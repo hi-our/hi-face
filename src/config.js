@@ -9,6 +9,7 @@ module.exports = {
   userDomain: 'cc',
   apiHost: `https://${env !== 'prod' ? env : ''}ccdaka.hjapi.com`,
   apiWeb: `https://${env !== 'prod' ? env : ''}cctalk.hjapi.com`,
+  apiTencent: `http://face.xuexitrip.com`,
   apiImageUpload: `https://${env !== 'prod' ? 'qa' : ''}ccfile.hjapi.com`,
   tokenKey: env === 'prod' || env === 'yz' ? 'ClubAuth' : 'ClubAuth_DEV',
   webViewDomain: `https://${env !== 'prod' ? env : ''}www.cctalk.com`,

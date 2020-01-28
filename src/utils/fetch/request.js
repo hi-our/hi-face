@@ -19,8 +19,14 @@ const request = (method = 'GET') => ({ url, data, cb }) => {
       header: {
         'Content-Type': 'application/json',
         Cookie: `${tokenKey}=${clubAuth}`,
-        'Hujiang-App-Key': 'mp-wechat', // todo
-        HJMPUA: `WX/${wxName}/${appInfo.system}/${appInfo.version}/${wxversion}`
+        Authorization: 'TC3-HMAC-SHA256 Credential=AKIDrCKFxUYtkUgeOujKVTG2Zr7DxYu39rRq/2020-01-28/cvm/tc3_request, SignedHeaders=content-type;host, Signature=eb6b9cf381b9884371913982102c07001cb40e9077dd317859aae3757efc7203',
+        'X-TC-Action': 'DescribeInstances',
+        'X-TC-Version': '2017-03-12',
+        'X-TC-Timestamp': '1527672334',
+        'X-TC-Region': 'ap-guangzhou',
+        
+        // 'Hujiang-App-Key': 'mp-wechat', // todo
+        // HJMPUA: `WX/${wxName}/${appInfo.system}/${appInfo.version}/${wxversion}`
       },
     })
   }).then(res => {

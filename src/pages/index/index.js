@@ -7,6 +7,8 @@ import VideoPlayer from 'components/video-player'
 import Banner from './components/bannner'
 import { navigateTo, redirectTo } from 'utils/navigate'
 import { VIDEO_STATUS } from './utils'
+import fetch from 'utils/fetch'
+import { apiMyFace } from 'constants/apis'
 
 const UN_LOGIN_HBG = 'https://n1image.hjfile.cn/res7/2019/11/22/cdaeb242a862231ca221e7da300334b4.png'
 
@@ -23,9 +25,29 @@ class Index extends Component {
     super(props)
     this.state = {
       groupId: '',
+      picChoosed: false,
+      bgPic: '',
       videoStatus: VIDEO_STATUS.NOT_PLAY,
     }
   }
+
+  componentDidMount() {
+    // this.fetchAPI()
+  }
+
+  submitUpload = () => {
+    fetch({
+      url: apiMyFace,
+      data: {
+        src: this.state.bgPic || ''
+      }
+    }).then(res => {
+      console.log('res :', res);
+    }).catch(error => {
+      console.log('error :', error);
+    })
+  }
+  
 
   // // loginBtnRef = el => this.loginBtn = el
 
@@ -35,6 +57,40 @@ class Index extends Component {
   switchBtnClick = () => {
     this.loginBtn.login({
       type: 'switch'
+    })
+  }
+
+  assignPicChoosed() {
+    if (this.state.bgPic) {
+      this.setState({
+        picChoosed: true
+      })
+    } else {
+      this.setState({
+        picChoosed: false
+      })
+    }
+  }
+
+  chooseImage(from) {
+    Taro.chooseImage({
+      count: 1,
+      sizeType: ['original', 'compressed'],
+      sourceType: [from.target.dataset.way],
+      success: res => {
+        let tempFilePaths = res.tempFilePaths
+        console.log('tempFilePaths[0] :', tempFilePaths[0]);
+        this.setState({
+          bgPic: tempFilePaths[0]
+        })
+        this.assignPicChoosed()
+      },
+      fail: res => {
+        this.assignPicChoosed()
+      },
+      complete: res => {
+        this.assignPicChoosed()
+      }
     })
   }
 
@@ -92,41 +148,15 @@ class Index extends Component {
 
     return (
       <PageWrapper>
-        <View className='index'>
-          <Banner
-            src='https://n1video.hjfile.cn/res7/2020/01/17/7ecb04ca6a368183e6084b312e24138f.mp4'
-            poster='https://n1image.hjfile.cn/res7/2020/01/16/f5cba34934ec6ff5022cad217c481533.png'
-            showName='视频播放地址你的呢我那个我能够翁我'
-            status={videoStatus}
-            onPlayStart={this.onPlayStart}
-            onPlayEnd={this.onPlayEnd}
-          />
-          <View className='dialog-fixed'>模拟遮挡层</View>
-          <View class='user-info'>
-            {
-              !isLogin
-                ? this.renderUnlogin()
-                : (
-                  <View className='discover'>
-                    <View onClick={this.switchBtnClick} className='discovery-btn'>账号切换</View>
-                    <View className='discovery-text'>↑已登录↑</View>
-                    <View onClick={this.onGoMyDaka} className='discovery-btn'>去我的打卡</View>
-                    <View className='group-wrap'>
-                      <Input className='border account' type='number' placeholder='请输入群号' onInput={this.onGroupInput}></Input>
-                      <Button
-                        className='discovery-btn'
-                        type='default'
-                        onClick={this.onGoGroup}
-                      >跳转</Button>
-                    </View>
-                  </View>
-                )
-            }
-          </View>
-          {/* {/* <LoginBtn */}
-            // ref={this.loginBtnRef}
-          /> */}
-        </View>
+        <Button
+          className="weui-btn"
+          type="default"
+          data-way="album"
+          onTap={this.chooseImage}
+        >
+          相册选择
+        </Button>
+        <Button onClick={this.submitUpload}>上传</Button>
       </PageWrapper>
     )
   }
