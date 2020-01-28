@@ -1,0 +1,363 @@
+// 去除prefix
+vendors = official
+
+@keyframes fadeIn {
+  0% {
+    opacity 0
+  }
+  100% {
+    opacity 1
+  }
+}
+.login-box
+  background-color rgba(0,0,0, 0.45)
+  position fixed
+  left 0
+  top 0
+  right 0
+  bottom 0
+  margin auto
+  z-index 999
+  opacity 0
+  display none
+  &.fadeIn
+    display flex
+    animation fadeIn 0.3s ease forwards
+  .shadow
+    position absolute
+    width 100%
+    height 100%
+    top 0
+    left 0
+    z-index 3
+  .box-wrap
+    width: 100%
+    height 300px
+    background-color: #ffffff
+    position: absolute
+    z-index 10
+    bottom: 0
+    left 0
+    padding 20px 0 15px
+    text-align: center
+    .title
+      font-size: 18px
+      width: 100%
+      font-weight 500
+      margin-bottom: 10px
+    .tip-txt
+      color #95A1AF
+      font-size: 13px
+      font-weight 400
+      .rule
+        color: #4A90E2
+      &.margin-bottom
+        margin-bottom: 30px
+    .btn-default
+      width 100%
+      height 37px
+    .login-btn
+      background-color #1AAD19
+      width 281px
+      height 37px
+      line-height 37px
+      margin: auto
+      border-radius: 4px
+      color: #FFFFFF
+      font-size: 15px
+    .useCCLoginBtn
+      // background-color: #F2F2F2
+      // color: #000000
+      // margin: 15px auto 35px
+    .new-user
+      background-color: #FFF
+      color: #000000
+      margin: 15px auto 35px
+      .login-btn
+        background-color: #F2F2F2
+        color: #000000
+.login-tips
+  background-color rgba(0,0,0, 0.45)
+  position fixed
+  left 0
+  top 0
+  right 0
+  bottom 0
+  margin auto
+  z-index 999
+  display flex
+  justify-content center
+  align-items center
+  opacity 0
+  display none
+  &.fadeIn
+    display flex
+    animation fadeIn 0.3s ease forwards
+  .shadow
+    position absolute
+    top 0
+    left 0
+    width 100%
+    height 100%
+    background-color rgba(0, 0, 0, 0.8)
+
+  .box
+    position absolute
+    z-index 10
+    top 55%
+    left 50%
+    transform translate(-50%, -50%)
+
+  .bg
+    position absolute
+    top -55px
+    z-index 1
+    width 270px
+    height 63px
+    background url('https://n1image.hjfile.cn/res7/2019/02/12/c8c4f10c2b48c69811643f3b242c8eb9.png') no-repeat
+    background-size 270px 63px
+
+  .container
+    position relative
+    width 270px
+    height 190px
+    padding 30px 40px 30px 40px
+    border-radius 8px
+    background-color rgb(255, 255, 255)
+
+  .close
+    position absolute
+    top -53px
+    right 3px
+    z-index 2
+    width 35px
+    height 53px
+
+  .text
+    text-align center
+    font-size 16px
+    font-weight 400
+    color rgba(47,55,66,1)
+    line-height 26px
+
+  .btn
+    width 190px
+    height 40px
+    line-height 22px
+    padding 9px 39px
+    margin 24px auto
+    text-align center
+    color #ffffff
+    font-size 16px
+    font-weight 500
+    border-radius 100px
+    box-shadow 0 2px 6px 0 rgba(47, 90, 255, 0.2)
+    background-image linear-gradient(60deg, rgb(47, 90, 255), rgb(0, 147, 255))
+
+.login-container
+  background-color rgba(0,0,0, 0.7)
+  position fixed
+  left 0
+  top 0
+  right 0
+  bottom 0
+  margin auto
+  z-index 999
+  opacity 0
+  display none
+  &.fadeIn
+    display block
+    animation fadeIn 0.3s ease forwards
+.placeholder
+  color #95A1AF
+  font-size 13px
+  line-height 18px
+  text-align left
+.login-inner
+  width 270px
+  position absolute
+  left 50%
+  top 50%
+  transform translate(-50%, -50%)
+  .bg
+    position absolute
+    top -55px
+    z-index 1
+    width 270px
+    height 63px
+    background url('https://n1image.hjfile.cn/res7/2019/02/12/c8c4f10c2b48c69811643f3b242c8eb9.png') no-repeat
+    background-size 270px 63px
+.border
+  box-sizing border-box
+  height 37px
+  border solid 1px #ECEDF2
+  font-size 13px
+  padding 0 18px
+  &.focus
+    border-color #2F5AFF !important
+  &.error
+    border-color #fa5252 !important
+
+.login-form
+  position relative
+  min-height 324px
+  background-color #FFF
+  border-radius 8px
+  padding 20px
+  box-sizing border-box
+  .form-tit
+    font-size 16px
+    text-align center
+    color #2F3742
+    margin-bottom 20px
+  .country
+    padding 0 10px 0 28px !important
+    border none
+    border-left 1px solid #ECEDF2
+    border-top 1px solid #ECEDF2
+    border-bottom 1px solid #ECEDF2
+    border-radius 19px 0 0 19px
+    text-align left
+    width 28%
+    &::before
+      position absolute
+      content "+"
+      color #95A1AF
+      font-size 13px
+      left 18px
+      top 9px
+    &::after
+      position absolute
+      content " "
+      width 1px
+      height 12px
+      background #ECEDF2
+      top 12px
+      left 64px
+
+  .mobile
+    border none
+    border-right 1px solid #ECEDF2
+    border-top 1px solid #ECEDF2
+    border-bottom 1px solid #ECEDF2
+    border-radius 0 19px 19px 0
+    text-align left
+    width 72%
+  .account
+    border none
+    border-left 1px solid #ECEDF2
+    border-right 1px solid #ECEDF2
+    border-top 1px solid #ECEDF2
+    border-bottom 1px solid #ECEDF2
+    border-radius 19px
+    text-align left
+    width 100%
+  .account-password
+    border none
+    border-left 1px solid #ECEDF2
+    border-right 1px solid #ECEDF2
+    border-top 1px solid #ECEDF2
+    border-bottom 1px solid #ECEDF2
+    border-radius 19px
+    text-align left
+    width 100%
+  .account-captcha
+    border none
+    border-left 1px solid #ECEDF2
+    border-right 1px solid #ECEDF2
+    border-top 1px solid #ECEDF2
+    border-bottom 1px solid #ECEDF2
+    border-radius 19px
+    text-align left
+    width 60%
+  .back-icon
+    position absolute
+    width 20px
+    height 20px
+  .captcha-group
+    padding-bottom 0 !important
+  .form-group
+    display flex
+    flex-direction row
+    justify-content space-between
+    padding-bottom 22px
+    position relative
+    .code
+      border-radius 19px
+      width 137px
+      text-align left
+    .sms-btn
+      width 88px
+      color #2F5AFF
+      display flex
+      align-items center
+      justify-content center
+      border-radius 19px
+      border solid 1px #2F5AFF
+      padding 0
+      &.disabeld
+        background-color rgba(207, 212, 219, 0.8)
+        border-color rgba(207, 212, 219, 0.8)
+        color #fff
+        padding 0
+        font-size 12px
+
+  .login-btn
+    width 190px
+    margin 12px auto
+    height 40px
+    line-height 40px
+    border-radius 100px
+    background:linear-gradient(60deg,rgba(47,90,255,1) 0%,rgba(0,147,255,1) 100%);    font-size 16px
+    font-weight 500
+    text-align center
+    color #ffffff
+    &::after
+      border none
+  .other-login
+    font-size 12px
+    color #2F5AFF
+    line-height 17px
+    text-align center
+    margin-top 8px
+    margin-bottom 26px
+  .tips
+    position absolute
+    display inline-block
+    left 20%
+    bottom 20px
+    font-size 12px
+    text-align center
+    color #95A1AF
+    .rule
+      display inline-block
+      color #4A90E2
+  .account-tips
+    margin-top 55px
+  .password-icon
+    position absolute
+    width 24px
+    height 24px
+    right 12px
+    top 7px
+    z-index 100
+  .captcha-icon
+    width 90px
+    height 42px
+    z-index 100
+  .error-tip
+    font-size 12px
+    color #fa5252
+    display block
+    line-height 17px
+    padding 0 16px
+    position absolute
+    bottom 2px
+    left 0
+.close-btn
+  position absolute
+  top -53px
+  right 3px
+  z-index 2
+  width 35px
+  height 53px

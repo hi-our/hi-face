@@ -1,0 +1,90 @@
+// 去除prefix
+vendors = official
+
+@keyframes rotate
+  0%
+    transform rotate3d(0, 0, 1, -360deg)
+
+  100%
+    transform none
+
+.list-loading, .list-loading-fail, .list-loading-end
+  padding 44rpx 0
+  color #999999
+  font-size 13px
+  text-align center
+
+  .refresh-btn
+    display inline
+    color #ff2d55
+
+.list-loading
+  position relative
+  line-height 1
+
+  image
+    width 40rpx
+    height 40rpx
+    animation rotate .5s linear infinite
+
+.list-loading-fail
+  image
+    position relative
+    top 5px
+    margin-right 10px
+    width 17px
+    height 19px
+
+.list-loading-end
+  padding 42px 0 22px
+  .bottom-line
+    width 100%
+    color #95a1af
+    font-size 12px
+    font-weight 300
+    text-align center
+
+.bottom-logo-ctn
+  margin-top 4px
+  text-align center
+
+  .bottom-logo
+    width 116px
+    height 15px
+
+
+.daka-card
+  background #999999
+  height 50px
+  margin-bottom 10px
+
+
+.to-discover-btn
+  margin-top 48px
+  color rgba(149, 161, 175, 1)
+  font-size 12px
+  text-align center
+
+.unlogin-img
+  width 375px
+  height 268px
+  
+.discover
+  text-align center
+
+  .discovery-text
+    color #95A1AF
+    font-size 16px
+    line-height 22px
+
+  .discovery-btn
+    display inline-block
+    width 186px
+    cursor pointer
+    color #fff
+    line-height 40px
+    font-size 16px
+    margin-top 19px
+    background linear-gradient(60deg,rgba(47,90,255,1), rgba(0,147,255,1))
+    box-shadow 0px 2px 6px 0px rgba(47,90,255,0.2)
+    border-radius 40px
