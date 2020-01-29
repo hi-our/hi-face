@@ -6,9 +6,9 @@ class Header extends Component {
     return (
       <header>
         <div className="Navbar">
-          <Link to="/">Home</Link>
-          <Link to="/photo">Photo Input</Link>
-          <Link to="/camera">Video Camera</Link>
+          <Link to="/">首页</Link>
+          <Link to="/photo">图片识别</Link>
+          <Link to="/camera">实时识别</Link>
         </div>
       </header>
     );
