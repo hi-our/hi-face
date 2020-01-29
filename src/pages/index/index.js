@@ -2,7 +2,7 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Input, Button } from '@tarojs/components'
 import CorePage from 'page'
 import PageWrapper from 'components/page-wrapper'
-// import LoginBtn from 'components/login-btn-wx'
+// import LoginBtn from 'components/login-btn-Taro'
 import VideoPlayer from 'components/video-player'
 import Banner from './components/bannner'
 import { navigateTo, redirectTo } from 'utils/navigate'
@@ -36,30 +36,26 @@ class Index extends Component {
   }
 
   submitUpload = async () => {
-    wx.request({
-      url: this.state.bgPic,
-      method: 'GET',
-      responseType: 'arraybuffer',
-      success: (res) => {
-        let base64 = wx.arrayBufferToBase64(res.data);
-        let userImageBase64 = 'data:image/jpg;base64,' + base64;
-        console.log(userImageBase64); // 打印base64格式图片
-        // 如果需要使用本地缓存图片，请参照第一步
-      }
-    })
-    
-    const data = Taro.arrayBufferToBase64(this.state.bgPic)
-    console.log('data :', data);
-    fetch({
-      url: apiMyFace,
-      data: {
-        src: this.state.bgPic || ''
-      }
-    }).then(res => {
-      console.log('res :', res);
-    }).catch(error => {
-      console.log('error :', error);
-    })
+    try {
+      const res = await Taro.request({
+        url: this.state.bgPic,
+        method: 'GET',
+        responseType: 'arraybuffer'
+      })
+      let base64 = Taro.arrayBufferToBase64(res.data);
+      let userImageBase64 = 'data:image/jpg;base64,' + base64;
+      console.log('userImageBase64', userImageBase64); // 打印base64格式图片
+      // 如果需要使用本地缓存图片，请参照第一步
+      const res2 = await fetch({
+        url: apiMyFace,
+        data: {
+          src: userImageBase64
+        }
+      })
+      console.log('res2 :', res2);
+    } catch (error) {
+      console.log('error :', error)
+    }
   }
   
 
@@ -87,6 +83,7 @@ class Index extends Component {
   }
 
   chooseImage(from) {
+    console.log('2 :', 2);
     Taro.chooseImage({
       count: 1,
       sizeType: ['original', 'compressed'],

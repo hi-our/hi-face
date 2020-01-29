@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "npm run watch",
-    "watch": "SERVER_ENV=yz MOCK=false npm run dev:h5",
+    "watch": "SERVER_ENV=yz MOCK=false npm run dev:weapp",
     "build:weapp": "taro build --type weapp",
     "build:swan": "taro build --type swan",
     "build:alipay": "taro build --type alipay",
@@ -42,7 +42,6 @@
     "@tarojs/taro-tt": "2.0.1",
     "@tarojs/taro-weapp": "2.0.1",
     "babel-runtime": "^6.26.0",
-    "base64-img": "^1.0.4",
     "nerv-devtools": "^1.5.5",
     "nervjs": "^1.5.5",
     "redux": "^4.0.0",

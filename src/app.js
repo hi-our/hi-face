@@ -9,7 +9,7 @@ import * as config from 'config'
 
 import './app.styl'
 
-const updateManager = Taro.getUpdateManager()
+const updateManager = process.env.TARO_ENV !== 'h5' ? Taro.getUpdateManager() : null
 
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
@@ -61,6 +61,8 @@ class App extends Component {
 
   // 小程序更新提醒
   setUpdateManager() {
+    if (!updateManager) return
+
     updateManager.onUpdateReady(() => {
       Taro.showModal({
         title: '更新提示',
