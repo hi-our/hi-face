@@ -6,6 +6,7 @@ require("@tensorflow/tfjs-node");
 var faceapi = require("face-api.js");
 // implements nodejs wrappers for HTMLCanvasElement, HTMLImageElement, ImageData
 var canvas = require('canvas');
+
 exports.canvas = canvas;
 // patch nodejs environment, we need to provide an implementation of
 // HTMLCanvasElement and HTMLImageElement

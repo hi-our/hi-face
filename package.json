@@ -1,5 +1,5 @@
 {
-  "name": "taro-framework",
+  "name": "goddess-hat",
   "version": "0.0.1",
   "private": true,
   "description": "基于Tarojs框架的小程序业务框架",
@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "npm run watch",
-    "watch": "SERVER_ENV=yz MOCK=true npm run dev:weapp",
+    "watch": "SERVER_ENV=yz MOCK=false npm run dev:h5",
     "build:weapp": "taro build --type weapp",
     "build:swan": "taro build --type swan",
     "build:alipay": "taro build --type alipay",
@@ -42,8 +42,9 @@
     "@tarojs/taro-tt": "2.0.1",
     "@tarojs/taro-weapp": "2.0.1",
     "babel-runtime": "^6.26.0",
-    "nervjs": "^1.5.5",
+    "base64-img": "^1.0.4",
     "nerv-devtools": "^1.5.5",
+    "nervjs": "^1.5.5",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0"

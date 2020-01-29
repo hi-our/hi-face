@@ -3,7 +3,7 @@ const appId = 'wxd5e8989ce23206af'
 
 module.exports = {
   env,
-  wxName: 'taro-framework',
+  wxName: 'goddess-hat',
   version: '1.6.18',
   appId,
   userDomain: 'cc',

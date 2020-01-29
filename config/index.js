@@ -1,7 +1,7 @@
 const alias = require('./alias')
 
 const config = {
-  projectName: 'taro-framework',
+  projectName: 'goddess-hat',
   date: '2019-11-2',
   designWidth: 750,
   deviceRatio: {

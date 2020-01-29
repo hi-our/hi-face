@@ -5,7 +5,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@tensorflow/tfjs-node": "1.4.0",
+    "@tensorflow/tfjs-node": "1.5.1",
     "canvas": "^2.6.0",
     "face-api.js": "0.22.0",
     "express": "^4.16.4",

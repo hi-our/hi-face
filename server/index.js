@@ -18,15 +18,20 @@ app.use(express.static(path.join(__dirname, './images')))
 app.use(express.static(path.join(__dirname, './weights')))
 // app.use(express.static(path.join(__dirname, '../../dist')))
 
-app.get('/', (req, res) => {
-  console.log('//// res :', res);
-  res.redirect('/face_detection')
-})
+// app.get('/', (req, res) => {
+//   // console.log('//// res :', res);
+//   res.redirect('/face_detection')
+// })
 app.get('/face_detection', async (req, res) => {
-  console.log('face_detection res :', res);
+  // console.log('face_detection req ', req);
+  // console.log('face_detection req query:', req.query);
   await faceDetectionNet.loadFromDisk('./weights')
 
-  const img = await canvas.loadImage(res.query.src)
+  const { src = '' } = req.query
+  console.log('src :', src);
+
+  const img = await canvas.loadImage(src)
+  console.log('img :', img);
   const detections = await faceapi.detectAllFaces(img, faceDetectionOptions)
 
   const out = faceapi.createCanvasFromMedia(img)

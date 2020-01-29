@@ -35,7 +35,21 @@ class Index extends Component {
     // this.fetchAPI()
   }
 
-  submitUpload = () => {
+  submitUpload = async () => {
+    wx.request({
+      url: this.state.bgPic,
+      method: 'GET',
+      responseType: 'arraybuffer',
+      success: (res) => {
+        let base64 = wx.arrayBufferToBase64(res.data);
+        let userImageBase64 = 'data:image/jpg;base64,' + base64;
+        console.log(userImageBase64); // 打印base64格式图片
+        // 如果需要使用本地缓存图片，请参照第一步
+      }
+    })
+    
+    const data = Taro.arrayBufferToBase64(this.state.bgPic)
+    console.log('data :', data);
     fetch({
       url: apiMyFace,
       data: {
