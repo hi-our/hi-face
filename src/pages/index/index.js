@@ -8,7 +8,9 @@ import Banner from './components/bannner'
 import { navigateTo, redirectTo } from 'utils/navigate'
 import { VIDEO_STATUS } from './utils'
 import fetch from 'utils/fetch'
+import { requestExternalImage } from 'utils/image-utils'
 import { apiMyFace } from 'constants/apis'
+// import faceapi from 'utils/face-api/face-api';
 
 const UN_LOGIN_HBG = 'https://n1image.hjfile.cn/res7/2019/11/22/cdaeb242a862231ca221e7da300334b4.png'
 
@@ -24,22 +26,24 @@ class Index extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      groupId: '',
-      picChoosed: false,
       bgPic: '',
-      videoStatus: VIDEO_STATUS.NOT_PLAY,
     }
   }
 
-  componentDidMount() {
-    // this.fetchAPI()
+  loadImageFromUrl = async (url) => {
+    const img = await requestExternalImage(url);
+    console.log('img :', img);
+    // inputImg.src = img.src;
+    // updateResults();
   }
 
+
   submitUpload = async () => {
+    // this.loadImageFromUrl('http://cc.hjfile.cn/cc/img/20200110/2020011011472209896561.png')
     try {
       const res = await Taro.request({
-        // url: this.state.bgPic,
-        url: 'https://cc.hjfile.cn/cc/img/20200110/2020011011472209896561.png',
+        url: this.state.bgPic,
+        // url: 'https://cc.hjfile.cn/cc/img/20200110/2020011011472209896561.png',
         method: 'GET',
         responseType: 'arraybuffer'
       })
@@ -84,28 +88,45 @@ class Index extends Component {
     }
   }
 
-  chooseImage(from) {
+  chooseImage = async (from) => {
     console.log('2 :', 2);
-    Taro.chooseImage({
+
+    const res = await Taro.chooseImage({
       count: 1,
       sizeType: ['original', 'compressed'],
-      sourceType: [from.target.dataset.way],
-      success: res => {
-        let tempFilePaths = res.tempFilePaths
-        console.log('tempFilePaths[0] :', tempFilePaths[0]);
-        this.setState({
-          bgPic: tempFilePaths[0]
-        })
-        this.assignPicChoosed()
-      },
-      fail: res => {
-        this.assignPicChoosed()
-      },
-      complete: res => {
-        this.assignPicChoosed()
-      }
+      sourceType: [from.target.dataset.way]
     })
+    let tempFilePaths = res.tempFilePaths[0]
+    this.setState({
+      bgPic: tempFilePaths
+    }, async () => {
+      if (process.env.TARO_ENV === 'h5') {
+        console.log('this.imgRef :', this.imgRef);
+        const results = await faceapi.detectAllFaces(this.imgRef).withFaceLandmarks();
+        // faceapi.matchDimensions(canvas, inputImg);
+        // this.readURL(tempFilePaths[0])
+      }
+
+    })
+    // let src = typeof tempFilePaths === 'string' ? 
+    console.log('tempFilePaths[0] :', tempFilePaths[0]);
+        // this.setState({
+        //   bgPic: tempFilePaths[0]
+        // })
+        // this.assignPicChoosed()
   }
+
+  readURL = (h5Blob) => {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      console.log('e :', e);
+      // updateResults();
+    };
+    console.log('h5Blob :', h5Blob);
+
+    reader.readAsDataURL(h5Blob);
+}
 
   onGoMyDaka = () => {
     navigateTo({
@@ -157,18 +178,19 @@ class Index extends Component {
 
   render () {
     const { isLogin } = this.props
-    const { videoStatus } = this.state
+    const { videoStatus, bgPic } = this.state
 
     return (
       <PageWrapper>
-        {/* <Button
+        <img ref={img => this.imgRef = img} src={'https://cc.hjfile.cn/cc/img/20200110/2020011011472209896561.png'} />
+        <Button
           className="weui-btn"
           type="default"
           data-way="album"
-          onTap={this.chooseImage}
+          onClick={this.chooseImage}
         >
           相册选择
-        </Button> */}
+        </Button>
         <Button onClick={this.submitUpload}>上传</Button>
       </PageWrapper>
     )
