@@ -41,22 +41,7 @@ Taro.onNetworkStatusChange(function (res) {
 
 
 
-// export function $log(msg, arg2) {
-//   if (getLogger()) {
-//     let data
-//     if (typeof msg === 'string') {
-//       data = arg2 || {}
-//       data.msg = msg
-//     } else {
-//       data = msg || {}
-//     }
-//     console.log('$log data', data)
-//     getLogger().send({
-//       data: JSON.stringify(data),
-//       status: 0,
-//     })
-//   }
-// }
+export function $log(msg, arg2) {}
 
 /**
  * $bi({ name: '', data: {} }) 或 $bi('', {})

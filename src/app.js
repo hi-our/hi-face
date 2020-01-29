@@ -1,16 +1,13 @@
 import Taro, { Component } from '@tarojs/taro'
 import { Provider } from '@tarojs/redux'
 
+import Index from './pages/index'
 import store from '@/store'
 // import userActions from '@/store/user'
 import * as config from 'config'
-// import Bisdk from '@bi/track-wx/dist/taro'
 
-import Index from 'pages/index/index'
 
 import './app.styl'
-
-// const __bisdk = new Bisdk(config)
 
 const updateManager = Taro.getUpdateManager()
 
