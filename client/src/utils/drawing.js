@@ -33,8 +33,9 @@ function getImg(src, callback) {
 function drawHat(ctx, config) {
   const { headPos, angle, faceWidth } = config;
   getImg('images/hat.png', img => {
-    // 保存画布
+    // 保存画布绘制状态
     ctx.save();
+    console.log('headPos.x, headPos.y :', headPos.x, headPos.y);
     // 画布原点移动到画帽子的地方
     ctx.translate(headPos.x, headPos.y);
     // 旋转画布到特定角度
@@ -43,8 +44,7 @@ function drawHat(ctx, config) {
     const { x, y, width, height } = translateHat(faceWidth, 0, 0);
     // 我的圣诞帽子实际佩戴部分长度只有0.75倍整个图片长度
     ctx.drawImage(img, x, y, width, height);
-    console.log('x, y, width, height :', x, y, width, height);
-    // 还原画布
+    // 还原画布绘制状态，如偏移
     ctx.restore();
   });
 }
@@ -61,9 +61,11 @@ export function drawing(canvas, options) {
   console.log('width, height :', width, height, ctx);
   ctx.clearRect(0, 0, width, height);
   // 先把图片绘制上去
-  getImg(imgSrc, img => ctx.drawImage(img, 0, 0, width, height));
-  // // 循环把帽子画到对应的点上
-  for (let i = 0, len = info.length; i < len; i++) {
-    drawHat(ctx, info[i]);
-  }
+  getImg(imgSrc, img => {
+    ctx.drawImage(img, 0, 0, width, height)
+    // // 循环把帽子画到对应的点上
+    for (let i = 0, len = info.length; i < len; i++) {
+      drawHat(ctx, info[i]);
+    }
+  });
 }

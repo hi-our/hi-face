@@ -70,17 +70,12 @@ class ChristmasHat extends Component {
   handleImageChange = async (image = this.state.imageURL) => {
     await this.getImageDimension(image);
     await getFullFaceDescription(image).then(fullDesc => {
-      console.log('this.canvasRef :', this.canvasRef);
       faceapi.matchDimensions(this.canvasRef, this.imageRef);
-      console.log('fullDesc :', fullDesc);
       const resizedResults = faceapi.resizeResults(fullDesc, this.imageRef);
-      console.log('resizedResults :', resizedResults);
       const info = getHatInfo(resizedResults);
-      console.log('info :', info);
       faceapi.draw.drawFaceLandmarks(this.canvasRef, resizedResults)  // 直接画出识别的的特征点
       const { detection = {} } = resizedResults[0]
       const { _imageDims } = detection
-      console.log('this.canvasRef.width :', _imageDims.width, _imageDims.height);
 
       drawing(this.canvasRef, {
         info,
@@ -88,7 +83,9 @@ class ChristmasHat extends Component {
         width: _imageDims.width,
         height: _imageDims.height,
       });
-      this.setState({ fullDesc, loading: false });
+      this.setState({ fullDesc, loading: false }, () => {
+
+      });
     });
   };
 
@@ -105,6 +102,24 @@ class ChristmasHat extends Component {
       });
     };
     img.src = imageURL;
+  };
+
+  handleURLChange = event => {
+    this.setState({ url: event.target.value });
+  };
+
+  handleButtonClick = async () => {
+    this.resetState();
+    let blob = await fetch(this.state.url)
+      .then(r => r.blob())
+      .catch(error => this.setState({ error }));
+    if (!!blob && blob.type.includes('image')) {
+      this.setState({
+        imageURL: URL.createObjectURL(blob),
+        loading: true
+      });
+      this.handleImageChange();
+    }
   };
 
   render() {
@@ -149,7 +164,7 @@ class ChristmasHat extends Component {
         }}
       >
         <div className="loading" />
-        <h3>Processing...</h3>
+        <h3>识别中</h3>
       </div>
     );
 
@@ -176,16 +191,17 @@ class ChristmasHat extends Component {
               }}
             >
               <div style={{ position: 'absolute' }}>
-                <img ref={img => this.imageRef = img} style={{ width: WIDTH }} src={imageURL} alt="imageURL" />
+                <img ref={img => this.imageRef = img} style={{ width: WIDTH, display: loading ? '' : 'none' }} src={imageURL} alt="imageURL" />
+                <canvas ref={canvas => this.canvasRef = canvas} style={{ width: WIDTH, display: loading ? 'none' : '' }}></canvas>
               </div>
-              {!!fullDesc ? (
+              {/* {!!fullDesc ? (
                 <DrawBox
                   fullDesc={fullDesc}
                   faceMatcher={faceMatcher}
                   imageWidth={WIDTH}
                   boxColor={boxColor}
                 />
-              ) : null}
+              ) : null} */}
             </div>
           ) : null}
           {loading ? spinner : null}
@@ -198,7 +214,7 @@ class ChristmasHat extends Component {
             marginTop: 10
           }}
         >
-          <p>Input Image file or URL</p>
+          <p>请上传图片或输入图片URL</p>
           <input
             id="myFileUpload"
             type="file"
@@ -216,7 +232,7 @@ class ChristmasHat extends Component {
               size="30"
               onChange={this.handleURLChange}
             />
-            <button onClick={this.handleButtonClick}>Upload</button>
+            <button onClick={this.handleButtonClick}>上传</button>
           </div>
           {/* <div>
             <input
@@ -227,7 +243,7 @@ class ChristmasHat extends Component {
             />
             <label>Show Descriptors</label>
           </div> */}
-          <canvas ref={canvas => this.canvasRef = canvas}></canvas>
+          
           {!!showDescriptors ? <ShowDescriptors fullDesc={fullDesc} /> : null}
         </div>
       </div>
