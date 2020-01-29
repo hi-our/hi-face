@@ -38,10 +38,12 @@ class Index extends Component {
   submitUpload = async () => {
     try {
       const res = await Taro.request({
-        url: this.state.bgPic,
+        // url: this.state.bgPic,
+        url: 'https://cc.hjfile.cn/cc/img/20200110/2020011011472209896561.png',
         method: 'GET',
         responseType: 'arraybuffer'
       })
+      console.log('res :', res);
       let base64 = Taro.arrayBufferToBase64(res.data);
       let userImageBase64 = 'data:image/jpg;base64,' + base64;
       console.log('userImageBase64', userImageBase64); // 打印base64格式图片
@@ -159,14 +161,14 @@ class Index extends Component {
 
     return (
       <PageWrapper>
-        <Button
+        {/* <Button
           className="weui-btn"
           type="default"
           data-way="album"
           onTap={this.chooseImage}
         >
           相册选择
-        </Button>
+        </Button> */}
         <Button onClick={this.submitUpload}>上传</Button>
       </PageWrapper>
     )
