@@ -1,0 +1,35 @@
+{
+  "name": "goddess-hat",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "homepage": "http://shenghanqin.github.io/goddess-hat",
+  "dependencies": {
+    "face-api.js": "^0.22.0",
+    "gh-pages": "^2.0.1",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.1",
+    "react-webcam": "^1.0.4",
+    "tslib": "^1.9.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "proxy": "http://localhost:5000/",
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

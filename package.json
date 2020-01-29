@@ -1,0 +1,37 @@
+{
+  "name": "goddess-hat",
+  "version": "1.0.0",
+  "description": "Example on using create-react-app with a Node Express Backend",
+  "author": {
+    "name": "shenghanqin",
+    "url": "https://xiaoxili.com"
+  },
+  "license": "MIT",
+  "scripts": {
+    "client": "cd client && yarn start",
+    "server": "nodemon server/index.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "dev:server": "cd client && yarn build && cd .. && yarn start",
+    "start": "node server/index.js",
+    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shenghanqin/goddess-hat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shenghanqin/goddess-hat/issues"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "create-react-app"
+  ]
+}
