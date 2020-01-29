@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
-  "homepage": "http://shenghanqin.github.io/goddess-hat",
+  "homepage": "http://www.xiaoxili.com/goddess-hat/",
   "dependencies": {
     "face-api.js": "^0.22.0",
     "gh-pages": "^2.0.1",
@@ -13,6 +13,9 @@
     "react-scripts": "2.1.1",
     "react-webcam": "^1.0.4",
     "tslib": "^1.9.3"
+  },
+  "devDependencies": {
+    "gh-pages": "^2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

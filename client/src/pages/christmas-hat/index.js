@@ -6,14 +6,14 @@ import {
   isFaceDetectionModelLoaded
 } from '../../api/face';
 
-import DrawBox from '../../components/draw-box';
+// import DrawBox from '../../components/draw-box';
 import ShowDescriptors from '../../components/show-descriptors';
 import { getHatInfo } from '../../utils/utils'
 import { drawing } from '../../utils/drawing'
 import * as faceapi from 'face-api.js';
 
 const MaxWidth = 600;
-const boxColor = '#BE80B5';
+// const boxColor = '#BE80B5';
 const testImg = require('../../img/test.jpg');
 
 const INIT_STATE = {
@@ -128,7 +128,6 @@ class ChristmasHat extends Component {
       HEIGHT,
       imageURL,
       fullDesc,
-      faceMatcher,
       showDescriptors,
       isModelLoaded,
       error,
