@@ -8,7 +8,8 @@ import {
 
 import DrawBox from '../../components/draw-box';
 import ShowDescriptors from '../../components/show-descriptors';
-import { getHatInfo } from '../../utils/utils';
+import { getHatInfo } from '../../utils/utils'
+import { drawing } from '../../utils/drawing'
 import * as faceapi from 'face-api.js';
 
 const MaxWidth = 600;
@@ -70,14 +71,23 @@ class ChristmasHat extends Component {
     await this.getImageDimension(image);
     await getFullFaceDescription(image).then(fullDesc => {
       console.log('this.canvasRef :', this.canvasRef);
-      faceapi.matchDimensions(this.canvasRef, image);
+      faceapi.matchDimensions(this.canvasRef, this.imageRef);
       console.log('fullDesc :', fullDesc);
-      const resizedResults = faceapi.resizeResults(fullDesc, image);
-  //     console.log('resizedResults :', resizedResults);
-  //     const info = getHatInfo(resizedResults);
-  //     console.log('info :', info);
-  //     // faceapi.draw.drawFaceLandmarks(this.canvasRef, resizedResults)  // 直接画出识别的的特征点
-  // // console.log('inputImg.src :', inputImg.src);
+      const resizedResults = faceapi.resizeResults(fullDesc, this.imageRef);
+      console.log('resizedResults :', resizedResults);
+      const info = getHatInfo(resizedResults);
+      console.log('info :', info);
+      faceapi.draw.drawFaceLandmarks(this.canvasRef, resizedResults)  // 直接画出识别的的特征点
+      const { detection = {} } = resizedResults[0]
+      const { _imageDims } = detection
+      console.log('this.canvasRef.width :', _imageDims.width, _imageDims.height);
+
+      drawing(this.canvasRef, {
+        info,
+        imgSrc: image,
+        width: _imageDims.width,
+        height: _imageDims.height,
+      });
       this.setState({ fullDesc, loading: false });
     });
   };
@@ -166,7 +176,7 @@ class ChristmasHat extends Component {
               }}
             >
               <div style={{ position: 'absolute' }}>
-                <img style={{ width: WIDTH }} src={imageURL} alt="imageURL" />
+                <img ref={img => this.imageRef = img} style={{ width: WIDTH }} src={imageURL} alt="imageURL" />
               </div>
               {!!fullDesc ? (
                 <DrawBox
@@ -217,7 +227,7 @@ class ChristmasHat extends Component {
             />
             <label>Show Descriptors</label>
           </div> */}
-          <canvas ref={canvas => this.canvasRef = canvas} style={{display: 'none'}} ></canvas>
+          <canvas ref={canvas => this.canvasRef = canvas}></canvas>
           {!!showDescriptors ? <ShowDescriptors fullDesc={fullDesc} /> : null}
         </div>
       </div>

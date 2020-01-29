@@ -30,13 +30,11 @@ function getCurrentFaceDetectionNet() {
   }
 }
 
-
-
-
 export async function loadModels() {
   const MODEL_URL = process.env.PUBLIC_URL + '/models';
   // await faceapi.loadTinyFaceDetectorModel(MODEL_URL);
   // await faceapi.loadFaceLandmarkTinyModel(MODEL_URL);
+  await getCurrentFaceDetectionNet().load(MODEL_URL)
   await faceapi.loadFaceRecognitionModel(MODEL_URL);
   await faceapi.loadSsdMobilenetv1Model(MODEL_URL)
   await faceapi.loadFaceLandmarkModel(MODEL_URL)
@@ -57,6 +55,8 @@ export async function getFullFaceDescription(blob, inputSize = 512) {
   // const resizedResults = await faceapi.resizeResults(fullDesc, img);
   return fullDesc;
 }
+
+
 
 export async function createMatcher(faceProfile) {
   // Create labeled descriptors of member from profile
