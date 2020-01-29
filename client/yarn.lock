@@ -1072,15 +1072,22 @@
     "@svgr/core" "^2.4.1"
     loader-utils "^1.1.0"
 
-"@tensorflow/tfjs-core@0.14.2":
-  version "0.14.2"
-  resolved "https://registry.yarnpkg.com/@tensorflow/tfjs-core/-/tfjs-core-0.14.2.tgz#b1ee6af0d893782a1c3b2c988091c36c42f1d7a4"
-  integrity sha512-VVbcu6H3ioKCkfkep/gQASfzPnQt3C5v+4ppH9pQ6Lf0lD+l3NMuMJYxa8Wjac1TfiWhFEX58bJvhpMfTGsUlg==
+"@tensorflow/tfjs-core@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@tensorflow/tfjs-core/-/tfjs-core-1.4.0.tgz#045c91f93cb3ea77473b664c0d1dbad675d7f046"
+  integrity sha512-a7dHhSsBbtaxp8/1UAeYKrjY1bQxsDy/Uhj57+mTuGLAcL8CDrTOXXZzucCgs5nvQErdscp7Gp/2VCcA1xp6XQ==
   dependencies:
+    "@types/offscreencanvas" "~2019.3.0"
     "@types/seedrandom" "2.4.27"
     "@types/webgl-ext" "0.0.30"
     "@types/webgl2" "0.0.4"
+    node-fetch "~2.1.2"
     seedrandom "2.4.3"
+
+"@types/offscreencanvas@~2019.3.0":
+  version "2019.3.0"
+  resolved "https://registry.yarnpkg.com/@types/offscreencanvas/-/offscreencanvas-2019.3.0.tgz#3336428ec7e9180cf4566dfea5da04eb586a6553"
+  integrity sha512-esIJx9bQg+QYF0ra8GnvfianIY8qWB0GBx54PK5Eps6m+xTj86KLavHv6qDhzKcu5UUOgNfJ2pWaIIV7TRUd9Q==
 
 "@types/q@^1.5.1":
   version "1.5.2"
@@ -3894,15 +3901,13 @@ extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
 
-face-api.js@^0.16.1:
-  version "0.16.2"
-  resolved "https://registry.yarnpkg.com/face-api.js/-/face-api.js-0.16.2.tgz#d0f1ef98c24794e9a198049cc789d6ed27a5e202"
-  integrity sha512-2iOaYTYGQC2JSspBe/mq+zTcyQgIS8rffVtXe2cePwxFLh3VbzlAbxt9d0jwbDKiOHS55LxRRB2Tb2xfIyLT1w==
+face-api.js@^0.22.0:
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/face-api.js/-/face-api.js-0.22.0.tgz#a7234942a59c4899cd3c43d4764cbb6a035672c9"
+  integrity sha512-vX9tehq+dT53CkJrkA0LUTBcw4ORX6OlnkoUi683ju9Ha2RBduIJQ5dsdBLL2sqpLzV2r/zlOTm/JaMDQPDU0A==
   dependencies:
-    "@tensorflow/tfjs-core" "0.14.2"
-    tfjs-image-recognition-base "^0.3.1"
-    tfjs-tiny-yolov2 "^0.4.0"
-    tslib "^1.9.3"
+    "@tensorflow/tfjs-core" "1.4.0"
+    tslib "^1.10.0"
 
 fast-deep-equal@^3.1.1:
   version "3.1.1"
@@ -6710,6 +6715,11 @@ no-case@^2.2.0:
   dependencies:
     lower-case "^1.1.1"
 
+node-fetch@~2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.1.2.tgz#ab884e8e7e57e38a944753cec706f788d1768bb5"
+  integrity sha1-q4hOjn5X44qUR1POxwb3iNF2i7U=
+
 node-forge@0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.9.0.tgz#d624050edbb44874adca12bb9a52ec63cb782579"
@@ -6759,22 +6769,6 @@ node-notifier@^5.2.1:
     semver "^5.5.0"
     shellwords "^0.1.1"
     which "^1.3.0"
-
-node-pre-gyp@*:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.14.0.tgz#9a0596533b877289bcad4e143982ca3d904ddc83"
-  integrity sha512-+CvDC7ZttU/sSt9rFjix/P05iS43qHCOOGzcr3Ry99bXG7VX953+vFyEuph/tfqoYu8dttBkE86JSKBO2OzcxA==
-  dependencies:
-    detect-libc "^1.0.2"
-    mkdirp "^0.5.1"
-    needle "^2.2.1"
-    nopt "^4.0.1"
-    npm-packlist "^1.1.6"
-    npmlog "^4.0.2"
-    rc "^1.2.7"
-    rimraf "^2.6.1"
-    semver "^5.3.0"
-    tar "^4.4.2"
 
 node-pre-gyp@^0.10.0:
   version "0.10.3"
@@ -9628,7 +9622,7 @@ tapable@^1.0.0, tapable@^1.1.0:
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-1.1.3.tgz#a1fccc06b58db61fd7a45da2da44f5f3a3e67ba2"
   integrity sha512-4WK/bYZmj8xLr+HUCODHGF1ZFzsYffasLUgEiMBY4fgtltdO6B4WJtlSbPaDTLpYTcGVwM2qLnFTICEcNxs3kA==
 
-tar@^4, tar@^4.4.2:
+tar@^4:
   version "4.4.13"
   resolved "https://registry.yarnpkg.com/tar/-/tar-4.4.13.tgz#43b364bc52888d555298637b10d60790254ab525"
   integrity sha512-w2VwSrBoHa5BsSyH+KxEqeQBAllHhccyMFVHtGtdMpF4W7IRWfZjFiQceJPChOeTsSDVUpER2T8FA93pr0L+QA==
@@ -9679,23 +9673,6 @@ text-table@0.2.0, text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
-
-tfjs-image-recognition-base@^0.3.0, tfjs-image-recognition-base@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/tfjs-image-recognition-base/-/tfjs-image-recognition-base-0.3.1.tgz#f135d9297d2b4b6f427e1bc22e02d04647877e39"
-  integrity sha512-58PNmCNwPx0AsQ7qfPn6iOiabIqzMuQymKFW4eZHXmsWW0fGlZBvO8AXLyuqW1ZbtH0LQUnyEETfWNFAYQmkwA==
-  dependencies:
-    "@tensorflow/tfjs-core" "0.14.2"
-    tslib "^1.9.3"
-
-tfjs-tiny-yolov2@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/tfjs-tiny-yolov2/-/tfjs-tiny-yolov2-0.4.0.tgz#9e4f269bca09e2dd09567e92c6fbbc0ed0ee400c"
-  integrity sha512-jCsAB9cn3TCikiYr1i4rqBsS5onPJ4E6VnxfRiqHGZRC4crWZ3blmyPPOiVUQx+UXMJQ77rEWfiVQE0/84VmtA==
-  dependencies:
-    "@tensorflow/tfjs-core" "0.14.2"
-    tfjs-image-recognition-base "^0.3.0"
-    tslib "^1.9.3"
 
 throat@^4.0.0:
   version "4.1.0"
@@ -9862,7 +9839,7 @@ tryer@^1.0.0:
   resolved "https://registry.yarnpkg.com/tryer/-/tryer-1.0.1.tgz#f2c85406800b9b0f74c9f7465b81eaad241252f8"
   integrity sha512-c3zayb8/kWWpycWYg87P71E1S1ZL6b6IJxfb5fvsUgsf0S2MVGaDhDXXjDMpdCpfWXqptc+4mXwmiy1ypXqRAA==
 
-tslib@^1.9.0, tslib@^1.9.3:
+tslib@^1.10.0, tslib@^1.9.0, tslib@^1.9.3:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
   integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==

@@ -1,11 +1,11 @@
 {
-  "name": "bnk48-face-recognition",
+  "name": "goddess-hat",
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
-  "homepage": "http://supachaic.github.io/bnk48-face-recognition",
+  "homepage": "http://shenghanqin.github.io/goddess-hat",
   "dependencies": {
-    "face-api.js": "^0.16.1",
+    "face-api.js": "^0.22.0",
     "gh-pages": "^2.0.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",

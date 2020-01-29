@@ -70,8 +70,9 @@ class ChristmasHat extends Component {
     await this.getImageDimension(image);
     await getFullFaceDescription(image).then(fullDesc => {
       console.log('this.canvasRef :', this.canvasRef);
-      // faceapi.matchDimensions(this.canvasRef, image);
-  //     const resizedResults = faceapi.resizeResults(fullDesc, image);
+      faceapi.matchDimensions(this.canvasRef, image);
+      console.log('fullDesc :', fullDesc);
+      const resizedResults = faceapi.resizeResults(fullDesc, image);
   //     console.log('resizedResults :', resizedResults);
   //     const info = getHatInfo(resizedResults);
   //     console.log('info :', info);
