@@ -27,9 +27,9 @@ export function getCurrentFaceDetectionNet() {
   }
 }
 
-// function isFaceDetectionModelLoaded() {
-//   return !!getCurrentFaceDetectionNet().params;
-// }
+export function isFaceDetectionModelLoaded() {
+  return !!getCurrentFaceDetectionNet().params;
+}
 
 // async function changeFaceDetector(detector) {
 //   selectedFaceDetector = detector;
