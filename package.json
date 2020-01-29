@@ -1,11 +1,10 @@
 {
-  "name": "example-create-react-app-express",
+  "name": "goddess-hat",
   "version": "1.0.0",
   "description": "Example on using create-react-app with a Node Express Backend",
   "author": {
-    "name": "Esau Silva",
-    "twitter": "@_esausilva",
-    "url": "https://esausilva.com"
+    "name": "shenghanqin",
+    "url": "https://xiaoxili.com"
   },
   "license": "MIT",
   "scripts": {
@@ -25,10 +24,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/esausilva/example-create-react-app-express.git"
+    "url": "https://github.com/shenghanqin/goddess-hat.git"
   },
   "bugs": {
-    "url": "https://github.com/esausilva/example-create-react-app-express/issues"
+    "url": "https://github.com/shenghanqin/goddess-hat/issues"
   },
   "keywords": [
     "node",

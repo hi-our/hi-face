@@ -4,6 +4,9 @@ import logo from './logo.svg';
 
 import './App.css';
 
+import { getCurrentFaceDetectionNet } from './uitls/faceDetectionControls';
+import * as faceapi from 'face-api.js';
+
 class App extends Component {
   state = {
     response: '',
@@ -39,6 +42,13 @@ class App extends Component {
 
     this.setState({ responseToPost: body });
   };
+
+  run = async () => {
+  // 初始化face-api 这里使用ssd moblile
+  await getCurrentFaceDetectionNet().load('/');
+  // 加载Landmark模型
+  await faceapi.loadFaceLandmarkModel('/');
+}
 
   render() {
     return (

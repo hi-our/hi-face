@@ -5,13 +5,23 @@
   "dependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "@material-ui/core": "^4.4.3",
+    "@tensorflow-models/coco-ssd": "^2.0.0",
+    "@tensorflow/tfjs-converter": "^1.2.9",
+    "@tensorflow/tfjs-core": "^1.2.9",
+    "face-api.js": "^0.21.0",
+    "p5": "^0.9.0",
+    "react-p5-wrapper": "^2.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   },
   "proxy": "http://localhost:5000/",
   "browserslist": [
