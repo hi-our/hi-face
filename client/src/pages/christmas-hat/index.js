@@ -8,6 +8,8 @@ import {
 
 import DrawBox from '../../components/draw-box';
 import ShowDescriptors from '../../components/show-descriptors';
+import { getHatInfo } from '../../utils/utils';
+import * as faceapi from 'face-api.js';
 
 const MaxWidth = 600;
 const boxColor = '#BE80B5';
@@ -67,6 +69,14 @@ class ChristmasHat extends Component {
   handleImageChange = async (image = this.state.imageURL) => {
     await this.getImageDimension(image);
     await getFullFaceDescription(image).then(fullDesc => {
+      console.log('this.canvasRef :', this.canvasRef);
+      // faceapi.matchDimensions(this.canvasRef, image);
+  //     const resizedResults = faceapi.resizeResults(fullDesc, image);
+  //     console.log('resizedResults :', resizedResults);
+  //     const info = getHatInfo(resizedResults);
+  //     console.log('info :', info);
+  //     // faceapi.draw.drawFaceLandmarks(this.canvasRef, resizedResults)  // 直接画出识别的的特征点
+  // // console.log('inputImg.src :', inputImg.src);
       this.setState({ fullDesc, loading: false });
     });
   };
@@ -206,6 +216,7 @@ class ChristmasHat extends Component {
             />
             <label>Show Descriptors</label>
           </div> */}
+          <canvas ref={canvas => this.canvasRef = canvas} style={{display: 'none'}} ></canvas>
           {!!showDescriptors ? <ShowDescriptors fullDesc={fullDesc} /> : null}
         </div>
       </div>

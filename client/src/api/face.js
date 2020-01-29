@@ -27,6 +27,7 @@ export async function getFullFaceDescription(blob, inputSize = 512) {
     .detectAllFaces(img, OPTION)
     .withFaceLandmarks(useTinyModel)
     .withFaceDescriptors();
+  // const resizedResults = await faceapi.resizeResults(fullDesc, img);
   return fullDesc;
 }
 
