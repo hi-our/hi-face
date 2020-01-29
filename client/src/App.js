@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { Route, Router } from 'react-router-dom';
-import createHistory from 'history/createBrowserHistory';
-import FaceRecognition from './views/faceRecognition';
-import CameraFaceDetect from './views/cameraFaceDetect';
-import Home from './views/Home';
-import Header from './components/Header';
+import { createBrowserHistory } from 'history';
+import FaceRecognition from './pages/face-recognition';
+import CameraFaceDetect from './pages/camera-face-detect';
+import Home from './pages/home';
+import Header from './components/header';
 import './App.css';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <Router history={createHistory({ basename: process.env.PUBLIC_URL })}>
+        <Router history={createBrowserHistory({ basename: process.env.PUBLIC_URL })}>
           <div className="route">
             <Header />
             <Route exact path="/" component={Home} />

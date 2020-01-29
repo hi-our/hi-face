@@ -6,8 +6,8 @@ import {
   createMatcher,
   isFaceDetectionModelLoaded
 } from '../api/face';
-import DrawBox from '../components/drawBox';
-import ShowDescriptors from '../components/showDescriptors';
+import DrawBox from '../components/draw-box';
+import ShowDescriptors from '../components/show-descriptors';
 import { JSON_PROFILE } from '../common/profile';
 
 const MaxWidth = 600;
@@ -36,7 +36,7 @@ class FaceRecognition extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.resetState();
     let _W = document.documentElement.clientWidth;
     if (_W > MaxWidth) _W = MaxWidth;

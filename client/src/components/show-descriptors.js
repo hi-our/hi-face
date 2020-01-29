@@ -8,11 +8,11 @@ class ShowDescriptors extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.update();
   }
 
-  componentWillReceiveProps(newProps) {
+  UNSAFE_componentWillReceiveProps(newProps) {
     this.update(newProps);
   }
 

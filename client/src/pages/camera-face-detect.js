@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import Webcam from 'react-webcam';
 import { loadModels, getFullFaceDescription, createMatcher } from '../api/face';
-import DrawBox from '../components/drawBox';
+import DrawBox from '../components/draw-box';
 import { JSON_PROFILE } from '../common/profile';
 
 const WIDTH = 420;
@@ -20,7 +20,7 @@ class CameraFaceDetect extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     loadModels();
     this.setInputDevice();
     this.matcher();
