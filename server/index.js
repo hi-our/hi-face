@@ -2,9 +2,16 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const tencentcloud = require('tencentcloud-sdk-nodejs');
+const loadEnv = require('./load-env')
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+loadEnv()
+
+const { SecretId, SecretKey } = process.env
+console.log('process.env :', process.env);
+console.log('SecretId, SecretKey :', SecretId, SecretKey);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -15,7 +22,7 @@ const models = tencentcloud.iai.v20180301.Models;
 const Credential = tencentcloud.common.Credential;
 
 // 实例化一个认证对象，入参需要传入腾讯云账户secretId，secretKey
-let cred = new Credential("AKIDrCKFxUYtkUgeOujKVTG2Zr7DxYu39rRq", "RdASZVDi0AoDORJH1azUmoy1rSnyCCwT");
+let cred = new Credential(SecretId, SecretKey);
 
 // 实例化要请求产品(以cvm为例)的client对象
 let client = new IaIClient(cred, "ap-shanghai");
@@ -44,24 +51,23 @@ app.get('/api/face-detection', async (req, res) => {
 
   // 通过client对象调用想要访问的接口，需要传入请求对象以及响应回调函数
   console.log('client :', client);
-  client.DetectFace(faceReq, function (err, response) {
+  client.AnalyzeFace(faceReq, function (err, response) {
     // 请求异常返回，打印异常信息
     if (err) {
-      console.log(err);
+      console.log('err', err);
       return;
     }
     // 请求正常返回，打印response对象
     console.log(response.to_json_string());
+    res.send({
+      data: response,
+      time: new Date(),
+      status: 0,
+      message: ''
+    })
   });
 
-  res.send({
-    data: {
-      src: '' //detections,
-    },
-    time: new Date(),
-    status: 0,
-    message: ''
-  })
+  
 
 
 });
