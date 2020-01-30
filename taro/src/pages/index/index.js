@@ -71,21 +71,21 @@ class Index extends Component {
 
   submitUpload = async () => {
     try {
-      const res = await Taro.request({
-        // url: this.state.bgPic,
-        url: 'https://i2n.hjfile.cn/u/200/65875530/Vs7KcLZBDzgxQbM.jpg',
-        method: 'GET',
-        responseType: 'arraybuffer'
-      })
-      console.log('res :', res);
-      let base64 = Taro.arrayBufferToBase64(res.data);
-      let userImageBase64 = 'data:image/jpg;base64,' + base64;
-      console.log('userImageBase64', userImageBase64); // 打印base64格式图片
-      // 如果需要使用本地缓存图片，请参照第一步
+      // const res = await Taro.request({
+      //   // url: this.state.bgPic,
+      //   url: 'https://i2n.hjfile.cn/u/200/65875530/Vs7KcLZBDzgxQbM.jpg',
+      //   method: 'GET',
+      //   responseType: 'arraybuffer'
+      // })
+      // console.log('res :', res);
+      // let base64 = Taro.arrayBufferToBase64(res.data);
+      // let userImageBase64 = 'data:image/jpg;base64,' + base64;
+      // console.log('userImageBase64', userImageBase64); // 打印base64格式图片
+      // // 如果需要使用本地缓存图片，请参照第一步
       const res2 = await fetch({
         url: apiMyFace,
         data: {
-          baseData: 'https://i2n.hjfile.cn/u/200/65875530/Vs7KcLZBDzgxQbM.jpg' //JSON.stringify(userImageBase64)
+          baseData: encodeURIComponent('https://i2n.hjfile.cn/u/200/65875530/Vs7KcLZBDzgxQbM.jpg') //JSON.stringify(userImageBase64)
         }
       })
       console.log('res2 :', res2);

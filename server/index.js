@@ -24,21 +24,21 @@ app.get('/api/face-detection', async (req, res) => {
   await faceDetectionNet.loadFromDisk('./weights')
 
   const { baseData = '' } = req.query
-  // console.log('src :', baseData);
+  console.log('src :', baseData);
 
-  const img = await canvas.loadImage(baseData)
-  // console.log('img :', img);
+  const img = await canvas.loadImage(decodeURIComponent(baseData))
+  console.log('img :', img);
   const detections = await faceapi.detectAllFaces(img, faceDetectionOptions)
 
-  console.log('detections :', detections);
+  // console.log('detections :', detections);
 
-  // const out = faceapi.createCanvasFromMedia(img)
-  // faceapi.draw.drawDetections(out, detections)
-  // console.log('out :', out);
+  // // const out = faceapi.createCanvasFromMedia(img)
+  // // faceapi.draw.drawDetections(out, detections)
+  // // console.log('out :', out);
 
   res.send({
     data: {
-      src: 'abc',
+      src: '' //detections,
     },
     time: new Date(),
     status: 0,
