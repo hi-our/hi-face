@@ -2,6 +2,10 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
+const faceapi = require('face-api.js')
+
+const { canvas, faceDetectionNet, faceDetectionOptions, saveFile } = require('./commons');
+
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -13,8 +17,34 @@ app.get('/api/hello', (req, res) => {
   res.send({ express: 'Hello From Express' });
 });
 // API calls
-app.get('/api/face-detection', (req, res) => {
-  res.send({ express: 'Hello From Express' });
+app.get('/api/face-detection', async (req, res) => {
+  // console.log('face_detection req ', req);
+  // console.log('face_detection req query:', req.query);
+  console.log('1 :', 1);
+  await faceDetectionNet.loadFromDisk('./weights')
+
+  const { baseData = '' } = req.query
+  // console.log('src :', baseData);
+
+  const img = await canvas.loadImage(baseData)
+  // console.log('img :', img);
+  const detections = await faceapi.detectAllFaces(img, faceDetectionOptions)
+
+  console.log('detections :', detections);
+
+  // const out = faceapi.createCanvasFromMedia(img)
+  // faceapi.draw.drawDetections(out, detections)
+  // console.log('out :', out);
+
+  res.send({
+    data: {
+      src: 'abc',
+    },
+    time: new Date(),
+    status: 0,
+    message: ''
+  })
+
 });
 
 app.post('/api/world', (req, res) => {

@@ -31,7 +31,7 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    this.testFetch()
+    // this.testFetch()
   }
 
   testFetch = async () => {
@@ -56,13 +56,24 @@ class Index extends Component {
     // updateResults();
   }
 
+  chooseImage = async (from) => {
+
+    const res = await Taro.chooseImage({
+      count: 1,
+      sizeType: ['compressed'],
+      sourceType: [from.target.dataset.way]
+    })
+    let tempFilePaths = res.tempFilePaths[0]
+    this.setState({
+      bgPic: tempFilePaths
+    })
+  }
 
   submitUpload = async () => {
-    // this.loadImageFromUrl('http://cc.hjfile.cn/cc/img/20200110/2020011011472209896561.png')
     try {
       const res = await Taro.request({
-        url: this.state.bgPic,
-        // url: 'https://cc.hjfile.cn/cc/img/20200110/2020011011472209896561.png',
+        // url: this.state.bgPic,
+        url: 'https://i2n.hjfile.cn/u/200/65875530/Vs7KcLZBDzgxQbM.jpg',
         method: 'GET',
         responseType: 'arraybuffer'
       })
@@ -74,7 +85,7 @@ class Index extends Component {
       const res2 = await fetch({
         url: apiMyFace,
         data: {
-          src: userImageBase64
+          baseData: 'https://i2n.hjfile.cn/u/200/65875530/Vs7KcLZBDzgxQbM.jpg' //JSON.stringify(userImageBase64)
         }
       })
       console.log('res2 :', res2);
@@ -107,33 +118,7 @@ class Index extends Component {
     }
   }
 
-  chooseImage = async (from) => {
-    console.log('2 :', 2);
-
-    const res = await Taro.chooseImage({
-      count: 1,
-      sizeType: ['original', 'compressed'],
-      sourceType: [from.target.dataset.way]
-    })
-    let tempFilePaths = res.tempFilePaths[0]
-    this.setState({
-      bgPic: tempFilePaths
-    }, async () => {
-      if (process.env.TARO_ENV === 'h5') {
-        console.log('this.imgRef :', this.imgRef);
-        const results = await faceapi.detectAllFaces(this.imgRef).withFaceLandmarks();
-        // faceapi.matchDimensions(canvas, inputImg);
-        // this.readURL(tempFilePaths[0])
-      }
-
-    })
-    // let src = typeof tempFilePaths === 'string' ? 
-    console.log('tempFilePaths[0] :', tempFilePaths[0]);
-        // this.setState({
-        //   bgPic: tempFilePaths[0]
-        // })
-        // this.assignPicChoosed()
-  }
+  
 
   readURL = (h5Blob) => {
     const reader = new FileReader();

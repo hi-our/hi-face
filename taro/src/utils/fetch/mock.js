@@ -10,15 +10,10 @@ function getMatched(api) {
   for (const key in mockRules) {
     if (key !== 'config') { // 排除非接口列表的字段
       let urls = mockRules[key] || []
-      console.log('key :', key, urls, urls.length);
       let matched = urls.length > 0 && urls.findIndex((item) => {
         let reg = new RegExp(item.replace('*', '(.*)'))
-        console.log('reg, pathname :', reg, url.pathname);
-        console.log('reg.test(url.pathname) :', reg.test(url.pathname));
         return reg.test(url.pathname)
       })
-
-      console.log('matched :', matched);
 
       if (matched >= 0) {
         url.matchKey = key
