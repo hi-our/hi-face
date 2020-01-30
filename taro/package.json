@@ -46,7 +46,8 @@
     "nervjs": "^1.5.5",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "tencentcloud-sdk-nodejs": "^3.0.117"
   },
   "devDependencies": {
     "@tarojs/plugin-babel": "2.0.1",
