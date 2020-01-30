@@ -92,7 +92,7 @@ const getHeadPos = (midPos, jawPos) => {
 const getK = (a, b) => (a.X - b.X) / (a.Y - b.Y);
 
 export function getHatInfo(results) {
-  const { FaceShapeSet } = results 
+  const { FaceShapeSet, ImageWidth, ImageHeight } = results 
   function getFaceInfo(leftEyeBrowPoints, rightEyeBrowPoints, outlinePoints) {
     // 获取眉心的点
     const midPointOfEyebrows = getMidPointOfEye(leftEyeBrowPoints, rightEyeBrowPoints);
@@ -114,6 +114,7 @@ export function getHatInfo(results) {
       angle,
       faceWidth,
       faceLength,
+      ImageWidth, ImageHeight
     };
   }
   return FaceShapeSet.map(face => {

@@ -14,6 +14,8 @@ import { getHatInfo } from 'utils/face-utils'
 import { getSystemInfo } from 'utils/common'
 import { drawing } from 'utils/canvas-drawing'
 
+import HatImg from '../../images/hat.png'
+
 const UN_LOGIN_HBG = 'https://n1image.hjfile.cn/res7/2019/11/22/cdaeb242a862231ca221e7da300334b4.png'
 
 import './styles.styl'
@@ -76,9 +78,25 @@ class Index extends Component {
       drawing(this.canvasRef, {
         info,
         imgSrc: testImg,
-        width: windowWidth,
-        height: tmpHeight,
+        width: ImageWidth,
+        height: ImageHeight,
       })
+
+      // const query = Taro.createSelectorQuery()
+      // query.select('#canvasHat')
+      //   .fields({ node: true, size: true })
+      //   .exec((res) => {
+      //     console.log('res :', res);
+      //     const canvas = res[0].node
+      //     // const ctx = canvas.getContext('2d')
+
+      //     // const dpr = wx.getSystemInfoSync().pixelRatio
+      //     canvas.width = ImageWidth
+      //     canvas.height = ImageHeight
+      //     // ctx.scale(dpr, dpr)
+
+      //     // ctx.fillRect(0, 0, 100, 100)
+      //   })
 
       
     } catch (error) {
@@ -223,7 +241,7 @@ class Index extends Component {
 
     return (
       <PageWrapper>
-        <Canvas canvasId='canvasHat' />
+        <Canvas canvasId='canvasHat' id='canvasHat' style={{ width: '414px', height: '245px' }} width='414' height='245' />
         <Button
           className="weui-btn"
           type="default"
