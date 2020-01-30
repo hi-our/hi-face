@@ -31,7 +31,7 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    // this.testFetch()
+    this.testFetch()
   }
 
   testFetch = async () => {
@@ -85,7 +85,7 @@ class Index extends Component {
       const res2 = await fetch({
         url: apiMyFace,
         data: {
-          baseData: encodeURIComponent('https://i2n.hjfile.cn/u/200/65875530/Vs7KcLZBDzgxQbM.jpg') //JSON.stringify(userImageBase64)
+          baseData: 'https://i2n.hjfile.cn/u/200/65875530/Vs7KcLZBDzgxQbM.jpg' //JSON.stringify(userImageBase64)
         }
       })
       console.log('res2 :', res2);

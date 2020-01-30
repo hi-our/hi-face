@@ -8,3 +8,5 @@ export const apiMyDakaList = `${apiHost}/daka/v1.1/user/daka_list`
 
 
 export const apiMyFace = `${apiFace}/api/face-detection`
+
+export const apiMyHello = `${apiFace}/api/hello`

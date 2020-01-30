@@ -1,10 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-
-const faceapi = require('face-api.js')
-
-const { canvas, faceDetectionNet, faceDetectionOptions, saveFile } = require('./commons');
+const tencentcloud = require('tencentcloud-sdk-nodejs');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -12,29 +9,50 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const IaIClient = tencentcloud.iai.v20180301.Client;
+const models = tencentcloud.iai.v20180301.Models;
+
+const Credential = tencentcloud.common.Credential;
+
+// 实例化一个认证对象，入参需要传入腾讯云账户secretId，secretKey
+let cred = new Credential("AKIDrCKFxUYtkUgeOujKVTG2Zr7DxYu39rRq", "RdASZVDi0AoDORJH1azUmoy1rSnyCCwT");
+
+// 实例化要请求产品(以cvm为例)的client对象
+let client = new IaIClient(cred, "ap-shanghai");
+
+
 // API calls
 app.get('/api/hello', (req, res) => {
   res.send({ express: 'Hello From Express' });
 });
 // API calls
 app.get('/api/face-detection', async (req, res) => {
-  // console.log('face_detection req ', req);
-  // console.log('face_detection req query:', req.query);
   console.log('1 :', 1);
-  await faceDetectionNet.loadFromDisk('./weights')
 
   const { baseData = '' } = req.query
   console.log('src :', baseData);
 
-  const img = await canvas.loadImage(decodeURIComponent(baseData))
-  console.log('img :', img);
-  const detections = await faceapi.detectAllFaces(img, faceDetectionOptions)
 
-  // console.log('detections :', detections);
+  let faceReq = new models.DetectFaceRequest();
+  let filters = {
+    Url: baseData
+  };
 
-  // // const out = faceapi.createCanvasFromMedia(img)
-  // // faceapi.draw.drawDetections(out, detections)
-  // // console.log('out :', out);
+  console.log('filters :', filters);
+  // 传入json参数
+  faceReq.from_json_string(JSON.stringify(filters));
+
+  // 通过client对象调用想要访问的接口，需要传入请求对象以及响应回调函数
+  console.log('client :', client);
+  client.DetectFace(faceReq, function (err, response) {
+    // 请求异常返回，打印异常信息
+    if (err) {
+      console.log(err);
+      return;
+    }
+    // 请求正常返回，打印response对象
+    console.log(response.to_json_string());
+  });
 
   res.send({
     data: {
@@ -44,6 +62,7 @@ app.get('/api/face-detection', async (req, res) => {
     status: 0,
     message: ''
   })
+
 
 });
 
