@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  <meta content="width=device-width,initial-scale=1,user-scalable=no" name="viewport">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="format-detection" content="telephone=no,address=no">
+  <meta name="apple-mobile-web-app-status-bar-style" content="white">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
+  <title></title>
+  <script>
+    !function(x){function w(){var v,u,t,tes,s=x.document,r=s.documentElement,a=r.getBoundingClientRect().width;if(!v&&!u){var n=!!x.navigator.appVersion.match(/AppleWebKit.*Mobile.*/);v=x.devicePixelRatio;tes=x.devicePixelRatio;v=n?v:1,u=1/v}if(a>=640){r.style.fontSize="40px"}else{if(a<=320){r.style.fontSize="20px"}else{r.style.fontSize=a/320*20+"px"}}}x.addEventListener("resize",function(){w()});w()}(window);
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://s5.music.126.net/static_public/5a1b70ea0180f6ca7295a59d/christmas/weights/js/face-api.js"></script>
+  <script>
+  const SSD_MOBILENETV1 = 'ssd_mobilenetv1';
+    const TINY_FACE_DETECTOR = 'tiny_face_detector';
+
+    let selectedFaceDetector = SSD_MOBILENETV1;
+
+    // ssd_mobilenetv1 options
+    let minConfidence = 0.5;
+
+    // tiny_face_detector options
+    let inputSize = 512;
+    let scoreThreshold = 0.5;
+
+    function getFaceDetectorOptions() {
+      return selectedFaceDetector === SSD_MOBILENETV1
+        ? new faceapi.SsdMobilenetv1Options({ minConfidence })
+        : new faceapi.TinyFaceDetectorOptions({ inputSize, scoreThreshold });
+    }
+
+    function getCurrentFaceDetectionNet() {
+      if (selectedFaceDetector === SSD_MOBILENETV1) {
+        return faceapi.nets.ssdMobilenetv1;
+      }
+      if (selectedFaceDetector === TINY_FACE_DETECTOR) {
+        return faceapi.nets.tinyFaceDetector;
+      }
+    }
+
+    function isFaceDetectionModelLoaded() {
+      return !!getCurrentFaceDetectionNet().params;
+    }
+
+    async function changeFaceDetector(detector) {
+      selectedFaceDetector = detector;
+      if (!isFaceDetectionModelLoaded()) {
+        await getCurrentFaceDetectionNet().load('/');
+      }
+    }
+
+    async function run() {
+        // 初始化face-api 这里使用ssd moblile
+      await getCurrentFaceDetectionNet().load('/');
+      // 加载Landmark模型
+      await faceapi.loadFaceLandmarkModel('/');
+    }
+    // 初始化加载
+      function ready(fn) {
+        if (document.addEventListener) {
+          document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+              //注销事件, 避免反复触发
+              document.removeEventListener('DOMContentLoaded', arguments.callee, false);
+              fn(); //执行函数
+            },
+            false,
+          );
+        } else if (document.attachEvent) {
+          //IE
+          document.attachEvent('onreadystatechange', function () {
+            if (document.readyState == 'complete') {
+              document.detachEvent('onreadystatechange', arguments.callee);
+              fn(); //函数执行
+            }
+          });
+        }
+      }
+
+      ready(function () {
+          run()
+        })
+
+
+
+  
+  </script>
+</body>
+</html>

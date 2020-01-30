@@ -12,6 +12,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/api/hello', (req, res) => {
   res.send({ express: 'Hello From Express' });
 });
+// API calls
+app.get('/api/face-detection', (req, res) => {
+  res.send({ express: 'Hello From Express' });
+});
 
 app.post('/api/world', (req, res) => {
   console.log(req.body);
