@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image, Input, Button } from '@tarojs/components'
+import { View, Image, Input, Button, Canvas } from '@tarojs/components'
 import CorePage from 'page'
 import PageWrapper from 'components/page-wrapper'
 // import LoginBtn from 'components/login-btn-Taro'
@@ -10,7 +10,9 @@ import { VIDEO_STATUS } from './utils'
 import fetch from 'utils/fetch'
 import { requestExternalImage } from 'utils/image-utils'
 import { apiMyFace } from 'constants/apis'
-// import faceapi from 'utils/face-api/face-api';
+import { getHatInfo } from 'utils/face-utils'
+import { getSystemInfo } from 'utils/common'
+import { drawing } from 'utils/canvas-drawing'
 
 const UN_LOGIN_HBG = 'https://n1image.hjfile.cn/res7/2019/11/22/cdaeb242a862231ca221e7da300334b4.png'
 
@@ -32,17 +34,52 @@ class Index extends Component {
 
   componentDidMount() {
     this.testFetch()
+    // setTimeout(() => {
+    //   const ctx = Taro.createCanvasContext('canvasHat')
+  
+    //   console.log('ctx :', ctx);
+  
+    //   ctx.setFontSize(20)
+    //   ctx.fillText('Hello', 20, 20)
+    //   ctx.fillText('MINA', 100, 100)
+    //   ctx.draw()
+      
+    // }, 3000);
   }
 
   testFetch = async () => {
+    let testImg = 'http://n1image.hjfile.cn/res7/2020/01/30/8cb348fc7759f1709e2268d70dd7c676.jpg'
     try {
       const res2 = await fetch({
         url: apiMyFace,
         data: {
-          baseData: 'abc'
+          baseData: testImg
         }
       })
-      console.log('res :', res2);
+
+      
+
+      console.log('res2 :', res2);
+
+      const { ImageWidth, ImageHeight } = res2
+
+      const { windowWidth  } = getSystemInfo()
+
+      let tmpHeight = windowWidth / ImageWidth * ImageHeight
+
+      console.log('tmpHeight :', tmpHeight);
+      
+
+      
+
+      const info = getHatInfo(res2)
+      drawing(this.canvasRef, {
+        info,
+        imgSrc: testImg,
+        width: windowWidth,
+        height: tmpHeight,
+      })
+
       
     } catch (error) {
       console.log('error :', error);
@@ -73,7 +110,7 @@ class Index extends Component {
     try {
       // const res = await Taro.request({
       //   // url: this.state.bgPic,
-      //   url: 'https://i2n.hjfile.cn/u/200/65875530/Vs7KcLZBDzgxQbM.jpg',
+      //   url: 'https://n1image.hjfile.cn/res7/2020/01/30/8cb348fc7759f1709e2268d70dd7c676.jpg',
       //   method: 'GET',
       //   responseType: 'arraybuffer'
       // })
@@ -85,7 +122,7 @@ class Index extends Component {
       const res2 = await fetch({
         url: apiMyFace,
         data: {
-          baseData: 'https://i2n.hjfile.cn/u/200/65875530/Vs7KcLZBDzgxQbM.jpg' //JSON.stringify(userImageBase64)
+          baseData: 'https://n1image.hjfile.cn/res7/2020/01/30/8cb348fc7759f1709e2268d70dd7c676.jpg' //JSON.stringify(userImageBase64)
         }
       })
       console.log('res2 :', res2);
@@ -186,7 +223,7 @@ class Index extends Component {
 
     return (
       <PageWrapper>
-        <img ref={img => this.imgRef = img} src={'https://cc.hjfile.cn/cc/img/20200110/2020011011472209896561.png'} />
+        <Canvas canvasId='canvasHat' />
         <Button
           className="weui-btn"
           type="default"

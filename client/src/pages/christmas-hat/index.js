@@ -75,6 +75,7 @@ class ChristmasHat extends Component {
       if (fullDesc.length) {
         faceapi.matchDimensions(this.canvasRef, this.imageRef);
         const resizedResults = faceapi.resizeResults(fullDesc, this.imageRef);
+        console.log('fullDesc :', fullDesc, resizedResults);
         const info = getHatInfo(resizedResults);
         faceapi.draw.drawFaceLandmarks(this.canvasRef, resizedResults)  // 直接画出识别的的特征点
         const { detection = {} } = resizedResults[0]

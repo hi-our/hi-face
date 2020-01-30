@@ -7,11 +7,19 @@ const loadEnv = require('./load-env')
 const app = express();
 const port = process.env.PORT || 5000;
 
+/* 
+根目录创建.env文件
+#腾讯云的id和key
+SecretId=abc
+SecretKey=def
+*/
 loadEnv()
 
-const { SecretId, SecretKey } = process.env
-console.log('process.env :', process.env);
-console.log('SecretId, SecretKey :', SecretId, SecretKey);
+const { SecretId = '', SecretKey = '' } = process.env
+
+if (!SecretId || !SecretKey) {
+  console.log('请设置腾讯云的安全key https://console.cloud.tencent.com/developer/security')
+}
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

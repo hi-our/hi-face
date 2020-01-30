@@ -10,8 +10,8 @@ const getMedian = points => points[Math.floor(points.length / 2)];
  * @param {*} pb
  */
 const getMidPoint = (pa, pb) => ({
-  x: (pa.x + pb.x) / 2,
-  y: (pa.y + pb.y) / 2,
+  X: (pa.X + pb.X) / 2,
+  Y: (pa.Y + pb.Y) / 2,
 });
 
 /**
@@ -19,7 +19,7 @@ const getMidPoint = (pa, pb) => ({
  * @param {*} a
  * @param {*} b
  */
-const getDistance = (a, b) => Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+const getDistance = (a, b) => Math.sqrt(Math.pow(a.X - b.X, 2) + Math.pow(a.Y - b.Y, 2));
 
 /**
  * 获取两个眉毛中点
@@ -54,7 +54,7 @@ const getFaceWith = outlinePoints => getDistance(outlinePoints[0], outlinePoints
  * @param {*} midPointOfEyebrows
  */
 const getFaceRadian = (jawPos, midPointOfEyebrows) =>
-  Math.PI - Math.atan2(jawPos.x - midPointOfEyebrows.x, jawPos.y - midPointOfEyebrows.y); //弧度  0.9272952180016122
+  Math.PI - Math.atan2(jawPos.X - midPointOfEyebrows.X, jawPos.Y - midPointOfEyebrows.Y); //弧度  0.9272952180016122
 
 // 计算帽子的位置, 眉心和右上角顶点的中点（考虑到图片绘制是从左上角开始绘制，还需要根据图片中心做个变换）
 // 知道眉心坐标（x1,y1) 知道下颌的坐标(x2, y2)，知道脸宽w，知道脸长l
@@ -66,8 +66,8 @@ const getFaceRadian = (jawPos, midPointOfEyebrows) =>
  */
 const getPos = (k, d, point) => {
   // 取y变小的那一边
-  let y = -Math.sqrt((d * d) / (1 + k * k)) + point.y;
-  let x = k * (y - point.y) + point.x;
+  let y = -Math.sqrt((d * d) / (1 + k * k)) + point.Y;
+  let x = k * (y - point.Y) + point.X;
   return { x, y };
 };
 
@@ -89,14 +89,17 @@ const getHeadPos = (midPos, jawPos) => {
  * @param {*} a
  * @param {*} b
  */
-const getK = (a, b) => (a.x - b.x) / (a.y - b.y);
+const getK = (a, b) => (a.X - b.X) / (a.Y - b.Y);
 
 export function getHatInfo(results) {
+  const { FaceShapeSet } = results 
   function getFaceInfo(leftEyeBrowPoints, rightEyeBrowPoints, outlinePoints) {
     // 获取眉心的点
     const midPointOfEyebrows = getMidPointOfEye(leftEyeBrowPoints, rightEyeBrowPoints);
+    console.log('midPointOfEyebrows :', midPointOfEyebrows);
     // 获取下颌的点
     const jawPos = getJawPos(outlinePoints);
+    console.log('jawPos :', jawPos);
     // 获取脸的倾斜角度
     const angle = getFaceRadian(midPointOfEyebrows, jawPos);
     // 获取头顶的坐标
@@ -113,11 +116,9 @@ export function getHatInfo(results) {
       faceLength,
     };
   }
-  return results.map(({landmarks}) => {
-    const rightEyeBrowPoints = landmarks.getRightEyeBrow();
-    const leftEyeBrowPoints = landmarks.getLeftEyeBrow();
-    const outlinePoints = landmarks.getJawOutline();
-    console.log('rightEyeBrowPoints :', rightEyeBrowPoints, leftEyeBrowPoints);
-    return getFaceInfo(leftEyeBrowPoints, rightEyeBrowPoints, outlinePoints);
+  return FaceShapeSet.map(face => {
+    const { LeftEyeBrow, RightEyeBrow, FaceProfile } = face
+
+    return getFaceInfo(LeftEyeBrow, RightEyeBrow, FaceProfile);
   });
 }
