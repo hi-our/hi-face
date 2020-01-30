@@ -6,14 +6,14 @@ import {
   isFaceDetectionModelLoaded
 } from '../../api/face';
 
-import DrawBox from '../../components/draw-box';
+// import DrawBox from '../../components/draw-box';
 import ShowDescriptors from '../../components/show-descriptors';
 import { getHatInfo } from '../../utils/utils'
 import { drawing } from '../../utils/drawing'
 import * as faceapi from 'face-api.js';
 
 const MaxWidth = 600;
-const boxColor = '#BE80B5';
+// const boxColor = '#BE80B5';
 const testImg = require('../../img/test.jpg');
 
 const INIT_STATE = {
@@ -59,34 +59,38 @@ class ChristmasHat extends Component {
   };
 
   handleFileChange = async event => {
-    this.resetState();
-    await this.setState({
-      imageURL: URL.createObjectURL(event.target.files[0]),
-      loading: true
-    });
-    this.handleImageChange();
+    if (event.target.files.length > 0) {
+      this.resetState();
+      await this.setState({
+        imageURL: URL.createObjectURL(event.target.files[0]),
+        loading: true
+      });
+      this.handleImageChange();
+    }
   };
 
   handleImageChange = async (image = this.state.imageURL) => {
     await this.getImageDimension(image);
     await getFullFaceDescription(image).then(fullDesc => {
-      faceapi.matchDimensions(this.canvasRef, this.imageRef);
-      const resizedResults = faceapi.resizeResults(fullDesc, this.imageRef);
-      const info = getHatInfo(resizedResults);
-      faceapi.draw.drawFaceLandmarks(this.canvasRef, resizedResults)  // 直接画出识别的的特征点
-      const { detection = {} } = resizedResults[0]
-      const { _imageDims } = detection
-
-      drawing(this.canvasRef, {
-        info,
-        imgSrc: image,
-        width: _imageDims.width,
-        height: _imageDims.height,
-      });
-      this.setState({ fullDesc, loading: false }, () => {
-
-      });
-    });
+      if (fullDesc.length) {
+        faceapi.matchDimensions(this.canvasRef, this.imageRef);
+        const resizedResults = faceapi.resizeResults(fullDesc, this.imageRef);
+        const info = getHatInfo(resizedResults);
+        faceapi.draw.drawFaceLandmarks(this.canvasRef, resizedResults)  // 直接画出识别的的特征点
+        const { detection = {} } = resizedResults[0]
+        const { _imageDims } = detection
+  
+        drawing(this.canvasRef, {
+          info,
+          imgSrc: image,
+          width: _imageDims.width,
+          height: _imageDims.height,
+        });
+      }
+      this.setState({ fullDesc, loading: false });
+    }).catch(error => {
+      console.log('error :', error);
+    })
   };
 
   getImageDimension = imageURL => {
@@ -128,7 +132,6 @@ class ChristmasHat extends Component {
       HEIGHT,
       imageURL,
       fullDesc,
-      faceMatcher,
       showDescriptors,
       isModelLoaded,
       error,
@@ -146,6 +149,8 @@ class ChristmasHat extends Component {
     } else if (!!fullDesc && !!imageURL && !loading) {
       if (fullDesc.length > 0) {
         status = <p>状态: 识别到{fullDesc.length}个人脸</p>;
+      } else {
+        status = <p>状态: 未识别到人脸</p>;
       }
 
     }
@@ -167,6 +172,8 @@ class ChristmasHat extends Component {
         <h3>识别中</h3>
       </div>
     );
+
+    let showResult = !loading && fullDesc && fullDesc.length > 0
 
     return (
       <div
@@ -191,8 +198,8 @@ class ChristmasHat extends Component {
               }}
             >
               <div style={{ position: 'absolute' }}>
-                <img ref={img => this.imageRef = img} style={{ width: WIDTH, display: loading ? '' : 'none' }} src={imageURL} alt="imageURL" />
-                <canvas ref={canvas => this.canvasRef = canvas} style={{ width: WIDTH, display: loading ? 'none' : '' }}></canvas>
+                <img ref={img => this.imageRef = img} style={{ width: WIDTH, display: !showResult ? '' : 'none' }} src={imageURL} alt="imageURL" />
+                <canvas ref={canvas => this.canvasRef = canvas} style={{ width: WIDTH, display: showResult ? '' : 'none' }}></canvas>
               </div>
               {/* {!!fullDesc ? (
                 <DrawBox

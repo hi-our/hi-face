@@ -64,7 +64,7 @@ class CameraFaceDetect extends Component {
       await getFullFaceDescription(
         this.webcam.current.getScreenshot(),
         inputSize
-      ).then(fullDesc => this.setState({ fullDesc }));
+      ).then(fullDesc => this.setState({ fullDesc })).catch(error => console.log('error :', error))
     }
   };
 

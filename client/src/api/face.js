@@ -52,7 +52,6 @@ export async function getFullFaceDescription(blob, inputSize = 512) {
     .detectAllFaces(img, OPTION)
     .withFaceLandmarks()
     .withFaceDescriptors();
-  // const resizedResults = await faceapi.resizeResults(fullDesc, img);
   return fullDesc;
 }
 
