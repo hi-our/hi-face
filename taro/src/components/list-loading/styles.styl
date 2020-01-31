@@ -1,0 +1,36 @@
+// 去除prefix
+vendors = official
+
+@keyframes rotate
+  0%
+    transform rotate3d(0, 0, 1, -360deg)
+
+  100%
+    transform none
+
+.list-loading, .list-loading-fail, .list-loading-end
+  padding 44rpx 0
+  color #999999
+  font-size 13px
+  text-align center
+
+  .refresh-btn
+    display inline
+    color #ff2d55
+
+.list-loading
+  position relative
+  line-height 1
+
+  .list-loading-icon
+    display inline-block
+    height 36px
+
+
+.list-loading-fail
+  image
+    position relative
+    top 5px
+    margin-right 10px
+    width 17px
+    height 19px
