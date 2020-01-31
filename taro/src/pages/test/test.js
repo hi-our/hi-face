@@ -1,26 +1,18 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Input, Button, Canvas } from '@tarojs/components'
-import CorePage from 'page'
 import PageWrapper from 'components/page-wrapper'
-// import LoginBtn from 'components/login-btn-Taro'
-import VideoPlayer from 'components/video-player'
-import Banner from './components/bannner'
-import { navigateTo, redirectTo } from 'utils/navigate'
-import { VIDEO_STATUS } from './utils'
 import fetch from 'utils/fetch'
-import { requestExternalImage } from 'utils/image-utils'
 import { apiAnalyzeFace } from 'constants/apis'
 import { getSystemInfo } from 'utils/common'
 import { getHatInfo, getBase64Main } from 'utils/face-utils'
 import { drawing } from 'utils/canvas-drawing'
 
-import HatImg from '../../images/hat.png'
-import { NOT_FACE } from './image-test'
+import { NOT_FACE, ONE_FACE } from 'constants/image-test'
 
 const UN_LOGIN_HBG = 'https://n1image.hjfile.cn/res7/2019/11/22/cdaeb242a862231ca221e7da300334b4.png'
 
 
-const imageData = NOT_FACE
+const imageData = ONE_FACE
 
 import './styles.styl'
 
@@ -32,13 +24,6 @@ class Index extends Component {
   config = {
     navigationBarTitleText: '首页',
     // navigationStyle: 'custom'
-  }
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      bgPic: '',
-    }
   }
 
   componentDidMount() {
@@ -129,15 +114,11 @@ class Index extends Component {
     })
   }
 
-
-
-
-
   render () {
     return (
       <PageWrapper>
         <Canvas canvasId='canvasHat' id='canvasHat' style={{ width: CANVAS_SIZE, height: CANVAS_SIZE }} />
-        <Button
+        {/* <Button
           className="weui-btn"
           type="default"
           data-way="album"
@@ -145,7 +126,7 @@ class Index extends Component {
         >
           相册选择
         </Button>
-        <Button onClick={this.submitUpload}>上传</Button>
+        <Button onClick={this.submitUpload}>上传</Button> */}
       </PageWrapper>
     )
   }
