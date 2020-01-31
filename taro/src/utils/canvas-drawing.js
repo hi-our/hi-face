@@ -81,7 +81,7 @@ const drawHat = async (ctx, config) => {
   ctx.rotate(angle);
   // 偏移图片，使帽子中心刚好在原点
   const { x, y, width, height } = translateHat(faceWidth, 0, 0);
-  console.log('x, y, width, height :', 0, 0, 30, 30);
+  // console.log('x, y, width, height :', 0, 0, 30, 30);
   // 我的圣诞帽子实际佩戴部分长度只有0.75倍整个图片长度
   ctx.drawImage(img, x, y, width, height);
 
@@ -103,24 +103,31 @@ export const drawing = async (canvas, options) => {
   // 重置
   ctx.clearRect(0, 0, width, height)
 
-  
-
-  // // 先把图片绘制上去
-  const imgSrcTransform = await getImg(imgSrc);
-  
-  ctx.drawImage(imgSrcTransform, 0, 0, width, height)
-
-
-  if (info) {
-    for (let i = 0, len = info.length; i < len; i++) {
-      await drawHat(ctx, info[i]);
-    }
+  try {
+    // // 先把图片绘制上去
+    const imgSrcTransform = await getImg(imgSrc);
+    console.log('imgSrcTransform :', imgSrcTransform);
+    ctx.drawImage(imgSrcTransform, 0, 0, width, height)
+    
+  } catch (error) {
+    console.log('imgSrcTransform error :', error);
   }
-  // 循环把帽子画到对应的点上
-  // ctx.draw()
+
+  // 把帽子画到对应的点上
+  try {
+    if (info) {
+      await drawHat(ctx, info[0]);
+    }
+    
+  } catch (error) {
+    console.log('drawHat :', error);
+  }
+
 
   // TODO 加了以后显示效果才对
-  fillText(ctx, ' ', 55, 233, false, 12, '#687583')
-  ctx.draw()
-  // ctx.save()
+  // fillText(ctx, ' ', 55, 233, false, 12, '#687583')
+  // TODO 加了以后显示效果才对
+  setTimeout(() => {
+    ctx.draw()
+  }, 500)
 }

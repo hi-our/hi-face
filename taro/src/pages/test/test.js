@@ -14,7 +14,7 @@ const imageData = ONE_FACE
 import './styles.styl'
 
 const { windowWidth } = getSystemInfo()
-const CANVAS_SIZE = parseInt(windowWidth * 0.9, 10) + 'px'
+const CANVAS_SIZE = '300px'
 
 // @CorePage
 class Index extends Component {
@@ -27,6 +27,15 @@ class Index extends Component {
     this.testFetch()
   }
 
+  onShareAppMessage() {
+    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2018/12/20/9de3c702be8dea2066b44913e95a9f8c.jpg?imageView2/1/w/375/h/300'
+
+    return {
+      title: 'AI圣诞帽',
+      imageUrl: DEFAULT_SHARE_COVER,
+      path: '/pages/test/test'
+    }
+  }
   testFetch = async () => {
     let testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
     try {
@@ -56,7 +65,7 @@ class Index extends Component {
     } catch (error) {
       console.log('test error draw :');
       drawing(this.canvasRef, {
-        imgSrc: testImg,
+        imgSrc: imageData,
         width: CANVAS_SIZE,
         height: CANVAS_SIZE,
       })
@@ -116,8 +125,10 @@ class Index extends Component {
   render () {
     return (
       <View>
-        2
+        <View>自动戴圣诞帽：</View>
         <Canvas canvasId='canvasHat' id='canvasHat' style={{ width: CANVAS_SIZE, height: CANVAS_SIZE }} />
+        <View>原图：</View>
+        <Image src={imageData} style={{ width: CANVAS_SIZE, height: CANVAS_SIZE }}></Image>
         {/* <Button
           className="weui-btn"
           type="default"
