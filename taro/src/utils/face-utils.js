@@ -123,3 +123,8 @@ export function getHatInfo(results) {
     return getFaceInfo(LeftEyeBrow, RightEyeBrow, FaceProfile);
   });
 }
+
+
+export const getBase64Main = (fullSrc) => {
+  return fullSrc.split(',')[1]
+}

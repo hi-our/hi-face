@@ -73,8 +73,10 @@ export const drawing = async (canvas, options) => {
   const imgSrc2 = await getImg(imgSrc);
   
   ctx.drawImage(imgSrc2, 0, 0, width, height)
-  for (let i = 0, len = info.length; i < len; i++) {
-    await drawHat(ctx, info[i]);
+  if (info) {
+    for (let i = 0, len = info.length; i < len; i++) {
+      await drawHat(ctx, info[i]);
+    }
   }
   // 循环把帽子画到对应的点上
   ctx.draw()
