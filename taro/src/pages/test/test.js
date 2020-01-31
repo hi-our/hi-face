@@ -9,9 +9,6 @@ import { drawing } from 'utils/canvas-drawing'
 
 import { NOT_FACE, ONE_FACE } from 'constants/image-test'
 
-const UN_LOGIN_HBG = 'https://n1image.hjfile.cn/res7/2019/11/22/cdaeb242a862231ca221e7da300334b4.png'
-
-
 const imageData = ONE_FACE
 
 import './styles.styl'
@@ -31,7 +28,7 @@ class Index extends Component {
   }
 
   testFetch = async () => {
-    let testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/4047a9202dd0bc5ff70b31d02ece0048.jpeg'
+    let testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
     try {
       const res2 = await fetch({
         url: apiAnalyzeFace,
