@@ -62,22 +62,29 @@ FaceModelVersion	否	String	人脸识别服务所用的算法模型版本。目�
 
 */
 // API calls
-app.get('/api/analyze-face', async (req, res) => {
+app.post('/api/analyze-face', async (req, res) => {
 
   let faceReq = new models.DetectFaceRequest();
+  let query_string = JSON.stringify(req.body || {})
   // 传入json参数
-  faceReq.from_json_string(JSON.stringify(req.query || {}));
+  faceReq.from_json_string(query_string);
+
+  console.log('post /api/analyze-face');
 
   // 通过client对象调用想要访问的接口，需要传入请求对象以及响应回调函数
-  console.log('client :', client);
   client.AnalyzeFace(faceReq, function (err, response) {
     // 请求异常返回，打印异常信息
     if (err) {
       console.log('err', err);
+      res.send({
+        data: {},
+        time: new Date(),
+        status: -10086,
+        message: '图片解析失败'
+      })
       return;
     }
     // 请求正常返回，打印response对象
-    console.log(response.to_json_string());
     res.send({
       data: response,
       time: new Date(),
@@ -85,9 +92,6 @@ app.get('/api/analyze-face', async (req, res) => {
       message: ''
     })
   });
-
-  
-
 
 });
 
@@ -98,7 +102,9 @@ app.post('/api/world', (req, res) => {
   );
 });
 
-console.log('(process.env.NODE_ENV :', process.env.NODE_ENV);
+if (process.env.NODE_ENV) {
+  console.log('(process.env.NODE_ENV :', process.env.NODE_ENV);
+}
 
 if (process.env.NODE_ENV === 'production') {
   console.log('编译正式环境的效果 :');
