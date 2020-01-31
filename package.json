@@ -29,8 +29,5 @@
     "node",
     "express",
     "create-react-app"
-  ],
-  "dependencies": {
-    "tencentcloud-sdk-nodejs": "^3.0.117"
-  }
+  ]
 }
