@@ -41,6 +41,7 @@
     "@tarojs/taro-swan": "2.0.1",
     "@tarojs/taro-tt": "2.0.1",
     "@tarojs/taro-weapp": "2.0.1",
+    "@tarojs/with-weapp": "2.0.1",
     "babel-runtime": "^6.26.0",
     "nerv-devtools": "^1.5.5",
     "nervjs": "^1.5.5",

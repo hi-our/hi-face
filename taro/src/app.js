@@ -21,6 +21,7 @@ class App extends Component {
   config = {
     pages: [
       'pages/test/test',
+      'pages/wear-a-mask/wear-a-mask',
       // 'pages/my-daka/my-daka',
       // 'pages/group/group',
     ],
