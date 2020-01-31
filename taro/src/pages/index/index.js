@@ -9,7 +9,7 @@ import { navigateTo, redirectTo } from 'utils/navigate'
 import { VIDEO_STATUS } from './utils'
 import fetch from 'utils/fetch'
 import { requestExternalImage } from 'utils/image-utils'
-import { apiMyFace } from 'constants/apis'
+import { apiAnalyzeFace } from 'constants/apis'
 import { getHatInfo } from 'utils/face-utils'
 import { getSystemInfo } from 'utils/common'
 import { drawing } from 'utils/canvas-drawing'
@@ -53,9 +53,10 @@ class Index extends Component {
     let testImg = 'http://n1image.hjfile.cn/res7/2020/01/30/8cb348fc7759f1709e2268d70dd7c676.jpg'
     try {
       const res2 = await fetch({
-        url: apiMyFace,
+        url: apiAnalyzeFace,
         data: {
-          baseData: testImg
+          Url: testImg,
+          Mode: 1
         }
       })
 
@@ -138,7 +139,7 @@ class Index extends Component {
       // console.log('userImageBase64', userImageBase64); // 打印base64格式图片
       // // 如果需要使用本地缓存图片，请参照第一步
       const res2 = await fetch({
-        url: apiMyFace,
+        url: apiAnalyzeFace,
         data: {
           baseData: 'https://n1image.hjfile.cn/res7/2020/01/30/8cb348fc7759f1709e2268d70dd7c676.jpg' //JSON.stringify(userImageBase64)
         }

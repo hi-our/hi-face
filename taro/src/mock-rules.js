@@ -7,7 +7,7 @@ const rules = {
     },
   },
   api: [ // 对应的yapi projectid
-    '/api/face-detection', // * 匹配通配符
+    '/api/analyze-face', // * 匹配通配符
   ]
 }
 

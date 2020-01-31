@@ -3,7 +3,7 @@
 import mockRules from '@/mock-rules'
 import { urlToLocation } from './utils'
 
-const MOCK_HOST = 'http://face.xuexitrip.com:5000'
+const MOCK_HOST = 'http://face.xuexitrip.com:8768'
 
 function getMatched(api) {
   let url = urlToLocation(api)
