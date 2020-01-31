@@ -1,6 +1,6 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Input, Button, Canvas } from '@tarojs/components'
-import PageWrapper from 'components/page-wrapper'
+// import PageWrapper from 'components/page-wrapper'
 import fetch from 'utils/fetch'
 import { apiAnalyzeFace } from 'constants/apis'
 import { getSystemInfo } from 'utils/common'
@@ -35,14 +35,15 @@ class Index extends Component {
         type: 'post',
         data: {
           Image: getBase64Main(imageData),
-          // Url: testImg,
+          Url: testImg,
           Mode: 1,
           FaceModelVersion: '3.0'
         }
       })
 
-      
 
+      
+      console.log('test getHatInfo:');
       const info = getHatInfo(res2)
       drawing(this.canvasRef, {
         info,
@@ -53,8 +54,9 @@ class Index extends Component {
 
       
     } catch (error) {
+      console.log('test error draw :');
       drawing(this.canvasRef, {
-        imgSrc: imageData,
+        imgSrc: testImg,
         width: CANVAS_SIZE,
         height: CANVAS_SIZE,
       })
@@ -113,7 +115,8 @@ class Index extends Component {
 
   render () {
     return (
-      <PageWrapper>
+      <View>
+        2
         <Canvas canvasId='canvasHat' id='canvasHat' style={{ width: CANVAS_SIZE, height: CANVAS_SIZE }} />
         {/* <Button
           className="weui-btn"
@@ -124,7 +127,7 @@ class Index extends Component {
           相册选择
         </Button>
         <Button onClick={this.submitUpload}>上传</Button> */}
-      </PageWrapper>
+      </View>
     )
   }
 }

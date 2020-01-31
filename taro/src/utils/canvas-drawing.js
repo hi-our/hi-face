@@ -3,6 +3,9 @@ import { drawCoverImage, fillText } from './canvas';
 import { getSystemInfo } from 'utils/common'
 import { HAT_IMG } from 'constants/image-test';
 
+const fsm = Taro.getFileSystemManager();
+const FILE_BASE_NAME = 'tmp_base64src';
+
 /* 
  * 根据我当前的圣诞帽元素进行一些偏移(我的图片大小是200*130)， 圣诞帽可佩戴部分的中心 (62,60)  这里需要微调
  * 图片可佩戴部分是 0.6 倍图片宽度
@@ -18,13 +21,36 @@ const translateHat = (faceWidth, x, y) => {
   };
 };
 
+
+const base64src = async (base64data) => {
+  const [, format, bodyData] = /data:image\/(\w+);base64,(.*)/.exec(base64data) || [];
+  if (!format) {
+    return (new Error('ERROR_BASE64SRC_PARSE'));
+  }
+  const filePath = `${wx.env.USER_DATA_PATH}/${FILE_BASE_NAME}.${format}`;
+  const buffer = wx.base64ToArrayBuffer(bodyData);
+  try {
+    await fsm.writeFile({
+      filePath,
+      data: buffer,
+      encoding: 'binary',
+    });
+    return filePath
+    
+  } catch (error) {
+    console.log('error :', error);
+  }
+};
+
 /**
  * 获取图片
  * @param {*} src 图片地址
  * @param {*} callback
  */
 const getImg = async (src) => {
-  if (src.includes(';base64,')) return src
+  if (src.includes(';base64,')) {
+    return await base64src(src)
+  }
 
   try {
     const res = await Taro.getImageInfo({
@@ -46,6 +72,10 @@ const getImg = async (src) => {
 const drawHat = async (ctx, config) => {
   const { headPos, angle, faceWidth } = config;
   const img = await getImg(HAT_IMG);
+
+  ctx.save();
+
+  console.log('drawHat img :', img);
   ctx.translate(headPos.x, headPos.y);
   // 旋转画布到特定角度
   ctx.rotate(angle);
@@ -57,7 +87,8 @@ const drawHat = async (ctx, config) => {
 
   // ctx.draw()
   // 还原画布绘制状态，如偏移
-  // ctx.restore();
+  ctx.restore()
+  
 }
 
 /**
@@ -71,15 +102,25 @@ export const drawing = async (canvas, options) => {
 
   // 重置
   ctx.clearRect(0, 0, width, height)
+
+  
+
   // // 先把图片绘制上去
   const imgSrcTransform = await getImg(imgSrc);
   
   ctx.drawImage(imgSrcTransform, 0, 0, width, height)
+
+
   if (info) {
     for (let i = 0, len = info.length; i < len; i++) {
       await drawHat(ctx, info[i]);
     }
   }
   // 循环把帽子画到对应的点上
+  // ctx.draw()
+
+  // TODO 加了以后显示效果才对
+  fillText(ctx, ' ', 55, 233, false, 12, '#687583')
   ctx.draw()
+  // ctx.save()
 }

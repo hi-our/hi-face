@@ -7,10 +7,11 @@ import { apiAdapter } from './utils'
 
 const request = (method = 'GET') => ({ url, data, cb }) => {
   return apiAdapter(url, data).then(({ api, params }) => {
-    // let clubAuth = Taro.getStorageSync('ClubAuth') || ''
+    let clubAuth = Taro.getStorageSync('ClubAuth') || ''
 
-    // const { tokenKey, wxName, version: wxversion } = config
-    // const appInfo = getSystemInfo()
+    const { tokenKey, wxName, version: wxversion } = config
+    const appInfo = getSystemInfo()
+
 
     return Taro.request({
       method,
@@ -18,10 +19,11 @@ const request = (method = 'GET') => ({ url, data, cb }) => {
       data: params,
       header: {
         'Content-Type': 'application/json',
-        // Cookie: `${tokenKey}=${clubAuth}`,
+        Cookie: `${tokenKey}=${clubAuth}`,
       },
     })
   }).then(res => {
+    console.log('6 :', res);
     if (res.statusCode === 200) {
       let result = res.data
       if (result.status === 0) {
@@ -57,11 +59,14 @@ const request = (method = 'GET') => ({ url, data, cb }) => {
 
     throw error
 
-  }).finally(() => {
-    if (cb && typeof cb === 'function') {
-      cb()
-    }
   })
+
+  // TODO finally找不到
+  // .finally(() => {
+  //   if (cb && typeof cb === 'function') {
+  //     cb()
+  //   }
+  // })
 }
 
 export default {

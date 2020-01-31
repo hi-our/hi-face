@@ -96,10 +96,8 @@ export function getHatInfo(results) {
   function getFaceInfo(leftEyeBrowPoints, rightEyeBrowPoints, outlinePoints) {
     // 获取眉心的点
     const midPointOfEyebrows = getMidPointOfEye(leftEyeBrowPoints, rightEyeBrowPoints);
-    console.log('midPointOfEyebrows :', midPointOfEyebrows);
     // 获取下颌的点
     const jawPos = getJawPos(outlinePoints);
-    console.log('jawPos :', jawPos);
     // 获取脸的倾斜角度
     const angle = getFaceRadian(midPointOfEyebrows, jawPos);
     // 获取头顶的坐标
