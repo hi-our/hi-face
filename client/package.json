@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
-  "homepage": "http://www.xiaoxili.com/goddess-hat/",
   "dependencies": {
     "face-api.js": "^0.22.0",
     "gh-pages": "^2.0.1",
