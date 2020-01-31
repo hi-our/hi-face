@@ -7,10 +7,10 @@ import { apiAdapter } from './utils'
 
 const request = (method = 'GET') => ({ url, data, cb }) => {
   return apiAdapter(url, data).then(({ api, params }) => {
-    let clubAuth = Taro.getStorageSync('ClubAuth') || ''
+    // let clubAuth = Taro.getStorageSync('ClubAuth') || ''
 
-    const { tokenKey, wxName, version: wxversion } = config
-    const appInfo = getSystemInfo()
+    // const { tokenKey, wxName, version: wxversion } = config
+    // const appInfo = getSystemInfo()
 
     return Taro.request({
       method,
@@ -18,15 +18,7 @@ const request = (method = 'GET') => ({ url, data, cb }) => {
       data: params,
       header: {
         'Content-Type': 'application/json',
-        Cookie: `${tokenKey}=${clubAuth}`,
-        Authorization: 'TC3-HMAC-SHA256 Credential=AKIDrCKFxUYtkUgeOujKVTG2Zr7DxYu39rRq/2020-01-28/cvm/tc3_request, SignedHeaders=content-type;host, Signature=eb6b9cf381b9884371913982102c07001cb40e9077dd317859aae3757efc7203',
-        'X-TC-Action': 'DescribeInstances',
-        'X-TC-Version': '2017-03-12',
-        'X-TC-Timestamp': '1527672334',
-        'X-TC-Region': 'ap-guangzhou',
-        
-        // 'Hujiang-App-Key': 'mp-wechat', // todo
-        // HJMPUA: `WX/${wxName}/${appInfo.system}/${appInfo.version}/${wxversion}`
+        // Cookie: `${tokenKey}=${clubAuth}`,
       },
     })
   }).then(res => {

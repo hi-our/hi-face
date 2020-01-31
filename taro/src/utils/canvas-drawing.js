@@ -1,9 +1,9 @@
 import Taro from '@tarojs/taro'
 import { drawCoverImage, fillText } from './canvas';
 import { getSystemInfo } from 'utils/common'
+import { HAT_IMG } from 'constants/image-test';
 
-const  HatImg = 'http://n1image.hjfile.cn/res7/2020/01/30/45e621c4a9acb9f928a1f47e038202ec.png'
-/**
+/* 
  * 根据我当前的圣诞帽元素进行一些偏移(我的图片大小是200*130)， 圣诞帽可佩戴部分的中心 (62,60)  这里需要微调
  * 图片可佩戴部分是 0.6 倍图片宽度
  * @param {*} x
@@ -24,6 +24,8 @@ const translateHat = (faceWidth, x, y) => {
  * @param {*} callback
  */
 const getImg = async (src) => {
+  if (src.includes(';base64,')) return src
+
   try {
     const res = await Taro.getImageInfo({
       src,
@@ -43,7 +45,7 @@ const getImg = async (src) => {
  */
 const drawHat = async (ctx, config) => {
   const { headPos, angle, faceWidth } = config;
-  const img = await getImg(HatImg);
+  const img = await getImg(HAT_IMG);
   ctx.translate(headPos.x, headPos.y);
   // 旋转画布到特定角度
   ctx.rotate(angle);
@@ -70,11 +72,13 @@ export const drawing = async (canvas, options) => {
   // 重置
   ctx.clearRect(0, 0, width, height)
   // // 先把图片绘制上去
-  const imgSrc2 = await getImg(imgSrc);
+  const imgSrcTransform = await getImg(imgSrc);
   
-  ctx.drawImage(imgSrc2, 0, 0, width, height)
-  for (let i = 0, len = info.length; i < len; i++) {
-    await drawHat(ctx, info[i]);
+  ctx.drawImage(imgSrcTransform, 0, 0, width, height)
+  if (info) {
+    for (let i = 0, len = info.length; i < len; i++) {
+      await drawHat(ctx, info[i]);
+    }
   }
   // 循环把帽子画到对应的点上
   ctx.draw()

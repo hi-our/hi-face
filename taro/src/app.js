@@ -1,7 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
 import { Provider } from '@tarojs/redux'
 
-import Index from './pages/index'
+import Index from './pages/test/test'
 import store from '@/store'
 // import userActions from '@/store/user'
 import * as config from 'config'
@@ -20,7 +20,7 @@ const updateManager = process.env.TARO_ENV !== 'h5' ? Taro.getUpdateManager() : 
 class App extends Component {
   config = {
     pages: [
-      'pages/index/index',
+      'pages/test/test',
       // 'pages/my-daka/my-daka',
       // 'pages/group/group',
     ],

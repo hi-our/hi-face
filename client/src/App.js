@@ -5,7 +5,7 @@ import FaceRecognition from './pages/face-recognition';
 import CameraFaceDetect from './pages/camera-face-detect';
 import ChristmasHat from './pages/christmas-hat';
 import Home from './pages/home';
-import Header from './components/header';
+import Header from './components/header-nav';
 import './App.css';
 
 class App extends Component {
