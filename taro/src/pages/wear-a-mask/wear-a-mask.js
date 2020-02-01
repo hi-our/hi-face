@@ -11,6 +11,9 @@ import { getHatInfo, getBase64Main } from 'utils/face-utils'
 import { drawing } from 'utils/canvas-drawing'
 
 import { NOT_FACE, ONE_FACE } from 'constants/image-test'
+import { TaroCropper } from 'taro-cropper'
+
+const testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
 
 const imageData = ONE_FACE
 
@@ -23,53 +26,98 @@ const CANVAS_SIZE = '300px'
 class Index extends Component {
   config = {
     navigationBarTitleText: '首页',
-    usingComponents: {
-      'image-cropper': '../../components/image-cropper/image-cropper' // 书写第三方组件的相对路径
+  }
+
+  constructor(props) {
+    super(props);
+    this.catTaroCropper = this.catTaroCropper.bind(this);
+    this.state = {
+      src:  '', //testImg,
+      cutImagePath: '' //testImg,
     }
-    // navigationStyle: 'custom'
   }
 
-  componentDidMount() {
-    // this.testFetch()
-    //获取到image-cropper实例
-    this.cropper = this.$scope.selectComponent("#image-cropper");
-    //开始裁剪
+  catTaroCropper(node) {
+    this.taroCropper = node;
+    console.log('this.taroCropper :', this.taroCropper);
+  }
+
+  onCut = (res) => {
+    console.log('onCut res :', res);
     this.setState({
-      src: "https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg",
+      cutImagePath: res,
+      src: ''
+    })
+  }
+
+  onCancel = () => {
+    Taro.showToast({
+      icon: 'none',
+      title: '点击取消'
+    })
+  }
+
+  downloadImage = () => {
+    const { cutImagePath } = this.state
+    Taro.saveImageToPhotosAlbum({
+      filePath: cutImagePath,
+      success: res => {
+        console.log('保存成功 :');
+      },
+      fail(e) {
+        console.log("err:" + e);
+      }
     });
-    Taro.showLoading({
-      title: '加载中'
-    })
   }
 
-  cropperload = (e) => {
-    console.log("cropper初始化完成");
-  }
-  loadimage = (e) => {
-    console.log("图片加载完成", e.detail);
-    Taro.hideLoading();
-    //重置图片角度、缩放、位置
-    console.log('this.cropper :', this.cropper);
-    this.cropper.imgReset();
-  }
-  clickcut = (e) => {
-    console.log('clickcut', e.detail);
-    //点击裁剪框阅览图片
-    Taro.previewImage({
-      current: e.detail.url, // 当前显示图片的http链接
-      urls: [e.detail.url] // 需要预览的图片http链接列表
-    })
-  }
-
-  
   render() {
+    const {
+      src,
+      cutImagePath
+    } = this.state;
+
     return (
       <View>
-        2
-        <image-cropper
-          id='image-cropper'
-          limit_move="{{true}}" disable_rotate="{{true}}" width="{{width}}" height="{{height}}" imgSrc="{{src}}" onLoad={this.cropperload} onImageload={this.loadimage} onTapcut={this.clickcut}
+        <View hidden={!src}>
+          <TaroCropper
+            height={1000} src={src}
+            cropperWidth={600}
+            cropperHeight={600}
+            ref={this.catTaroCropper}
+            // themeColor={'#f00'}
+            // hideFinishText
+            fullScreen
+            onCut={this.onCut}
+            hideCancelText={false}
+            onCancel={this.onCancel}
+          />
+
+        </View>
+        <Button onClick={() => {
+          Taro.chooseImage({
+            count: 1
+          })
+            .then(res => {
+              // console.log(res);
+              this.setState({
+                src: res.tempFilePaths[0]
+              });
+            })
+        }}>选择图片</Button>
+        <Image
+          src={cutImagePath}
+          mode='widthFix'
+          style={{
+            width: Taro.pxTransform(300),
+            height: Taro.pxTransform(300)
+          }}
         />
+
+        {
+          cutImagePath && (
+            <Button onClick={this.downloadImage}>下载图片</Button>
+          )
+        }
       </View>
     )
   }
