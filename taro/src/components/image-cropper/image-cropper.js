@@ -450,6 +450,7 @@ Component({
      * 初始化图片，包括位置、大小、旋转角度
      */
     imgReset() {
+      console.log('imgReset :', this.data.img_height);
       this.setData({
         scale: 1,
         angle: 0,
@@ -472,10 +473,12 @@ Component({
       // getImageInfo接口传入 src: '' 会导致内存泄漏
       
       if (!this.data.imgSrc) return;
+      console.log('2 :', 2);
       wx.getImageInfo({
         src: this.data.imgSrc,
         success: (res) => {
           this.data.imageObject = res;
+          console.log('this.data.imageObject :', this.data.imageObject);
           //图片非本地路径需要换成本地路径
           if (this.data.imgSrc.search(/tmp/) == -1){
             this.setData({
