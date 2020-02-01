@@ -100,8 +100,38 @@ class Index extends Component {
     } = this.state;
 
     return (
-      <View>
-        <View hidden={!originSrc}>
+      <View className={'mask-page'}>
+        <View className='main-wrap'>
+          {cutImagePath
+            ? (
+              <View className='image-wrap'>
+                <Image
+                  src={cutImagePath}
+                  mode='widthFix'
+                  className='image-selected'
+                />
+
+              </View>
+            )
+            : (
+              <View className='to-choose' onClick={this.onChooseImage}>
+              </View>
+            )
+          }
+          {!!cutImagePath && (
+            <View className='button-wrap'>
+              <Button className='button-remove'></Button>
+              <Button className='button-download'></Button>
+            </View>
+          )}
+        </View>
+
+        {
+          cutImagePath && (
+            <Button onClick={this.downloadImage}>下载图片</Button>
+          )
+        }
+        <View className='cropper-wrap' hidden={!originSrc}>
           <TaroCropper
             src={originSrc}
             cropperWidth={CANVAS_SIZE * 2}
@@ -113,21 +143,6 @@ class Index extends Component {
             onCancel={this.onCancel}
           />
         </View>
-        <Button onClick={this.onChooseImage}>选择图片</Button>
-        <Image
-          src={cutImagePath}
-          mode='widthFix'
-          style={{
-            width: Taro.pxTransform(300),
-            height: Taro.pxTransform(300)
-          }}
-        />
-
-        {
-          cutImagePath && (
-            <Button onClick={this.downloadImage}>下载图片</Button>
-          )
-        }
       </View>
     )
   }
