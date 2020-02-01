@@ -91,7 +91,7 @@ if (!SecretId || !SecretKey) {
   console.log('请设置腾讯云的安全key https://console.cloud.tencent.com/developer/security')
 }
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ "limit": "5000kb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const IaIClient = tencentcloud.iai.v20180301.Client;

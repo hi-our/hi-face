@@ -12,6 +12,7 @@ const request = (method = 'GET') => ({ url, data, cb }) => {
     // const { tokenKey, wxName, version: wxversion } = config
     // const appInfo = getSystemInfo()
 
+
     return Taro.request({
       method,
       url: api,
@@ -57,11 +58,14 @@ const request = (method = 'GET') => ({ url, data, cb }) => {
 
     throw error
 
-  }).finally(() => {
-    if (cb && typeof cb === 'function') {
-      cb()
-    }
   })
+
+  // TODO finally找不到
+  // .finally(() => {
+  //   if (cb && typeof cb === 'function') {
+  //     cb()
+  //   }
+  // })
 }
 
 export default {

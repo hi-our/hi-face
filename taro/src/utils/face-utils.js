@@ -46,12 +46,12 @@ const getFaceLength = (jawPos, midPointOfEyebrows) => (5 * getDistance(jawPos, m
  * 获取脸的宽度（即帽子宽度）
  * @param {*} outlinePoints
  */
-const getFaceWith = outlinePoints => getDistance(outlinePoints[0], outlinePoints[outlinePoints.length - 1])
+const getFaceWidth = outlinePoints => getDistance(outlinePoints[0], outlinePoints[outlinePoints.length - 1])
 
 /**
  * 获取脸的倾斜弧度
- * @param {*} jawPos
- * @param {*} midPointOfEyebrows
+ * @param {*} jawPos // 获取下颌的点
+ * @param {*} midPointOfEyebrows // 两眼之间的点
  */
 const getFaceRadian = (jawPos, midPointOfEyebrows) =>
   Math.PI - Math.atan2(jawPos.X - midPointOfEyebrows.X, jawPos.Y - midPointOfEyebrows.Y); //弧度  0.9272952180016122
@@ -96,17 +96,17 @@ export function getHatInfo(results) {
   function getFaceInfo(leftEyeBrowPoints, rightEyeBrowPoints, outlinePoints) {
     // 获取眉心的点
     const midPointOfEyebrows = getMidPointOfEye(leftEyeBrowPoints, rightEyeBrowPoints);
-    console.log('midPointOfEyebrows :', midPointOfEyebrows);
     // 获取下颌的点
     const jawPos = getJawPos(outlinePoints);
-    console.log('jawPos :', jawPos);
     // 获取脸的倾斜角度
     const angle = getFaceRadian(midPointOfEyebrows, jawPos);
     // 获取头顶的坐标
     const headPos = getHeadPos(midPointOfEyebrows, jawPos);
     // 获取脸大小信息
     const faceLength = getFaceLength(getJawPos(outlinePoints), midPointOfEyebrows);
-    const faceWidth = getFaceWith(outlinePoints);
+    const faceWidth = getFaceWidth(outlinePoints);
+    console.log('faceLength :', faceLength, faceWidth);
+    console.log('angle :', angle);
     return {
       midPointOfEyebrows,
       jawPos,
@@ -119,9 +119,67 @@ export function getHatInfo(results) {
   }
   return FaceShapeSet.map(face => {
     const { LeftEyeBrow, RightEyeBrow, FaceProfile } = face
+    console.log('FaceProfile :', FaceProfile);
 
     return getFaceInfo(LeftEyeBrow, RightEyeBrow, FaceProfile);
   });
+}
+
+const getMouthLeftRigthPoint = (Mouth = []) => {
+  let xPoints = Mouth.map(item => item.X)
+  var minX = xPoints.sort(function (a, b) {
+    return a - b;
+  })[0];
+  var maxX = xPoints.sort(function (a, b) {
+    return b - a;
+  })[0];
+  let leftPoint = {}
+  let rightPoint = {}
+  Mouth.forEach(item => {
+    if (item.X === minX) leftPoint = item
+    if (item.X === maxX) rightPoint = item
+  })
+  return {
+    leftPoint,
+    rightPoint
+  }
+}
+
+export function getMouthInfo(results) {
+  const { FaceShapeSet, ImageWidth, ImageHeight } = results 
+  function getFaceInfo(leftEyeBrowPoints, rightEyeBrowPoints, outlinePoints, mouthPoint) {
+    // 获取眉心的点
+    const midPointOfEyebrows = getMidPointOfEye(leftEyeBrowPoints, rightEyeBrowPoints);
+    // 获取下颌的点
+    const jawPos = getJawPos(outlinePoints);
+    // 获取脸的倾斜角度
+    const angle = getFaceRadian(midPointOfEyebrows, jawPos);
+    // 获取头顶的坐标
+    const faceWidth = getFaceWidth(outlinePoints);
+
+
+    const { leftPoint, rightPoint } = getMouthLeftRigthPoint(mouthPoint)
+    const mouthMidPoint = getMidPoint(leftPoint, rightPoint)
+    const mouthAngle = getFaceRadian(leftPoint, rightPoint)
+
+    console.log('getFaceRadian :', angle, getFaceRadian(leftPoint, rightPoint));
+
+
+    return {
+      mouthMidPoint,
+      leftPoint,
+      rightPoint,
+      angle,
+      faceWidth,
+      mouthAngle,
+      ImageWidth, ImageHeight
+    }
+  }
+  return FaceShapeSet.map(face => {
+    const { LeftEyeBrow, RightEyeBrow, FaceProfile, Mouth } = face
+
+    return getFaceInfo(LeftEyeBrow, RightEyeBrow, FaceProfile, Mouth);
+  })
 }
 
 
