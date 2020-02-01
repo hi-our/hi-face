@@ -177,12 +177,8 @@ class Index extends Component {
 
   render () {
     const { shareImage, canvasDrawerConfig } = this.state
-    console.log('this.state.canvasDrawerConfig :', canvasDrawerConfig);
-    console.log('shareImage :', shareImage);
     return (
       <View>
-        
-        <Image className='image-poster' src={shareImage} />
         <View>自动戴圣诞帽：</View>
         <Canvas canvasId='canvasHat' id='canvasHat' style={{ width: CANVAS_SIZE, height: CANVAS_SIZE }} />
         <View>原图：</View>
@@ -195,6 +191,7 @@ class Index extends Component {
             onCreateFail={this.onCanvasCreateFail}
           />
         )}
+        <Image className='image-poster' src={shareImage} />
         {/* <Button
           className="weui-btn"
           type="default"
