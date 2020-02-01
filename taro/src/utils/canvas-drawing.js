@@ -45,6 +45,23 @@ const base64src = async (base64data) => {
   }
 };
 
+export const srcToBase64Main = async (src, callback) => {
+  try {
+    fsm.readFile({
+      filePath: src,
+      encoding: 'base64',
+      success: function (data) {
+        // console.log(data.data)
+        callback(data.data)
+      }
+    })
+
+    
+  } catch (error) {
+    console.log('error :', error);
+  }
+}
+
 /**
  * 获取图片
  * @param {*} src 图片地址

@@ -70,7 +70,6 @@ export const apiAdapter = (api, params) => {
     if (restReg.test(api)) {
       reject(new SyntaxError(`${api.match(restReg).join(',')}参数必填`))
     }
-    console.log('api, params :', api, params);
     resolve({ api, params })
   })
 }
