@@ -131,3 +131,13 @@ export const drawing = async (canvas, options) => {
     ctx.draw()
   }, 500)
 }
+
+export const getDrawerConfig = (options) => {
+  const { info, width = 200, height = 200, imgSrc = 'images/default.jpg' } = options;
+  let config = {
+    width,
+    height,
+    images: []
+  }
+  return config
+}

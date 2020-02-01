@@ -5,13 +5,17 @@ import fetch from 'utils/fetch'
 import { apiAnalyzeFace } from 'constants/apis'
 import { getSystemInfo } from 'utils/common'
 import { getHatInfo, getBase64Main } from 'utils/face-utils'
-import { drawing } from 'utils/canvas-drawing'
+import { drawing, getDrawerConfig } from 'utils/canvas-drawing'
 
 import { NOT_FACE, ONE_FACE } from 'constants/image-test'
 // 引入代码
-import { TaroCanvasDrawer } from 'components/taro-plugin-canvas';
+import { TaroCanvasDrawer,  } from 'components/taro-plugin-canvas';
+import OneImgTest from '../../images/one_face.jpeg'
 
-const imageData = ONE_FACE
+console.log('OneImgTest :', OneImgTest);
+
+const testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
+const imageData = testImg
 
 import './styles.styl'
 
@@ -23,6 +27,13 @@ class Index extends Component {
   config = {
     navigationBarTitleText: '首页',
     // navigationStyle: 'custom'
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      canvasDrawerConfig: null
+    }
   }
 
   componentDidMount() {
@@ -39,7 +50,7 @@ class Index extends Component {
     }
   }
   testFetch = async () => {
-    let testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
+    
     try {
       const res2 = await fetch({
         url: apiAnalyzeFace,
@@ -52,9 +63,6 @@ class Index extends Component {
         }
       })
 
-
-      
-      console.log('test getHatInfo:');
       const info = getHatInfo(res2)
       drawing(this.canvasRef, {
         info,
@@ -62,6 +70,24 @@ class Index extends Component {
         width: CANVAS_SIZE,
         height: CANVAS_SIZE,
       })
+      this.setState({
+        canvasDrawerConfig: {
+          width: 600,
+          height: 600,
+          debug: true,
+          images: [
+            {
+              x: 0,
+              y: 0,
+              url: OneImgTest,
+              width: 600,
+              height: 600,
+              borderColor: '#000',
+              borderWidth: 1
+            }
+          ]
+        }
+      }) 
 
       
     } catch (error) {
@@ -124,14 +150,51 @@ class Index extends Component {
     })
   }
 
+  onCanvasCreateSuccess = (result) => {
+    const { tempFilePath, errMsg } = result;
+    console.log('tempFilePath :', tempFilePath);
+    Taro.hideLoading();
+    if (errMsg === 'canvasToTempFilePath:ok') {
+      this.setState({
+        shareImage: tempFilePath,
+        // 重置 TaroCanvasDrawer 状态
+        canvasStatus: false,
+        canvasDrawerConfig: null
+      })
+    } else {
+      // 重置 TaroCanvasDrawer 状态
+      this.setState({
+        canvasStatus: false,
+        canvasDrawerConfig: null
+      })
+      Taro.showToast({ icon: 'none', title: errMsg || '出现错误' });
+      console.log(errMsg);
+    }
+  }
+  onCanvasCreateFail = (result) => {
+    console.log('result :', result);
+  }
+
   render () {
+    const { shareImage, canvasDrawerConfig } = this.state
+    console.log('this.state.canvasDrawerConfig :', canvasDrawerConfig);
+    console.log('shareImage :', shareImage);
     return (
       <View>
-        {/* <TaroCanvasDrawer /> */}
+        
+        <Image className='image-poster' src={shareImage} />
         <View>自动戴圣诞帽：</View>
         <Canvas canvasId='canvasHat' id='canvasHat' style={{ width: CANVAS_SIZE, height: CANVAS_SIZE }} />
         <View>原图：</View>
         <Image src={imageData} style={{ width: CANVAS_SIZE, height: CANVAS_SIZE }}></Image>
+        <View>TaroCanvasDrawer效果，但不够智能</View>
+        {!!canvasDrawerConfig && (
+          <TaroCanvasDrawer
+            config={canvasDrawerConfig}
+            onCreateSuccess={this.onCanvasCreateSuccess}
+            onCreateFail={this.onCanvasCreateFail}
+          />
+        )}
         {/* <Button
           className="weui-btn"
           type="default"
