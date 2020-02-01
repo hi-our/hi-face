@@ -160,18 +160,13 @@ export function getMouthInfo(results) {
 
     const { leftPoint, rightPoint } = getMouthLeftRigthPoint(mouthPoint)
     const mouthMidPoint = getMidPoint(leftPoint, rightPoint)
-    const mouthAngle = getFaceRadian(leftPoint, rightPoint)
-
-    console.log('getFaceRadian :', angle, getFaceRadian(leftPoint, rightPoint));
-
-
+    
     return {
       mouthMidPoint,
       leftPoint,
       rightPoint,
       angle,
       faceWidth,
-      mouthAngle,
       ImageWidth, ImageHeight
     }
   }

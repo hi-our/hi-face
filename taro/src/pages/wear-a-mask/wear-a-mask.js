@@ -8,10 +8,11 @@ import fetch from 'utils/fetch'
 import { apiAnalyzeFace } from 'constants/apis'
 import { getSystemInfo } from 'utils/common'
 import { getHatInfo, getMouthInfo, getBase64Main } from 'utils/face-utils'
-import { srcToBase64Main } from 'utils/canvas-drawing'
+import { srcToBase64Main, getImg } from 'utils/canvas-drawing'
 
 import { NOT_FACE, ONE_FACE } from 'constants/image-test'
 import { TaroCropper } from 'taro-cropper'
+import Mask1Image from '../../images/mask-1.png'
 
 // const testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
 const testImg = 'https://n1image.hjfile.cn/res7/2020/02/01/73b0d0794e4390779767721f453b9794.png'
@@ -22,6 +23,7 @@ import './styles.styl'
 
 const { windowWidth } = getSystemInfo()
 const CANVAS_SIZE = 300
+const DPR_CANVAS_SIZE = CANVAS_SIZE * windowWidth / 375
 const MASK_SIZE = 100
 
 const resetState = () => {
@@ -54,8 +56,19 @@ class Index extends Component {
       originSrc:  '', //testImg,
       cutImageSrc: '', //testImg,
       imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      currentHatId: 1
+      currentHatId: 1,
+      isSavePicture: false
 
+    }
+  }
+
+  onShareAppMessage() {
+    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2018/12/20/9de3c702be8dea2066b44913e95a9f8c.jpg?imageView2/1/w/375/h/300'
+
+    return {
+      title: '自动戴口罩',
+      imageUrl: DEFAULT_SHARE_COVER,
+      path: '/pages/wear-a-mask/wear-a-mask'
     }
   }
 
@@ -114,14 +127,12 @@ class Index extends Component {
       })
 
       const info = getMouthInfo(res2)
-      let { faceWidth, angle, mouthMidPoint, ImageWidth, mouthAngle } = info[0]
+      let { faceWidth, angle, mouthMidPoint, ImageWidth } = info[0]
       let dpr = ImageWidth / CANVAS_SIZE * (375 / windowWidth)
-
       const hatCenterX = mouthMidPoint.X / dpr
       const hatCenterY =  mouthMidPoint.Y / dpr
       const scale = faceWidth / MASK_SIZE / dpr
-      const rotate = mouthAngle
-
+      const rotate = angle / (Math.PI / 180)
 
       this.setState({
         hatCenterX,
@@ -152,17 +163,67 @@ class Index extends Component {
     })
   }
 
-  downloadImage = () => {
-    const { cutImageSrc } = this.state
-    Taro.saveImageToPhotosAlbum({
-      filePath: cutImageSrc,
+  drawCanvas = async () => {
+    const {
+      scale,
+      rotate,
+      hatCenterX,
+      hatCenterY,
+      currentHatId,
+    } = this.state
+    const pc = Taro.createCanvasContext('canvasMask')
+    // const pc = this.canvasMaskRef
+    const hatSize = 100 * scale;
+
+    pc.clearRect(0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE);
+    pc.drawImage(this.state.cutImageSrc, 0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE);
+    pc.translate(hatCenterX, hatCenterY);
+    pc.rotate((rotate * Math.PI) / 180);
+
+    let maskSrc = await getImg('https://n1image.hjfile.cn/res7/2020/02/01/b63c990ca4ab8fd2430118190c70314f.png')
+    console.log('maskSrc :', maskSrc);
+    pc.drawImage(
+      maskSrc,
+      // this.state.cutImageSrc,
+      -hatSize / 2,
+      -hatSize / 2,
+      hatSize,
+      hatSize
+    );
+    pc.draw();
+  }
+
+  downloadImage = async () => {
+    console.log('downloadImage :');
+    this.setState({
+      isSavePicture: true
+    })
+
+    await this.drawCanvas()
+    console.log('downloadImage2 :');
+    Taro.canvasToTempFilePath({
+      x: 0,
+      y: 0,
+      height: DPR_CANVAS_SIZE,
+      width: DPR_CANVAS_SIZE,
+      destHeight: 300,
+      destWidth: 300,
+      canvasId: 'canvasMask',
       success: res => {
-        console.log('保存成功 :');
-      },
-      fail(e) {
-        console.log("err:" + e);
+        console.log('res.tempFilePath :', res.tempFilePath);
+        // app.globalData.successPic = res.tempFilePath;
+        Taro.saveImageToPhotosAlbum({
+          filePath: res.tempFilePath,
+          success: res2 => {
+            console.log('保存成功 :', res2);
+            // console.log("success:" + res);
+          },
+          fail(e) {
+            console.log("保存失败:" + e);
+          }
+        });
       }
-    });
+    })
   }
 
   render() {
@@ -181,7 +242,8 @@ class Index extends Component {
       hatSize,
 
       scale,
-      rotate
+      rotate,
+      isSavePicture
     } = this.state
     let hatStyle = {
       top: hatCenterY - hatSize / 2 - 2 + 'px',
@@ -200,7 +262,10 @@ class Index extends Component {
                   mode='widthFix'
                   className='image-selected'
                 />
-                <Image class="hat" id='hat' src={require('../../images/mask-1.png')} style={hatStyle} />
+                <Image class="hat" id='hat' src={Mask1Image} style={hatStyle} />
+                {
+                  isSavePicture && <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />
+                }
 
               </View>
             )
@@ -212,16 +277,10 @@ class Index extends Component {
           {!!cutImageSrc && (
             <View className='button-wrap'>
               <Button className='button-remove' onClick={this.onRemoveImage}></Button>
-              <Button className='button-download'></Button>
+              <Button className='button-download' onClick={this.downloadImage}></Button>
             </View>
           )}
         </View>
-
-        {
-          cutImageSrc && (
-            <Button onClick={this.downloadImage}>下载图片</Button>
-          )
-        }
         <View className='cropper-wrap' hidden={!originSrc}>
           <TaroCropper
             src={originSrc}
@@ -234,6 +293,7 @@ class Index extends Component {
             onCancel={this.onCancel}
           />
         </View>
+        
       </View>
     )
   }

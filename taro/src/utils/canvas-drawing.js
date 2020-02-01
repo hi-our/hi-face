@@ -67,7 +67,8 @@ export const srcToBase64Main = async (src, callback) => {
  * @param {*} src 图片地址
  * @param {*} callback
  */
-const getImg = async (src) => {
+export const getImg = async (src) => {
+  console.log('getImg src :', src);
   if (src.includes(';base64,')) {
     return await base64src(src)
   }
@@ -92,6 +93,7 @@ const getImg = async (src) => {
 const drawHat = async (ctx, config) => {
   const { headPos, angle, faceWidth } = config;
   const img = await getImg(HatImgTest);
+  console.log('img :', img);
 
   ctx.save();
 
