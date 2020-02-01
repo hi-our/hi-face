@@ -237,6 +237,7 @@ Component({
         that._canvasDetectionPosition();
       },
       imgSrc(value, that){
+        console.log('imgSrc value :', value);
         that.pushImg();
       },
       cut_top(value, that) {

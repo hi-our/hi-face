@@ -8,6 +8,8 @@ import { getHatInfo, getBase64Main } from 'utils/face-utils'
 import { drawing } from 'utils/canvas-drawing'
 
 import { NOT_FACE, ONE_FACE } from 'constants/image-test'
+// 引入代码
+import { TaroCanvasDrawer } from 'components/taro-plugin-canvas';
 
 const imageData = ONE_FACE
 
@@ -125,6 +127,7 @@ class Index extends Component {
   render () {
     return (
       <View>
+        {/* <TaroCanvasDrawer /> */}
         <View>自动戴圣诞帽：</View>
         <Canvas canvasId='canvasHat' id='canvasHat' style={{ width: CANVAS_SIZE, height: CANVAS_SIZE }} />
         <View>原图：</View>
