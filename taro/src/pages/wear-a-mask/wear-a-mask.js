@@ -12,7 +12,10 @@ import { srcToBase64Main, getImg } from 'utils/canvas-drawing'
 
 import { NOT_FACE, ONE_FACE } from 'constants/image-test'
 import { TaroCropper } from 'taro-cropper'
-import Mask1Image from '../../images/mask-1.png'
+// import Mask1Image from '../../images/mask-1.png'
+
+const Mask1Image = 'https://n1image.hjfile.cn/res7/2020/02/01/b63c990ca4ab8fd2430118190c70314f.png'
+
 
 // const testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
 const testImg = 'https://n1image.hjfile.cn/res7/2020/02/01/73b0d0794e4390779767721f453b9794.png'
@@ -52,7 +55,6 @@ class Index extends Component {
     super(props);
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
-      ...resetState(),
       originSrc:  '', //testImg,
       cutImageSrc: '', //testImg,
       imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -115,6 +117,7 @@ class Index extends Component {
   onAnalyzeFace = async (base64Main = '' ) => {
     if (!base64Main) return
 
+    Taro.showLoading()
     try {
       const res2 = await fetch({
         url: apiAnalyzeFace,
@@ -135,13 +138,18 @@ class Index extends Component {
       const rotate = angle / (Math.PI / 180)
 
       this.setState({
+        ...resetState(),
         hatCenterX,
         hatCenterY,
         scale,
         rotate,
       })
 
+      Taro.hideLoading()
+
     } catch (error) {
+      Taro.hideLoading()
+      this.setState(resetState())
       console.log('error :', error);
     }
   }
@@ -170,13 +178,20 @@ class Index extends Component {
       hatCenterX,
       hatCenterY,
       currentHatId,
+      cutImageSrc
     } = this.state
+    this.setState({
+      isSavePicture: true
+    })
+    console.log('cutImageSrc :', cutImageSrc);
     const pc = Taro.createCanvasContext('canvasMask')
     // const pc = this.canvasMaskRef
     const hatSize = 100 * scale;
 
     pc.clearRect(0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE);
-    pc.drawImage(this.state.cutImageSrc, 0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE);
+    let tmpCutImage = await getImg(cutImageSrc)
+    pc.drawImage(tmpCutImage, 0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE);
+    pc.save()
     pc.translate(hatCenterX, hatCenterY);
     pc.rotate((rotate * Math.PI) / 180);
 
@@ -189,15 +204,12 @@ class Index extends Component {
       -hatSize / 2,
       hatSize,
       hatSize
-    );
-    pc.draw();
+    )
+    pc.restore()
+    pc.draw()
   }
 
   downloadImage = async () => {
-    console.log('downloadImage :');
-    this.setState({
-      isSavePicture: true
-    })
 
     await this.drawCanvas()
     console.log('downloadImage2 :');
