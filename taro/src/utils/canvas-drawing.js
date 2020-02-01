@@ -1,7 +1,10 @@
 import Taro from '@tarojs/taro'
 import { drawCoverImage, fillText } from './canvas';
 import { getSystemInfo } from 'utils/common'
-import { HAT_IMG } from 'constants/image-test';
+import { HAT_IMG } from 'constants/image-test'
+
+import FaceImageTest from '../images/one_face.jpeg'
+import HatImgTest from '../images/hat.png'
 
 const fsm = Taro.getFileSystemManager();
 const FILE_BASE_NAME = 'tmp_base64src';
@@ -71,11 +74,10 @@ const getImg = async (src) => {
  */
 const drawHat = async (ctx, config) => {
   const { headPos, angle, faceWidth } = config;
-  const img = await getImg(HAT_IMG);
+  const img = await getImg(HatImgTest);
 
   ctx.save();
 
-  console.log('drawHat img :', img);
   ctx.translate(headPos.x, headPos.y);
   // 旋转画布到特定角度
   ctx.rotate(angle);
@@ -114,15 +116,9 @@ export const drawing = async (canvas, options) => {
   }
 
   // 把帽子画到对应的点上
-  try {
-    if (info) {
-      await drawHat(ctx, info[0]);
-    }
-    
-  } catch (error) {
-    console.log('drawHat :', error);
+  if (info) {
+    drawHat(ctx, info[0]);
   }
-
 
   // TODO 加了以后显示效果才对
   // fillText(ctx, ' ', 55, 233, false, 12, '#687583')
@@ -130,14 +126,4 @@ export const drawing = async (canvas, options) => {
   setTimeout(() => {
     ctx.draw()
   }, 500)
-}
-
-export const getDrawerConfig = (options) => {
-  const { info, width = 200, height = 200, imgSrc = 'images/default.jpg' } = options;
-  let config = {
-    width,
-    height,
-    images: []
-  }
-  return config
 }
