@@ -20,7 +20,7 @@ const imageData = ONE_FACE
 import './styles.styl'
 
 const { windowWidth } = getSystemInfo()
-const CANVAS_SIZE = '300px'
+const CANVAS_SIZE = '300'
 
 // @CorePage
 class Index extends Component {
@@ -32,25 +32,48 @@ class Index extends Component {
     super(props);
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
-      src:  '', //testImg,
+      originSrc:  '', //testImg,
       cutImagePath: '' //testImg,
     }
   }
+
+
 
   catTaroCropper(node) {
     this.taroCropper = node;
     console.log('this.taroCropper :', this.taroCropper);
   }
 
-  onCut = (res) => {
-    console.log('onCut res :', res);
+  onChooseImage = () => {
+    Taro.chooseImage({
+      count: 1
+    }).then(res => {
+      // console.log(res);
+      this.setState({
+        originSrc: res.tempFilePaths[0]
+      });
+    })
+  }
+
+  onCut = (cutImagePath) => {
+    // console.log('onCut res :', cutImagePath);
+    // Taro.getImageInfo({
+    //   src: cutImagePath,
+    //   success: function (res) {
+    //     console.log(res.width)
+    //     console.log(res.height)
+    //   }
+    // })
     this.setState({
-      cutImagePath: res,
-      src: ''
+      cutImagePath: cutImagePath,
+      originSrc: ''
     })
   }
 
   onCancel = () => {
+    this.setState({
+      originSrc: ''
+    })
     Taro.showToast({
       icon: 'none',
       title: '点击取消'
@@ -72,38 +95,25 @@ class Index extends Component {
 
   render() {
     const {
-      src,
+      originSrc,
       cutImagePath
     } = this.state;
 
     return (
       <View>
-        <View hidden={!src}>
+        <View hidden={!originSrc}>
           <TaroCropper
-            height={1000} src={src}
-            cropperWidth={600}
-            cropperHeight={600}
+            src={originSrc}
+            cropperWidth={CANVAS_SIZE * 2}
+            cropperHeight={CANVAS_SIZE * 2}
             ref={this.catTaroCropper}
-            // themeColor={'#f00'}
-            // hideFinishText
             fullScreen
             onCut={this.onCut}
             hideCancelText={false}
             onCancel={this.onCancel}
           />
-
         </View>
-        <Button onClick={() => {
-          Taro.chooseImage({
-            count: 1
-          })
-            .then(res => {
-              // console.log(res);
-              this.setState({
-                src: res.tempFilePaths[0]
-              });
-            })
-        }}>选择图片</Button>
+        <Button onClick={this.onChooseImage}>选择图片</Button>
         <Image
           src={cutImagePath}
           mode='widthFix'
