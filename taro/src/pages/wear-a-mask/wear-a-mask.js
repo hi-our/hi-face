@@ -122,9 +122,9 @@ class WearMask extends Component {
       cutImageSrc: imageData
     })
     this.onAnalyzeFace(getBase64Main(imageData))
-    this.getImageLocalPath(HTTP_LIST).then(res2 => {
-      console.log('res2 :', res2);
-    })
+    // this.getImageLocalPath(HTTP_LIST).then(res2 => {
+    //   console.log('res2 :', res2);
+    // })
   }
 
   getImageLocalPath = (urlArr) => {
