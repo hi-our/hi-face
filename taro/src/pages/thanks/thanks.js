@@ -39,7 +39,7 @@ class Thanks extends Component {
 
   render() {
     const { thanksWord, authorAvatar, authorName, authorDesc, sourceLink, referenceList } = DATA
-    console.log('thanksWord :', thanksWord);
+ 
     return (
       <View>
         <View className='thanks-word'>

@@ -40,10 +40,10 @@ const config = {
   },
   alias,
   mini: {
+    imageUrlLoaderOption: {
+      limit: 0
+    },
     postcss: {
-      imageUrlLoaderOption: {
-        limit: 0
-      },
       pxtransform: {
         enable: true,
         config: {

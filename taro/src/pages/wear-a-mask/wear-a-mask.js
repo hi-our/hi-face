@@ -1,35 +1,12 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image, Icon, Button, Canvas, ScrollView, Block } from '@tarojs/components'
+import { View, Image, Icon, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 import fetch from 'utils/fetch'
 import { apiAnalyzeFace } from 'constants/apis'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo, getBase64Main } from 'utils/face-utils'
 import { srcToBase64Main, getImg } from 'utils/canvas-drawing'
 
-// import { NOT_FACE, ONE_FACE } from 'constants/image-test'
 import { TaroCropper } from 'taro-cropper'
-
-const Mask1Image = 'https://n1image.hjfile.cn/res7/2020/02/01/b63c990ca4ab8fd2430118190c70314f.png'
-
-
-// const testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
-// const testImg = 'https://n1image.hjfile.cn/res7/2020/02/01/73b0d0794e4390779767721f453b9794.png'
-
-const HTTP_LIST = [
-  'https://n1image.hjfile.cn/res7/2020/02/02/470f57c36363ed37618c7112d00e57a5.png',
-  'https://n1image.hjfile.cn/res7/2020/02/02/23c6f3c4229b624f32433c37606a558f.png',
-  'https://n1image.hjfile.cn/res7/2020/02/02/969453d4bde3b964d78334907e1fe83d.png',
-  'https://n1image.hjfile.cn/res7/2020/02/02/ca710b2ff33d16d62bfada7d063ed19c.png',
-  'https://n1image.hjfile.cn/res7/2020/02/02/f73c9c1f35124b4edba66cbf7dd730b8.png',
-
-  'https://n1image.hjfile.cn/res7/2020/02/02/d89fa766c69f6cf46252938bda5a5604.png',
-  'https://n1image.hjfile.cn/res7/2020/02/02/4739879682c32288981ee12b9cb89527.png',
-  'https://n1image.hjfile.cn/res7/2020/02/02/03446d7c610190eb90fd269839a21d1d.png',
-  'https://n1image.hjfile.cn/res7/2020/02/02/47844ed9295e25da2025fa99617c9c29.png',
-  'https://n1image.hjfile.cn/res7/2020/02/02/43395ea7a8ca7ea53ab4e2086c6f8ca1.png',
-]
-
-// const imageData = NOT_FACE
 
 import './styles.styl'
 
@@ -68,11 +45,11 @@ class WearMask extends Component {
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
       ...resetState(),
-      originSrc:  '', //testImg,
-      cutImageSrc: '', //testImg,
+      originSrc:  '',
+      cutImageSrc: '',
       imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 
-      currentMaskId: 0,
+      currentMaskId: 1,
       isShowMask: false,
       isSavePicture: false
     }
@@ -153,15 +130,12 @@ class WearMask extends Component {
 
   catTaroCropper(node) {
     this.taroCropper = node;
-    console.log('this.taroCropper :', this.taroCropper);
   }
 
   onChooseImage = () => {
     Taro.chooseImage({
       count: 1,
-      // sizeType: ['original', 'compressed'],
     }).then(res => {
-      // console.log(res);
       this.setState({
         originSrc: res.tempFilePaths[0]
       });
@@ -170,7 +144,7 @@ class WearMask extends Component {
 
   onCut = (cutImageSrc) => {
     let tmask = this
-    console.log('cutImageSrc :', cutImageSrc);
+    // console.log('cutImageSrc :', cutImageSrc);
     this.setState({
       cutImageSrc,
       originSrc: ''
@@ -186,7 +160,7 @@ class WearMask extends Component {
     if (!base64Main) return
 
     Taro.showLoading({
-      title: '图片识别中'
+      title: '识别中，多等几秒'
     })
 
     this.setState({
@@ -277,7 +251,6 @@ class WearMask extends Component {
     })
 
     const pc = Taro.createCanvasContext('canvasMask')
-    // const pc = this.canvasMaskRef
     const maskSize = 100 * scale;
 
     pc.clearRect(0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE);
@@ -285,31 +258,18 @@ class WearMask extends Component {
     pc.drawImage(tmpCutImage, 0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE);
     pc.save()
     pc.translate(maskCenterX, maskCenterY);
-    pc.rotate((rotate * Math.PI) / 180);
+    pc.rotate((rotate * Math.PI) / 180)
 
-    try {
-      let maskSrc = await getImg(HTTP_LIST[currentMaskId])
-      console.log('maskSrc :', maskSrc);
-      
-      if (maskSrc) {
-        pc.drawImage(
-          maskSrc,
-          // this.state.cutImageSrc,
-          -maskSize / 2,
-          -maskSize / 2,
-          maskSize,
-          maskSize
-        )
+    pc.drawImage(
+      require(`../../images/mask-${currentMaskId}.png`),
+      -maskSize / 2,
+      -maskSize / 2,
+      maskSize,
+      maskSize
+    )
 
-        pc.restore()
-        pc.draw()
-        return true
-      }
-      
-    } catch (error) {
-      console.log('error :', error);
-      return false
-    }
+    pc.restore()
+    pc.draw()
     
   }
 
@@ -322,14 +282,8 @@ class WearMask extends Component {
     })
 
     try {
-      const drawResult =  await this.drawCanvas()
-      if (!drawResult) {
-        Taro.showToast({
-          title: '图片生成失败，再试一下',
-          icon: 'none'
-        })
-        return
-      }
+      await this.drawCanvas()
+
       Taro.canvasToTempFilePath({
         x: 0,
         y: 0,
@@ -379,9 +333,8 @@ class WearMask extends Component {
 
   chooseMask = (e) => {
     const maskId = e.target.dataset.maskId
-    console.log('object :', maskId);
     this.setState({
-      currentMaskId: e.target.dataset.maskId
+      currentMaskId: maskId
     })
   }
 
@@ -512,15 +465,14 @@ class WearMask extends Component {
                 {
                   !isSavePicture && isShowMask && (
                     <Block>
-                      <Image className="mask" id='mask' src={HTTP_LIST[currentMaskId]} style={maskStyle} />
+                      <Image className="mask" id='mask' src={require(`../../images/mask-${currentMaskId}.png`)} style={maskStyle} />
                       {/* <Icon type="cancel" className="image-btn-cancel" id="cancel" style={cancelStyle} /> */}
                       <Icon type="waiting" className="image-btn-handle" id="handle" color="green" style={handleStyle} />
                     </Block>
                   )
                 }
-                {
-                  isSavePicture && <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />
-                }
+                <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />
+                {/* {isSavePicture && <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />} */}
 
 
               </View>
@@ -541,7 +493,7 @@ class WearMask extends Component {
                 </Button>
               </View>
             ) 
-            : <View className='button-wrap'>点击图片区域即可选择图片</View>
+            : <Text className='button-wrap'>{'备注：点击图片区域即可选择图片\n选择后，会自动识别图中人脸，并自动戴上口罩\n识别过程需几秒钟，请耐心等待'}</Text>
           }
         </View>
         <View className='cropper-wrap' hidden={!originSrc}>
@@ -560,14 +512,14 @@ class WearMask extends Component {
           !!cutImageSrc && (
             <ScrollView className="mask-select-wrap" scrollX>
               {
-                HTTP_LIST.map((imgSrc, index) => {
+                imgList.map((imgId) => {
                   return (
                     <Image
                       className="image-item"
-                      key={imgSrc}
-                      src={imgSrc}
+                      key={imgId}
+                      src={require(`../../images/mask-${imgId}.png`)}
                       onClick={this.chooseMask}
-                      data-mask-id={index}
+                      data-mask-id={imgId}
                     />
                   )
                 })
