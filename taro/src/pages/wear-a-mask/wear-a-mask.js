@@ -159,7 +159,7 @@ class WearMask extends Component {
   onChooseImage = () => {
     Taro.chooseImage({
       count: 1,
-      sizeType: ['compressed'],
+      // sizeType: ['original', 'compressed'],
     }).then(res => {
       // console.log(res);
       this.setState({
@@ -300,13 +300,17 @@ class WearMask extends Component {
           maskSize,
           maskSize
         )
+
+        pc.restore()
+        pc.draw()
+        return true
       }
       
     } catch (error) {
       console.log('error :', error);
+      return false
     }
-    pc.restore()
-    pc.draw()
+    
   }
 
   downloadImage = async () => {
@@ -318,14 +322,21 @@ class WearMask extends Component {
     })
 
     try {
-      await this.drawCanvas()
+      const drawResult =  await this.drawCanvas()
+      if (!drawResult) {
+        Taro.showToast({
+          title: '图片生成失败，再试一下',
+          icon: 'none'
+        })
+        return
+      }
       Taro.canvasToTempFilePath({
         x: 0,
         y: 0,
         height: DPR_CANVAS_SIZE,
         width: DPR_CANVAS_SIZE,
-        destHeight: 300,
-        destWidth: 300,
+        destHeight: 300 * 2,
+        destWidth: 300 * 2,
         canvasId: 'canvasMask',
         success: res => {
           console.log('res.tempFilePath :', res.tempFilePath);
