@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "npm run watch",
-    "watch": "SERVER_ENV=yz MOCK=false npm run dev:weapp",
+    "watch": "SERVER_ENV=yz MOCK=true npm run dev:weapp",
     "build:weapp": "taro build --type weapp",
     "build:swan": "taro build --type swan",
     "build:alipay": "taro build --type alipay",
