@@ -5,9 +5,9 @@
 
 微信搜一搜：快快戴口罩
 
-<!-- 扫码预览 -->
+**扫码预览**
 
-<!-- ![](https://image.idealclover.cn/projects/Wear-A-Mask/qrcode.jpg) -->
+![](https://n1image.hjfile.cn/res7/2020/02/02/e40fff62cb635dd9be797226f7c266ed.png)
 
 <!-- ## 小程序截图
 ![](https://image.idealclover.cn/projects/Wear-A-Mask/demo.png) -->
