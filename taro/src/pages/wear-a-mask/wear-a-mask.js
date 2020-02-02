@@ -1,7 +1,7 @@
 const testImage = 'https://n1image.hjfile.cn/res7/2020/01/31/8ab8ff439233f3beae97a06c2b2bdec2.jpeg'
 
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image, Input, Button, Canvas, ScrollView } from '@tarojs/components'
+import { View, Image, Icon, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 // import PageWrapper from 'components/page-wrapper'
 import ImageCropper from 'components/image-cropper-taro'
 import fetch from 'utils/fetch'
@@ -119,6 +119,8 @@ class Index extends Component {
   onAnalyzeFace = async (base64Main = '' ) => {
     if (!base64Main) return
 
+    const { hatSize } = this.state
+
     Taro.showLoading()
 
     this.setState({
@@ -142,7 +144,19 @@ class Index extends Component {
       const hatCenterX = mouthMidPoint.X / dpr
       const hatCenterY =  mouthMidPoint.Y / dpr
       const scale = faceWidth / MASK_SIZE / dpr
-      const rotate = angle / (Math.PI / 180)
+      const rotate = angle / Math.PI * 180
+
+      console.log('angle :', angle);
+      console.log(' Math.cos(angle) :',  Math.cos(angle));
+
+      // 角度计算有点难
+      let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+      let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+
+      const cancelCenterX = (mouthMidPoint.X - widthScaleDpr) / dpr - 2
+      const cancelCenterY = (mouthMidPoint.Y - heightScaleDpr) / dpr - 2
+      const handleCenterX = (mouthMidPoint.X + widthScaleDpr) / dpr - 2
+      const handleCenterY = (mouthMidPoint.Y + heightScaleDpr) / dpr - 2
 
       this.setState({
         ...resetState(),
@@ -151,6 +165,10 @@ class Index extends Component {
         hatCenterY,
         scale,
         rotate,
+        cancelCenterX,
+        cancelCenterY,
+        handleCenterX,
+        handleCenterY,
       })
 
       Taro.hideLoading()
@@ -253,6 +271,14 @@ class Index extends Component {
     })
   }
 
+  chooseMask = (e) => {
+    const hatId = e.target.dataset.hatId
+    console.log('object :', hatId);
+    this.setState({
+      currentHatId: e.target.dataset.hatId
+    })
+  }
+
   render() {
     const {
       originSrc,
@@ -280,6 +306,16 @@ class Index extends Component {
       transform: `rotate(${rotate+'deg'}) scale(${scale})`
     }
 
+    let cancelStyle = {
+      top: cancelCenterY -10 + 'px',
+      left: cancelCenterX - 10 + 'px'
+    }
+
+    let handleStyle = {
+      top: handleCenterY -10 + 'px',
+      left: handleCenterX - 10 + 'px'
+    }
+
     return (
       <View className='mask-page'>
         <View className='main-wrap'>
@@ -291,10 +327,19 @@ class Index extends Component {
                   mode='widthFix'
                   className='image-selected'
                 />
-                {isShowMask && <Image class="hat" id='hat' src={Mask1Image} style={hatStyle} />}
+                {
+                  isShowMask && (
+                    <Block>
+                      <Image className="hat" id='hat' src={require(`../../images/mask-${currentHatId}.png`)} style={hatStyle} />
+                      <Icon type="cancel" className="image-btn-cancel" id="cancel" style={cancelStyle} />
+                      <Icon type="waiting" className="image-btn-handle" id="handle" color="green" style={handleStyle} />
+                    </Block>
+                  )
+                }
                 {
                   isSavePicture && <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />
                 }
+
 
               </View>
             )
@@ -324,9 +369,15 @@ class Index extends Component {
         </View>
         <ScrollView className="mask-select-wrap" scrollX>
           {
-            imgList.map((img, index) => {
+            imgList.map((imgId, index) => {
               return (
-                <Image className="image-item" key={index} src={require(`../../images/mask-${ index+ 1}.png`)} />
+                <Image
+                  className="image-item"
+                  key={imgId}
+                  src={require(`../../images/mask-${imgId }.png`)}
+                  onClick={this.chooseMask}
+                  data-hat-id={imgId}
+                />
               )
             })
           }
