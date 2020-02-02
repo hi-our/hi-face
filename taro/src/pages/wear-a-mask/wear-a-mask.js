@@ -1,5 +1,3 @@
-const testImage = 'https://n1image.hjfile.cn/res7/2020/01/31/8ab8ff439233f3beae97a06c2b2bdec2.jpeg'
-
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Icon, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 import fetch from 'utils/fetch'
@@ -62,7 +60,7 @@ const resetState = () => {
 // @CorePage
 class WearMask extends Component {
   config = {
-    navigationBarTitleText: '首页',
+    navigationBarTitleText: '一起戴口罩',
   }
 
   constructor(props) {
@@ -86,7 +84,7 @@ class WearMask extends Component {
     const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2018/12/20/9de3c702be8dea2066b44913e95a9f8c.jpg?imageView2/1/w/375/h/300'
 
     return {
-      title: '自动戴口罩',
+      title: '让我们一起戴口罩，抗击疫情吧！',
       imageUrl: DEFAULT_SHARE_COVER,
       path: '/pages/wear-a-mask/wear-a-mask'
     }
