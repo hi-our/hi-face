@@ -1,7 +1,7 @@
 const testImage = 'https://n1image.hjfile.cn/res7/2020/01/31/8ab8ff439233f3beae97a06c2b2bdec2.jpeg'
 
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image, Input, Button, Canvas } from '@tarojs/components'
+import { View, Image, Input, Button, Canvas, ScrollView } from '@tarojs/components'
 // import PageWrapper from 'components/page-wrapper'
 import ImageCropper from 'components/image-cropper-taro'
 import fetch from 'utils/fetch'
@@ -12,9 +12,9 @@ import { srcToBase64Main, getImg } from 'utils/canvas-drawing'
 
 import { NOT_FACE, ONE_FACE } from 'constants/image-test'
 import { TaroCropper } from 'taro-cropper'
-// import Mask1Image from '../../images/mask-1.png'
+import Mask1Image from '../../images/mask-1.png'
 
-const Mask1Image = 'https://n1image.hjfile.cn/res7/2020/02/01/b63c990ca4ab8fd2430118190c70314f.png'
+// const Mask1Image = 'https://n1image.hjfile.cn/res7/2020/02/01/b63c990ca4ab8fd2430118190c70314f.png'
 
 
 // const testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
@@ -58,7 +58,9 @@ class Index extends Component {
       originSrc:  '', //testImg,
       cutImageSrc: '', //testImg,
       imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+
       currentHatId: 1,
+      isShowMask: false,
       isSavePicture: false
 
     }
@@ -118,6 +120,11 @@ class Index extends Component {
     if (!base64Main) return
 
     Taro.showLoading()
+
+    this.setState({
+      isShowMask: false,
+    })
+
     try {
       const res2 = await fetch({
         url: apiAnalyzeFace,
@@ -139,6 +146,7 @@ class Index extends Component {
 
       this.setState({
         ...resetState(),
+        isShowMask: true,
         hatCenterX,
         hatCenterY,
         scale,
@@ -149,7 +157,10 @@ class Index extends Component {
 
     } catch (error) {
       Taro.hideLoading()
-      this.setState(resetState())
+      this.setState({
+        ...resetState(),
+        isShowMask: true,
+      })
       console.log('error :', error);
     }
   }
@@ -195,7 +206,7 @@ class Index extends Component {
     pc.translate(hatCenterX, hatCenterY);
     pc.rotate((rotate * Math.PI) / 180);
 
-    let maskSrc = await getImg('https://n1image.hjfile.cn/res7/2020/02/01/b63c990ca4ab8fd2430118190c70314f.png')
+    let maskSrc = await getImg(require('../../images/mask-1.png'))
     console.log('maskSrc :', maskSrc);
     pc.drawImage(
       maskSrc,
@@ -211,7 +222,11 @@ class Index extends Component {
 
   downloadImage = async () => {
 
-    await this.drawCanvas()
+    try {
+      await this.drawCanvas()
+    } catch (error) {
+      console.log('error :', error);
+    }
     console.log('downloadImage2 :');
     Taro.canvasToTempFilePath({
       x: 0,
@@ -255,6 +270,8 @@ class Index extends Component {
 
       scale,
       rotate,
+      imgList,
+      isShowMask,
       isSavePicture
     } = this.state
     let hatStyle = {
@@ -274,7 +291,7 @@ class Index extends Component {
                   mode='widthFix'
                   className='image-selected'
                 />
-                <Image class="hat" id='hat' src={Mask1Image} style={hatStyle} />
+                {isShowMask && <Image class="hat" id='hat' src={Mask1Image} style={hatStyle} />}
                 {
                   isSavePicture && <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />
                 }
@@ -305,6 +322,15 @@ class Index extends Component {
             onCancel={this.onCancel}
           />
         </View>
+        <ScrollView className="mask-select-wrap" scrollX>
+          {
+            imgList.map((img, index) => {
+              return (
+                <Image className="image-item" key={index} src={require(`../../images/mask-${ index+ 1}.png`)} />
+              )
+            })
+          }
+        </ScrollView>
         
       </View>
     )
