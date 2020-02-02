@@ -168,15 +168,14 @@ class Index extends Component {
       const scale = faceWidth / MASK_SIZE / dpr
       const rotate = angle / Math.PI * 180
 
-
       // 角度计算有点难
       let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
       let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
 
-      const cancelCenterX = (mouthMidPoint.X - widthScaleDpr) / dpr - 2
-      const cancelCenterY = (mouthMidPoint.Y - heightScaleDpr) / dpr - 2
-      const handleCenterX = (mouthMidPoint.X + widthScaleDpr) / dpr - 2
-      const handleCenterY = (mouthMidPoint.Y + heightScaleDpr) / dpr - 2
+      const cancelCenterX = hatCenterX - widthScaleDpr - 2
+      const cancelCenterY = hatCenterY - heightScaleDpr - 2
+      const handleCenterX = hatCenterX + widthScaleDpr - 2
+      const handleCenterY = hatCenterY + heightScaleDpr - 2
 
       this.setState({
         ...resetState(),
@@ -429,10 +428,10 @@ class Index extends Component {
       transform: `rotate(${rotate+'deg'}) scale(${scale})`
     }
 
-    // let cancelStyle = {
-    //   top: cancelCenterY -10 + 'px',
-    //   left: cancelCenterX - 10 + 'px'
-    // }
+    let cancelStyle = {
+      top: cancelCenterY -10 + 'px',
+      left: cancelCenterX - 10 + 'px'
+    }
 
     let handleStyle = {
       top: handleCenterY -10 + 'px',
@@ -459,7 +458,7 @@ class Index extends Component {
                   isShowMask && (
                     <Block>
                       <Image className="hat" id='hat' src={require(`../../images/mask-${currentHatId}.png`)} style={hatStyle} />
-                      {/* <Icon type="cancel" className="image-btn-cancel" id="cancel" style={cancelStyle} /> */}
+                      <Icon type="cancel" className="image-btn-cancel" id="cancel" style={cancelStyle} />
                       <Icon type="waiting" className="image-btn-handle" id="handle" color="green" style={handleStyle} />
                     </Block>
                   )
