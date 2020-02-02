@@ -249,7 +249,6 @@ class IaiClient extends AbstractClient {
      */
     AnalyzeFace(req, cb) {
         let resp = new AnalyzeFaceResponse();
-        // console.log('req, resp :', req, resp);
         this.request("AnalyzeFace", req, resp, cb);
     }
 

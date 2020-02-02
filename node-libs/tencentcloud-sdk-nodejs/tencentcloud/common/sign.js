@@ -12,14 +12,11 @@ class Sign {
             HmacSHA256: "sha256",
             'TC3-HMAC-SHA256': 'TC3-HMAC-SHA256'
         };
-        console.log('signMethod :', signMethod);
 
         if (!signMethodMap.hasOwnProperty(signMethod)) {
-            console.log('3 :', 3);
             throw new TencentCloudSDKHttpException("signMethod invalid, signMethod only support (HmacSHA1, HmacSHA256)");
         }
         let hmac = crypto.createHmac(signMethodMap[signMethod], secretKey || "");
-        // console.log('2222', hmac.update(Buffer.from(signStr, 'utf8')).digest('base64'));
         return hmac.update(Buffer.from(signStr, 'utf8')).digest('base64')
     }
 

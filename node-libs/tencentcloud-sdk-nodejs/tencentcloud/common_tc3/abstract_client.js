@@ -136,7 +136,6 @@ class AbstractClient {
         let header = {};
         header["Content-Type"] = "application/json; charset=utf-8";
         
-        console.log('this.profile.httpProfile :', this.profile.httpProfile);
         let service = this.profile.httpProfile.endpoint.split('.')[0];
         let timeStamp = new Date();
         let time = timeStamp.getTime();
