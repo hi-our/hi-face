@@ -154,7 +154,6 @@ class AbstractClient {
         let signStr = this.formatSignString(params);
 
         params.Signature = Sign.sign(this.credential.secretKey, signStr, this.profile.signMethod);
-        console.log('params.Signature :', params.Signature);
         return params;
     }
 

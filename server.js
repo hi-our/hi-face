@@ -163,7 +163,6 @@ app.post('/api/analyze-face', async (req, res) => {
   client.AnalyzeFace(faceReq, function (error, response) {
     // 请求异常返回，打印异常信息
     if (error) {
-      console.log('error', error);
       const { code = '' } = error
       console.log('code :', code);
       
@@ -175,6 +174,8 @@ app.post('/api/analyze-face', async (req, res) => {
       })
       return;
     }
+
+    console.log('AnalyzeFace response :', response)
     // 请求正常返回，打印response对象
     res.send({
       data: response,

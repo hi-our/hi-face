@@ -7,7 +7,6 @@ const crypto = require('crypto');
 class Sign {
 
     static sign_tc3(secretKey, date, service, str2sign, signMethod) {
-        console.log('sign_tc3 signMethod :', signMethod);
 
         if (signMethod !== "TC3-HMAC-SHA256") {
             throw new TencentCloudSDKHttpException("signMethod invalid, signMethod only support 'TC3-HMAC-SHA256'");
