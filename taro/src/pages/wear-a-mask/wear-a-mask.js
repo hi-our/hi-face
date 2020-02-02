@@ -72,7 +72,7 @@ class WearMask extends Component {
       cutImageSrc: '', //testImg,
       imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 
-      currentMaskId: 1,
+      currentMaskId: 0,
       isShowMask: false,
       isSavePicture: false
     }
@@ -81,7 +81,7 @@ class WearMask extends Component {
   }
 
   onShareAppMessage() {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2018/12/20/9de3c702be8dea2066b44913e95a9f8c.jpg?imageView2/1/w/375/h/300'
+    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
 
     return {
       title: '让我们一起戴口罩，抗击疫情吧！',
@@ -288,7 +288,7 @@ class WearMask extends Component {
     pc.rotate((rotate * Math.PI) / 180);
 
     try {
-      let maskSrc = await getImg(Mask1Image)
+      let maskSrc = await getImg(HTTP_LIST[currentMaskId])
       console.log('maskSrc :', maskSrc);
       
       if (maskSrc) {
@@ -499,10 +499,10 @@ class WearMask extends Component {
                   className='image-selected'
                 />
                 {
-                  isShowMask && (
+                  !isSavePicture && isShowMask && (
                     <Block>
                       <Image className="mask" id='mask' src={HTTP_LIST[currentMaskId]} style={maskStyle} />
-                      <Icon type="cancel" className="image-btn-cancel" id="cancel" style={cancelStyle} />
+                      {/* <Icon type="cancel" className="image-btn-cancel" id="cancel" style={cancelStyle} /> */}
                       <Icon type="waiting" className="image-btn-handle" id="handle" color="green" style={handleStyle} />
                     </Block>
                   )
@@ -522,8 +522,12 @@ class WearMask extends Component {
           {cutImageSrc
             ? (
               <View className='button-wrap'>
-                <Button className='button-remove' onClick={this.onRemoveImage}></Button>
-                <Button className='button-download' onClick={this.downloadImage}></Button>
+                <Button className='button-remove' onClick={this.onRemoveImage}>
+                  移除图片
+                </Button>
+                <Button className='button-download' onClick={this.downloadImage}>
+                  保存图片
+                </Button>
               </View>
             ) 
             : <View className='button-wrap'>点击图片区域即可选择图片</View>
