@@ -6,7 +6,7 @@ import { getSystemInfo } from 'utils/common'
 import { getMouthInfo, getBase64Main } from 'utils/face-utils'
 import { srcToBase64Main, getImg } from 'utils/canvas-drawing'
 
-import { NOT_FACE, ONE_FACE } from 'constants/image-test'
+// import { NOT_FACE, ONE_FACE } from 'constants/image-test'
 import { TaroCropper } from 'taro-cropper'
 
 const Mask1Image = 'https://n1image.hjfile.cn/res7/2020/02/01/b63c990ca4ab8fd2430118190c70314f.png'
@@ -29,7 +29,7 @@ const HTTP_LIST = [
   'https://n1image.hjfile.cn/res7/2020/02/02/43395ea7a8ca7ea53ab4e2086c6f8ca1.png',
 ]
 
-const imageData = NOT_FACE
+// const imageData = NOT_FACE
 
 import './styles.styl'
 
@@ -116,10 +116,10 @@ class WearMask extends Component {
     this.start_y = 0;
 
     
-    this.setState({
-      cutImageSrc: imageData
-    })
-    this.onAnalyzeFace(getBase64Main(imageData))
+    // this.setState({
+    //   cutImageSrc: imageData
+    // })
+    // this.onAnalyzeFace(getBase64Main(imageData))
     // this.getImageLocalPath(HTTP_LIST).then(res2 => {
     //   console.log('res2 :', res2);
     // })
@@ -519,12 +519,15 @@ class WearMask extends Component {
               </View>
             )
           }
-          {!!cutImageSrc && (
-            <View className='button-wrap'>
-              <Button className='button-remove' onClick={this.onRemoveImage}></Button>
-              <Button className='button-download' onClick={this.downloadImage}></Button>
-            </View>
-          )}
+          {cutImageSrc
+            ? (
+              <View className='button-wrap'>
+                <Button className='button-remove' onClick={this.onRemoveImage}></Button>
+                <Button className='button-download' onClick={this.downloadImage}></Button>
+              </View>
+            ) 
+            : <View className='button-wrap'>点击图片区域即可选择图片</View>
+          }
         </View>
         <View className='cropper-wrap' hidden={!originSrc}>
           <TaroCropper
