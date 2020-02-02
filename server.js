@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const tencentcloud = require('tencentcloud-sdk-nodejs');
+const tencentcloud = require('./node-libs/tencentcloud-sdk-nodejs');
 const loadEnv = require('./load-env')
 
 const app = express();
@@ -97,13 +97,27 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const IaIClient = tencentcloud.iai.v20180301.Client;
 const models = tencentcloud.iai.v20180301.Models;
 
-const Credential = tencentcloud.common.Credential;
+const Credential = tencentcloud.common_tc3.Credential;
+const ClientProfile = tencentcloud.common_tc3.ClientProfile;
+const HttpProfile = tencentcloud.common_tc3.HttpProfile;
+
+let httpProfile = new HttpProfile();
+httpProfile.endpoint = "iai.tencentcloudapi.com";
+let clientProfile = new ClientProfile();
+
+/*
+推荐使用 V3 鉴权。当内容超过 1M 时，必须使用 V3 签名鉴权。https://cloud.tencent.com/document/product/1093/39964
+*/
+clientProfile.signMethod = "TC3-HMAC-SHA256";
+// clientProfile.signMethod = 'HmacSHA256';
+clientProfile.httpProfile = httpProfile;
+
 
 // 实例化一个认证对象，入参需要传入腾讯云账户secretId，secretKey
 let cred = new Credential(SecretId, SecretKey);
 
 // 实例化要请求产品(以cvm为例)的client对象
-let client = new IaIClient(cred, "ap-shanghai");
+let client = new IaIClient(cred, "ap-shanghai", clientProfile);
 
 
 // API calls
@@ -135,12 +149,16 @@ FaceModelVersion	否	String	人脸识别服务所用的算法模型版本。目�
 app.post('/api/analyze-face', async (req, res) => {
 
   let faceReq = new models.DetectFaceRequest();
-  let query_string = JSON.stringify(req.body || {})
+  let queryBody = Object.assign({}, req.body || {}, { signMethod: 'TC3-HMAC-SHA256'})
+  // console.log('queryBody :', queryBody);
+  let query_string = JSON.stringify(queryBody)
   // 传入json参数
   faceReq.from_json_string(query_string);
 
-  console.log('post /api/analyze-face');
+  // console.log('faceReq :', faceReq);
 
+  console.log('post /api/analyze-face');
+  // TC3-HMAC-SHA256
   // 通过client对象调用想要访问的接口，需要传入请求对象以及响应回调函数
   client.AnalyzeFace(faceReq, function (error, response) {
     // 请求异常返回，打印异常信息
