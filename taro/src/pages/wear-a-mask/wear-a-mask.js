@@ -54,7 +54,7 @@ class WearMask extends Component {
       isSavePicture: false
     }
 
-    this.httpPathList = []
+    this.cutImageSrcCanvas = ''
   }
 
   onShareAppMessage() {
@@ -132,15 +132,53 @@ class WearMask extends Component {
     this.taroCropper = node;
   }
 
-  onChooseImage = () => {
+  onChooseImage = (event) => {
+    console.log('1 :', 1);
+    const way = event.target.dataset.way
+    console.log('way :', way);
     Taro.chooseImage({
       count: 1,
+      sourceType: [way],
     }).then(res => {
       this.setState({
         originSrc: res.tempFilePaths[0]
       });
     })
   }
+
+  onGetUserInfo =  (e) => {
+
+    if (e.detail.userInfo) {
+      //用户按了允许授权按钮
+
+      this.setState({
+        originSrc: e.detail.userInfo.avatarUrl
+      });
+    } else {
+      //用户按了拒绝按钮
+    }
+  }
+
+  // getAvatar() {
+    // if (app.globalData.userInfo) {
+    //   this.setData({
+    //     bgPic: app.globalData.userInfo.avatarUrl
+    //   });
+    //   this.assignPicChoosed();
+    // } else {
+    //   // 在没有 open-type=getUserInfo 版本的兼容处理
+    //   wx.getUserInfo({
+    //     success: res => {
+    //       app.globalData.userInfo = res.userInfo;
+    //       this.setData({
+    //         userInfo: res.userInfo,
+    //         bgPic: res.userInfo.avatarUrl
+    //       });
+    //       this.assignPicChoosed();
+    //     }
+    //   });
+    // }
+  // }
 
   onCut = (cutImageSrc) => {
     let tmask = this
@@ -149,6 +187,8 @@ class WearMask extends Component {
       cutImageSrc,
       originSrc: ''
     }, async () => {
+        this.cutImageSrcCanvas = await getImg(cutImageSrc)
+        console.log('this.cutImageSrcCanvas :', this.cutImageSrcCanvas);
         srcToBase64Main(cutImageSrc, (base64Main) => {
           tmask.onAnalyzeFace(base64Main)
         })
@@ -231,6 +271,7 @@ class WearMask extends Component {
   }
 
   onRemoveImage = () => {
+    this.cutImageSrcCanvas = ''
     this.setState({
       ...resetState(),
       cutImageSrc: ''
@@ -254,7 +295,7 @@ class WearMask extends Component {
     const maskSize = 100 * scale;
 
     pc.clearRect(0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE);
-    let tmpCutImage = await getImg(cutImageSrc)
+    let tmpCutImage = this.cutImageSrcCanvas || await getImg(cutImageSrc)
     pc.drawImage(tmpCutImage, 0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE);
     pc.save()
     pc.translate(maskCenterX, maskCenterY);
@@ -309,11 +350,18 @@ class WearMask extends Component {
               tmask.saveFinally()
               Taro.hideLoading()
               Taro.showToast({
-                title: '图片未保存'
+                title: '图片未保存成功'
               })
-              console.log('图片未保存:' + e);
+              console.log('图片未保存成功:' + e);
             }
           });
+        },
+        fail: () => {
+          tmask.saveFinally()
+          Taro.hideLoading()
+          Taro.showToast({
+            title: '图片未保存成功'
+          })
         }
       })
 
@@ -446,54 +494,74 @@ class WearMask extends Component {
       left: handleCenterX - 10 + 'px'
     }
 
+    let maskCanvasStyle = {
+      top: isSavePicture ? '0' : '-9999px'
+    }
+
     return (
       <View className='mask-page'>
         <View className='main-wrap'>
-          {cutImageSrc
-            ? (
-              <View
-                className='image-wrap'
-                onTouchStart={this.touchStart}
-                onTouchMove={this.touchMove}
-                onTouchEnd={this.touchEnd}
-              >
-                <Image
-                  src={cutImageSrc}
-                  mode='widthFix'
-                  className='image-selected'
-                />
-                {
-                  !isSavePicture && isShowMask && (
-                    <Block>
-                      <Image className="mask" id='mask' src={require(`../../images/mask-${currentMaskId}.png`)} style={maskStyle} />
-                      {/* <Icon type="cancel" className="image-btn-cancel" id="cancel" style={cancelStyle} /> */}
-                      <Icon type="waiting" className="image-btn-handle" id="handle" color="green" style={handleStyle} />
-                    </Block>
-                  )
-                }
-                <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />
-                {/* {isSavePicture && <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />} */}
+          <View
+            className='image-position'
+          >
+            {cutImageSrc
+              ? (
+                <View
+                  className='image-wrap'
+                  onTouchStart={this.touchStart}
+                  onTouchMove={this.touchMove}
+                  onTouchEnd={this.touchEnd}
+                >
+                  <Image
+                    src={cutImageSrc}
+                    mode='widthFix'
+                    className='image-selected'
+                  />
+                  {
+                    !isSavePicture && isShowMask && (
+                      <Block>
+                        <Image className="mask" id='mask' src={require(`../../images/mask-${currentMaskId}.png`)} style={maskStyle} />
+                        {/* <Icon type="cancel" className="image-btn-cancel" id="cancel" style={cancelStyle} /> */}
+                        <Icon type="waiting" className="image-btn-handle" id="handle" color="green" style={handleStyle} />
+                      </Block>
+                    )
+                  }
+                  {/* { && <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />} */}
 
 
-              </View>
-            )
-            : (
-              <View className='to-choose' onClick={this.onChooseImage}>
-              </View>
-            )
-          }
+                </View>
+              )
+              : (
+                <View className='to-choose'></View>
+                )
+              }
+            <View className='canvas-mask-good' style={maskCanvasStyle}>
+              <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />
+            </View>
+          </View>
           {cutImageSrc
             ? (
               <View className='button-wrap'>
-                <Button className='button-remove' onClick={this.onRemoveImage}>
+                <View className='button-remove' onClick={this.onRemoveImage}>
                   移除图片
-                </Button>
-                <Button className='button-download' onClick={this.downloadImage}>
+                </View>
+                <View className='button-download' onClick={this.downloadImage}>
                   保存图片
-                </Button>
+                </View>
               </View>
             ) 
-            : <Text className='button-wrap'>{'备注：点击图片区域即可选择图片\n选择后，会自动识别图中人脸，并自动戴上口罩\n识别过程需几秒钟，请耐心等待'}</Text>
+            : (
+              <View className='button-wrap'>
+                <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
+                <Button className='button-camera' type="default" data-way="camera" onClick={this.onChooseImage}>
+                  使用相机
+                </Button>
+                <Button className='button-gallery' type="default" data-way="album" onClick={this.onChooseImage}>
+                  相册选择
+                </Button>
+              </View>
+            )
+            
           }
         </View>
         <View className='cropper-wrap' hidden={!originSrc}>
@@ -509,24 +577,33 @@ class WearMask extends Component {
           />
         </View>
         {
-          !!cutImageSrc && (
-            <ScrollView className="mask-select-wrap" scrollX>
-              {
-                imgList.map((imgId) => {
-                  return (
-                    <Image
-                      className="image-item"
-                      key={imgId}
-                      src={require(`../../images/mask-${imgId}.png`)}
-                      onClick={this.chooseMask}
-                      data-mask-id={imgId}
-                    />
-                  )
-                })
-              }
-            </ScrollView>
-          )
+          cutImageSrc
+            ? (
+              <ScrollView className="mask-select-wrap" scrollX>
+                {
+                  imgList.map((imgId) => {
+                    return (
+                      <Image
+                        className="image-item"
+                        key={imgId}
+                        src={require(`../../images/mask-${imgId}.png`)}
+                        onClick={this.chooseMask}
+                        data-mask-id={imgId}
+                      />
+                    )
+                  })
+                }
+              </ScrollView>
+            )
+            : (
+              <View className='bottom-tips-wrap'>
+                <Text>
+                  {'备注：\n选择后会识别图中人脸，并自动戴上口罩\n识别过程需几秒钟，请耐心等待'}
+                </Text>
+              </View>
+            )
         }
+
         
       </View>
     )

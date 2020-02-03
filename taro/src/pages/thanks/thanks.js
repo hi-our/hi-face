@@ -4,6 +4,11 @@ import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/co
 import { DATA } from './data'
 import './styles.styl'
 
+import * as config from 'config'
+
+
+const version = config.version
+
 // @CorePage
 class Thanks extends Component {
   config = {
@@ -73,6 +78,7 @@ class Thanks extends Component {
             }
           </View>
         </View>
+          <View className='version'>ver.{version}</View>
       </View>
     )
   }
