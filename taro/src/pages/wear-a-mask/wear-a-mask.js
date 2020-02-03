@@ -97,33 +97,6 @@ class WearMask extends Component {
     //   cutImageSrc: imageData
     // })
     // this.onAnalyzeFace(getBase64Main(imageData))
-    // this.getImageLocalPath(HTTP_LIST).then(res2 => {
-    //   console.log('res2 :', res2);
-    // })
-  }
-
-  getImageLocalPath = (urlArr) => {
-    return Promise.all(
-      urlArr.map((url) => {
-        console.log('url :', url);
-        return new Promise((resolve, reject) => {
-          if (url === '') {
-            reject(new Error(`getImageLocalPath : ${url} fail`))
-            console.log('下载图片失败，请重试')
-          }
-          Taro.getImageInfo({
-            src: url,
-            success: res => {
-              resolve(res)
-            },
-            fail: e => {
-              reject(new Error(`getImageLocalPath : ${url} fail ${e}`))
-              console.log('下载图片失败，请重试')
-            }
-          })
-        })
-      })
-    )
   }
 
 
@@ -133,9 +106,7 @@ class WearMask extends Component {
   }
 
   onChooseImage = (event) => {
-    console.log('1 :', 1);
     const way = event.target.dataset.way
-    console.log('way :', way);
     Taro.chooseImage({
       count: 1,
       sourceType: [way],
@@ -182,7 +153,6 @@ class WearMask extends Component {
 
   onCut = (cutImageSrc) => {
     let tmask = this
-    // console.log('cutImageSrc :', cutImageSrc);
     this.setState({
       cutImageSrc,
       originSrc: ''
@@ -334,8 +304,6 @@ class WearMask extends Component {
         destWidth: 300 * 2,
         canvasId: 'canvasMask',
         success: res => {
-          console.log('res.tempFilePath :', res.tempFilePath);
-          // app.globalData.successPic = res.tempFilePath;
           Taro.saveImageToPhotosAlbum({
             filePath: res.tempFilePath,
             success: res2 => {
