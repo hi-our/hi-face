@@ -5,6 +5,7 @@ import { apiAnalyzeFace } from 'constants/apis'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo, getBase64Main } from 'utils/face-utils'
 import { srcToBase64Main, getImg } from 'utils/canvas-drawing'
+import TcbService from 'utils/tcb-service-mp-sdk'
 
 import { TaroCropper } from 'taro-cropper'
 
@@ -17,6 +18,8 @@ const PageDpr = windowWidth / 375
 const DPR_CANVAS_SIZE = CANVAS_SIZE * PageDpr
 const DEFAULT_MASK_SIZE = 100 * PageDpr
 const MASK_SIZE = 100
+
+
 
 const resetState = () => {
   return {
@@ -67,7 +70,29 @@ class WearMask extends Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    Taro.cloud
+      .callFunction({
+        name: "AnalyzeFace",
+        data: {
+          abc: 123
+        }
+      })
+      .then(res => {
+        console.log('res :', res);
+      })
+    // const tcbService = new TcbService()
+    // console.log('2 :', 2);
+    // let result = await tcbService.callService({
+    //   service: 'ai',
+    //   // action: 'AnalyzeFace',
+    //   action: 'FaceDetect',
+    //   data: {
+    //     Mode: 1,
+    //     FaceModelVersion: '3.0'
+    //   },
+    // })
+    // console.log('result :', result);
     const {
       maskCenterX,
       maskCenterY,
@@ -97,35 +122,7 @@ class WearMask extends Component {
     //   cutImageSrc: imageData
     // })
     // this.onAnalyzeFace(getBase64Main(imageData))
-    // this.getImageLocalPath(HTTP_LIST).then(res2 => {
-    //   console.log('res2 :', res2);
-    // })
   }
-
-  getImageLocalPath = (urlArr) => {
-    return Promise.all(
-      urlArr.map((url) => {
-        console.log('url :', url);
-        return new Promise((resolve, reject) => {
-          if (url === '') {
-            reject(new Error(`getImageLocalPath : ${url} fail`))
-            console.log('下载图片失败，请重试')
-          }
-          Taro.getImageInfo({
-            src: url,
-            success: res => {
-              resolve(res)
-            },
-            fail: e => {
-              reject(new Error(`getImageLocalPath : ${url} fail ${e}`))
-              console.log('下载图片失败，请重试')
-            }
-          })
-        })
-      })
-    )
-  }
-
 
 
   catTaroCropper(node) {
@@ -133,9 +130,7 @@ class WearMask extends Component {
   }
 
   onChooseImage = (event) => {
-    console.log('1 :', 1);
     const way = event.target.dataset.way
-    console.log('way :', way);
     Taro.chooseImage({
       count: 1,
       sourceType: [way],
@@ -159,36 +154,14 @@ class WearMask extends Component {
     }
   }
 
-  // getAvatar() {
-    // if (app.globalData.userInfo) {
-    //   this.setData({
-    //     bgPic: app.globalData.userInfo.avatarUrl
-    //   });
-    //   this.assignPicChoosed();
-    // } else {
-    //   // 在没有 open-type=getUserInfo 版本的兼容处理
-    //   wx.getUserInfo({
-    //     success: res => {
-    //       app.globalData.userInfo = res.userInfo;
-    //       this.setData({
-    //         userInfo: res.userInfo,
-    //         bgPic: res.userInfo.avatarUrl
-    //       });
-    //       this.assignPicChoosed();
-    //     }
-    //   });
-    // }
-  // }
-
   onCut = (cutImageSrc) => {
     let tmask = this
-    // console.log('cutImageSrc :', cutImageSrc);
+
     this.setState({
       cutImageSrc,
       originSrc: ''
     }, async () => {
         this.cutImageSrcCanvas = await getImg(cutImageSrc)
-        console.log('this.cutImageSrcCanvas :', this.cutImageSrcCanvas);
         srcToBase64Main(cutImageSrc, (base64Main) => {
           tmask.onAnalyzeFace(base64Main)
         })
@@ -208,47 +181,60 @@ class WearMask extends Component {
     })
 
     try {
-      const res2 = await fetch({
-        url: apiAnalyzeFace,
-        type: 'post',
-        data: {
-          Image: base64Main,
-          Mode: 1,
-          FaceModelVersion: '3.0'
-        }
-      })
+      Taro.cloud
+        .callFunction({
+          name: "AnalyzeFace",
+          data: {
+            // Image: base64Main,
+            Mode: 1,
+            FaceModelVersion: '3.0'
+          }
+        })
+        .then(res => {
+          console.log('res :', res);
+        })
+      
+      // const res2 = await fetch({
+      //   url: apiAnalyzeFace,
+      //   type: 'post',
+      //   data: {
+      //     Image: base64Main,
+      //     Mode: 1,
+      //     FaceModelVersion: '3.0'
+      //   }
+      // })
 
-      const info = getMouthInfo(res2)
-      let { faceWidth, angle, mouthMidPoint, ImageWidth } = info[0]
-      let dpr = ImageWidth / CANVAS_SIZE * (375 / windowWidth)
-      const maskCenterX = mouthMidPoint.X / dpr
-      const maskCenterY =  mouthMidPoint.Y / dpr
-      const scale = faceWidth / MASK_SIZE / dpr
-      const rotate = angle / Math.PI * 180
+      // const info = getMouthInfo(res2)
+      // let { faceWidth, angle, mouthMidPoint, ImageWidth } = info[0]
+      // let dpr = ImageWidth / CANVAS_SIZE * (375 / windowWidth)
+      // const maskCenterX = mouthMidPoint.X / dpr
+      // const maskCenterY =  mouthMidPoint.Y / dpr
+      // const scale = faceWidth / MASK_SIZE / dpr
+      // const rotate = angle / Math.PI * 180
 
-      // 角度计算有点难
-      let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
-      let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+      // // 角度计算有点难
+      // let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+      // let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
 
-      const cancelCenterX = maskCenterX - widthScaleDpr - 2
-      const cancelCenterY = maskCenterY - heightScaleDpr - 2
-      const handleCenterX = maskCenterX + widthScaleDpr - 2
-      const handleCenterY = maskCenterY + heightScaleDpr - 2
+      // const cancelCenterX = maskCenterX - widthScaleDpr - 2
+      // const cancelCenterY = maskCenterY - heightScaleDpr - 2
+      // const handleCenterX = maskCenterX + widthScaleDpr - 2
+      // const handleCenterY = maskCenterY + heightScaleDpr - 2
 
-      this.setState({
-        ...resetState(),
-        isShowMask: true,
-        maskCenterX,
-        maskCenterY,
-        scale,
-        rotate,
-        cancelCenterX,
-        cancelCenterY,
-        handleCenterX,
-        handleCenterY,
-      })
+      // this.setState({
+      //   ...resetState(),
+      //   isShowMask: true,
+      //   maskCenterX,
+      //   maskCenterY,
+      //   scale,
+      //   rotate,
+      //   cancelCenterX,
+      //   cancelCenterY,
+      //   handleCenterX,
+      //   handleCenterY,
+      // })
 
-      Taro.hideLoading()
+      // Taro.hideLoading()
 
     } catch (error) {
       Taro.hideLoading()
@@ -334,8 +320,6 @@ class WearMask extends Component {
         destWidth: 300 * 2,
         canvasId: 'canvasMask',
         success: res => {
-          console.log('res.tempFilePath :', res.tempFilePath);
-          // app.globalData.successPic = res.tempFilePath;
           Taro.saveImageToPhotosAlbum({
             filePath: res.tempFilePath,
             success: res2 => {

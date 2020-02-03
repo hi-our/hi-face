@@ -1,0 +1,18 @@
+{
+	"miniprogramRoot": "taro/dist/",
+	"cloudfunctionRoot": "cloud/functions/",
+	"projectname": "tencent-test-1-demo",
+	"description": "test",
+	"appid": "wxd5e8989ce23206af",
+	"setting": {
+		"urlCheck": true,
+		"es6": false,
+		"postcss": false,
+		"minified": false
+	},
+	"compileType": "miniprogram",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"cloudfunctionTemplateRoot": "cloudfunctionTemplate",
+	"condition": {}
+}
