@@ -121,35 +121,20 @@ class WearMask extends Component {
 
     if (e.detail.userInfo) {
       //用户按了允许授权按钮
-
+      // TODO写法，用于更换图片
       this.setState({
-        originSrc: e.detail.userInfo.avatarUrl
-      });
+        originSrc: ''
+      }, () => {
+        setTimeout(() => {
+          this.setState({
+            originSrc: e.detail.userInfo.avatarUrl
+          })
+        }, 100);
+      })
     } else {
       //用户按了拒绝按钮
     }
   }
-
-  // getAvatar() {
-    // if (app.globalData.userInfo) {
-    //   this.setData({
-    //     bgPic: app.globalData.userInfo.avatarUrl
-    //   });
-    //   this.assignPicChoosed();
-    // } else {
-    //   // 在没有 open-type=getUserInfo 版本的兼容处理
-    //   wx.getUserInfo({
-    //     success: res => {
-    //       app.globalData.userInfo = res.userInfo;
-    //       this.setData({
-    //         userInfo: res.userInfo,
-    //         bgPic: res.userInfo.avatarUrl
-    //       });
-    //       this.assignPicChoosed();
-    //     }
-    //   });
-    // }
-  // }
 
   onCut = (cutImageSrc) => {
     let tmask = this
@@ -158,7 +143,6 @@ class WearMask extends Component {
       originSrc: ''
     }, async () => {
         this.cutImageSrcCanvas = await getImg(cutImageSrc)
-        console.log('this.cutImageSrcCanvas :', this.cutImageSrcCanvas);
         srcToBase64Main(cutImageSrc, (base64Main) => {
           tmask.onAnalyzeFace(base64Main)
         })
@@ -170,7 +154,7 @@ class WearMask extends Component {
     if (!base64Main) return
 
     Taro.showLoading({
-      title: '识别中，多等几秒'
+      title: '识别中...'
     })
 
     this.setState({
