@@ -1,41 +1,33 @@
-const testImage = 'https://n1image.hjfile.cn/res7/2020/01/31/8ab8ff439233f3beae97a06c2b2bdec2.jpeg'
-
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image, Icon, Button, Canvas, ScrollView, Block } from '@tarojs/components'
+import { View, Image, Icon, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 import fetch from 'utils/fetch'
 import { apiAnalyzeFace } from 'constants/apis'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo, getBase64Main } from 'utils/face-utils'
 import { srcToBase64Main, getImg } from 'utils/canvas-drawing'
 
-import { NOT_FACE, ONE_FACE } from 'constants/image-test'
 import { TaroCropper } from 'taro-cropper'
-
-const Mask1Image = 'https://n1image.hjfile.cn/res7/2020/02/01/b63c990ca4ab8fd2430118190c70314f.png'
-
-
-// const testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
-const testImg = 'https://n1image.hjfile.cn/res7/2020/02/01/73b0d0794e4390779767721f453b9794.png'
-
-const imageData = ONE_FACE
 
 import './styles.styl'
 
 const { windowWidth } = getSystemInfo()
 const CANVAS_SIZE = 300
-const DPR_CANVAS_SIZE = CANVAS_SIZE * windowWidth / 375
+const PageDpr = windowWidth / 375
+
+const DPR_CANVAS_SIZE = CANVAS_SIZE * PageDpr
+const DEFAULT_MASK_SIZE = 100 * PageDpr
 const MASK_SIZE = 100
 
 const resetState = () => {
   return {
-    hatCenterX: windowWidth / 2,
-    hatCenterY: 150,
-    cancelCenterX: windowWidth / 2 - 50 - 2,
-    cancelCenterY: 100,
-    handleCenterX: windowWidth / 2 + 50 - 2,
-    handleCenterY: 200,
+    maskCenterX: DPR_CANVAS_SIZE / 2,
+    maskCenterY: DPR_CANVAS_SIZE / 2,
+    cancelCenterX: DPR_CANVAS_SIZE / 2 - DEFAULT_MASK_SIZE / 2 - 2,
+    cancelCenterY: DPR_CANVAS_SIZE / 2 - DEFAULT_MASK_SIZE / 2 - 2,
+    handleCenterX: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
+    handleCenterY: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
 
-    hatSize: 100 / (375 / windowWidth),
+    maskSize: DEFAULT_MASK_SIZE,
 
     scale: 1,
     rotate: 0
@@ -43,9 +35,9 @@ const resetState = () => {
 }
 
 // @CorePage
-class Index extends Component {
+class WearMask extends Component {
   config = {
-    navigationBarTitleText: '首页',
+    navigationBarTitleText: '一起戴口罩',
   }
 
   constructor(props) {
@@ -53,22 +45,23 @@ class Index extends Component {
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
       ...resetState(),
-      originSrc:  '', //testImg,
-      cutImageSrc: '', //testImg,
+      originSrc:  '',
+      cutImageSrc: '',
       imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 
-      currentHatId: 1,
+      currentMaskId: 1,
       isShowMask: false,
       isSavePicture: false
-
     }
+
+    this.cutImageSrcCanvas = ''
   }
 
   onShareAppMessage() {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2018/12/20/9de3c702be8dea2066b44913e95a9f8c.jpg?imageView2/1/w/375/h/300'
+    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
 
     return {
-      title: '自动戴口罩',
+      title: '让我们一起戴口罩，抗击疫情吧！',
       imageUrl: DEFAULT_SHARE_COVER,
       path: '/pages/wear-a-mask/wear-a-mask'
     }
@@ -76,8 +69,8 @@ class Index extends Component {
 
   componentDidMount() {
     const {
-      hatCenterX,
-      hatCenterY,
+      maskCenterX,
+      maskCenterY,
       cancelCenterX,
       cancelCenterY,
       handleCenterX,
@@ -85,8 +78,8 @@ class Index extends Component {
       scale,
       rotate
     } = this.state
-    this.hat_center_x = hatCenterX;
-    this.hat_center_y = hatCenterY;
+    this.mask_center_x = maskCenterX;
+    this.mask_center_y = maskCenterY;
     this.cancel_center_x = cancelCenterX;
     this.cancel_center_y = cancelCenterY;
     this.handle_center_x = handleCenterX;
@@ -99,40 +92,59 @@ class Index extends Component {
     this.start_x = 0;
     this.start_y = 0;
 
-    this.setState({
-      cutImageSrc: imageData
-    })
-    this.onAnalyzeFace(getBase64Main(imageData))
+    
+    // this.setState({
+    //   cutImageSrc: imageData
+    // })
+    // this.onAnalyzeFace(getBase64Main(imageData))
   }
 
 
 
   catTaroCropper(node) {
     this.taroCropper = node;
-    console.log('this.taroCropper :', this.taroCropper);
   }
 
-  onChooseImage = () => {
+  onChooseImage = (event) => {
+    const way = event.target.dataset.way
     Taro.chooseImage({
       count: 1,
-      sizeType: ['compressed'],
+      sourceType: [way],
     }).then(res => {
-      // console.log(res);
       this.setState({
         originSrc: res.tempFilePaths[0]
       });
     })
   }
 
+  onGetUserInfo =  (e) => {
+
+    if (e.detail.userInfo) {
+      //用户按了允许授权按钮
+      // TODO写法，用于更换图片
+      this.setState({
+        originSrc: ''
+      }, () => {
+        setTimeout(() => {
+          this.setState({
+            originSrc: e.detail.userInfo.avatarUrl
+          })
+        }, 100);
+      })
+    } else {
+      //用户按了拒绝按钮
+    }
+  }
+
   onCut = (cutImageSrc) => {
-    let that = this
-    console.log('cutImageSrc :', cutImageSrc);
+    let tmask = this
     this.setState({
       cutImageSrc,
       originSrc: ''
     }, async () => {
+        this.cutImageSrcCanvas = await getImg(cutImageSrc)
         srcToBase64Main(cutImageSrc, (base64Main) => {
-          that.onAnalyzeFace(base64Main)
+          tmask.onAnalyzeFace(base64Main)
         })
     })
   }
@@ -142,7 +154,7 @@ class Index extends Component {
     if (!base64Main) return
 
     Taro.showLoading({
-      title: '图片识别中'
+      title: '识别中...'
     })
 
     this.setState({
@@ -163,26 +175,25 @@ class Index extends Component {
       const info = getMouthInfo(res2)
       let { faceWidth, angle, mouthMidPoint, ImageWidth } = info[0]
       let dpr = ImageWidth / CANVAS_SIZE * (375 / windowWidth)
-      const hatCenterX = mouthMidPoint.X / dpr
-      const hatCenterY =  mouthMidPoint.Y / dpr
+      const maskCenterX = mouthMidPoint.X / dpr
+      const maskCenterY =  mouthMidPoint.Y / dpr
       const scale = faceWidth / MASK_SIZE / dpr
       const rotate = angle / Math.PI * 180
-
 
       // 角度计算有点难
       let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
       let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
 
-      const cancelCenterX = (mouthMidPoint.X - widthScaleDpr) / dpr - 2
-      const cancelCenterY = (mouthMidPoint.Y - heightScaleDpr) / dpr - 2
-      const handleCenterX = (mouthMidPoint.X + widthScaleDpr) / dpr - 2
-      const handleCenterY = (mouthMidPoint.Y + heightScaleDpr) / dpr - 2
+      const cancelCenterX = maskCenterX - widthScaleDpr - 2
+      const cancelCenterY = maskCenterY - heightScaleDpr - 2
+      const handleCenterX = maskCenterX + widthScaleDpr - 2
+      const handleCenterY = maskCenterY + heightScaleDpr - 2
 
       this.setState({
         ...resetState(),
         isShowMask: true,
-        hatCenterX,
-        hatCenterY,
+        maskCenterX,
+        maskCenterY,
         scale,
         rotate,
         cancelCenterX,
@@ -214,6 +225,7 @@ class Index extends Component {
   }
 
   onRemoveImage = () => {
+    this.cutImageSrcCanvas = ''
     this.setState({
       ...resetState(),
       cutImageSrc: ''
@@ -224,9 +236,9 @@ class Index extends Component {
     const {
       scale,
       rotate,
-      hatCenterX,
-      hatCenterY,
-      currentHatId,
+      maskCenterX,
+      maskCenterY,
+      currentMaskId,
       cutImageSrc
     } = this.state
     this.setState({
@@ -234,41 +246,31 @@ class Index extends Component {
     })
 
     const pc = Taro.createCanvasContext('canvasMask')
-    // const pc = this.canvasMaskRef
-    const hatSize = 100 * scale;
+    const maskSize = 100 * scale;
 
     pc.clearRect(0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE);
-    let tmpCutImage = await getImg(cutImageSrc)
+    let tmpCutImage = this.cutImageSrcCanvas || await getImg(cutImageSrc)
     pc.drawImage(tmpCutImage, 0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE);
     pc.save()
-    pc.translate(hatCenterX, hatCenterY);
-    pc.rotate((rotate * Math.PI) / 180);
+    pc.translate(maskCenterX, maskCenterY);
+    pc.rotate((rotate * Math.PI) / 180)
 
-    try {
-      let maskSrc = await getImg(Mask1Image)
-      console.log('maskSrc :', maskSrc);
-      
-      if (maskSrc) {
-        pc.drawImage(
-          maskSrc,
-          // this.state.cutImageSrc,
-          -hatSize / 2,
-          -hatSize / 2,
-          hatSize,
-          hatSize
-        )
-      }
-      
-    } catch (error) {
-      console.log('error :', error);
-    }
+    pc.drawImage(
+      require(`../../images/mask-${currentMaskId}.png`),
+      -maskSize / 2,
+      -maskSize / 2,
+      maskSize,
+      maskSize
+    )
+
     pc.restore()
     pc.draw()
+    
   }
 
   downloadImage = async () => {
 
-    let that = this
+    let tmask = this
 
     Taro.showLoading({
       title: '图片生成中'
@@ -276,21 +278,20 @@ class Index extends Component {
 
     try {
       await this.drawCanvas()
+
       Taro.canvasToTempFilePath({
         x: 0,
         y: 0,
         height: DPR_CANVAS_SIZE,
         width: DPR_CANVAS_SIZE,
-        destHeight: 300,
-        destWidth: 300,
+        destHeight: 300 * 2,
+        destWidth: 300 * 2,
         canvasId: 'canvasMask',
         success: res => {
-          console.log('res.tempFilePath :', res.tempFilePath);
-          // app.globalData.successPic = res.tempFilePath;
           Taro.saveImageToPhotosAlbum({
             filePath: res.tempFilePath,
             success: res2 => {
-              that.saveFinally()
+              tmask.saveFinally()
               Taro.hideLoading()
               Taro.showToast({
                 title: '图片保存成功'
@@ -298,14 +299,21 @@ class Index extends Component {
               console.log('保存成功 :', res2);
             },
             fail(e) {
-              that.saveFinally()
+              tmask.saveFinally()
               Taro.hideLoading()
               Taro.showToast({
-                title: '图片未保存'
+                title: '图片未保存成功'
               })
-              console.log('图片未保存:' + e);
+              console.log('图片未保存成功:' + e);
             }
           });
+        },
+        fail: () => {
+          tmask.saveFinally()
+          Taro.hideLoading()
+          Taro.showToast({
+            title: '图片未保存成功'
+          })
         }
       })
 
@@ -324,16 +332,15 @@ class Index extends Component {
   saveFinally = () => this.setState({ isSavePicture: false})
 
   chooseMask = (e) => {
-    const hatId = e.target.dataset.hatId
-    console.log('object :', hatId);
+    const maskId = e.target.dataset.maskId
     this.setState({
-      currentHatId: e.target.dataset.hatId
+      currentMaskId: maskId
     })
   }
 
   touchStart = (e) => {
-    if (e.target.id == 'hat') {
-      this.touch_target = 'hat';
+    if (e.target.id == 'mask') {
+      this.touch_target = 'mask';
     } else if (e.target.id == 'handle') {
       this.touch_target = 'handle';
     } else {
@@ -346,8 +353,8 @@ class Index extends Component {
     }
   }
   touchEnd = (e) => {
-    this.hat_center_x = this.state.hatCenterX;
-    this.hat_center_y = this.state.hatCenterY;
+    this.mask_center_x = this.state.maskCenterX;
+    this.mask_center_y = this.state.maskCenterY;
     this.cancel_center_x = this.state.cancelCenterX;
     this.cancel_center_y = this.state.cancelCenterY;
     this.handle_center_x = this.state.handleCenterX;
@@ -362,10 +369,10 @@ class Index extends Component {
     var current_y = e.touches[0].clientY;
     var moved_x = current_x - this.start_x;
     var moved_y = current_y - this.start_y;
-    if (this.touch_target == 'hat') {
+    if (this.touch_target == 'mask') {
       this.setState({
-        hatCenterX: this.state.hatCenterX + moved_x,
-        hatCenterY: this.state.hatCenterY + moved_y,
+        maskCenterX: this.state.maskCenterX + moved_x,
+        maskCenterY: this.state.maskCenterY + moved_y,
         cancelCenterX: this.state.cancelCenterX + moved_x,
         cancelCenterY: this.state.cancelCenterY + moved_y,
         handleCenterX: this.state.handleCenterX + moved_x,
@@ -376,13 +383,13 @@ class Index extends Component {
       this.setState({
         handleCenterX: this.state.handleCenterX + moved_x,
         handleCenterY: this.state.handleCenterY + moved_y,
-        cancelCenterX: 2 * this.state.hatCenterX - this.state.handleCenterX,
-        cancelCenterY: 2 * this.state.hatCenterY - this.state.handleCenterY
+        cancelCenterX: 2 * this.state.maskCenterX - this.state.handleCenterX,
+        cancelCenterY: 2 * this.state.maskCenterY - this.state.handleCenterY
       });
-      let diff_x_before = this.handle_center_x - this.hat_center_x;
-      let diff_y_before = this.handle_center_y - this.hat_center_y;
-      let diff_x_after = this.state.handleCenterX - this.hat_center_x;
-      let diff_y_after = this.state.handleCenterY - this.hat_center_y;
+      let diff_x_before = this.handle_center_x - this.mask_center_x;
+      let diff_y_before = this.handle_center_y - this.mask_center_y;
+      let diff_x_after = this.state.handleCenterX - this.mask_center_x;
+      let diff_y_after = this.state.handleCenterY - this.mask_center_y;
       let distance_before = Math.sqrt(
         diff_x_before * diff_x_before + diff_y_before * diff_y_before
       );
@@ -406,16 +413,16 @@ class Index extends Component {
     const {
       originSrc,
       cutImageSrc,
-      currentHatId,
+      currentMaskId,
 
-      hatCenterX,
-      hatCenterY,
+      maskCenterX,
+      maskCenterY,
       cancelCenterX,
       cancelCenterY,
       handleCenterX,
       handleCenterY,
 
-      hatSize,
+      maskSize,
 
       scale,
       rotate,
@@ -423,65 +430,91 @@ class Index extends Component {
       isShowMask,
       isSavePicture
     } = this.state
-    let hatStyle = {
-      top: hatCenterY - hatSize / 2 - 2 + 'px',
-      left: hatCenterX - hatSize / 2 - 2 + 'px',
+    let maskStyle = {
+      top: maskCenterY - maskSize / 2 - 2 + 'px',
+      left: maskCenterX - maskSize / 2 - 2 + 'px',
       transform: `rotate(${rotate+'deg'}) scale(${scale})`
     }
 
-    // let cancelStyle = {
-    //   top: cancelCenterY -10 + 'px',
-    //   left: cancelCenterX - 10 + 'px'
-    // }
+    let cancelStyle = {
+      top: cancelCenterY -10 + 'px',
+      left: cancelCenterX - 10 + 'px'
+    }
 
     let handleStyle = {
       top: handleCenterY -10 + 'px',
       left: handleCenterX - 10 + 'px'
     }
 
+    let maskCanvasStyle = {
+      top: isSavePicture ? '0' : '-9999px'
+    }
+
     return (
       <View className='mask-page'>
         <View className='main-wrap'>
+          <View
+            className='image-position'
+          >
+            {cutImageSrc
+              ? (
+                <View
+                  className='image-wrap'
+                  onTouchStart={this.touchStart}
+                  onTouchMove={this.touchMove}
+                  onTouchEnd={this.touchEnd}
+                >
+                  <Image
+                    src={cutImageSrc}
+                    mode='widthFix'
+                    className='image-selected'
+                  />
+                  {
+                    !isSavePicture && isShowMask && (
+                      <Block>
+                        <Image className="mask" id='mask' src={require(`../../images/mask-${currentMaskId}.png`)} style={maskStyle} />
+                        {/* <Icon type="cancel" className="image-btn-cancel" id="cancel" style={cancelStyle} /> */}
+                        <Icon type="waiting" className="image-btn-handle" id="handle" color="green" style={handleStyle} />
+                      </Block>
+                    )
+                  }
+                  {/* { && <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />} */}
+
+
+                </View>
+              )
+              : (
+                <View className='to-choose'></View>
+                )
+              }
+            <View className='canvas-mask-good' style={maskCanvasStyle}>
+              <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />
+            </View>
+          </View>
           {cutImageSrc
             ? (
-              <View
-                className='image-wrap'
-                onTouchStart={this.touchStart}
-                onTouchMove={this.touchMove}
-                onTouchEnd={this.touchEnd}
-              >
-                <Image
-                  src={cutImageSrc}
-                  mode='widthFix'
-                  className='image-selected'
-                />
-                {
-                  isShowMask && (
-                    <Block>
-                      <Image className="hat" id='hat' src={require(`../../images/mask-${currentHatId}.png`)} style={hatStyle} />
-                      {/* <Icon type="cancel" className="image-btn-cancel" id="cancel" style={cancelStyle} /> */}
-                      <Icon type="waiting" className="image-btn-handle" id="handle" color="green" style={handleStyle} />
-                    </Block>
-                  )
-                }
-                {
-                  isSavePicture && <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />
-                }
-
-
+              <View className='button-wrap'>
+                <View className='button-remove' onClick={this.onRemoveImage}>
+                  移除图片
+                </View>
+                <View className='button-download' onClick={this.downloadImage}>
+                  保存图片
+                </View>
               </View>
-            )
+            ) 
             : (
-              <View className='to-choose' onClick={this.onChooseImage}>
+              <View className='button-wrap'>
+                <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
+                <Button className='button-camera' type="default" data-way="camera" onClick={this.onChooseImage}>
+                  使用相机
+                </Button>
+                <Button className='button-gallery' type="default" data-way="album" onClick={this.onChooseImage}>
+                  相册选择
+                </Button>
               </View>
             )
+            
           }
-          {!!cutImageSrc && (
-            <View className='button-wrap'>
-              <Button className='button-remove' onClick={this.onRemoveImage}></Button>
-              <Button className='button-download' onClick={this.downloadImage}></Button>
-            </View>
-          )}
         </View>
         <View className='cropper-wrap' hidden={!originSrc}>
           <TaroCropper
@@ -496,26 +529,37 @@ class Index extends Component {
           />
         </View>
         {
-          !!cutImageSrc && (
-            <ScrollView className="mask-select-wrap" scrollX>
-              {
-                imgList.map(imgId => {
-                  return (
-                    <Image
-                      className="image-item"
-                      key={imgId}
-                      src={require(`../../images/mask-${imgId }.png`)}
-                      onClick={this.chooseMask}
-                      data-hat-id={imgId}
-                    />
-                  )
-                })
-              }
-            </ScrollView>
-          )
+          cutImageSrc
+            ? (
+              <ScrollView className="mask-select-wrap" scrollX>
+                {
+                  imgList.map((imgId) => {
+                    return (
+                      <Image
+                        className="image-item"
+                        key={imgId}
+                        src={require(`../../images/mask-${imgId}.png`)}
+                        onClick={this.chooseMask}
+                        data-mask-id={imgId}
+                      />
+                    )
+                  })
+                }
+              </ScrollView>
+            )
+            : (
+              <View className='bottom-tips-wrap'>
+                <Text>
+                  {'备注：\n选择后会识别图中人脸，并自动戴上口罩\n识别过程需几秒钟，请耐心等待'}
+                </Text>
+              </View>
+            )
         }
+
         
       </View>
     )
   }
 }
+
+export default WearMask

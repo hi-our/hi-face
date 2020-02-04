@@ -169,8 +169,8 @@ app.post('/api/analyze-face', async (req, res) => {
       res.send({
         data: {},
         time: new Date(),
-        status: -10086,
-        message: FACE_CODE[code] || '图片解析失败'
+        status: code || -10086,
+        message: FACE_CODE[code] || '图片解析失败' + code
       })
       return;
     }
