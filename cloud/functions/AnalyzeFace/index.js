@@ -1,21 +1,17 @@
 const tencentcloud = require('./tencentcloud-sdk-nodejs')
-
-const cloud = require('wx-server-sdk')
-// const app = require("./tcb-admin-node");
 const config = require('./config')
 
 const tcb = require('tcb-admin-node');
 
-// const SecretId = process.env.TENCENTCLOUD_SECRETID
-// const SecretKey = process.env.TENCENTCLOUD_SECRETKEY
 // 腾讯云的id和key
-let SecretId = config.SecretId
-let SecretKey = config.SecretKey
+let secretId = config.SecretId || ''
+let secretKey = config.SecretKey || ''
+let env = config.env || ''
 
 tcb.init({
-  secretId: SecretId,
-  secretKey: SecretKey,
-  env: 'development-v9y2f'
+  secretId,
+  secretKey,
+  env
 })
 const FACE_CODE = {
   'FailedOperation.ConflictOperation': '操作冲突，请勿同时操作相同的Person。',
@@ -87,7 +83,7 @@ const FACE_CODE = {
   'UnsupportedOperation.UnknowMethod': '未知方法名。',
 }
 
-cloud.init()
+// cloud.init()
 
 const IaIClient = tencentcloud.iai.v20180301.Client;
 const models = tencentcloud.iai.v20180301.Models;
@@ -107,7 +103,7 @@ clientProfile.signMethod = "TC3-HMAC-SHA256";
 clientProfile.httpProfile = httpProfile;
 
 // 实例化一个认证对象，入参需要传入腾讯云账户secretId，secretKey
-let cred = new Credential(SecretId, SecretKey);
+let cred = new Credential(secretId, secretKey);
 
 // 实例化要请求产品(以cvm为例)的client对象
 let client = new IaIClient(cred, "ap-shanghai", clientProfile);
@@ -119,7 +115,7 @@ exports.main = async (event) => {
   })
   
   const { fileContent } = res
-  const wxContext = cloud.getWXContext()
+  // const wxContext = cloud.getWXContext()
 
 
   let faceReq = new models.DetectFaceRequest()

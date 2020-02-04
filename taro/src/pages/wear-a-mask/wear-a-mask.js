@@ -77,19 +77,19 @@ class WearMask extends Component {
   async componentDidMount() {
     tcbService.callService({
       service: 'ai',
-      action: 'DetectFace',
+      action: 'AnalyzeFace',
       data: {
         FileID: 'cloud://development-v9y2f.6465-development-v9y2f-1251170943/22222.png'
       }
     }).then((res) => {
       console.log('res :', res);
       // 处理结果
-    })
+    }).catch(console.log)
     // Taro.cloud
     //   .callFunction({
     //     name: "AnalyzeFace",
     //     data: {
-    //       abc: 123
+    //       FileID: 'cloud://development-v9y2f.6465-development-v9y2f-1251170943/22222.png'
     //     }
     //   })
     //   .then(res => {
