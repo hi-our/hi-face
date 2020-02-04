@@ -11,6 +11,10 @@ const data = {
   sourceLink: 'https://github.com/shenghanqin/goddess-hat',
   referenceList: [
     {
+      image: 'https://n1image.hjfile.cn/res7/2020/02/04/d6fec5814eb7f6d5f058942ca5e5f9b6.png',
+      desc: 'Taro 多端统一开发解决方案\ntaro.aotu.io\n快速开发多端小程序的必选框架'
+    },
+    {
       image: 'https://n1image.hjfile.cn/res7/2020/02/02/8d095d49ed4ca2810c1a9871d39499bc.png',
       desc: '我要戴口罩\ngithub.com/idealclover/Wear-A-Mask\n参考了口罩的主要逻辑'
     },
