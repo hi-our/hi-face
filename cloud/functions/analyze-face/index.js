@@ -113,7 +113,7 @@ exports.main = async (event) => {
   let res = await tcb.downloadFile({
     fileID: FileID
   })
-  
+
   const { fileContent } = res
   // const wxContext = cloud.getWXContext()
 

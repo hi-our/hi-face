@@ -1,6 +1,6 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Icon, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
-import fetch from 'utils/fetch'
+import fetch, { cloudCallFunction } from 'utils/fetch'
 import { apiAnalyzeFace } from 'constants/apis'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo, getBase64Main } from 'utils/face-utils'
@@ -75,38 +75,20 @@ class WearMask extends Component {
   }
 
   async componentDidMount() {
-    tcbService.callService({
-      service: 'ai',
-      action: 'AnalyzeFace',
+    cloudCallFunction({
+      name: 'analyze-face',
       data: {
         FileID: 'cloud://development-v9y2f.6465-development-v9y2f-1251170943/22222.png'
       }
-    }).then((res) => {
-      console.log('res :', res);
-      // 处理结果
-    }).catch(console.log)
+    })
+
     // Taro.cloud
     //   .callFunction({
-    //     name: "AnalyzeFace",
-    //     data: {
-    //       FileID: 'cloud://development-v9y2f.6465-development-v9y2f-1251170943/22222.png'
-    //     }
     //   })
     //   .then(res => {
-    //     console.log('res :', res);
+    //     console.log('res 222222:', res);
     //   })
-    // const tcbService = new TcbService()
-    // console.log('2 :', 2);
-    // let result = await tcbService.callService({
-    //   service: 'ai',
-    //   // action: 'AnalyzeFace',
-    //   action: 'FaceDetect',
-    //   data: {
-    //     Mode: 1,
-    //     FaceModelVersion: '3.0'
-    //   },
-    // })
-    // console.log('result :', result);
+
     const {
       maskCenterX,
       maskCenterY,
