@@ -4,12 +4,19 @@ const cloud = require('wx-server-sdk')
 // const app = require("./tcb-admin-node");
 const config = require('./config')
 
+const tcb = require('tcb-admin-node');
+
 // const SecretId = process.env.TENCENTCLOUD_SECRETID
 // const SecretKey = process.env.TENCENTCLOUD_SECRETKEY
 // 腾讯云的id和key
 let SecretId = config.SecretId
 let SecretKey = config.SecretKey
 
+tcb.init({
+  secretId: SecretId,
+  secretKey: SecretKey,
+  env: 'development-v9y2f'
+})
 const FACE_CODE = {
   'FailedOperation.ConflictOperation': '操作冲突，请勿同时操作相同的Person。',
   'FailedOperation.DuplicatedGroupDescription': '同一人员库中自定义描述字段不可重复。',
@@ -106,48 +113,49 @@ let cred = new Credential(SecretId, SecretKey);
 let client = new IaIClient(cred, "ap-shanghai", clientProfile);
 
 exports.main = async (event) => {
-  console.log('process.env.TENCENTCLOUD_SECRETID :', process.env.TENCENTCLOUD_SECRETID);
+  const { FileID } = event
+  let res = await tcb.downloadFile({
+    fileID: FileID
+  })
+  
+  const { fileContent } = res
   const wxContext = cloud.getWXContext()
 
 
   let faceReq = new models.DetectFaceRequest()
-  console.log('event :', event);
-  let queryBody = Object.assign({}, event || {})
+
   // console.log('queryBody :', queryBody);
-  let query_string = JSON.stringify(queryBody)
+  let query_string = JSON.stringify({
+    Image: fileContent.toString('base64')
+  })
   // 传入json参数
   faceReq.from_json_string(query_string);
 
+  return new Promise((resolve, reject) => {
+    // TC3-HMAC-SHA256
+    // 通过client对象调用想要访问的接口，需要传入请求对象以及响应回调函数
+    client.AnalyzeFace(faceReq, function (error, response) {
+      // 请求异常返回，打印异常信息
+      if (error) {
+        const { code = '' } = error
+        console.log('code :', code);
 
-  // TC3-HMAC-SHA256
-  // 通过client对象调用想要访问的接口，需要传入请求对象以及响应回调函数
-  client.AnalyzeFace(faceReq, function (error, response) {
-    // 请求异常返回，打印异常信息
-    if (error) {
-      const { code = '' } = error
-      console.log('code :', code);
-
-      return{
-        data: {},
-        time: new Date(),
-        status: -10086,
-        message: FACE_CODE[code] || '图片解析失败'
+        reject({
+          data: {},
+          time: new Date(),
+          status: -10086,
+          message: FACE_CODE[code] || '图片解析失败'
+        })
+        return
       }
-    }
-
-    console.log('AnalyzeFace response :', response)
-    // 请求正常返回，打印response对象
-    return {
-      data: response,
-      time: new Date(),
-      status: 0,
-      message: ''
-    }
+      console.log('AnalyzeFace response :', response)
+      // 请求正常返回，打印response对象
+      resolve({
+        data: response,
+        time: new Date(),
+        status: 0,
+        message: ''
+      })
+    })
   });
-
-  return {
-    openid: wxContext.OPENID,
-    appid: wxContext.APPID,
-    unionid: wxContext.UNIONID,
-  }
 }

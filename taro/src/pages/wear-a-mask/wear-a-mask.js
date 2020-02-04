@@ -9,7 +9,11 @@ import TcbService from 'utils/tcb-service-mp-sdk'
 
 import { TaroCropper } from 'taro-cropper'
 
+
+
 import './styles.styl'
+
+let tcbService = new TcbService()
 
 const { windowWidth } = getSystemInfo()
 const CANVAS_SIZE = 300
@@ -71,16 +75,26 @@ class WearMask extends Component {
   }
 
   async componentDidMount() {
-    Taro.cloud
-      .callFunction({
-        name: "AnalyzeFace",
-        data: {
-          abc: 123
-        }
-      })
-      .then(res => {
-        console.log('res :', res);
-      })
+    tcbService.callService({
+      service: 'ai',
+      action: 'DetectFace',
+      data: {
+        FileID: 'cloud://development-v9y2f.6465-development-v9y2f-1251170943/22222.png'
+      }
+    }).then((res) => {
+      console.log('res :', res);
+      // 处理结果
+    })
+    // Taro.cloud
+    //   .callFunction({
+    //     name: "AnalyzeFace",
+    //     data: {
+    //       abc: 123
+    //     }
+    //   })
+    //   .then(res => {
+    //     console.log('res :', res);
+    //   })
     // const tcbService = new TcbService()
     // console.log('2 :', 2);
     // let result = await tcbService.callService({
@@ -130,15 +144,52 @@ class WearMask extends Component {
   }
 
   onChooseImage = (event) => {
-    const way = event.target.dataset.way
     Taro.chooseImage({
-      count: 1,
-      sourceType: [way],
-    }).then(res => {
-      this.setState({
-        originSrc: res.tempFilePaths[0]
-      });
-    })
+      success: dRes => {
+        // 上传图片
+        const uploadTask = Taro.cloud.uploadFile({
+          cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.png`, // 随机图片名
+          filePath: dRes.tempFilePaths[0], // 本地的图片路径
+          success: (res) => {
+            const { fileID } = res
+            console.log('res :', fileID);
+
+            Taro.cloud.getTempFileURL({
+              fileList:[
+                fileID
+              ]
+            }).then(res2 => {
+              // fileID tempFileURL
+              const { tempFileURL } = res2
+              tcbService.callService({
+                service: 'ai',
+                action: 'DetectFace',
+                data: {
+                  FileID: fileID,
+                  Url: tempFileURL
+                }
+              }).then((res3) => {
+                console.log('res3 :', res3);
+                // 处理结果
+              })
+              console.log('res2 :', res2);
+            })
+          },
+          fail: console.error
+        });
+      },
+      fail: console.error,
+    });
+    
+    // const way = event.target.dataset.way
+    // Taro.chooseImage({
+    //   count: 1,
+    //   sourceType: [way],
+    // }).then(res => {
+    //   this.setState({
+    //     originSrc: res.tempFilePaths[0]
+    //   });
+    // })
   }
 
   onGetUserInfo =  (e) => {
