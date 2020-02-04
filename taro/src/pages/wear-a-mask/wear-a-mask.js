@@ -5,15 +5,10 @@ import { apiAnalyzeFace } from 'constants/apis'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo, getBase64Main } from 'utils/face-utils'
 import { srcToBase64Main, getImg } from 'utils/canvas-drawing'
-import TcbService from 'utils/tcb-service-mp-sdk'
 
 import { TaroCropper } from 'taro-cropper'
 
-
-
 import './styles.styl'
-
-let tcbService = new TcbService()
 
 const { windowWidth } = getSystemInfo()
 const CANVAS_SIZE = 300
@@ -75,20 +70,6 @@ class WearMask extends Component {
   }
 
   async componentDidMount() {
-    cloudCallFunction({
-      name: 'analyze-face',
-      data: {
-        FileID: 'cloud://development-v9y2f.6465-development-v9y2f-1251170943/22222.png'
-      }
-    })
-
-    // Taro.cloud
-    //   .callFunction({
-    //   })
-    //   .then(res => {
-    //     console.log('res 222222:', res);
-    //   })
-
     const {
       maskCenterX,
       maskCenterY,
@@ -112,12 +93,6 @@ class WearMask extends Component {
     this.touch_target = '';
     this.start_x = 0;
     this.start_y = 0;
-
-    
-    // this.setState({
-    //   cutImageSrc: imageData
-    // })
-    // this.onAnalyzeFace(getBase64Main(imageData))
   }
 
 
@@ -126,52 +101,15 @@ class WearMask extends Component {
   }
 
   onChooseImage = (event) => {
+    const way = event.target.dataset.way
     Taro.chooseImage({
-      success: dRes => {
-        // 上传图片
-        const uploadTask = Taro.cloud.uploadFile({
-          cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.png`, // 随机图片名
-          filePath: dRes.tempFilePaths[0], // 本地的图片路径
-          success: (res) => {
-            const { fileID } = res
-            console.log('res :', fileID);
-
-            Taro.cloud.getTempFileURL({
-              fileList:[
-                fileID
-              ]
-            }).then(res2 => {
-              // fileID tempFileURL
-              const { tempFileURL } = res2
-              tcbService.callService({
-                service: 'ai',
-                action: 'DetectFace',
-                data: {
-                  FileID: fileID,
-                  Url: tempFileURL
-                }
-              }).then((res3) => {
-                console.log('res3 :', res3);
-                // 处理结果
-              })
-              console.log('res2 :', res2);
-            })
-          },
-          fail: console.error
-        });
-      },
-      fail: console.error,
-    });
-    
-    // const way = event.target.dataset.way
-    // Taro.chooseImage({
-    //   count: 1,
-    //   sourceType: [way],
-    // }).then(res => {
-    //   this.setState({
-    //     originSrc: res.tempFilePaths[0]
-    //   });
-    // })
+      count: 1,
+      sourceType: [way],
+    }).then(res => {
+      this.setState({
+        originSrc: res.tempFilePaths[0]
+      });
+    })
   }
 
   onGetUserInfo =  (e) => {
@@ -193,17 +131,69 @@ class WearMask extends Component {
     this.setState({
       cutImageSrc,
       originSrc: ''
-    }, async () => {
-        this.cutImageSrcCanvas = await getImg(cutImageSrc)
-        srcToBase64Main(cutImageSrc, (base64Main) => {
-          tmask.onAnalyzeFace(base64Main)
-        })
+    }, () => { 
+      this.onAnalyzeFace(cutImageSrc)
     })
   }
 
+  cloudCanvasToAnalyze = async (tempFilePaths) => {
+    let tmask = this
 
-  onAnalyzeFace = async (base64Main = '' ) => {
-    if (!base64Main) return
+    return new Promise((resolve, reject) => {
+      // 上传图片
+      Taro.cloud.uploadFile({
+        cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.png`, // 随机图片名
+        filePath: tempFilePaths, // 本地的图片路径
+        success: (uploadRes) => {
+          const { fileID } = uploadRes
+          cloudCallFunction({
+            name: 'analyze-face',
+            data: {
+              fileID
+            }
+          }).then(cloudRes => {
+            resolve(cloudRes)
+            Taro.cloud.deleteFile({
+              fileList: [fileID],
+              success: res => {
+                // handle success
+                console.log('临时图片删除成功', res.fileList)
+              },
+              fail: error => {
+                console.log('临时图片删除失败', error)
+              },
+            })
+          }).catch(error => {
+            console.log('error :', error);
+            reject(error)
+          })
+        },
+        fail: (error) => {
+          console.log('error :', error);
+          reject(error)
+        }
+      })
+    })
+  }
+
+  // TODO 其他小程序再说
+  tmpFetchFunction = () => {
+    // srcToBase64Main(cutImageSrc, (base64Main) => {
+    // })
+    // const res2 = await fetch({
+    //   url: apiAnalyzeFace,
+    //   type: 'post',
+    //   data: {
+    //     Image: base64Main,
+    //     Mode: 1,
+    //     FaceModelVersion: '3.0'
+    //   }
+    // })
+  }
+
+
+  onAnalyzeFace = async (cutImageSrc) => {
+    if (!cutImageSrc) return
 
     Taro.showLoading({
       title: '识别中，多等几秒'
@@ -214,60 +204,41 @@ class WearMask extends Component {
     })
 
     try {
-      Taro.cloud
-        .callFunction({
-          name: "AnalyzeFace",
-          data: {
-            // Image: base64Main,
-            Mode: 1,
-            FaceModelVersion: '3.0'
-          }
-        })
-        .then(res => {
-          console.log('res :', res);
-        })
-      
-      // const res2 = await fetch({
-      //   url: apiAnalyzeFace,
-      //   type: 'post',
-      //   data: {
-      //     Image: base64Main,
-      //     Mode: 1,
-      //     FaceModelVersion: '3.0'
-      //   }
-      // })
 
-      // const info = getMouthInfo(res2)
-      // let { faceWidth, angle, mouthMidPoint, ImageWidth } = info[0]
-      // let dpr = ImageWidth / CANVAS_SIZE * (375 / windowWidth)
-      // const maskCenterX = mouthMidPoint.X / dpr
-      // const maskCenterY =  mouthMidPoint.Y / dpr
-      // const scale = faceWidth / MASK_SIZE / dpr
-      // const rotate = angle / Math.PI * 180
+      const res2 = await this.cloudCanvasToAnalyze(cutImageSrc)
+      console.log('图片分析的结果 :', res2);
 
-      // // 角度计算有点难
-      // let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
-      // let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+      const info = getMouthInfo(res2)
+      let { faceWidth, angle, mouthMidPoint, ImageWidth } = info[0]
+      let dpr = ImageWidth / CANVAS_SIZE * (375 / windowWidth)
+      const maskCenterX = mouthMidPoint.X / dpr
+      const maskCenterY =  mouthMidPoint.Y / dpr
+      const scale = faceWidth / MASK_SIZE / dpr
+      const rotate = angle / Math.PI * 180
 
-      // const cancelCenterX = maskCenterX - widthScaleDpr - 2
-      // const cancelCenterY = maskCenterY - heightScaleDpr - 2
-      // const handleCenterX = maskCenterX + widthScaleDpr - 2
-      // const handleCenterY = maskCenterY + heightScaleDpr - 2
+      // 角度计算有点难
+      let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+      let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
 
-      // this.setState({
-      //   ...resetState(),
-      //   isShowMask: true,
-      //   maskCenterX,
-      //   maskCenterY,
-      //   scale,
-      //   rotate,
-      //   cancelCenterX,
-      //   cancelCenterY,
-      //   handleCenterX,
-      //   handleCenterY,
-      // })
+      const cancelCenterX = maskCenterX - widthScaleDpr - 2
+      const cancelCenterY = maskCenterY - heightScaleDpr - 2
+      const handleCenterX = maskCenterX + widthScaleDpr - 2
+      const handleCenterY = maskCenterY + heightScaleDpr - 2
 
-      // Taro.hideLoading()
+      this.setState({
+        ...resetState(),
+        isShowMask: true,
+        maskCenterX,
+        maskCenterY,
+        scale,
+        rotate,
+        cancelCenterX,
+        cancelCenterY,
+        handleCenterX,
+        handleCenterY,
+      })
+
+      Taro.hideLoading()
 
     } catch (error) {
       Taro.hideLoading()

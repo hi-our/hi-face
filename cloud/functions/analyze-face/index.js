@@ -109,9 +109,9 @@ let cred = new Credential(secretId, secretKey);
 let client = new IaIClient(cred, "ap-shanghai", clientProfile);
 
 exports.main = async (event) => {
-  const { FileID } = event
+  const { fileID } = event
   let res = await tcb.downloadFile({
-    fileID: FileID
+    fileID
   })
 
   const { fileContent } = res
@@ -136,7 +136,7 @@ exports.main = async (event) => {
         const { code = '' } = error
         console.log('code :', code);
 
-        reject({
+        resolve({
           data: {},
           time: new Date(),
           status: -10086,
