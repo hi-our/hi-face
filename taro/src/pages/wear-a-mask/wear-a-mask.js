@@ -1,6 +1,6 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Icon, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
-import fetch from 'utils/fetch'
+import fetch, { cloudCallFunction } from 'utils/fetch'
 import { apiAnalyzeFace } from 'constants/apis'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo, getBase64Main } from 'utils/face-utils'
@@ -17,6 +17,8 @@ const PageDpr = windowWidth / 375
 const DPR_CANVAS_SIZE = CANVAS_SIZE * PageDpr
 const DEFAULT_MASK_SIZE = 100 * PageDpr
 const MASK_SIZE = 100
+
+
 
 const resetState = () => {
   return {
@@ -67,7 +69,7 @@ class WearMask extends Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {
       maskCenterX,
       maskCenterY,
@@ -91,14 +93,7 @@ class WearMask extends Component {
     this.touch_target = '';
     this.start_x = 0;
     this.start_y = 0;
-
-    
-    // this.setState({
-    //   cutImageSrc: imageData
-    // })
-    // this.onAnalyzeFace(getBase64Main(imageData))
   }
-
 
 
   catTaroCropper(node) {
@@ -137,21 +132,71 @@ class WearMask extends Component {
   }
 
   onCut = (cutImageSrc) => {
-    let tmask = this
     this.setState({
       cutImageSrc,
       originSrc: ''
-    }, async () => {
-        this.cutImageSrcCanvas = await getImg(cutImageSrc)
-        srcToBase64Main(cutImageSrc, (base64Main) => {
-          tmask.onAnalyzeFace(base64Main)
-        })
+    }, () => { 
+      this.onAnalyzeFace(cutImageSrc)
     })
   }
 
+  cloudCanvasToAnalyze = async (tempFilePaths) => {
 
-  onAnalyzeFace = async (base64Main = '' ) => {
-    if (!base64Main) return
+    return new Promise((resolve, reject) => {
+      // 上传图片
+      Taro.cloud.uploadFile({
+        cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.png`, // 随机图片名
+        filePath: tempFilePaths, // 本地的图片路径
+        success: (uploadRes) => {
+          const { fileID } = uploadRes
+          cloudCallFunction({
+            name: 'analyze-face',
+            data: {
+              fileID
+            }
+          }).then(cloudRes => {
+            resolve(cloudRes)
+            Taro.cloud.deleteFile({
+              fileList: [fileID],
+              success: res => {
+                // handle success
+                console.log('临时图片删除成功', res.fileList)
+              },
+              fail: error => {
+                console.log('临时图片删除失败', error)
+              },
+            })
+          }).catch(error => {
+            console.log('error :', error);
+            reject(error)
+          })
+        },
+        fail: (error) => {
+          console.log('error :', error);
+          reject(error)
+        }
+      })
+    })
+  }
+
+  // TODO 其他小程序再说
+  tmpFetchFunction = () => {
+    // srcToBase64Main(cutImageSrc, (base64Main) => {
+    // })
+    // const res2 = await fetch({
+    //   url: apiAnalyzeFace,
+    //   type: 'post',
+    //   data: {
+    //     Image: base64Main,
+    //     Mode: 1,
+    //     FaceModelVersion: '3.0'
+    //   }
+    // })
+  }
+
+
+  onAnalyzeFace = async (cutImageSrc) => {
+    if (!cutImageSrc) return
 
     Taro.showLoading({
       title: '识别中...'
@@ -162,15 +207,9 @@ class WearMask extends Component {
     })
 
     try {
-      const res2 = await fetch({
-        url: apiAnalyzeFace,
-        type: 'post',
-        data: {
-          Image: base64Main,
-          Mode: 1,
-          FaceModelVersion: '3.0'
-        }
-      })
+
+      const res2 = await this.cloudCanvasToAnalyze(cutImageSrc)
+      console.log('图片分析的结果 :', res2);
 
       const info = getMouthInfo(res2)
       let { faceWidth, angle, mouthMidPoint, ImageWidth } = info[0]
