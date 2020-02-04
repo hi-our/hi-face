@@ -1,16 +1,38 @@
 .page-loading
   min-height 100%
-  background #fff
+  background #0E1226
 
-.g-duck-loading
-  position absolute
-  top 45%
-  left 50%
-  display block
-  width 100px
-  height 100px
-  transform translate(-50%, -50%)
-  text-align center
+  .page-loading-square
+    position absolute
+    top 45%
+    left 50%
+    transform translate(-50%, -50%)
+    width 30px
+    height 30px
+    padding 25px
+    background rgba(255,255,255,0.1)
+    border-radius 12px
+  .loading-icon-wrap
+    position relative
+    width 30px
+    height 30px
+    overflow hidden
+  .loading-icon
+    width 100% * 17
+    height 100%
+    background url(//n1image.hjfile.cn/res7/2019/06/18/49760044a6c1498490890bdf2cfc3aeb.png) 0 0 no-repeat
+    background-size auto 100%
+    animation page-loading-animate 1s steps(1) infinite
+
+    image
+      display block
+      width 100%
+      height 100%
+
+@keyframes page-loading-animate
+  for i in 0..17
+    {5.88% * i}
+      transform translateX(-(i * 5.88%))
 
 // --- 骨架 ---
 

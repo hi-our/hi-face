@@ -1,4 +1,9 @@
-export const DATA = {
+// 云函数入口文件
+const cloud = require('wx-server-sdk')
+
+cloud.init()
+
+const data = {
   thanksWord: '感谢我家小雪的默默支持及照顾。\n感谢老娘舅群小伙伴的支持，包括范老师、苏老师、拉总、俊总。\n感谢公司小伙伴的支持，包括华翔、Coco。',
   authorAvatar: 'https://n1image.hjfile.cn/res7/2020/02/02/19ad178fc9dc54eca7b050a6ad3077d0.jpg',
   authorName: '小溪里',
@@ -19,4 +24,14 @@ export const DATA = {
     }
   ]
 
+}
+
+// 云函数入口函数
+exports.main = async (event, context) => {
+  return {
+    data,
+    time: new Date(),
+    status: 0,
+    message: ''
+  }
 }

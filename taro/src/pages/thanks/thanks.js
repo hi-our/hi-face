@@ -1,7 +1,8 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 
-import { DATA } from './data'
+import { cloudCallFunction } from 'utils/fetch'
+import PageWrapper from 'components/page-wrapper';
 import './styles.styl'
 
 import * as config from 'config'
@@ -13,6 +14,30 @@ const version = config.version
 class Thanks extends Component {
   config = {
     navigationBarTitleText: '致谢',
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      pageData: {},
+      pageStatus: 'loading'
+    }
+  }
+
+  componentDidMount() {
+    cloudCallFunction({
+      name: 'thanks-data'
+    }).then(res => {
+      this.setState({
+        pageData: res,
+        pageStatus: 'done'
+      })
+    }).catch((error) => {
+      this.setState({
+        pageStatus: 'error'
+      })
+      console.log('error :', error);
+    })
   }
 
 
@@ -43,10 +68,18 @@ class Thanks extends Component {
   }
 
   render() {
-    const { thanksWord, authorAvatar, authorName, authorDesc, sourceLink, referenceList } = DATA
+    const { pageData, pageStatus } = this.state
+    const {
+      thanksWord = '',
+      authorAvatar = '',
+      authorName = '',
+      authorDesc = '',
+      sourceLink = '',
+      referenceList = []
+    } = pageData
  
     return (
-      <View>
+      <PageWrapper status={pageStatus}>
         <View className='thanks-word'>
           <Text>{thanksWord}</Text>
         </View>
@@ -79,7 +112,7 @@ class Thanks extends Component {
           </View>
         </View>
           <View className='version'>ver.{version}</View>
-      </View>
+      </PageWrapper>
     )
   }
 }
