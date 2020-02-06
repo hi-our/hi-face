@@ -1,7 +1,7 @@
 import Taro, { useState, useEffect, useRef } from '@tarojs/taro';
 import { genderBad } from './gender'
-// import  RenderPop from './components/model'
-import FlyModel from './components/fly-model'
+import  RenderPop from './components/list-model'
+import { FlyModel } from './components/fly-modal'
 import guideImg from '../../images/spread-6.png'
 import { View, Button, Image } from '@tarojs/components'
 
@@ -174,11 +174,11 @@ export default class SpreadGame extends Taro.Component {
           <View>
             {divEle}
           </View>
-          {/* <RenderPop
+          <RenderPop
             count={count}
             config={config}
             setConfig={setConfig}
-          /> */}
+          />
           {/* {
             FlyModel({
               title: '历史数据',
