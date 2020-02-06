@@ -15,7 +15,7 @@
  * under the License.
  */
 const models = require("./models");
-const AbstractClient = require('../../common_tc3/abstract_client')
+const AbstractClient = require('../../common/abstract_client')
 const GetPersonGroupInfoResponse = models.GetPersonGroupInfoResponse;
 const SearchFacesReturnsByGroupResponse = models.SearchFacesReturnsByGroupResponse;
 const Candidate = models.Candidate;

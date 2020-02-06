@@ -109,6 +109,8 @@ class WearMask extends Component {
       this.setState({
         originSrc: res.tempFilePaths[0]
       });
+    }).catch(error => {
+      console.log('error :', error);
     })
   }
 

@@ -4,6 +4,7 @@ const ClientProfile = require("./profile/client_profile");
 const Sign = require("./sign");
 const HttpConnection = require("./http/http_connection");
 const TencentCloudSDKHttpException = require("./exception/tencent_cloud_sdk_exception");
+const crypto = require('crypto');
 
 /**
  * @inner
@@ -77,7 +78,13 @@ class AbstractClient {
      */
     doRequest(action, req) {
         let params = this.mergeData(req);
-        params = this.formatRequestData(action, params);
+
+        if (this.profile.signMethod === "TC3-HMAC-SHA256") {
+            params = this.buildReqWithTc3Signature(action, params);
+        } else {
+            params = this.formatRequestData(action, params);
+        }
+
         let optional = {
             timeout: this.profile.httpProfile.reqTimeout * 1000
         };
@@ -155,6 +162,60 @@ class AbstractClient {
 
         params.Signature = Sign.sign(this.credential.secretKey, signStr, this.profile.signMethod);
         return params;
+    }
+
+    /**
+     * @inner
+     */
+    buildReqWithTc3Signature(action, params) {
+        let header = {};
+        header["Content-Type"] = "application/json; charset=utf-8";
+
+        let service = this.profile.httpProfile.endpoint.split('.')[0];
+        let timeStamp = new Date();
+        let time = timeStamp.getTime();
+        let year = timeStamp.getFullYear();
+        let month = (timeStamp.getMonth() + 1) < 10 ? `0${(timeStamp.getMonth() + 1)}` : (timeStamp.getMonth() + 1);
+        let day = timeStamp.getDate() < 10 ? `0${timeStamp.getDate()}` : timeStamp.getDate();
+        let date = `${year}-${month}-${day}`;
+
+        header["Host"] = this.profile.httpProfile.endpoint;
+        header["X-TC-Action"] = action;
+        header["X-TC-RequestClient"] = this.sdkVersion;
+        header["X-TC-Timestamp"] = '' + Math.round((time / 1000));
+        header["X-TC-Version"] = this.apiVersion;
+        header["X-TC-Region"] = "ap-shanghai";
+
+        let signature = this.getTc3Signature(params, date, service, header);
+        let auth = `TC3-HMAC-SHA256 Credential=${this.credential.secretId}/${date}/${service}/tc3_request`;
+        auth = `${auth}, SignedHeaders=content-type;host, Signature=${signature}`;
+        header["Authorization"] = auth;
+        return header;
+    }
+
+
+    /**
+     * @inner
+     */
+    getTc3Signature(params, date, service, header) {
+        let uri = "/";
+        let querystring = "";
+        let payload = JSON.stringify(params);
+        let payloadHash = this.getHash(payload);
+        let canonicalHeaders = `content-type:${header["Content-Type"]}\nhost:${header["Host"]}\n`;
+        let signedHeaders = "content-type;host";
+        let canonicalRequest = `POST\n${uri}\n${querystring}\n${canonicalHeaders}\n${signedHeaders}\n${payloadHash}`;
+        let algorithm = "TC3-HMAC-SHA256";
+        let credentialScope = `${date}/${service}/tc3_request`;
+        let digest = this.getHash(canonicalRequest);
+        let string2Sign = `${algorithm}\n${header["X-TC-Timestamp"]}\n${credentialScope}\n${digest}`;
+        let signature = Sign.sign_tc3(this.credential.secretKey, date, service, string2Sign, this.profile.signMethod);
+        return signature;
+    }
+
+    getHash(str) {
+        let hash = crypto.createHash("sha256");
+        return hash.update(str).digest("hex");
     }
 
     /**
