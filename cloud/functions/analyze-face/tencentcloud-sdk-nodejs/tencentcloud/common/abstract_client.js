@@ -78,11 +78,12 @@ class AbstractClient {
      */
     doRequest(action, req) {
         let params = this.mergeData(req);
+        let headers = {}
 
         if (this.profile.signMethod === "TC3-HMAC-SHA256") {
-            params = this.buildReqWithTc3Signature(action, params);
+            headers = this.buildReqWithTc3Signature(action, params);
         } else {
-            params = this.formatRequestData(action, params);
+            headers = this.formatRequestData(action, params);
         }
 
         let optional = {
@@ -92,7 +93,7 @@ class AbstractClient {
             (resolve, reject) => {
             HttpConnection.doRequest(this.profile.httpProfile.reqMethod,
                 this.profile.httpProfile.protocol + this.getEndpoint() + this.path,
-                params, (error, response, data) => {
+                params, headers,  (error, response, data) => {
                     if (error) {
                         reject(new TencentCloudSDKHttpException(error.message));
                     } else if (response.statusCode !== 200) {
