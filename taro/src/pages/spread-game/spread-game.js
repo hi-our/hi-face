@@ -8,6 +8,32 @@ import { View, Button, Image } from '@tarojs/components'
 
 import './styles.styl'
 
+const countInitState = {
+  row: 50,
+  col: 50,
+  //感染概率 2 - 10
+  percent: 10,
+  runPercent: 10,
+  allBad: 1,
+  fly: true,
+  // 飞机距离为 50
+  flyDir: 50,
+  travel: true,
+  // 高铁距离为 10
+  highTravelDir: 10,
+  way: true,
+  // 口罩
+  mask: false,
+  // 聚集
+  gather: false,
+  // 在家自我隔离
+  home: 0,
+  // 高速路距离为 5
+  highWayDir: 5,
+  showPop: false,
+  speed: 3
+}
+
 export default class SpreadGame extends Taro.Component {
 
   renderPlane = (props) => {
@@ -24,31 +50,7 @@ export default class SpreadGame extends Taro.Component {
   }
   render() {
     const [day, setDay] = useState(0);
-    const [config, setConfig] = useState({
-      row: 50,
-      col: 50,
-      //感染概率 2 - 10
-      percent: 10,
-      runPercent: 10,
-      allBad: 1,
-      fly: true,
-      // 飞机距离为 50
-      flyDir: 50,
-      travel: true,
-      // 高铁距离为 10
-      highTravelDir: 10,
-      way: true,
-      // 口罩
-      mask: false,
-      // 聚集
-      gather: false,
-      // 在家自我隔离
-      home: 0,
-      // 高速路距离为 5
-      highWayDir: 5,
-      showPop: false,
-      speed: 3
-    })
+    const [config, setConfig] = useState(countInitState)
 
     // 声明一个叫 "count" 的 state 变量
     const [count, setCount] = useState(genderBad({

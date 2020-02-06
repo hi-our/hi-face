@@ -1,19 +1,19 @@
 import Taro, { useState, useEffect, useRef } from '@tarojs/taro';
 import { View, Image, Icon, Switch } from '@tarojs/components';
-import maskImg from '../../../images/spread-1.jpg'
-import flyImg from '../../../images/spread-2.jpg'
-import travleImg from '../../../images/spread-3.jpg'
-import wayImg from '../../../images/spread-3.jpeg'
-import gatherImg from '../../../images/spread-4.jpeg'
-import homeImg from '../../../images/spread-5.jpeg'
+import maskImg from '../../../../images/spread-1.jpg'
+import flyImg from '../../../../images/spread-2.jpg'
+import travleImg from '../../../../images/spread-3.jpg'
+import wayImg from '../../../../images/spread-3.jpeg'
+import gatherImg from '../../../../images/spread-4.jpeg'
+import homeImg from '../../../../images/spread-5.jpeg'
 
-import FlyModal from './fly-modal'
-import '../styles.styl';
+import FlyModal from '../fly-modal'
+import './styles.styl'
 
 export default class RenderPop extends Taro.Component {
   render() {
 
-    const { config, setConfig } = this.props
+    const { config = {}, setConfig } = this.props
     const [modalVisible, setModalVisible] = useState({
       fly: false,
       travel: false,
@@ -24,8 +24,9 @@ export default class RenderPop extends Taro.Component {
 
     return (
       <View
+        className='pop-dialog'
         popup
-        visible={config.showPop}
+        style={{ display: config.showPop ? 'block' : 'none', width: '90%' }}
         onClose={() => {
           setConfig({
             ...config,
@@ -133,6 +134,98 @@ export default class RenderPop extends Taro.Component {
             <Image src={homeImg} alt='' />
           </View>
         </FlyModal>
+        <View>
+          <View>演变属性</View>
+          <View>
+            <Switch
+              checked={!config.fly}
+              onChange={(ev) => {
+                setConfig({
+                  ...config,
+                  fly: !ev
+                })
+              }}
+            />
+            <View className='item_click' onClick={() => {
+              setModalVisible({
+                ...modalVisible,
+                fly: true
+              })
+            }}>飞机管制<Icon type='right'></Icon></View>
+          </View>
+          <View>
+            <Switch
+              checked={!config.travel}
+              onChange={(ev) => {
+                setConfig({
+                  ...config,
+                  travel: !ev
+                })
+              }}
+            />
+            <View className='item_click' onClick={() => {
+              setModalVisible({
+                ...modalVisible,
+                travel: true
+              })
+            }}>高铁管制<Icon type='right'></Icon></View>
+          </View>
+          <View>
+            <Switch
+              checked={!config.way}
+              onChange={(ev) => {
+                setConfig({
+                  ...config,
+                  way: !ev
+                })
+              }}
+            />
+            <View className='item_click' onClick={() => {
+              setModalVisible({
+                ...modalVisible,
+                way: true
+              })
+            }}>高速管制<Icon type='right'></Icon></View>
+          </View>
+          <View>
+            <Switch
+              checked={config.mask}
+              onChange={(ev) => {
+                const percent = ev ? config.percent - 2 : config.percent + 2
+                setConfig({
+                  ...config,
+                  mask: ev,
+                  percent
+                })
+              }}
+            />
+            <View className='item_click' onClick={() => {
+              setModalVisible({
+                ...modalVisible,
+                mask: true
+              })
+            }}>个体普及戴口罩<Icon type='right'></Icon></View>
+          </View>
+          <View>
+            <Switch
+              checked={config.gather}
+              onChange={(ev) => {
+                const percent = ev ? config.percent - 2 : config.percent + 2
+                setConfig({
+                  ...config,
+                  gather: ev,
+                  percent
+                })
+              }}
+            />
+            <View className='item_click' onClick={() => {
+              setModalVisible({
+                ...modalVisible,
+                gather: true
+              })
+            }}>人员聚集管制<Icon type='right'></Icon></View>
+          </View>
+        </View>
       </View>
     )
   }
