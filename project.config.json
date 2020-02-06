@@ -43,6 +43,13 @@
 					"pathName": "pages/thanks/thanks",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/spread-game/spread-game",
+					"pathName": "pages/spread-game/spread-game",
+					"query": "",
+					"scene": null
 				}
 			]
 		}
