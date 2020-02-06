@@ -9,16 +9,19 @@ class HttpConnection {
         let req = {
             method: method,
             url: url,
-            json: false,
         };
         if(headers){
             req.headers = headers;
+            req.json = false;
         }
         if (method === "GET") {
             req.url += "?" + QueryString.stringify(data);
-        } else {
+        } else if(headers) {
             req.body = JSON.stringify(data);
+        } else {
+            req.form = data
         }
+
         Object.assign(req, opt);
         request(req, function (error, response, body) {
             /**

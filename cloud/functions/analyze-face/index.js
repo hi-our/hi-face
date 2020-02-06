@@ -41,7 +41,7 @@ let cred = new Credential(secretId, secretKey);
 let client = new IaIClient(cred, "ap-shanghai", clientProfile);
 
 exports.main = async (event) => {
-  const { fileID, base64Main = status.base64Test } = event
+  const { fileID = '', base64Main = '' } = event
 
   let Image = ''
 

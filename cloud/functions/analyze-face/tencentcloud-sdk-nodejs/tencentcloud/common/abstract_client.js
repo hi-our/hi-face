@@ -78,12 +78,12 @@ class AbstractClient {
      */
     doRequest(action, req) {
         let params = this.mergeData(req);
-        let headers = {}
+        let headers = null
 
         if (this.profile.signMethod === "TC3-HMAC-SHA256") {
             headers = this.buildReqWithTc3Signature(action, params);
         } else {
-            headers = this.formatRequestData(action, params);
+            params = this.formatRequestData(action, params);
         }
 
         let optional = {
