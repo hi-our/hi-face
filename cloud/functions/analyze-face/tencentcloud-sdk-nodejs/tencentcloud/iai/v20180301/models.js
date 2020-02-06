@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-const AbstractModel = require("../../common_tc3/abstract_model");
+const AbstractModel = require("../../common/abstract_model");
 
 /**
  * GetPersonGroupInfo返回参数结构体
