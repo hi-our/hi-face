@@ -12,8 +12,6 @@ import { NOT_FACE, ONE_FACE } from 'constants/image-test'
 import { TaroCanvasDrawer,  } from 'components/taro-plugin-canvas';
 import OneImgTest from '../../images/one_face.jpeg'
 
-console.log('OneImgTest :', OneImgTest);
-
 const testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
 const imageData = testImg
 

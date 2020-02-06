@@ -37,11 +37,13 @@ export default class PageStatus extends Taro.Component {
         <Block>
           {!loadingType && (
             <View className='page-loading'>
-              <Image
-                className='g-duck-loading'
-                src={LoadingImg}
-                mode='aspectFill'
-              />
+              <View className='page-loading-square'>
+                <View className='loading-icon-wrap'>
+                  <View className='loading-icon'>
+                    <Image src={require('./images/page-loading.png')}></Image>
+                  </View>
+                </View>
+              </View>
             </View>
           )}
         </Block>
