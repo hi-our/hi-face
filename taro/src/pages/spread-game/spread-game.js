@@ -4,44 +4,22 @@ import  RenderPop from './components/list-model'
 import { FlyModel } from './components/fly-modal'
 import guideImg from '../../images/spread-6.png'
 import { View, Button, Image } from '@tarojs/components'
+import { COUNT_INIT_STATE } from './status';
 
 
 import './styles.styl'
 
-const countInitState = {
-  row: 50,
-  col: 50,
-  //感染概率 2 - 10
-  percent: 10,
-  runPercent: 10,
-  allBad: 1,
-  fly: true,
-  // 飞机距离为 50
-  flyDir: 50,
-  travel: true,
-  // 高铁距离为 10
-  highTravelDir: 10,
-  way: true,
-  // 口罩
-  mask: false,
-  // 聚集
-  gather: false,
-  // 在家自我隔离
-  home: 0,
-  // 高速路距离为 5
-  highWayDir: 5,
-  showPop: false,
-  speed: 3
-}
-
 export default class SpreadGame extends Taro.Component {
 
   renderPlane = (props) => {
+    const { day, config } = props
+    const { row, col, percent } = config
+
     return (
       <View>
-        <View>时间：{props.day} 目</View>
-        <View>个体数：{props.config.row * props.config.col} 人</View>
-        <View>传染概率：{props.config.percent} %</View>
+        <View>时间：{day} 目</View>
+        <View>个体数：{row * col} 人</View>
+        <View>传染概率：{percent} %</View>
         {/* <p>飞机管制：{props.config.fly ? '无' : '有'}</p>
       <p>高铁管制：{props.config.travel ? '无' : '有'}</p>
       <p>高速管制：{props.config.way ? '无' : '有'}</p> */}
@@ -50,7 +28,7 @@ export default class SpreadGame extends Taro.Component {
   }
   render() {
     const [day, setDay] = useState(0);
-    const [config, setConfig] = useState(countInitState)
+    const [config, setConfig] = useState(Object.assign({}, COUNT_INIT_STATE))
 
     // 声明一个叫 "count" 的 state 变量
     const [count, setCount] = useState(genderBad({
@@ -82,14 +60,14 @@ export default class SpreadGame extends Taro.Component {
           console.log('清除定时器')
           setStart(false)
           clearInterval(id);
-          const saveItem = localStorage.saveItem ? JSON.parse(localStorage.saveItem) : []
+          const saveItem = Taro.getStorageSync('saveItem') || []
           saveItem.length = 5
           saveItem.unshift({
             day: day + 1,
             count,
             config
           })
-          localStorage.saveItem = JSON.stringify(saveItem)
+          Taro.setStorageSync('saveItem', saveItem)
         }
         // 遍历每个人，根据演变规则演变
         count.forEach(col => {
@@ -143,17 +121,14 @@ export default class SpreadGame extends Taro.Component {
     }
 
     function clickHistory(setHistory2) {
-      const saveItem = localStorage.saveItem ? JSON.parse(localStorage.saveItem) : []
+      const saveItem = Taro.getStorageSync('saveItem') || []
+
       setHistory2({
         content: saveItem,
         visible: true
       })
       console.log(saveItem)
     }
-    
-    
-
-
 
     return (
       <View>

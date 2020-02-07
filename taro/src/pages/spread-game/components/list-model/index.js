@@ -8,9 +8,17 @@ import gatherImg from '../../../../images/spread-4.jpeg'
 import homeImg from '../../../../images/spread-5.jpeg'
 
 import FlyModal from '../fly-modal'
+import { COUNT_INIT_STATE } from '../../status';
 import './styles.styl'
 
 export default class RenderPop extends Taro.Component {
+
+  static defaultProps = {
+    config: Object.assign({}, COUNT_INIT_STATE),
+    setConfig: () => {}
+    
+  }
+
   render() {
 
     const { config = {}, setConfig } = this.props
