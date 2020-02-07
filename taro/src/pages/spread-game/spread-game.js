@@ -17,9 +17,9 @@ export default class SpreadGame extends Taro.Component {
 
     return (
       <View>
-        <View>时间：{day} 目</View>
-        <View>个体数：{row * col} 人</View>
-        <View>传染概率：{percent} %</View>
+        <View className="app-p">时间：{day} 目</View>
+        <View className="app-p">个体数：{row * col} 人</View>
+        <View className="app-p">传染概率：{percent} %</View>
         {/* <p>飞机管制：{props.config.fly ? '无' : '有'}</p>
       <p>高铁管制：{props.config.travel ? '无' : '有'}</p>
       <p>高速管制：{props.config.way ? '无' : '有'}</p> */}
@@ -132,7 +132,7 @@ export default class SpreadGame extends Taro.Component {
 
     return (
       <View>
-        <View className="App-View">
+        <View className="app-view">
           <Button type="primary" onClick={() => clickHistory(setHistory)}>查看历史数据</Button>
           <Button className='bottom-btn' disabled={start} onClick={() => setConfig({
             ...config,
@@ -141,7 +141,7 @@ export default class SpreadGame extends Taro.Component {
           >
             设置演变属性
           </Button>
-          <View>病毒演化模拟器</View>
+          <View className="app-h3">病毒演化模拟器</View>
           {this.renderPlane({
             count,
             config,
@@ -189,9 +189,9 @@ export default class SpreadGame extends Taro.Component {
               content: (<Image src={guideImg} alt='' style={{ width: '100%' }} />)
             })
           } */}
-          <View>本应用数据非实际数据，只做娱乐用途</View>
+          <View>本应用数据非实际数据，仅作演示用途</View>
 
-          <Button type="primary" className='history' disabled={start} onClick={() => clickStart()}>{start ? '正在演变' : '开始演变'}</Button>
+          <Button type={start ? 'warn' : 'primary'} className='history' disabled={start} onClick={() => clickStart()}>{start ? '正在演变' : '开始演变'}</Button>
         </View>
       </View>
     )
