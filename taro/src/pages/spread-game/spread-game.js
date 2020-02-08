@@ -1,9 +1,9 @@
 import Taro, { useState, useEffect, useRef } from '@tarojs/taro';
 import { genderBad } from './gender'
 import  RenderPop from './components/list-model'
-import { FlyModel } from './components/fly-modal'
+import { FlyModal } from './components/fly-modal'
 import guideImg from '../../images/spread-6.png'
-import { View, Button, Image } from '@tarojs/components'
+import { View, Button, Image, Block } from '@tarojs/components'
 import { COUNT_INIT_STATE } from './status';
 
 
@@ -61,11 +61,11 @@ export default class SpreadGame extends Taro.Component {
           setStart(false)
           clearInterval(id);
           const saveItem = Taro.getStorageSync('saveItem') || []
-          saveItem.length = 5
           saveItem.unshift({
             day: day + 1,
             count,
-            config
+            config,
+            key: Math.floor(100000000 * Math.random())
           })
           Taro.setStorageSync('saveItem', saveItem)
         }
@@ -156,39 +156,43 @@ export default class SpreadGame extends Taro.Component {
             config={config}
             setConfig={setConfig}
           />
-          {/* {
-            FlyModel({
-              title: '历史数据',
-              visible: history.visible,
-              setVisible: () => {
-                setHistory({
-                  ...history,
-                  visible: false
-                })
-              },
-              content: history.content.map((val, index) => {
-                if (!val) return ''
-                return (<View key={index}>
-                  飞机管制{val.config.fly ? '关' : '开'}，
-                高铁管制{val.config.travel ? '关' : '开'}，
-                高速管制{val.config.way ? '关' : '开'}，
-                个体{val.config.mask ? '普及' : '未普及'}戴口罩,
-                人员聚集{val.config.gather ? '管制' : '未管制'}，
-                自我隔离百分比：{val.config.home * 10} %,
-                耗时{val.day}目</View>)
+          <FlyModal
+            title='历史数据'
+            visible={history.visible}
+            setVisible={() => {
+              setHistory({
+                ...history,
+                visible: false
               })
-            })
-          }
-          {
-            FlyModel({
-              title: '',
-              visible: guide,
-              setVisible: () => {
-                setGuide(false)
-              },
-              content: (<Image src={guideImg} alt='' style={{ width: '100%' }} />)
-            })
-          } */}
+            }}
+          >
+            {
+              history.content.filter(item => !!item).map((val) => {
+                console.log('val :', typeof val, !!val);
+
+                return (
+                  <View key={val.key}>
+                    飞机管制{val.config.fly ? '关' : '开'}，
+                    高铁管制{val.config.travel ? '关' : '开'}，
+                    高速管制{val.config.way ? '关' : '开'}，
+                    个体{val.config.mask ? '普及' : '未普及'}戴口罩,
+                    人员聚集{val.config.gather ? '管制' : '未管制'}，
+                    自我隔离百分比：{val.config.home * 10} %,
+                    耗时{val.day}目
+                  </View>
+                )
+              })
+            }
+          </FlyModal>
+          <FlyModal
+            title=''
+            visible={guide}
+            setVisible={() => {
+              setGuide(false)
+            }}
+          >
+            <Image src={guideImg} alt='' className='guide-img'  />
+          </FlyModal>
           <View>本应用数据非实际数据，仅作演示用途</View>
 
           <Button type={start ? 'warn' : 'primary'} className='history' disabled={start} onClick={() => clickStart()}>{start ? '正在演变' : '开始演变'}</Button>
