@@ -4,11 +4,13 @@ import  RenderPop from './components/list-model'
 import { FlyModal } from './components/fly-modal'
 import guideImg from '../../images/spread-6.png'
 import { View, Button, Image, Block } from '@tarojs/components'
-import { COUNT_INIT_STATE } from './status';
-
+import { isIphoneSafeArea } from 'utils/common';
+import { COUNT_INIT_STATE } from './status'
 import { MAP_LITE } from './map-lite';
 
 import './styles.styl'
+
+const isIphoneX = isIphoneSafeArea()
 
 const getMapList = (count) => {
   let mapList = []
@@ -26,18 +28,30 @@ const getMapList = (count) => {
 
 export default class SpreadGame extends Taro.Component {
 
+  config = {
+    navigationBarTitleText: '病毒演化模拟器',
+  }
+
+  onShareAppMessage() {
+    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
+
+    return {
+      title: '让我们快快戴口罩，抗击疫情吧！',
+      imageUrl: DEFAULT_SHARE_COVER,
+      path: '/pages/wear-a-mask/wear-a-mask'
+    }
+  }
+
   renderPlane = (props) => {
     const { day, config } = props
-    const { row, col, percent } = config
+    const { row, col, percent, mask } = config
 
     return (
       <View>
         <View className="app-p">时间：{day} 目</View>
-        <View className="app-p">个体数：{row * col} 人</View>
+        <View className="app-p">世界地图：{row * col} 点</View>
         <View className="app-p">传染概率：{percent} %</View>
-        {/* <p>飞机管制：{props.config.fly ? '无' : '有'}</p>
-      <p>高铁管制：{props.config.travel ? '无' : '有'}</p>
-      <p>高速管制：{props.config.way ? '无' : '有'}</p> */}
+        <View className="app-p">个体普及戴口罩：{mask ? '有' : '无'}</View>
       </View>
     )
   }
@@ -135,27 +149,29 @@ export default class SpreadGame extends Taro.Component {
         content: saveItem,
         visible: true
       })
-      console.log(saveItem)
     }
+
 
     return (
       <View>
         <View className="app-view">
-          <Button type="primary" onClick={() => clickHistory(setHistory)}>查看历史数据</Button>
-          <Button className='bottom-btn' disabled={start} onClick={() => setConfig({
-            ...config,
-            showPop: true
-          })}
-          >
-            设置演变属性
-          </Button>
-          <View className="app-h3">病毒演化模拟器</View>
+          {/* <View className="app-h3">病毒演化模拟器</View> */}
           {this.renderPlane({
             count,
             config,
             setConfig,
             day
           })}
+          <View className='btn-wrap'>
+            <Button className='bottom-btn' onClick={() => clickHistory(setHistory)}>查看历史数据</Button>
+            <Button type="primary" disabled={start} onClick={() => setConfig({
+              ...config,
+              showPop: true
+            })}
+            >
+              设置演变属性
+          </Button>
+          </View>
           <View className='map-wrap'>
             {
               mapList.map((one) => {
@@ -193,7 +209,6 @@ export default class SpreadGame extends Taro.Component {
           >
             {
               history.content.filter(item => !!item).map((val) => {
-                console.log('val :', typeof val, !!val);
 
                 return (
                   <View key={val.key}>
@@ -218,9 +233,9 @@ export default class SpreadGame extends Taro.Component {
           >
             <Image src={guideImg} alt='' className='guide-img'  />
           </FlyModal>
-          <View>本应用数据非实际数据，仅作演示用途</View>
+          <View className='app-p'>本应用数据非实际数据，仅作演示用途</View>
 
-          <Button type={start ? 'warn' : 'primary'} className='history' disabled={start} onClick={() => clickStart()}>{start ? '正在演变' : '开始演变'}</Button>
+          <Button type={start ? 'warn' : 'primary'} className={`history ${isIphoneX ? 'ip-x' : ''}`} disabled={start} onClick={() => clickStart()}>{start ? '正在演变' : '开始演变'}</Button>
         </View>
       </View>
     )

@@ -58,7 +58,7 @@ export default class RenderPop extends Taro.Component {
                 onChange={(ev) => {
                   setConfig({
                     ...config,
-                    fly: !ev
+                    fly: !ev.detail.value
                   })
                 }}
               />
@@ -75,7 +75,7 @@ export default class RenderPop extends Taro.Component {
                 onChange={(ev) => {
                   setConfig({
                     ...config,
-                    travel: !ev
+                    travel: !ev.detail.value
                   })
                 }}
               />
@@ -92,7 +92,7 @@ export default class RenderPop extends Taro.Component {
                 onChange={(ev) => {
                   setConfig({
                     ...config,
-                    way: !ev
+                    way: !ev.detail.value
                   })
                 }}
               />
@@ -107,10 +107,11 @@ export default class RenderPop extends Taro.Component {
               <Switch
                 checked={config.mask}
                 onChange={(ev) => {
-                  const percent = ev ? config.percent - 2 : config.percent + 2
+                  console.log('ev.detail.value :', ev.detail.value);
+                  const percent = ev.detail.value ? config.percent - 2 : config.percent + 2
                   setConfig({
                     ...config,
-                    mask: ev,
+                    mask: ev.detail.value,
                     percent
                   })
                 }}
@@ -126,22 +127,17 @@ export default class RenderPop extends Taro.Component {
               <Switch
                 checked={config.gather}
                 onChange={(ev) => {
-                  const percent = ev ? config.percent - 2 : config.percent + 2
+                  const percent = ev.detail.value ? config.percent - 2 : config.percent + 2
                   setConfig({
                     ...config,
-                    gather: ev,
+                    gather: ev.detail.value,
                     percent
                   })
                 }}
               />
             </View>
             <View className='list-item'>
-              <View className='item_click' onClick={() => {
-                setModalVisible({
-                  ...modalVisible,
-                  gather: true
-                })
-              }}>人员聚集管制<Icon type='info' size='15'></Icon></View>
+              <View className='item_click'>演化速度</View>
               <View className='list-item-right'>
                 <Slider onChange={(ev) => {
                   console.log('ev.detail.value :', ev.detail.value);

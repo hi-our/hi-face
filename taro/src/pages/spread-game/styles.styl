@@ -1,6 +1,7 @@
 
 .app-view {
   min-height: 100vh;
+  padding-top 1px
   padding-bottom: 47px;
   box-sizing: border-box;
   text-align: center;
@@ -43,31 +44,34 @@
   font-size: 14px
   margin 5px 0
 
+.btn-wrap
+  margin-top 10px
+  display flex
+  justify-content center
+
+  button
+    padding 0 15px
+    font-size: 14px
+    margin 0 15px
+    border-radius 10px
+    line-height: 2
+
 .bottom-btn {
-  border-radius: 0;
   background #fff
 }
 .sub-title {
   margin-bottom: 30px;
 }
-.am-wingblank-lg:after {
-  display: none;
-}
-.am-input-label {
-  width: 190px !important;
-}
-.item_click {
-  display: flex;
-  align-items: center;
-}
 
-.history {
+.history
   position: fixed !important;
   bottom: 0;
   left: 0;
   width: 100%;
   border-radius: 0;
-}
+
+  &.ip-x
+    padding-bottom 12px
 
 .guide-img
   width 346px
@@ -82,8 +86,8 @@
 
 .map-dot
   position absolute
-  width 6px
-  height 6px
+  width 7px
+  height 7px
   background: #25a778;
   // border-radius: 50%
   &.map-dot-china

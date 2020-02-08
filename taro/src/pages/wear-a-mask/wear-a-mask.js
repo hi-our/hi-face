@@ -39,7 +39,7 @@ const resetState = () => {
 // @CorePage
 class WearMask extends Component {
   config = {
-    navigationBarTitleText: '一起戴口罩',
+    navigationBarTitleText: '快快戴口罩',
   }
 
   constructor(props) {
@@ -63,7 +63,7 @@ class WearMask extends Component {
     const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
 
     return {
-      title: '让我们一起戴口罩，抗击疫情吧！',
+      title: '让我们快快戴口罩，抗击疫情吧！',
       imageUrl: DEFAULT_SHARE_COVER,
       path: '/pages/wear-a-mask/wear-a-mask'
     }
