@@ -450,6 +450,12 @@ class WearMask extends Component {
     this.start_y = current_y;
   }
 
+  goSpreadGame = () => {
+    Taro.navigateTo({
+      url: '/pages/spread-game/spread-game'
+    })
+  }
+
   render() {
     const {
       originSrc,
@@ -597,6 +603,7 @@ class WearMask extends Component {
             )
         }
 
+        {!originSrc && <View className='virus-btn' onClick={this.goSpreadGame}>病毒演化器</View>}
         
       </View>
     )
