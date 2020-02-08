@@ -1,4 +1,4 @@
-[
+export const MAP_LITE = [
   {l: 126,t: 138},
   {l: 123,t: 136},
   {l: 126,t: 136},

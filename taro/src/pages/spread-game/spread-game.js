@@ -8,8 +8,21 @@ import { COUNT_INIT_STATE } from './status';
 
 import { MAP_LITE } from './map-lite';
 
-
 import './styles.styl'
+
+const getMapList = (count) => {
+  let mapList = []
+  count.forEach((col, index) => {
+    col.forEach((val, index2) => {
+      let mapIndex = index * 50 + index2
+      mapList[mapIndex] = Object.assign({}, {
+        status: val.name
+      }, MAP_LITE[mapIndex])
+    })
+  })
+
+  return mapList
+}
 
 export default class SpreadGame extends Taro.Component {
 
@@ -43,15 +56,8 @@ export default class SpreadGame extends Taro.Component {
       content: []
     })
 
+    let mapList = getMapList(count)
 
-    const divEle = count.map((col, index) => {
-      const person = col.map((val, index2) => {
-        const key = `${index}-${index2}`
-        const className = val.healthy ? 'person' : `person ${val.name}`
-        return <View className={className} key={key}></View>
-      })
-      return <View className='split' key={index}>{person}</View>
-    })
     const savedCallback = useRef();
     const [start, setStart] = useState(false);
 
@@ -150,8 +156,25 @@ export default class SpreadGame extends Taro.Component {
             setConfig,
             day
           })}
-          <View>
-            {divEle}
+          <View className='map-wrap'>
+            {
+              mapList.map((one) => {
+                let oneStyle= {
+                  left: one.l * 2 + 'rpx',
+                  top: (138 - one.t) * 3 + 'rpx'
+                }
+                
+                let className = 'map-dot'
+                if (one.cn) {
+                  className += ' map-dot-china'
+                }
+                if (one.status) {
+                  className += ' ' + one.status
+                }
+                return <View key={one.l + one.r + one.l * one.r} className={className} style={oneStyle}></View>
+              })
+            }
+
           </View>
           <RenderPop
             count={count}
