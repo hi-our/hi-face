@@ -6,6 +6,8 @@ import guideImg from '../../images/spread-6.png'
 import { View, Button, Image, Block } from '@tarojs/components'
 import { COUNT_INIT_STATE } from './status';
 
+import { MAP_LITE } from './map-lite';
+
 
 import './styles.styl'
 
