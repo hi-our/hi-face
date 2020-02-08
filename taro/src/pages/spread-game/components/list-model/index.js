@@ -1,5 +1,5 @@
 import Taro, { useState, useEffect, useRef } from '@tarojs/taro';
-import { View, Image, Icon, Switch, Block } from '@tarojs/components';
+import { View, Image, Icon, Switch, Block, Slider } from '@tarojs/components';
 import maskImg from '../../../../images/spread-1.jpg'
 import flyImg from '../../../../images/spread-2.jpg'
 import travleImg from '../../../../images/spread-3.jpg'
@@ -134,6 +134,25 @@ export default class RenderPop extends Taro.Component {
                   })
                 }}
               />
+            </View>
+            <View className='list-item'>
+              <View className='item_click' onClick={() => {
+                setModalVisible({
+                  ...modalVisible,
+                  gather: true
+                })
+              }}>人员聚集管制<Icon type='info' size='15'></Icon></View>
+              <View className='list-item-right'>
+                <Slider onChange={(ev) => {
+                  console.log('ev.detail.value :', ev.detail.value);
+                    setConfig({
+                      ...config,
+                      speed: ev.detail.value
+                    })
+                }} min="1" max="10" value={config.speed} showValue
+                />
+              </View>
+
             </View>
           </View>
         </FlyModal>
