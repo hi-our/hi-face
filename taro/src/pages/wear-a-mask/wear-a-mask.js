@@ -26,6 +26,7 @@ const MASK_SIZE = 100
 const resetState = () => {
   return {
     currentMaskId: 1,
+    timeNow: Date.now(),
     maskSize: DEFAULT_MASK_SIZE,
 
     maskCenterX: DPR_CANVAS_SIZE / 2,
@@ -117,8 +118,7 @@ class WearMask extends Component {
   }
 
   async componentDidMount() {
-    setTmpThis(this, this.state)
-    console.log('this.state :', this.state);
+    setTmpThis(this, this.state.shapeList[0])
 
     this.start_x = 0;
     this.start_y = 0;
@@ -250,7 +250,6 @@ class WearMask extends Component {
       console.log('图片分析的结果 :', res2);
 
       const info = getMouthInfo(res2)
-      console.log('info :', info);
       let shapeList = info.map(item => {
         let { faceWidth, angle, mouthMidPoint, ImageWidth } = item
         let dpr = ImageWidth / CANVAS_SIZE * (375 / windowWidth)
@@ -269,6 +268,7 @@ class WearMask extends Component {
         const resizeCenterY = maskCenterY + heightScaleDpr - 2
         return {
           currentMaskId: 1,
+          timeNow: Date.now(),
           maskSize: DEFAULT_MASK_SIZE,
           maskCenterX,
           maskCenterY,
@@ -282,6 +282,8 @@ class WearMask extends Component {
 
       })
 
+      setTmpThis(this, shapeList[0])
+
       this.setState({
         currentShapeIndex: 0,
         shapeList,
@@ -292,12 +294,14 @@ class WearMask extends Component {
 
     } catch (error) {
       Taro.hideLoading()
+      let shapeList =  [
+        resetState()
+      ]
       this.setState({
-        shapeList: [
-          resetState()
-        ],
+        shapeList,
         isShowMask: true,
       })
+      setTmpThis(this, shapeList[0])
       console.log('error :', error);
     }
   }
@@ -324,11 +328,8 @@ class WearMask extends Component {
 
   drawCanvas = async () => {
     const {
-      scale,
-      rotate,
-      maskCenterX,
-      maskCenterY,
-      currentMaskId,
+      shapeList,
+      currentJiayouId,
       cutImageSrc
     } = this.state
     this.setState({
@@ -336,24 +337,52 @@ class WearMask extends Component {
     })
 
     const pc = Taro.createCanvasContext('canvasMask')
-    const maskSize = 100 * scale;
-
+    
     pc.clearRect(0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE);
     let tmpCutImage = this.cutImageSrcCanvas || await getImg(cutImageSrc)
-    pc.drawImage(tmpCutImage, 0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE);
-    pc.save()
-    pc.translate(maskCenterX, maskCenterY);
-    pc.rotate((rotate * Math.PI) / 180)
+    pc.drawImage(tmpCutImage, 0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE)
+    
+    // 形状
+    shapeList.forEach(shape => {
+      pc.save()
+      const {
+        scale,
+        rotate,
+        maskCenterX,
+        maskCenterY,
+        currentMaskId,
+      } = shape
+      const maskSize = 100 * scale;
+      pc.translate(maskCenterX, maskCenterY);
+      pc.rotate((rotate * Math.PI) / 180)
+  
+      pc.drawImage(
+        require(`../../images/mask-${currentMaskId}.png`),
+        -maskSize / 2,
+        -maskSize / 2,
+        maskSize,
+        maskSize
+      )
+      pc.restore()
+    })
 
-    pc.drawImage(
-      require(`../../images/mask-${currentMaskId}.png`),
-      -maskSize / 2,
-      -maskSize / 2,
-      maskSize,
-      maskSize
-    )
+    if (currentJiayouId > 0) {
+      pc.save()
 
-    pc.restore()
+      pc.drawImage(
+        require(`../../images/jiayou-${currentJiayouId}.png`),
+        0,
+        132 * PageDpr,
+        300 * PageDpr,
+        169 * PageDpr,
+        // 0,
+        // 0,
+        // 600 * PageDpr,
+        // 338 * PageDpr,
+      )
+      // pc.restore()
+    }
+
     pc.draw()
     
   }
@@ -456,9 +485,11 @@ class WearMask extends Component {
  
     this.touch_target = type;
     this.touch_shape_index = shapeIndex;
-    this.setState({
-      currentShapeIndex: shapeIndex
-    })
+    if (shapeIndex !== this.state.currentShapeIndex) {
+      this.setState({
+        currentShapeIndex: shapeIndex
+      })
+    }
 
     if (this.touch_target != '') {
       this.start_x = e.touches[0].clientX;
@@ -466,8 +497,8 @@ class WearMask extends Component {
     }
   }
   touchEnd = (e) => {
-    if (this.touch_target !== '' && this.touch_target !== 'cancel') {
-      setTmpThis(this, this.state)
+    if (this.touch_target !== '' || this.touch_target !== 'cancel') {
+      setTmpThis(this, this.state.shapeList[this.touch_shape_index])
     }
   }
   touchMove = (e) => {
@@ -517,11 +548,9 @@ class WearMask extends Component {
       let distance_after = Math.sqrt(
         diff_x_after * diff_x_after + diff_y_after * diff_y_after
       );
-      let angle_before =
-        (Math.atan2(diff_y_before, diff_x_before) / Math.PI) * 180;
-      let angle_after =
-        (Math.atan2(diff_y_after, diff_x_after) / Math.PI) * 180;
-      
+      let angle_before = (Math.atan2(diff_y_before, diff_x_before) / Math.PI) * 180;
+      let angle_after = (Math.atan2(diff_y_after, diff_x_after) / Math.PI) * 180;
+    
       let twoState = {
         scale: (distance_after / distance_before) * this.scale,
         rotate: angle_after - angle_before + this.rotate
@@ -531,6 +560,7 @@ class WearMask extends Component {
         ...oneState,
         ...twoState
       }
+
       this.setState({
         shapeList
       })
@@ -574,8 +604,6 @@ class WearMask extends Component {
       top: isSavePicture ? '0' : '-9999px'
     }
 
-    console.log('shapeList :', shapeList);
-
     return (
       <View className='mask-page'>
         <View className='main-wrap'>
@@ -600,6 +628,7 @@ class WearMask extends Component {
 
                       const {
                         currentMaskId,
+                        timeNow,
                         maskSize,
                         maskCenterX,
                         maskCenterY,
@@ -628,7 +657,7 @@ class WearMask extends Component {
                       }
 
                       return (
-                        <Block key={shape.maskCenterX}>
+                        <Block key={timeNow}>
                           <Image className="mask" data-type='mask' data-shape-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} style={maskStyle} />
                           {
                             currentShapeIndex === shapeIndex && (
@@ -643,7 +672,7 @@ class WearMask extends Component {
                     })
                   }
                   {
-                    currentJiayouId > 0 && (
+                    !isSavePicture && isShowMask && currentJiayouId > 0 && (
                       <View className="image-jiayou">
                         <Image id='mask' src={require(`../../images/jiayou-${currentJiayouId}.png`)} />
                         <View className='image-btn-jiayou' onClick={this.chooseJiayouId}></View>
@@ -762,6 +791,7 @@ class WearMask extends Component {
         }
 
         {!originSrc && <View className='virus-btn' onClick={this.goSpreadGame}>病毒演化器</View>}
+        {!originSrc && <Button className='share-btn' openType='share'>分享给朋友<View className='share-btn-icon'></View></Button>}
         
       </View>
     )
