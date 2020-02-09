@@ -8,6 +8,8 @@ import { srcToBase64Main, getImg } from 'utils/canvas-drawing'
 
 import { TaroCropper } from 'taro-cropper'
 
+import OneFaceImage from '../../images/one_face.jpeg'
+
 import './styles.styl'
 
 const { windowWidth } = getSystemInfo()
@@ -101,6 +103,8 @@ class WearMask extends Component {
     this.cancel_center_y = cancelCenterY;
     this.resize_center_x = resizeCenterX;
     this.resize_center_y = resizeCenterY;
+
+    console.log('this.mask_center_x :', this.mask_center_x);
 
     this.scale = scale;
     this.rotate = rotate;
