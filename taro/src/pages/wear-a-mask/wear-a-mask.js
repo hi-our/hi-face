@@ -26,8 +26,8 @@ const resetState = () => {
     maskCenterY: DPR_CANVAS_SIZE / 2,
     cancelCenterX: DPR_CANVAS_SIZE / 2 - DEFAULT_MASK_SIZE / 2 - 2,
     cancelCenterY: DPR_CANVAS_SIZE / 2 - DEFAULT_MASK_SIZE / 2 - 2,
-    handleCenterX: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
-    handleCenterY: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
+    resizeCenterX: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
+    resizeCenterY: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
 
     maskSize: DEFAULT_MASK_SIZE,
 
@@ -90,8 +90,8 @@ class WearMask extends Component {
       maskCenterY,
       cancelCenterX,
       cancelCenterY,
-      handleCenterX,
-      handleCenterY,
+      resizeCenterX,
+      resizeCenterY,
       scale,
       rotate
     } = this.state
@@ -99,8 +99,8 @@ class WearMask extends Component {
     this.mask_center_y = maskCenterY;
     this.cancel_center_x = cancelCenterX;
     this.cancel_center_y = cancelCenterY;
-    this.handle_center_x = handleCenterX;
-    this.handle_center_y = handleCenterY;
+    this.resize_center_x = resizeCenterX;
+    this.resize_center_y = resizeCenterY;
 
     this.scale = scale;
     this.rotate = rotate;
@@ -108,6 +108,13 @@ class WearMask extends Component {
     this.touch_target = '';
     this.start_x = 0;
     this.start_y = 0;
+
+    this.setState({
+      cutImageSrc: OneFaceImage,
+    }, () => {
+      this.onAnalyzeFace(OneFaceImage)
+    })
+
   }
 
 
@@ -242,8 +249,8 @@ class WearMask extends Component {
 
       const cancelCenterX = maskCenterX - widthScaleDpr - 2
       const cancelCenterY = maskCenterY - heightScaleDpr - 2
-      const handleCenterX = maskCenterX + widthScaleDpr - 2
-      const handleCenterY = maskCenterY + heightScaleDpr - 2
+      const resizeCenterX = maskCenterX + widthScaleDpr - 2
+      const resizeCenterY = maskCenterY + heightScaleDpr - 2
 
       this.setState({
         ...resetState(),
@@ -254,8 +261,8 @@ class WearMask extends Component {
         rotate,
         cancelCenterX,
         cancelCenterY,
-        handleCenterX,
-        handleCenterY,
+        resizeCenterX,
+        resizeCenterY,
       })
 
       Taro.hideLoading()
@@ -413,8 +420,8 @@ class WearMask extends Component {
     this.mask_center_y = this.state.maskCenterY;
     this.cancel_center_x = this.state.cancelCenterX;
     this.cancel_center_y = this.state.cancelCenterY;
-    this.handle_center_x = this.state.handleCenterX;
-    this.handle_center_y = this.state.handleCenterY;
+    this.resize_center_x = this.state.resizeCenterX;
+    this.resize_center_y = this.state.resizeCenterY;
     // }
     this.touch_target = '';
     this.scale = this.state.scale;
@@ -431,21 +438,21 @@ class WearMask extends Component {
         maskCenterY: this.state.maskCenterY + moved_y,
         cancelCenterX: this.state.cancelCenterX + moved_x,
         cancelCenterY: this.state.cancelCenterY + moved_y,
-        handleCenterX: this.state.handleCenterX + moved_x,
-        handleCenterY: this.state.handleCenterY + moved_y
+        resizeCenterX: this.state.resizeCenterX + moved_x,
+        resizeCenterY: this.state.resizeCenterY + moved_y
       });
     }
     if (this.touch_target == 'rotate-resize') {
       this.setState({
-        handleCenterX: this.state.handleCenterX + moved_x,
-        handleCenterY: this.state.handleCenterY + moved_y,
-        cancelCenterX: 2 * this.state.maskCenterX - this.state.handleCenterX,
-        cancelCenterY: 2 * this.state.maskCenterY - this.state.handleCenterY
+        resizeCenterX: this.state.resizeCenterX + moved_x,
+        resizeCenterY: this.state.resizeCenterY + moved_y,
+        cancelCenterX: 2 * this.state.maskCenterX - this.state.resizeCenterX,
+        cancelCenterY: 2 * this.state.maskCenterY - this.state.resizeCenterY
       });
-      let diff_x_before = this.handle_center_x - this.mask_center_x;
-      let diff_y_before = this.handle_center_y - this.mask_center_y;
-      let diff_x_after = this.state.handleCenterX - this.mask_center_x;
-      let diff_y_after = this.state.handleCenterY - this.mask_center_y;
+      let diff_x_before = this.resize_center_x - this.mask_center_x;
+      let diff_y_before = this.resize_center_y - this.mask_center_y;
+      let diff_x_after = this.state.resizeCenterX - this.mask_center_x;
+      let diff_y_after = this.state.resizeCenterY - this.mask_center_y;
       let distance_before = Math.sqrt(
         diff_x_before * diff_x_before + diff_y_before * diff_y_before
       );
@@ -493,14 +500,11 @@ class WearMask extends Component {
       maskCenterY,
       cancelCenterX,
       cancelCenterY,
-      handleCenterX,
-      handleCenterY,
-
+      resizeCenterX,
+      resizeCenterY,
       maskSize,
-
       scale,
       rotate,
-      imgList,
       isShowMask,
       isSavePicture,
       currentTabIndex,
@@ -518,8 +522,8 @@ class WearMask extends Component {
     }
 
     let handleStyle = {
-      top: handleCenterY -10 + 'px',
-      left: handleCenterX - 10 + 'px'
+      top: resizeCenterY -10 + 'px',
+      left: resizeCenterX - 10 + 'px'
     }
 
     let maskCanvasStyle = {
