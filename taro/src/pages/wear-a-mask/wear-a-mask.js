@@ -38,6 +38,32 @@ const resetState = () => {
   }
 }
 
+const setTmpThis = (el, elState) => {
+  const {
+    maskCenterX,
+    maskCenterY,
+    cancelCenterX,
+    cancelCenterY,
+    resizeCenterX,
+    resizeCenterY,
+    scale,
+    rotate
+  } = elState
+
+  el.mask_center_x = maskCenterX;
+  el.mask_center_y = maskCenterY;
+  el.cancel_center_x = cancelCenterX;
+  el.cancel_center_y = cancelCenterY;
+  el.resize_center_x = resizeCenterX;
+  el.resize_center_y = resizeCenterY;
+
+  el.scale = scale;
+  el.rotate = rotate;
+
+  el.touch_target = '';
+
+}
+
 const materialList = [
   {
     name: 'mask',
@@ -64,8 +90,6 @@ class WearMask extends Component {
       ...resetState(),
       originSrc:  '',
       cutImageSrc: '',
-      imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      
       currentJiayouId: 1,
       currentTabIndex: 0,
       currentMaskId: 1,
@@ -87,29 +111,8 @@ class WearMask extends Component {
   }
 
   async componentDidMount() {
-    const {
-      maskCenterX,
-      maskCenterY,
-      cancelCenterX,
-      cancelCenterY,
-      resizeCenterX,
-      resizeCenterY,
-      scale,
-      rotate
-    } = this.state
-    this.mask_center_x = maskCenterX;
-    this.mask_center_y = maskCenterY;
-    this.cancel_center_x = cancelCenterX;
-    this.cancel_center_y = cancelCenterY;
-    this.resize_center_x = resizeCenterX;
-    this.resize_center_y = resizeCenterY;
+    setTmpThis(this, this.state)
 
-    console.log('this.mask_center_x :', this.mask_center_x);
-
-    this.scale = scale;
-    this.rotate = rotate;
-
-    this.touch_target = '';
     this.start_x = 0;
     this.start_y = 0;
 
@@ -420,43 +423,45 @@ class WearMask extends Component {
     }
   }
   touchEnd = (e) => {
-    this.mask_center_x = this.state.maskCenterX;
-    this.mask_center_y = this.state.maskCenterY;
-    this.cancel_center_x = this.state.cancelCenterX;
-    this.cancel_center_y = this.state.cancelCenterY;
-    this.resize_center_x = this.state.resizeCenterX;
-    this.resize_center_y = this.state.resizeCenterY;
-    // }
-    this.touch_target = '';
-    this.scale = this.state.scale;
-    this.rotate = this.state.rotate;
+    setTmpThis(this, this.state)
   }
   touchMove = (e) => {
+    const {
+      maskCenterX,
+      maskCenterY,
+      cancelCenterX,
+      cancelCenterY,
+      resizeCenterX,
+      resizeCenterY,
+      scale,
+      rotate
+    } = this.state
+
     var current_x = e.touches[0].clientX;
     var current_y = e.touches[0].clientY;
     var moved_x = current_x - this.start_x;
     var moved_y = current_y - this.start_y;
     if (this.touch_target == 'mask') {
       this.setState({
-        maskCenterX: this.state.maskCenterX + moved_x,
-        maskCenterY: this.state.maskCenterY + moved_y,
-        cancelCenterX: this.state.cancelCenterX + moved_x,
-        cancelCenterY: this.state.cancelCenterY + moved_y,
-        resizeCenterX: this.state.resizeCenterX + moved_x,
-        resizeCenterY: this.state.resizeCenterY + moved_y
+        maskCenterX: maskCenterX + moved_x,
+        maskCenterY: maskCenterY + moved_y,
+        cancelCenterX: cancelCenterX + moved_x,
+        cancelCenterY: cancelCenterY + moved_y,
+        resizeCenterX: resizeCenterX + moved_x,
+        resizeCenterY: resizeCenterY + moved_y
       });
     }
     if (this.touch_target == 'rotate-resize') {
       this.setState({
-        resizeCenterX: this.state.resizeCenterX + moved_x,
-        resizeCenterY: this.state.resizeCenterY + moved_y,
-        cancelCenterX: 2 * this.state.maskCenterX - this.state.resizeCenterX,
-        cancelCenterY: 2 * this.state.maskCenterY - this.state.resizeCenterY
+        resizeCenterX: resizeCenterX + moved_x,
+        resizeCenterY: resizeCenterY + moved_y,
+        cancelCenterX: 2 * maskCenterX - resizeCenterX,
+        cancelCenterY: 2 * maskCenterY - resizeCenterY
       });
       let diff_x_before = this.resize_center_x - this.mask_center_x;
       let diff_y_before = this.resize_center_y - this.mask_center_y;
-      let diff_x_after = this.state.resizeCenterX - this.mask_center_x;
-      let diff_y_after = this.state.resizeCenterY - this.mask_center_y;
+      let diff_x_after = resizeCenterX - this.mask_center_x;
+      let diff_y_after = resizeCenterY - this.mask_center_y;
       let distance_before = Math.sqrt(
         diff_x_before * diff_x_before + diff_y_before * diff_y_before
       );
