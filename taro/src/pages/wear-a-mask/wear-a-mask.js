@@ -9,6 +9,7 @@ import { srcToBase64Main, getImg } from 'utils/canvas-drawing'
 import { TaroCropper } from 'taro-cropper'
 
 import OneFaceImage from '../../images/one_face.jpeg'
+import TwoFaceImage from '../../images/two_face.jpg'
 
 import './styles.styl'
 
@@ -24,15 +25,15 @@ const MASK_SIZE = 100
 
 const resetState = () => {
   return {
+    currentMaskId: 1,
+    maskSize: DEFAULT_MASK_SIZE,
+
     maskCenterX: DPR_CANVAS_SIZE / 2,
     maskCenterY: DPR_CANVAS_SIZE / 2,
     cancelCenterX: DPR_CANVAS_SIZE / 2 - DEFAULT_MASK_SIZE / 2 - 2,
     cancelCenterY: DPR_CANVAS_SIZE / 2 - DEFAULT_MASK_SIZE / 2 - 2,
     resizeCenterX: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
     resizeCenterY: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
-
-    maskSize: DEFAULT_MASK_SIZE,
-
     scale: 1,
     rotate: 0
   }
@@ -61,6 +62,7 @@ const setTmpThis = (el, elState) => {
   el.rotate = rotate;
 
   el.touch_target = '';
+  el.touch_shape_index = -1;
 
 }
 
@@ -87,12 +89,14 @@ class WearMask extends Component {
     super(props);
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
-      ...resetState(),
+      shapeList: [
+        resetState()
+      ],
+      currentShapeIndex: 0,
       originSrc:  '',
       cutImageSrc: '',
       currentJiayouId: 1,
       currentTabIndex: 0,
-      currentMaskId: 1,
       isShowMask: false,
       isSavePicture: false
     }
@@ -112,14 +116,15 @@ class WearMask extends Component {
 
   async componentDidMount() {
     setTmpThis(this, this.state)
+    console.log('this.state :', this.state);
 
     this.start_x = 0;
     this.start_y = 0;
 
     this.setState({
-      cutImageSrc: OneFaceImage,
+      cutImageSrc: TwoFaceImage,
     }, () => {
-      this.onAnalyzeFace(OneFaceImage)
+      this.onAnalyzeFace(TwoFaceImage)
     })
 
   }
@@ -243,33 +248,42 @@ class WearMask extends Component {
       console.log('图片分析的结果 :', res2);
 
       const info = getMouthInfo(res2)
-      let { faceWidth, angle, mouthMidPoint, ImageWidth } = info[0]
-      let dpr = ImageWidth / CANVAS_SIZE * (375 / windowWidth)
-      const maskCenterX = mouthMidPoint.X / dpr
-      const maskCenterY =  mouthMidPoint.Y / dpr
-      const scale = faceWidth / MASK_SIZE / dpr
-      const rotate = angle / Math.PI * 180
+      console.log('info :', info);
+      let shapeList = info.map(item => {
+        let { faceWidth, angle, mouthMidPoint, ImageWidth } = item
+        let dpr = ImageWidth / CANVAS_SIZE * (375 / windowWidth)
+        const maskCenterX = mouthMidPoint.X / dpr
+        const maskCenterY = mouthMidPoint.Y / dpr
+        const scale = faceWidth / MASK_SIZE / dpr
+        const rotate = angle / Math.PI * 180
 
-      // 角度计算有点难
-      let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
-      let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+        // 角度计算有点难
+        let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+        let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
 
-      const cancelCenterX = maskCenterX - widthScaleDpr - 2
-      const cancelCenterY = maskCenterY - heightScaleDpr - 2
-      const resizeCenterX = maskCenterX + widthScaleDpr - 2
-      const resizeCenterY = maskCenterY + heightScaleDpr - 2
+        const cancelCenterX = maskCenterX - widthScaleDpr - 2
+        const cancelCenterY = maskCenterY - heightScaleDpr - 2
+        const resizeCenterX = maskCenterX + widthScaleDpr - 2
+        const resizeCenterY = maskCenterY + heightScaleDpr - 2
+        return {
+          currentMaskId: 1,
+          maskSize: DEFAULT_MASK_SIZE,
+          maskCenterX,
+          maskCenterY,
+          scale,
+          rotate,
+          cancelCenterX,
+          cancelCenterY,
+          resizeCenterX,
+          resizeCenterY,
+        }
+
+      })
 
       this.setState({
-        ...resetState(),
+        currentShapeIndex: 0,
+        shapeList,
         isShowMask: true,
-        maskCenterX,
-        maskCenterY,
-        scale,
-        rotate,
-        cancelCenterX,
-        cancelCenterY,
-        resizeCenterX,
-        resizeCenterY,
       })
 
       Taro.hideLoading()
@@ -401,21 +415,25 @@ class WearMask extends Component {
 
   saveFinally = () => this.setState({ isSavePicture: false})
 
-  chooseMask = (e) => {
-    const maskId = e.target.dataset.maskId
-    this.setState({
+  chooseMask = (maskId) => {
+    let { shapeList, currentShapeIndex } = this.state
+    shapeList[currentShapeIndex] = {
+      ...shapeList[currentShapeIndex],
       currentMaskId: maskId
+    }
+    this.setState({
+      shapeList
     })
   }
 
   touchStart = (e) => {
-    if (e.target.id == 'mask') {
-      this.touch_target = 'mask';
-    } else if (e.target.id == 'rotate-resize') {
-      this.touch_target = 'rotate-resize';
-    } else {
-      this.touch_target = '';
-    }
+    const { type = '', shapeIndex = 0 } = e.target.dataset
+ 
+    this.touch_target = type;
+    this.touch_shape_index = shapeIndex;
+    this.setState({
+      currentShapeIndex: shapeIndex
+    })
 
     if (this.touch_target != '') {
       this.start_x = e.touches[0].clientX;
@@ -426,6 +444,7 @@ class WearMask extends Component {
     setTmpThis(this, this.state)
   }
   touchMove = (e) => {
+    let { shapeList } = this.state
     const {
       maskCenterX,
       maskCenterY,
@@ -433,31 +452,38 @@ class WearMask extends Component {
       cancelCenterY,
       resizeCenterX,
       resizeCenterY,
-      scale,
-      rotate
-    } = this.state
+    } = shapeList[this.touch_shape_index]
 
     var current_x = e.touches[0].clientX;
     var current_y = e.touches[0].clientY;
     var moved_x = current_x - this.start_x;
     var moved_y = current_y - this.start_y;
     if (this.touch_target == 'mask') {
-      this.setState({
+      shapeList[this.touch_shape_index] = {
+        ...shapeList[this.touch_shape_index],
         maskCenterX: maskCenterX + moved_x,
         maskCenterY: maskCenterY + moved_y,
         cancelCenterX: cancelCenterX + moved_x,
         cancelCenterY: cancelCenterY + moved_y,
         resizeCenterX: resizeCenterX + moved_x,
         resizeCenterY: resizeCenterY + moved_y
-      });
+      }
+      this.setState({
+        shapeList
+      })
     }
     if (this.touch_target == 'rotate-resize') {
-      this.setState({
+      let oneState = {
         resizeCenterX: resizeCenterX + moved_x,
         resizeCenterY: resizeCenterY + moved_y,
         cancelCenterX: 2 * maskCenterX - resizeCenterX,
         cancelCenterY: 2 * maskCenterY - resizeCenterY
-      });
+      }
+      
+      this.setState({
+        shapeList
+      })
+
       let diff_x_before = this.resize_center_x - this.mask_center_x;
       let diff_y_before = this.resize_center_y - this.mask_center_y;
       let diff_x_after = resizeCenterX - this.mask_center_x;
@@ -472,10 +498,20 @@ class WearMask extends Component {
         (Math.atan2(diff_y_before, diff_x_before) / Math.PI) * 180;
       let angle_after =
         (Math.atan2(diff_y_after, diff_x_after) / Math.PI) * 180;
-      this.setState({
+      
+      let twoState = {
         scale: (distance_after / distance_before) * this.scale,
         rotate: angle_after - angle_before + this.rotate
-      });
+      }
+      shapeList[this.touch_shape_index] = {
+        ...shapeList[this.touch_shape_index],
+        ...oneState,
+        ...twoState
+      }
+      this.setState({
+        shapeList
+      })
+
     }
     this.start_x = current_x;
     this.start_y = current_y;
@@ -503,37 +539,13 @@ class WearMask extends Component {
     const {
       originSrc,
       cutImageSrc,
-      currentMaskId,
-
-      maskCenterX,
-      maskCenterY,
-      cancelCenterX,
-      cancelCenterY,
-      resizeCenterX,
-      resizeCenterY,
-      maskSize,
-      scale,
-      rotate,
       isShowMask,
       isSavePicture,
       currentTabIndex,
-      currentJiayouId
+      currentJiayouId,
+      shapeList,
+      currentShapeIndex
     } = this.state
-    let maskStyle = {
-      top: maskCenterY - maskSize / 2 - 2 + 'px',
-      left: maskCenterX - maskSize / 2 - 2 + 'px',
-      transform: `rotate(${rotate+'deg'}) scale(${scale})`
-    }
-
-    let cancelStyle = {
-      top: cancelCenterY -10 + 'px',
-      left: cancelCenterX - 10 + 'px'
-    }
-
-    let handleStyle = {
-      top: resizeCenterY -10 + 'px',
-      left: resizeCenterX - 10 + 'px'
-    }
 
     let maskCanvasStyle = {
       top: isSavePicture ? '0' : '-9999px'
@@ -559,13 +571,51 @@ class WearMask extends Component {
                     className='image-selected'
                   />
                   {
-                    !isSavePicture && isShowMask && (
-                      <Block>
-                        <Image className="mask" id='mask' src={require(`../../images/mask-${currentMaskId}.png`)} style={maskStyle} />
-                        {/* <Icon type="cancel" className="image-btn-cancel" id="cancel" style={cancelStyle} /> */}
-                        <Icon type="waiting" className="image-btn-handle" id="rotate-resize" color="green" style={handleStyle} />
-                      </Block>
-                    )
+                    !isSavePicture && isShowMask && shapeList.map((shape, shapeIndex) => {
+
+                      const {
+                        currentMaskId,
+                        maskSize,
+                        maskCenterX,
+                        maskCenterY,
+                        cancelCenterX,
+                        cancelCenterY,
+                        resizeCenterX,
+                        resizeCenterY,
+                        scale,
+                        rotate
+                      } = shape
+
+                      let maskStyle = {
+                        top: maskCenterY - maskSize / 2 - 2 + 'px',
+                        left: maskCenterX - maskSize / 2 - 2 + 'px',
+                        transform: `rotate(${rotate + 'deg'}) scale(${scale})`
+                      }
+
+                      let cancelStyle = {
+                        top: cancelCenterY - 10 + 'px',
+                        left: cancelCenterX - 10 + 'px'
+                      }
+
+                      let handleStyle = {
+                        top: resizeCenterY - 10 + 'px',
+                        left: resizeCenterX - 10 + 'px'
+                      }
+
+                      return (
+                        <Block key={shape.maskCenterX}>
+                          <Image className="mask" data-type='mask' data-shape-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} style={maskStyle} />
+                          {
+                            currentShapeIndex === shapeIndex && (
+                              <Block>
+                                <View className='image-btn-cancel' data-type='cancel' data-shape-index={shapeIndex} style={cancelStyle}></View>
+                                <View className='image-btn-handle' data-shape-index={shapeIndex} data-type='rotate-resize' style={handleStyle}></View>
+                              </Block>
+                            )
+                          }
+                        </Block>
+                      )
+                    })
                   }
                   {
                     currentJiayouId > 0 && (
@@ -575,9 +625,6 @@ class WearMask extends Component {
                       </View>
                     )
                   }
-                  {/* { && <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />} */}
-
-
                 </View>
               )
               : (
