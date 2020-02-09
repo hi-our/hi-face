@@ -60,7 +60,7 @@ class WearMask extends Component {
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
       ...resetState(),
-      selectedCatIndex: 0,
+      currentTabIndex: 0,
       originSrc:  '',
       cutImageSrc: '',
       imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -470,8 +470,10 @@ class WearMask extends Component {
     })
   }
 
-  chooseCategory = () => {
-
+  chooseTab = (tabIndex) => {
+    this.setState({
+      currentTabIndex: tabIndex
+    })
   }
 
   render() {
@@ -494,7 +496,7 @@ class WearMask extends Component {
       imgList,
       isShowMask,
       isSavePicture,
-      selectedCatIndex
+      currentTabIndex
     } = this.state
     let maskStyle = {
       top: maskCenterY - maskSize / 2 - 2 + 'px',
@@ -600,13 +602,13 @@ class WearMask extends Component {
             {
               materialList.map((item, itemIndex) => {
                 return (
-                  <View key={item.name} style={{display: selectedCatIndex === itemIndex ? ' block': 'none'}}>
+                  <View key={item.name} style={{display: currentTabIndex === itemIndex ? ' block': 'none'}}>
                     <ScrollView className="mask-select-wrap" scrollX>
                       {
                         item.imgList.map((imgId) => {
                           return (
                             <Image
-                              className="tab-bd-image"
+                              className={`tab-bd-image  tab-bd-image-${item.name}`}
                               key={imgId}
                               src={require(`../../images/${item.name}-${imgId}.png`)}
                               onClick={this.chooseMask}
@@ -625,11 +627,15 @@ class WearMask extends Component {
             {
               materialList.map((item, itemIndex) => {
                 return (
-                  <View key={item.name} className={`tab-hd-item ${selectedCatIndex === itemIndex ? 'tab-hd-active' : ''}`}>
+                  <View
+                    key={item.name}
+                    className={`tab-hd-item ${currentTabIndex === itemIndex ? 'tab-hd-active' : ''}`}
+                    onClick={this.chooseTab.bind(this, itemIndex)}
+                  >
                     <Image
                       className='tab-hd-image'
                       src={require(`../../images/${item.name}-${item.imgList[0]}.png`)}
-                      onClick={this.chooseCategory}
+                      mode='aspectFit'
                     />
                   </View>
                 )
