@@ -69,11 +69,13 @@ const setTmpThis = (el, elState) => {
 const materialList = [
   {
     name: 'mask',
+    icon: require('../../images/icon-category-mask.png'),
     imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     type: 'multi'
   },
   {
     name: 'jiayou',
+    icon: require('../../images/icon-category-jiayou.png'),
     imgList: [1, 2, 3, 4, 5, 6],
     type: 'single'
   }
@@ -291,7 +293,9 @@ class WearMask extends Component {
     } catch (error) {
       Taro.hideLoading()
       this.setState({
-        ...resetState(),
+        shapeList: [
+          resetState()
+        ],
         isShowMask: true,
       })
       console.log('error :', error);
@@ -311,7 +315,9 @@ class WearMask extends Component {
   onRemoveImage = () => {
     this.cutImageSrcCanvas = ''
     this.setState({
-      ...resetState(),
+      shapeList: [
+        resetState()
+      ],
       cutImageSrc: ''
     })
   }
@@ -417,12 +423,31 @@ class WearMask extends Component {
 
   chooseMask = (maskId) => {
     let { shapeList, currentShapeIndex } = this.state
-    shapeList[currentShapeIndex] = {
-      ...shapeList[currentShapeIndex],
-      currentMaskId: maskId
+    if (currentShapeIndex >= 0) {
+      shapeList[currentShapeIndex] = {
+        ...shapeList[currentShapeIndex],
+        currentMaskId: maskId
+      }
+    } else {
+      currentShapeIndex = shapeList.length
+      shapeList.push({
+        ...resetState(),
+        currentMaskId: maskId
+      })
     }
     this.setState({
-      shapeList
+      shapeList,
+      currentShapeIndex
+    })
+  }
+
+  removeShape = (e) => {
+    const { shapeIndex = 0 } = e.target.dataset
+    const { shapeList } = this.state
+    shapeList.splice(shapeIndex, 1);
+    this.setState({
+      shapeList,
+      currentShapeIndex: -1
     })
   }
 
@@ -441,7 +466,9 @@ class WearMask extends Component {
     }
   }
   touchEnd = (e) => {
-    setTmpThis(this, this.state)
+    if (this.touch_target !== '' && this.touch_target !== 'cancel') {
+      setTmpThis(this, this.state)
+    }
   }
   touchMove = (e) => {
     let { shapeList } = this.state
@@ -479,10 +506,6 @@ class WearMask extends Component {
         cancelCenterX: 2 * maskCenterX - resizeCenterX,
         cancelCenterY: 2 * maskCenterY - resizeCenterY
       }
-      
-      this.setState({
-        shapeList
-      })
 
       let diff_x_before = this.resize_center_x - this.mask_center_x;
       let diff_y_before = this.resize_center_y - this.mask_center_y;
@@ -551,6 +574,8 @@ class WearMask extends Component {
       top: isSavePicture ? '0' : '-9999px'
     }
 
+    console.log('shapeList :', shapeList);
+
     return (
       <View className='mask-page'>
         <View className='main-wrap'>
@@ -608,7 +633,7 @@ class WearMask extends Component {
                           {
                             currentShapeIndex === shapeIndex && (
                               <Block>
-                                <View className='image-btn-cancel' data-type='cancel' data-shape-index={shapeIndex} style={cancelStyle}></View>
+                                <View className='image-btn-cancel' data-type='cancel' data-shape-index={shapeIndex} style={cancelStyle} onClick={this.removeShape}></View>
                                 <View className='image-btn-handle' data-shape-index={shapeIndex} data-type='rotate-resize' style={handleStyle}></View>
                               </Block>
                             )
@@ -717,7 +742,7 @@ class WearMask extends Component {
                         >
                           <Image
                             className='tab-hd-image'
-                            src={require(`../../images/${item.name}-${item.imgList[0]}.png`)}
+                            src={item.icon}
                             mode='aspectFit'
                           />
                         </View>
