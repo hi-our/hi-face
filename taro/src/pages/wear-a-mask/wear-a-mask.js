@@ -60,11 +60,12 @@ class WearMask extends Component {
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
       ...resetState(),
-      currentTabIndex: 0,
       originSrc:  '',
       cutImageSrc: '',
       imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-
+      
+      currentJiayouId: 1,
+      currentTabIndex: 0,
       currentMaskId: 1,
       isShowMask: false,
       isSavePicture: false
@@ -476,6 +477,12 @@ class WearMask extends Component {
     })
   }
 
+  chooseJiayouId = (jiayouId = 0) => {
+    this.setState({
+      currentJiayouId: jiayouId
+    })
+  }
+
   render() {
     const {
       originSrc,
@@ -496,7 +503,8 @@ class WearMask extends Component {
       imgList,
       isShowMask,
       isSavePicture,
-      currentTabIndex
+      currentTabIndex,
+      currentJiayouId
     } = this.state
     let maskStyle = {
       top: maskCenterY - maskSize / 2 - 2 + 'px',
@@ -544,6 +552,14 @@ class WearMask extends Component {
                         {/* <Icon type="cancel" className="image-btn-cancel" id="cancel" style={cancelStyle} /> */}
                         <Icon type="waiting" className="image-btn-handle" id="rotate-resize" color="green" style={handleStyle} />
                       </Block>
+                    )
+                  }
+                  {
+                    currentJiayouId > 0 && (
+                      <View className="image-jiayou">
+                        <Image id='mask' src={require(`../../images/jiayou-${currentJiayouId}.png`)} />
+                        <View className='image-btn-jiayou' onClick={this.chooseJiayouId}></View>
+                      </View>
                     )
                   }
                   {/* { && <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />} */}
@@ -596,71 +612,60 @@ class WearMask extends Component {
             onCancel={this.onCancel}
           />
         </View>
-
-        <View className='tab-wrap'>
-          <View className='tab-bd'>
-            {
-              materialList.map((item, itemIndex) => {
-                return (
-                  <View key={item.name} style={{display: currentTabIndex === itemIndex ? ' block': 'none'}}>
-                    <ScrollView className="mask-select-wrap" scrollX>
-                      {
-                        item.imgList.map((imgId) => {
-                          return (
-                            <Image
-                              className={`tab-bd-image  tab-bd-image-${item.name}`}
-                              key={imgId}
-                              src={require(`../../images/${item.name}-${imgId}.png`)}
-                              onClick={this.chooseMask}
-                              data-mask-id={imgId}
-                            />
-                          )
-                        })
-                      }
-                    </ScrollView>
-                  </View>
-                )
-              })
-            }
-          </View>
-          <View className='tab-hd'>
-            {
-              materialList.map((item, itemIndex) => {
-                return (
-                  <View
-                    key={item.name}
-                    className={`tab-hd-item ${currentTabIndex === itemIndex ? 'tab-hd-active' : ''}`}
-                    onClick={this.chooseTab.bind(this, itemIndex)}
-                  >
-                    <Image
-                      className='tab-hd-image'
-                      src={require(`../../images/${item.name}-${item.imgList[0]}.png`)}
-                      mode='aspectFit'
-                    />
-                  </View>
-                )
-              })
-            }
-          </View>
-        </View>
-        {/* {
+        
+        {
           cutImageSrc
             ? (
-              <ScrollView className="mask-select-wrap" scrollX>
-                {
-                  imgList.map((imgId) => {
-                    return (
-                      <Image
-                        className="image-item"
-                        key={imgId}
-                        src={require(`../../images/mask-${imgId}.png`)}
-                        onClick={this.chooseMask}
-                        data-mask-id={imgId}
-                      />
-                    )
-                  })
-                }
-              </ScrollView>
+              <View className='tab-wrap'>
+                <View className='tab-bd'>
+                  {
+                    materialList.map((item, itemIndex) => {
+                      return (
+                        <View key={item.name} style={{ display: currentTabIndex === itemIndex ? ' block' : 'none' }}>
+                          <ScrollView className="mask-select-wrap" scrollX>
+                            {
+                              item.imgList.map((imgId) => {
+                                return (
+                                  <Image
+                                    className={`tab-bd-image  tab-bd-image-${item.name}`}
+                                    key={imgId}
+                                    src={require(`../../images/${item.name}-${imgId}.png`)}
+                                    onClick={() => {
+                                      if (item.name === 'mask') this.chooseMask(imgId)
+                                      if (item.name === 'jiayou') this.chooseJiayouId(imgId)
+                                      
+                                    }}
+                                    data-mask-id={imgId}
+                                  />
+                                )
+                              })
+                            }
+                          </ScrollView>
+                        </View>
+                      )
+                    })
+                  }
+                </View>
+                <View className='tab-hd'>
+                  {
+                    materialList.map((item, itemIndex) => {
+                      return (
+                        <View
+                          key={item.name}
+                          className={`tab-hd-item ${currentTabIndex === itemIndex ? 'tab-hd-active' : ''}`}
+                          onClick={this.chooseTab.bind(this, itemIndex)}
+                        >
+                          <Image
+                            className='tab-hd-image'
+                            src={require(`../../images/${item.name}-${item.imgList[0]}.png`)}
+                            mode='aspectFit'
+                          />
+                        </View>
+                      )
+                    })
+                  }
+                </View>
+              </View>
             )
             : (
               <View className='bottom-tips-wrap'>
@@ -669,7 +674,7 @@ class WearMask extends Component {
                 </Text>
               </View>
             )
-        } */}
+        }
 
         {!originSrc && <View className='virus-btn' onClick={this.goSpreadGame}>病毒演化器</View>}
         
