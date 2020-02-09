@@ -36,6 +36,19 @@ const resetState = () => {
   }
 }
 
+const materialList = [
+  {
+    name: 'mask',
+    imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    type: 'multi'
+  },
+  {
+    name: 'jiayou',
+    imgList: [1, 2, 3, 4, 5, 6],
+    type: 'single'
+  }
+]
+
 // @CorePage
 class WearMask extends Component {
   config = {
@@ -47,6 +60,7 @@ class WearMask extends Component {
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
       ...resetState(),
+      selectedCatIndex: 0,
       originSrc:  '',
       cutImageSrc: '',
       imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -382,8 +396,8 @@ class WearMask extends Component {
   touchStart = (e) => {
     if (e.target.id == 'mask') {
       this.touch_target = 'mask';
-    } else if (e.target.id == 'handle') {
-      this.touch_target = 'handle';
+    } else if (e.target.id == 'rotate-resize') {
+      this.touch_target = 'rotate-resize';
     } else {
       this.touch_target = '';
     }
@@ -420,7 +434,7 @@ class WearMask extends Component {
         handleCenterY: this.state.handleCenterY + moved_y
       });
     }
-    if (this.touch_target == 'handle') {
+    if (this.touch_target == 'rotate-resize') {
       this.setState({
         handleCenterX: this.state.handleCenterX + moved_x,
         handleCenterY: this.state.handleCenterY + moved_y,
@@ -456,6 +470,10 @@ class WearMask extends Component {
     })
   }
 
+  chooseCategory = () => {
+
+  }
+
   render() {
     const {
       originSrc,
@@ -475,7 +493,8 @@ class WearMask extends Component {
       rotate,
       imgList,
       isShowMask,
-      isSavePicture
+      isSavePicture,
+      selectedCatIndex
     } = this.state
     let maskStyle = {
       top: maskCenterY - maskSize / 2 - 2 + 'px',
@@ -521,7 +540,7 @@ class WearMask extends Component {
                       <Block>
                         <Image className="mask" id='mask' src={require(`../../images/mask-${currentMaskId}.png`)} style={maskStyle} />
                         {/* <Icon type="cancel" className="image-btn-cancel" id="cancel" style={cancelStyle} /> */}
-                        <Icon type="waiting" className="image-btn-handle" id="handle" color="green" style={handleStyle} />
+                        <Icon type="waiting" className="image-btn-handle" id="rotate-resize" color="green" style={handleStyle} />
                       </Block>
                     )
                   }
@@ -575,7 +594,50 @@ class WearMask extends Component {
             onCancel={this.onCancel}
           />
         </View>
-        {
+
+        <View className='tab-wrap'>
+          <View className='tab-bd'>
+            {
+              materialList.map((item, itemIndex) => {
+                return (
+                  <View key={item.name} style={{display: selectedCatIndex === itemIndex ? ' block': 'none'}}>
+                    <ScrollView className="mask-select-wrap" scrollX>
+                      {
+                        item.imgList.map((imgId) => {
+                          return (
+                            <Image
+                              className="tab-bd-image"
+                              key={imgId}
+                              src={require(`../../images/${item.name}-${imgId}.png`)}
+                              onClick={this.chooseMask}
+                              data-mask-id={imgId}
+                            />
+                          )
+                        })
+                      }
+                    </ScrollView>
+                  </View>
+                )
+              })
+            }
+          </View>
+          <View className='tab-hd'>
+            {
+              materialList.map((item, itemIndex) => {
+                return (
+                  <View key={item.name} className={`tab-hd-item ${selectedCatIndex === itemIndex ? 'tab-hd-active' : ''}`}>
+                    <Image
+                      className='tab-hd-image'
+                      src={require(`../../images/${item.name}-${item.imgList[0]}.png`)}
+                      onClick={this.chooseCategory}
+                    />
+                  </View>
+                )
+              })
+            }
+          </View>
+        </View>
+        {/* {
           cutImageSrc
             ? (
               <ScrollView className="mask-select-wrap" scrollX>
@@ -601,7 +663,7 @@ class WearMask extends Component {
                 </Text>
               </View>
             )
-        }
+        } */}
 
         {!originSrc && <View className='virus-btn' onClick={this.goSpreadGame}>病毒演化器</View>}
         
