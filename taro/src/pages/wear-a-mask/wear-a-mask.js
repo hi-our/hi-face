@@ -4,6 +4,8 @@ import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo } from 'utils/face-utils'
 import { getImg } from 'utils/canvas-drawing'
+import { TaroCropper } from 'taro-cropper'
+
 
 import './styles.styl'
 
