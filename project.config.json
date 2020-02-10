@@ -5,10 +5,23 @@
 	"description": "test",
 	"appid": "wxd5e8989ce23206af",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": false,
 		"postcss": false,
-		"minified": false
+		"minified": false,
+		"newFeature": true,
+		"coverView": true,
+		"autoAudits": false,
+		"showShadowRootInWxmlPanel": true,
+		"scopeDataCheck": false,
+		"checkInvalidKey": true,
+		"checkSiteMap": true,
+		"uploadWithSourceMap": true,
+		"babelSetting": {
+			"ignore": [],
+			"disablePlugins": [],
+			"outputPath": ""
+		}
 	},
 	"compileType": "miniprogram",
 	"simulatorType": "wechat",
@@ -42,6 +55,19 @@
 					"name": "pages/thanks/thanks",
 					"pathName": "pages/thanks/thanks",
 					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/spread-game/spread-game",
+					"pathName": "pages/spread-game/spread-game",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/test/test",
+					"pathName": "pages/test/test",
 					"scene": null
 				}
 			]

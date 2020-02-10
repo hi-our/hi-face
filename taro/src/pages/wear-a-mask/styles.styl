@@ -46,25 +46,43 @@
 
 .image-wrap
   position relative
-  width: 300px
+  width 300px
   height 300px
-
-
 
 .image-selected
-  width: 300px
+  width 300px
   height 300px
+
+.image-jiayou
+  position absolute
+  left 0
+  right 0
+  bottom 0
+  height 169px
+
+  image
+    width 100%
+    height 100%
+
+.image-btn-jiayou
+  position absolute
+  left 5px
+  top 59px
+  width 20px
+  height 20px
+  background url(https://n1image.hjfile.cn/res7/2020/02/09/2c591b8d9d1c75d1e4d8804e710dc086.png) no-repeat
+  background-size contain
 
 .cropper-wrap
   position fixed
   left 0
-  top: 0
+  top 0
 
 .button-wrap
   margin-top 20px
   display flex
   justify-content center
-  font-size: 12px
+  font-size 12px
   color #2f3742
   line-height 1.5
   text-align center
@@ -75,7 +93,7 @@
   width 60px
   background url(https://n1image.hjfile.cn/res7/2020/02/01/63e0c77558a7bc50c4f2666b8df449e0.png) no-repeat center top
   background-size auto 40px
-  font-size: 10px
+  font-size 10px
 
 
 
@@ -85,7 +103,7 @@
   margin-left 30px
   background url(https://n1image.hjfile.cn/res7/2020/02/01/8fb88a2a273c37c6098966681c402f21.png) no-repeat center top
   background-size auto 40px
-  font-size: 10px
+  font-size 10px
 
 .button-avatar
 .button-camera
@@ -98,16 +116,13 @@
   margin 0 10px
 
 
-.mask {
-  height: 100px;
-  width: 100px;
-  position: absolute;
-  border: dashed 2px yellow;
-  top:100px;
+.mask
+  height 100px
+  width 100px
+  position absolute
+  border dashed 2px yellow
+  top:100px
   z-index 1
-}
-
-
 
 .bottom-tips-wrap
   padding 10px 0
@@ -117,24 +132,91 @@
   word-break break-all
   text-align center
 
-.mask-select-wrap {
-   width: 100%;
-   bottom: 5px;
-   white-space: nowrap;
-}
-.image-item {
-  height: 70px;
-  width: 70px;
-  border:2px solid;
-  border-color: #eeeeee;
-  margin: 5px;
-}
+.mask-select-wrap
+   width 100%
+   bottom 5px
+   white-space nowrap
+
+.tab-wrap
+  .tab-bd
+    background #fff
+  .tab-hd
+    padding 0 10px
+    display flex
+  
+  .tab-hd-item
+    padding 0 10px
+
+  .tab-hd-active
+    background #fff
+
+  .tab-hd-image
+    height 25px
+    width 25px
+
+  .tab-bd-image
+    height 50px
+    width 50px
+    margin 5px
+  .tab-bd-image-jiayou
+    height 28px
+    margin-top 27px
 
 
 .image-btn-handle,
-.image-btn-cancel{
-  position: absolute;
-  z-index: 1;
-  width:20px;
-  height:20px;
-}
+.image-btn-cancel 
+  position absolute
+  z-index 1
+  width:20px
+  height:20px
+
+.image-btn-handle 
+  background url(https://n1image.hjfile.cn/res7/2020/02/09/9b5c2be4361101b155a604e6735a8ad3.png) no-repeat
+  background-size contain
+  
+.image-btn-cancel 
+  background url(https://n1image.hjfile.cn/res7/2020/02/09/2c591b8d9d1c75d1e4d8804e710dc086.png) no-repeat
+  background-size contain
+
+.virus-btn
+  position fixed
+  right 4px
+  top 0
+  font-size 12px
+  width 14px
+  padding 5px
+  line-height 1
+  border-radius 0 0 15px 15px 
+  background-color #4fa938
+  color #fff
+  text-align center
+
+  &:after
+    content ''
+    display block
+    margin-top 5px
+    width 16px
+    height 16px
+    background url(https://n1image.hjfile.cn/res7/2020/02/08/a5f4812ff70914f64550cee1b473d6c7.png) no-repeat
+    background-size contain
+
+.share-btn
+  position fixed
+  left 4px
+  top 0
+  font-size 12px
+  width 14px
+  box-sizing content-box
+  padding 5px
+  line-height 1
+  border-radius 0 0 15px 15px 
+  background-color #2f5aff
+  color #fff
+  text-align center
+
+.share-btn-icon
+  margin 5px auto 0
+  width 16px
+  height 16px
+  background url(https://n1image.hjfile.cn/res7/2020/02/09/6cd2bcc0f4551bf3088f6de4111b50d9.png) no-repeat
+  background-size contain

@@ -1,0 +1,100 @@
+
+.app-view {
+  min-height: 100vh;
+  padding-top 1px
+  box-sizing: border-box;
+  text-align: center;
+  background-color: #282c34;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding-bottom: 20px;
+  color #fff
+}
+
+.person 
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #25a778;
+  float: left;
+  margin: 1px;
+  flex-shrink: 0;
+
+  &.bad
+    background: red;
+  
+  &.light
+    background: #575652;
+  
+
+.split {
+  width: 100%;
+  height: 5px;
+  display: flex;
+  justify-content: center;
+}
+
+.app-h3
+  margin 10px 0
+  font-size: 20px
+
+.app-p
+  font-size: 14px
+  margin 5px 0
+
+.btn-wrap
+  margin-top 10px
+  display flex
+  justify-content center
+
+  button
+    padding 0 15px
+    font-size: 14px
+    margin 0 15px
+    border-radius 10px
+    line-height: 2
+
+.bottom-btn {
+  background #fff
+}
+.sub-title {
+  margin-bottom: 30px;
+}
+
+.history
+  position: fixed !important;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 0;
+
+  &.ip-x
+    padding-bottom 12px
+
+.guide-img
+  width 346px
+  height 403px
+
+
+.map-wrap
+  margin 15px auto
+  height 210px
+  width 350px
+  position relative
+
+.map-dot
+  position absolute
+  width 7px
+  height 7px
+  background: #25a778;
+  // border-radius: 50%
+  &.map-dot-china
+    background rgba(255,156,0,1)
+    z-index 1
+  
+  &.bad
+    background: red;
+  
+  &.light
+    background: #575652;
