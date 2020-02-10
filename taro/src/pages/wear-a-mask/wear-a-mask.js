@@ -1,15 +1,9 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image, Icon, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
-import fetch, { cloudCallFunction } from 'utils/fetch'
-import { apiAnalyzeFace } from 'constants/apis'
+import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
+import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
-import { getMouthInfo, getBase64Main } from 'utils/face-utils'
-import { srcToBase64Main, getImg } from 'utils/canvas-drawing'
-
-import { TaroCropper } from 'taro-cropper'
-
-import OneFaceImage from '../../images/one_face.jpeg'
-import TwoFaceImage from '../../images/two_face.jpg'
+import { getMouthInfo } from 'utils/face-utils'
+import { getImg } from 'utils/canvas-drawing'
 
 import './styles.styl'
 
@@ -20,7 +14,6 @@ const PageDpr = windowWidth / 375
 const DPR_CANVAS_SIZE = CANVAS_SIZE * PageDpr
 const DEFAULT_MASK_SIZE = 100 * PageDpr
 const MASK_SIZE = 100
-
 
 
 const resetState = () => {
@@ -123,12 +116,6 @@ class WearMask extends Component {
     this.start_x = 0;
     this.start_y = 0;
 
-    this.setState({
-      cutImageSrc: TwoFaceImage,
-    }, () => {
-      this.onAnalyzeFace(TwoFaceImage)
-    })
-
   }
 
 
@@ -150,20 +137,13 @@ class WearMask extends Component {
     })
   }
 
-  onGetUserInfo =  (e) => {
+  onGetUserInfo =  async (e) => {
 
     if (e.detail.userInfo) {
       //用户按了允许授权按钮
       // TODO写法，用于更换图片
-      this.setState({
-        originSrc: ''
-      }, () => {
-        setTimeout(() => {
-          this.setState({
-            originSrc: e.detail.userInfo.avatarUrl
-          })
-        }, 100);
-      })
+      let avatarUrl = await getImg(e.detail.userInfo.avatarUrl)
+      this.onCut(avatarUrl)
     } else {
       //用户按了拒绝按钮
     }
