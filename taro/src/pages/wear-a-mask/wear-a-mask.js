@@ -79,6 +79,7 @@ const materialList = [
 class WearMask extends Component {
   config = {
     navigationBarTitleText: '快快戴口罩',
+    disableScroll: true
   }
 
   constructor(props) {
