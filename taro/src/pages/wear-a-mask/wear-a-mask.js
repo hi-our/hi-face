@@ -7,6 +7,7 @@ import { getImg } from 'utils/canvas-drawing'
 import { TaroCropper } from 'taro-cropper'
 
 import one_face_image from '../../images/one_face.jpeg';
+import two_face_image from '../../images/two_face.jpg';
 
 import './styles.styl'
 
@@ -21,43 +22,34 @@ const MASK_SIZE = 100
 
 const resetState = () => {
   return {
+    maskWidth: DEFAULT_MASK_SIZE,
     currentMaskId: 1,
     timeNow: Date.now(),
-    maskSize: DEFAULT_MASK_SIZE,
 
     maskCenterX: DPR_CANVAS_SIZE / 2,
     maskCenterY: DPR_CANVAS_SIZE / 2,
-    cancelCenterX: DPR_CANVAS_SIZE / 2 - DEFAULT_MASK_SIZE / 2 - 2,
-    cancelCenterY: DPR_CANVAS_SIZE / 2 - DEFAULT_MASK_SIZE / 2 - 2,
     resizeCenterX: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
     resizeCenterY: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
-    scale: 1,
     rotate: 0
   }
 }
 
 const setTmpThis = (el, elState) => {
   const {
-    m_maskWidth,
+    maskWidth,
     maskCenterX,
     maskCenterY,
-    cancelCenterX,
-    cancelCenterY,
     resizeCenterX,
     resizeCenterY,
-    scale,
     rotate
   } = elState
 
-  el.m_mask_width = m_maskWidth
+  el.mask_width = maskWidth
   el.mask_center_x = maskCenterX;
   el.mask_center_y = maskCenterY;
-  el.cancel_center_x = cancelCenterX;
-  el.cancel_center_y = cancelCenterY;
   el.resize_center_x = resizeCenterX;
   el.resize_center_y = resizeCenterY;
 
-  el.scale = scale;
   el.rotate = rotate;
 
   el.touch_target = '';
@@ -123,9 +115,9 @@ class WearMask extends Component {
     this.start_y = 0;
 
     this.setState({
-      cutImageSrc: one_face_image
+      cutImageSrc: two_face_image
     }, () => {
-        this.onAnalyzeFace(one_face_image)
+        this.onAnalyzeFace(two_face_image)
     })
 
   }
@@ -254,24 +246,18 @@ class WearMask extends Component {
         let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
         let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
 
-        const cancelCenterX = maskCenterX - widthScaleDpr - 2
-        const cancelCenterY = maskCenterY - heightScaleDpr - 2
         const resizeCenterX = maskCenterX + widthScaleDpr - 2
         const resizeCenterY = maskCenterY + heightScaleDpr - 2
 
-        const m_maskWidth = faceWidth / dpr
+        const maskWidth = faceWidth * 1.2 / dpr
 
         return {
-          m_maskWidth,
+          maskWidth,
           currentMaskId: 1,
-          timeNow: Date.now(),
-          maskSize: DEFAULT_MASK_SIZE,
+          timeNow: Date.now() * Math.random(),
           maskCenterX,
           maskCenterY,
-          scale,
           rotate,
-          cancelCenterX,
-          cancelCenterY,
           resizeCenterX,
           resizeCenterY,
         }
@@ -342,13 +328,13 @@ class WearMask extends Component {
     shapeList.forEach(shape => {
       pc.save()
       const {
-        scale,
+        maskWidth,
         rotate,
         maskCenterX,
         maskCenterY,
         currentMaskId,
       } = shape
-      const maskSize = 100 * scale;
+      const maskSize = maskWidth
       pc.translate(maskCenterX, maskCenterY);
       pc.rotate((rotate * Math.PI) / 180)
   
@@ -504,7 +490,7 @@ class WearMask extends Component {
       maskCenterY,
       resizeCenterX,
       resizeCenterY,
-      m_maskWidth,
+      maskWidth,
     } = shapeList[this.touch_shape_index]
 
     var current_x = e.touches[0].clientX;
@@ -529,7 +515,6 @@ class WearMask extends Component {
         resizeCenterY: resizeCenterY + moved_y,
       }
 
-      // console.log('this.resize_center_x - this.mask_center_x :', this.resize_center_x, this.mask_center_x);
       let diff_x_before = this.resize_center_x - this.mask_center_x;
       let diff_y_before = this.resize_center_y - this.mask_center_y;
       let diff_x_after = resizeCenterX - this.mask_center_x;
@@ -545,13 +530,11 @@ class WearMask extends Component {
       let angle_before = (Math.atan2(diff_y_before, diff_x_before) / Math.PI) * 180;
       let angle_after = (Math.atan2(diff_y_after, diff_x_after) / Math.PI) * 180;
 
-    
-      console.log('(distance_after / distance_before),  :', (distance_after / distance_before), m_maskWidth);
       let twoState = {
-        scale: (distance_after / distance_before) * this.scale,
-        m_maskWidth: (distance_after / distance_before) * this.scale * DEFAULT_MASK_SIZE ,
+        maskWidth: (distance_after / distance_before) * this.mask_width ,
         rotate: angle_after - angle_before + this.rotate
       }
+
       shapeList[this.touch_shape_index] = {
         ...shapeList[this.touch_shape_index],
         ...oneState,
@@ -624,7 +607,7 @@ class WearMask extends Component {
                     !isSavePicture && isShowMask && shapeList.map((shape, shapeIndex) => {
 
                       const {
-                        m_maskWidth,
+                        maskWidth,
                         currentMaskId,
                         timeNow,
                         maskCenterX,
@@ -632,12 +615,13 @@ class WearMask extends Component {
                         rotate
                       } = shape
 
+                      let transX = maskCenterX - maskWidth / 2 - 2 + 'px'
+                      let transY = maskCenterY - maskWidth / 2 - 2 + 'px'
+
                       let maskStyle = {
-                        top: maskCenterY - m_maskWidth / 2 - 2 + 'px',
-                        left: maskCenterX - m_maskWidth / 2 - 2 + 'px',
-                        width: m_maskWidth + 'px',
-                        height: m_maskWidth + 'px',
-                        transform: `rotate(${rotate + 'deg'})`
+                        width: maskWidth + 'px',
+                        height: maskWidth + 'px',
+                        transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`
                       }
 
                       return (
