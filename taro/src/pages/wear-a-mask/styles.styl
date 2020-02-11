@@ -115,14 +115,17 @@
   border-radius 25px
   margin 0 10px
 
-
-.mask
+.mask-container
   height 100px
   width 100px
   position absolute
   border dashed 2px yellow
   top:100px
   z-index 1
+
+.mask
+  width 100%
+  height 100%
 
 .bottom-tips-wrap
   padding 10px 0
@@ -171,10 +174,16 @@
   height:20px
 
 .image-btn-handle 
+  right 0
+  bottom 0
+  transform translate(50%, 50%)
   background url(https://n1image.hjfile.cn/res7/2020/02/09/9b5c2be4361101b155a604e6735a8ad3.png) no-repeat
   background-size contain
   
 .image-btn-cancel 
+  left 0
+  top 0
+  transform translate(-50%, -50%)
   background url(https://n1image.hjfile.cn/res7/2020/02/09/2c591b8d9d1c75d1e4d8804e710dc086.png) no-repeat
   background-size contain
 

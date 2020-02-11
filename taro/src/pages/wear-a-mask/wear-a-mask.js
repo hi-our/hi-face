@@ -6,6 +6,7 @@ import { getMouthInfo } from 'utils/face-utils'
 import { getImg } from 'utils/canvas-drawing'
 import { TaroCropper } from 'taro-cropper'
 
+import one_face_image from '../../images/one_face.jpeg';
 
 import './styles.styl'
 
@@ -37,6 +38,7 @@ const resetState = () => {
 
 const setTmpThis = (el, elState) => {
   const {
+    m_maskWidth,
     maskCenterX,
     maskCenterY,
     cancelCenterX,
@@ -47,6 +49,7 @@ const setTmpThis = (el, elState) => {
     rotate
   } = elState
 
+  el.m_mask_width = m_maskWidth
   el.mask_center_x = maskCenterX;
   el.mask_center_y = maskCenterY;
   el.cancel_center_x = cancelCenterX;
@@ -118,6 +121,12 @@ class WearMask extends Component {
 
     this.start_x = 0;
     this.start_y = 0;
+
+    this.setState({
+      cutImageSrc: one_face_image
+    }, () => {
+        this.onAnalyzeFace(one_face_image)
+    })
 
   }
 
@@ -249,7 +258,11 @@ class WearMask extends Component {
         const cancelCenterY = maskCenterY - heightScaleDpr - 2
         const resizeCenterX = maskCenterX + widthScaleDpr - 2
         const resizeCenterY = maskCenterY + heightScaleDpr - 2
+
+        const m_maskWidth = faceWidth / dpr
+
         return {
+          m_maskWidth,
           currentMaskId: 1,
           timeNow: Date.now(),
           maskSize: DEFAULT_MASK_SIZE,
@@ -493,6 +506,7 @@ class WearMask extends Component {
       cancelCenterY,
       resizeCenterX,
       resizeCenterY,
+      m_maskWidth,
     } = shapeList[this.touch_shape_index]
 
     var current_x = e.touches[0].clientX;
@@ -525,12 +539,11 @@ class WearMask extends Component {
       let diff_y_before = this.resize_center_y - this.mask_center_y;
       let diff_x_after = resizeCenterX - this.mask_center_x;
       let diff_y_after = resizeCenterY - this.mask_center_y;
-      let distance_before = Math.sqrt(
-        diff_x_before * diff_x_before + diff_y_before * diff_y_before
-      );
-      let distance_after = Math.sqrt(
-        diff_x_after * diff_x_after + diff_y_after * diff_y_after
-      );
+      let distance_before = this.m_mask_width
+      let distance_after = m_maskWidth
+      
+      console.log('distance_before :', distance_before);
+      console.log('distance_after :', distance_before);
       let angle_before = (Math.atan2(diff_y_before, diff_x_before) / Math.PI) * 180;
       let angle_after = (Math.atan2(diff_y_after, diff_x_after) / Math.PI) * 180;
     
@@ -610,23 +623,24 @@ class WearMask extends Component {
                     !isSavePicture && isShowMask && shapeList.map((shape, shapeIndex) => {
 
                       const {
+                        m_maskWidth,
                         currentMaskId,
                         timeNow,
-                        maskSize,
                         maskCenterX,
                         maskCenterY,
                         cancelCenterX,
                         cancelCenterY,
                         resizeCenterX,
                         resizeCenterY,
-                        scale,
                         rotate
                       } = shape
 
                       let maskStyle = {
-                        top: maskCenterY - maskSize / 2 - 2 + 'px',
-                        left: maskCenterX - maskSize / 2 - 2 + 'px',
-                        transform: `rotate(${rotate + 'deg'}) scale(${scale})`
+                        top: maskCenterY - m_maskWidth / 2 - 2 + 'px',
+                        left: maskCenterX - m_maskWidth / 2 - 2 + 'px',
+                        width: m_maskWidth + 'px',
+                        height: m_maskWidth + 'px',
+                        transform: `rotate(${rotate + 'deg'})`
                       }
 
                       let cancelStyle = {
@@ -640,17 +654,17 @@ class WearMask extends Component {
                       }
 
                       return (
-                        <Block key={timeNow}>
-                          <Image className="mask" data-type='mask' data-shape-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} style={maskStyle} />
+                        <View className='mask-container' key={timeNow} style={maskStyle}>
+                          <Image className="mask" data-type='mask' data-shape-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} />
                           {
                             currentShapeIndex === shapeIndex && (
                               <Block>
-                                <View className='image-btn-cancel' data-type='cancel' data-shape-index={shapeIndex} style={cancelStyle} onClick={this.removeShape}></View>
-                                <View className='image-btn-handle' data-shape-index={shapeIndex} data-type='rotate-resize' style={handleStyle}></View>
+                                <View className='image-btn-cancel' data-type='cancel' data-shape-index={shapeIndex}  onClick={this.removeShape}></View>
+                                <View className='image-btn-handle' data-shape-index={shapeIndex} data-type='rotate-resize'></View>
                               </Block>
                             )
                           }
-                        </Block>
+                        </View>
                       )
                     })
                   }
