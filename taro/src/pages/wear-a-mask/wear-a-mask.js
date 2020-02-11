@@ -434,7 +434,8 @@ class WearMask extends Component {
 
   chooseMask = (maskId) => {
     let { shapeList, currentShapeIndex } = this.state
-    if (currentShapeIndex >= 0) {
+
+    if (shapeList.length > 0 && currentShapeIndex >= 0) {
       shapeList[currentShapeIndex] = {
         ...shapeList[currentShapeIndex],
         currentMaskId: maskId
@@ -462,6 +463,13 @@ class WearMask extends Component {
     })
   }
 
+
+  checkedShape = (e) => {
+    this.setState({
+      currentShapeIndex: -1
+    })
+  }
+
   touchStart = (e) => {
     const { type = '', shapeIndex = 0 } = e.target.dataset
  
@@ -480,7 +488,9 @@ class WearMask extends Component {
   }
   touchEnd = (e) => {
     if (this.touch_target !== '' || this.touch_target !== 'cancel') {
-      setTmpThis(this, this.state.shapeList[this.touch_shape_index])
+      if (this.state.shapeList[this.touch_shape_index]) {
+        setTmpThis(this, this.state.shapeList[this.touch_shape_index])
+      }
     }
   }
   touchMove = (e) => {
@@ -490,7 +500,6 @@ class WearMask extends Component {
       maskCenterY,
       resizeCenterX,
       resizeCenterY,
-      maskWidth,
     } = shapeList[this.touch_shape_index]
 
     var current_x = e.touches[0].clientX;
@@ -618,6 +627,8 @@ class WearMask extends Component {
                       let transX = maskCenterX - maskWidth / 2 - 2 + 'px'
                       let transY = maskCenterY - maskWidth / 2 - 2 + 'px'
 
+                      console.log('maskCenterX :', shape, maskCenterX, maskWidth);
+
                       let maskStyle = {
                         width: maskWidth + 'px',
                         height: maskWidth + 'px',
@@ -630,8 +641,9 @@ class WearMask extends Component {
                           {
                             currentShapeIndex === shapeIndex && (
                               <Block>
-                                <View className='image-btn-cancel' data-type='cancel' data-shape-index={shapeIndex}  onClick={this.removeShape}></View>
-                                <View className='image-btn-handle' data-shape-index={shapeIndex} data-type='rotate-resize'></View>
+                                <View className='image-btn-remove' data-shape-index={shapeIndex}  onClick={this.removeShape}></View>
+                                <View className='image-btn-resize' data-shape-index={shapeIndex} data-type='rotate-resize'></View>
+                                <View className='image-btn-checked' data-shape-index={shapeIndex}  onClick={this.checkedShape}></View>
                               </Block>
                             )
                           }
