@@ -502,8 +502,6 @@ class WearMask extends Component {
     const {
       maskCenterX,
       maskCenterY,
-      cancelCenterX,
-      cancelCenterY,
       resizeCenterX,
       resizeCenterY,
       m_maskWidth,
@@ -518,8 +516,6 @@ class WearMask extends Component {
         ...shapeList[this.touch_shape_index],
         maskCenterX: maskCenterX + moved_x,
         maskCenterY: maskCenterY + moved_y,
-        cancelCenterX: cancelCenterX + moved_x,
-        cancelCenterY: cancelCenterY + moved_y,
         resizeCenterX: resizeCenterX + moved_x,
         resizeCenterY: resizeCenterY + moved_y
       }
@@ -531,24 +527,29 @@ class WearMask extends Component {
       let oneState = {
         resizeCenterX: resizeCenterX + moved_x,
         resizeCenterY: resizeCenterY + moved_y,
-        cancelCenterX: 2 * maskCenterX - resizeCenterX,
-        cancelCenterY: 2 * maskCenterY - resizeCenterY
       }
 
+      // console.log('this.resize_center_x - this.mask_center_x :', this.resize_center_x, this.mask_center_x);
       let diff_x_before = this.resize_center_x - this.mask_center_x;
       let diff_y_before = this.resize_center_y - this.mask_center_y;
       let diff_x_after = resizeCenterX - this.mask_center_x;
       let diff_y_after = resizeCenterY - this.mask_center_y;
-      let distance_before = this.m_mask_width
-      let distance_after = m_maskWidth
-      
-      console.log('distance_before :', distance_before);
-      console.log('distance_after :', distance_before);
+      let distance_before = Math.sqrt(
+        diff_x_before * diff_x_before + diff_y_before * diff_y_before
+      );
+
+      let distance_after = Math.sqrt(
+        diff_x_after * diff_x_after + diff_y_after * diff_y_after
+      );
+
       let angle_before = (Math.atan2(diff_y_before, diff_x_before) / Math.PI) * 180;
       let angle_after = (Math.atan2(diff_y_after, diff_x_after) / Math.PI) * 180;
+
     
+      console.log('(distance_after / distance_before),  :', (distance_after / distance_before), m_maskWidth);
       let twoState = {
         scale: (distance_after / distance_before) * this.scale,
+        m_maskWidth: (distance_after / distance_before) * this.scale * DEFAULT_MASK_SIZE ,
         rotate: angle_after - angle_before + this.rotate
       }
       shapeList[this.touch_shape_index] = {
@@ -628,10 +629,6 @@ class WearMask extends Component {
                         timeNow,
                         maskCenterX,
                         maskCenterY,
-                        cancelCenterX,
-                        cancelCenterY,
-                        resizeCenterX,
-                        resizeCenterY,
                         rotate
                       } = shape
 
@@ -641,16 +638,6 @@ class WearMask extends Component {
                         width: m_maskWidth + 'px',
                         height: m_maskWidth + 'px',
                         transform: `rotate(${rotate + 'deg'})`
-                      }
-
-                      let cancelStyle = {
-                        top: cancelCenterY - 10 + 'px',
-                        left: cancelCenterX - 10 + 'px'
-                      }
-
-                      let handleStyle = {
-                        top: resizeCenterY - 10 + 'px',
-                        left: resizeCenterX - 10 + 'px'
                       }
 
                       return (
