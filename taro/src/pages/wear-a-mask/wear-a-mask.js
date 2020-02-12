@@ -114,11 +114,11 @@ class WearMask extends Component {
     this.start_x = 0;
     this.start_y = 0;
 
-    this.setState({
-      cutImageSrc: two_face_image
-    }, () => {
-        this.onAnalyzeFace(two_face_image)
-    })
+    // this.setState({
+    //   cutImageSrc: two_face_image
+    // }, () => {
+    //     this.onAnalyzeFace(two_face_image)
+    // })
 
   }
 
@@ -667,7 +667,7 @@ class WearMask extends Component {
                 </View>
               )
               : (
-                <View className='to-choose'></View>
+                <View className='to-choose' data-way="album" onClick={this.onChooseImage}></View>
                 )
               }
             <View className='canvas-mask-good' style={maskCanvasStyle}>
