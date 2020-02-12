@@ -9,7 +9,7 @@ import { drawing, getDrawerConfig } from 'utils/canvas-drawing'
 
 import { NOT_FACE, ONE_FACE } from 'constants/image-test'
 // 引入代码
-import { TaroCanvasDrawer,  } from 'components/taro-plugin-canvas';
+// import { TaroCanvasDrawer,  } from 'components/taro-plugin-canvas';
 import OneImgTest from '../../images/one_face.jpeg'
 
 const testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
@@ -182,13 +182,13 @@ class Index extends Component {
         <View>原图：</View>
         <Image src={imageData} style={{ width: CANVAS_SIZE, height: CANVAS_SIZE }}></Image>
         <View>TaroCanvasDrawer效果，但不够智能</View>
-        {!!canvasDrawerConfig && (
+        {/* {!!canvasDrawerConfig && (
           <TaroCanvasDrawer
             config={canvasDrawerConfig}
             onCreateSuccess={this.onCanvasCreateSuccess}
             onCreateFail={this.onCanvasCreateFail}
           />
-        )}
+        )} */}
         <Image className='image-poster' src={shareImage} />
         {/* <Button
           className="weui-btn"
