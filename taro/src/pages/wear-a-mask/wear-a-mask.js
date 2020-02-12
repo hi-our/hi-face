@@ -593,6 +593,13 @@ class WearMask extends Component {
       top: isSavePicture ? '0' : '-9999px'
     }
 
+    let tabsTips = ''
+    if (currentTabIndex === 0) {
+      tabsTips = currentShapeIndex >= 0 ? '点击更换口罩' : '点击新增口罩'
+    } else if (currentTabIndex === 1) {
+      tabsTips = currentJiayouId >= 1 ? '点击更换文案图片' : '点击新增文案图片'
+    }
+
     return (
       <View className='mask-page'>
         <View className='main-wrap'>
@@ -626,8 +633,6 @@ class WearMask extends Component {
 
                       let transX = maskCenterX - maskWidth / 2 - 2 + 'px'
                       let transY = maskCenterY - maskWidth / 2 - 2 + 'px'
-
-                      console.log('maskCenterX :', shape, maskCenterX, maskWidth);
 
                       let maskStyle = {
                         width: maskWidth + 'px',
@@ -711,6 +716,28 @@ class WearMask extends Component {
           cutImageSrc
             ? (
               <View className='tab-wrap'>
+                <View className='tab-hd'>
+                  {
+                    materialList.map((item, itemIndex) => {
+                      return (
+                        <View
+                          key={item.name}
+                          className={`tab-hd-item ${currentTabIndex === itemIndex ? 'tab-hd-active' : ''}`}
+                          onClick={this.chooseTab.bind(this, itemIndex)}
+                        >
+                          <Image
+                            className='tab-hd-image'
+                            src={item.icon}
+                            mode='aspectFit'
+                          />
+                        </View>
+                      )
+                    })
+                  }
+                  <View className='tab-hd-tips'>
+                    提示：{tabsTips}
+                  </View>
+                </View>
                 <View className='tab-bd'>
                   {
                     materialList.map((item, itemIndex) => {
@@ -740,25 +767,7 @@ class WearMask extends Component {
                     })
                   }
                 </View>
-                <View className='tab-hd'>
-                  {
-                    materialList.map((item, itemIndex) => {
-                      return (
-                        <View
-                          key={item.name}
-                          className={`tab-hd-item ${currentTabIndex === itemIndex ? 'tab-hd-active' : ''}`}
-                          onClick={this.chooseTab.bind(this, itemIndex)}
-                        >
-                          <Image
-                            className='tab-hd-image'
-                            src={item.icon}
-                            mode='aspectFit'
-                          />
-                        </View>
-                      )
-                    })
-                  }
-                </View>
+                
               </View>
             )
             : (
