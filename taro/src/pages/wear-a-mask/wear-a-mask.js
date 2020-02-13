@@ -108,6 +108,8 @@ class WearMask extends Component {
       const { dataset = {} } = target
       const { posterSrc = '' } = dataset
 
+      console.log('posterSrc :', posterSrc);
+
       if (posterSrc) {
         shareImage = posterSrc
       }
@@ -475,7 +477,7 @@ class WearMask extends Component {
  
     this.touch_target = type;
     this.touch_shape_index = shapeIndex;
-    if (shapeIndex !== this.state.currentShapeIndex) {
+    if (this.touch_target == 'mask' && shapeIndex !== this.state.currentShapeIndex) {
       this.setState({
         currentShapeIndex: shapeIndex
       })
@@ -577,7 +579,7 @@ class WearMask extends Component {
     })
   }
 
-  previewPhoto = () => {
+  previewPoster = () => {
     const { posterSrc } = this.state
     if (posterSrc !== '') Taro.previewImage({ urls: [posterSrc] })
   }
@@ -603,7 +605,7 @@ class WearMask extends Component {
     return (
       <View className={`poster-dialog ${isShowPoster ? 'show': ''}`}>
         <View className='poster-dialog-main'>
-          <Image className='poster-image' src={posterSrc}></Image>
+          <Image className='poster-image' src={posterSrc} onClick={this.previewPoster}></Image>
           <View className='poster-dialog-close' onClick={this.onHidePoster} />
           <View className='poster-footer-btn'>
             <View className='poster-btn-save' onClick={this.savePoster}>
