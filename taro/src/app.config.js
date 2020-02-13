@@ -3,7 +3,7 @@ export default {
     'pages/wear-a-mask/wear-a-mask',
     'pages/test/test',
     'pages/thanks/thanks',
-    'pages/spread-game/spread-game',
+    // 'pages/spread-game/spread-game',
   ],
   window: {
     backgroundTextStyle: 'light',
