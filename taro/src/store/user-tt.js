@@ -1,4 +1,4 @@
-import Taro from '@tarojs/taro'
+import Taro from 'react'
 import mirror from 'mirror'
 import PassTtSDK from '@hujiang/passport-bytedance-sdk'
 import * as config from 'config'

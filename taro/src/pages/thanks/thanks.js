@@ -1,4 +1,4 @@
-import Taro, { Component } from '@tarojs/taro'
+import React, { Component } from 'react'
 import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 
 import { cloudCallFunction } from 'utils/fetch'
@@ -12,10 +12,10 @@ const version = config.version
 
 // @CorePage
 class Thanks extends Component {
+
   config = {
     navigationBarTitleText: '致谢',
   }
-
   constructor(props) {
     super(props)
     this.state = {

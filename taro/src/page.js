@@ -1,4 +1,4 @@
-import { connect } from '@tarojs/redux'
+import { connect } from 'react-redux'
 import { modelName as userModel, getPassSdk } from '@/store/user'
 import { LOGIN_STATUS } from 'constants/status'
 import EventEmitter from 'utils/event-emitter'

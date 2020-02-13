@@ -1,4 +1,4 @@
-import Taro from '@tarojs/taro'
+import React, { Component } from 'react'
 import { Block } from '@tarojs/components'
 import { isIphoneSafeArea } from 'utils/common'
 import PageStatus from '../page-status'
@@ -7,7 +7,7 @@ import BackHome from '../back-home'
 
 const isIpx = isIphoneSafeArea()
 
-class PageWrapper extends Taro.Component {
+class PageWrapper extends Component {
   config = {
     component: true
   }

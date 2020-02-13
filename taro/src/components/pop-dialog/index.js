@@ -1,10 +1,10 @@
-import Taro from '@tarojs/taro';
+import React, { Component } from 'react';
 import { View, Block } from '@tarojs/components';
 
 import './styles.styl'
 
 
-export default class PopDialog extends Taro.Component {
+export default class PopDialog extends Component {
   config = {
     component: true
   }

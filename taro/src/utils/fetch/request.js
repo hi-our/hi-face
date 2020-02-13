@@ -1,4 +1,4 @@
-import Taro from '@tarojs/taro'
+import Taro from 'react'
 import * as config from 'config'
 import { getSystemInfo } from '../common'
 import { NETWORK_ERROR_CODE } from 'constants/status'

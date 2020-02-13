@@ -1,4 +1,4 @@
-import Taro, { Component, Config } from '@tarojs/taro'
+import React, { Component, Config } from 'react'
 import PropTypes, { InferProps } from 'prop-types'
 import { View, Block, Video, Image } from '@tarojs/components'
 

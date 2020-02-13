@@ -1,5 +1,5 @@
 import request from './request'
-import Taro from '@tarojs/taro'
+import Taro from 'react'
 
 
 export const cloudCallFunction = ({ name, data = {}, config = {} }) => {

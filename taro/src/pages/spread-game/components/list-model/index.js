@@ -1,4 +1,4 @@
-import Taro, { useState } from '@tarojs/taro';
+import React, { Component, useState } from 'react';
 import { View, Image, Icon, Switch, Block, Slider } from '@tarojs/components';
 import FlyModal from '../fly-modal'
 import { COUNT_INIT_STATE } from '../../status';
@@ -11,7 +11,7 @@ const wayImg = 'https://n1image.hjfile.cn/res7/2020/02/12/927ea084f0a192c833e8ba
 const gatherImg = 'https://n1image.hjfile.cn/res7/2020/02/12/f9a5b430fde569699e78765c4a738ee7.jpeg'
 const homeImg = 'https://n1image.hjfile.cn/res7/2020/02/12/daeb1409dd1c557c40ca9740fce5b31b.jpeg'
 
-export default class RenderPop extends Taro.Component {
+export default class RenderPop extends Component {
 
   static defaultProps = {
     config: Object.assign({}, COUNT_INIT_STATE),

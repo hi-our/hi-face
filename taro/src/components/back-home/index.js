@@ -1,8 +1,8 @@
-import Taro from '@tarojs/taro'
+import React from 'react'
 import { Block, View } from '@tarojs/components'
 import './styles.styl'
 
-export default class BackHome extends Taro.Component {
+export default class BackHome extends React.Component {
   config = {
     component: true
   }

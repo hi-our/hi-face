@@ -1,9 +1,9 @@
-import Taro from '@tarojs/taro'
+import React, { Component } from 'react'
 import { Block, View, Image } from '@tarojs/components'
 import LogoLoading from '../logo-loading'
 import './styles.styl'
 
-class ListLoading extends Taro.Component {
+class ListLoading extends Component {
   config = {
     component: true
   }

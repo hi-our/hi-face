@@ -1,4 +1,4 @@
-import Taro from '@tarojs/cli'
+import react from 'react'
 import mirror from 'mirror'
 import EventEmitter from 'utils/event-emitter'
 import fetch from 'utils/fetch'

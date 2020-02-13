@@ -1,7 +1,7 @@
-import Taro, { useState, useEffect, useRef } from '@tarojs/taro';
+import React, { Component, useState, useEffect, useRef } from 'react';
 import { genderBad } from './gender'
 import  RenderPop from './components/list-model'
-import { FlyModal } from './components/fly-modal'
+import FlyModal from './components/fly-modal'
 import { View, Button, Image } from '@tarojs/components'
 import { isIphoneSafeArea } from 'utils/common';
 import { COUNT_INIT_STATE } from './status'
@@ -27,7 +27,7 @@ const getMapList = (count) => {
   return mapList
 }
 
-export default class SpreadGame extends Taro.Component {
+export default class SpreadGame extends Component {
 
   config = {
     navigationBarTitleText: '病毒演化模拟器',

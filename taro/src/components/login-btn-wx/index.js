@@ -1,6 +1,6 @@
-import Taro from '@tarojs/taro'
+import React, { Component } from 'react'
 import { Block, View, Form, Button, Text, Input, Image } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import { connect } from 'react-redux'
 import { getPassSdk, Toast, $bi, getCurPage } from 'utils/common'
 import userActions, { modelName as userModel } from '@/store/user'
 import EventEmitter from 'utils/event-emitter'
@@ -23,7 +23,7 @@ const hidePasswordPic =
   isLogin: state[userModel].loginStatus === LOGIN_STATUS.SUCCESS,
   userInfo: state[userModel].userInfo,
 }))
-class ComLoginBtn extends Taro.Component {
+class ComLoginBtn extends Component {
   config = {
     component: true
   }

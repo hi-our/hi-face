@@ -1,4 +1,4 @@
-import Taro, { Component } from '@tarojs/taro'
+import React, { Component } from 'react'
 import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'

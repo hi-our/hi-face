@@ -1,7 +1,5 @@
-import Taro, { Component } from '@tarojs/taro'
-import { Provider } from '@tarojs/redux'
-
-import Index from './pages/test/test'
+import React, { Component } from 'react'
+import { Provider } from 'react-redux'
 import store from '@/store'
 // import userActions from '@/store/user'
 import * as config from 'config'
@@ -11,52 +9,7 @@ import './app.styl'
 
 const updateManager = process.env.TARO_ENV !== 'h5' ? Taro.getUpdateManager() : null
 
-// 如果需要在 h5 环境中开启 React Devtools
-// 取消以下注释：
-// if (process.env.NODE_ENV !== 'production' && process.env.TARO_ENV === 'h5')  {
-//   require('nerv-devtools')
-// }
-
 class App extends Component {
-  config = {
-    pages: [
-      'pages/wear-a-mask/wear-a-mask',
-      'pages/test/test',
-      'pages/thanks/thanks',
-      'pages/spread-game/spread-game',
-    ],
-    window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
-    },
-    networkTimeout: {
-      request: 10000,
-      downloadFile: 100
-    },
-    tabBar: {
-      backgroundColor: '#fff',
-      borderStyle: 'white',
-      color: '#95a1af',
-      selectedColor: '#2f5aff',
-      list: [
-        {
-          pagePath: 'pages/wear-a-mask/wear-a-mask',
-          text: '戴口罩',
-          iconPath: 'images/mask-1.png',
-          selectedIconPath: 'images/mask-2.png'
-        },
-        {
-          pagePath: 'pages/thanks/thanks',
-          text: '致谢',
-          iconPath: 'images/thank-1.png',
-          selectedIconPath: 'images/thank-2.png'
-        },
-        
-      ]
-    },
-  }
 
   componentDidMount () {
 
@@ -108,10 +61,9 @@ class App extends Component {
   render () {
     return (
       <Provider store={store}>
-        <Index />
+        {this.props.children}
       </Provider>
     )
   }
 }
-
-Taro.render(<App />, document.getElementById('app'))
+export default App

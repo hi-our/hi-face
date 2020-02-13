@@ -1,9 +1,9 @@
-import Taro from '@tarojs/taro'
+import React, { Component } from 'react'
 import { Block, View } from '@tarojs/components'
 import { getSystemInfo } from 'utils/common'
 import './styles.styl'
 
-export default class ToTop extends Taro.Component {
+export default class ToTop extends Component {
   config = {
     component: true
   }

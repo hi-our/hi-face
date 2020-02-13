@@ -6,7 +6,7 @@
 无UnionId，无ClubAuth，clubAuth无效，登录失败
 */
 
-import Taro from '@tarojs/taro'
+import Taro from 'react'
 import mirror from 'mirror'
 import PassWxSDK from '@hujiang/passport-wechat-sdk'
 import * as config from 'config'

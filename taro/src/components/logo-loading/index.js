@@ -1,4 +1,4 @@
-import Taro from '@tarojs/taro'
+import Taro from 'react'
 import { View, Image } from '@tarojs/components'
 // cc 机器人的loading图标
 import './styles.global.styl'

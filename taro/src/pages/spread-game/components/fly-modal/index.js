@@ -1,10 +1,10 @@
-import Taro from '@tarojs/taro';
+import React, { Component } from 'react';
 import { View, Block } from '@tarojs/components';
 
 import './styles.styl'
 
 
-export default class FlyModal extends Taro.Component {
+class FlyModal extends Component {
   static defaultProps = {
     visible: false,
     title: '',
@@ -49,3 +49,5 @@ export default class FlyModal extends Taro.Component {
     )
   }
 }
+
+export default FlyModal

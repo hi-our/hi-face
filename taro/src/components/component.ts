@@ -1,4 +1,4 @@
-import { Component } from '@tarojs/taro'
+import { Component } from 'react'
 
 const objectToString = (style: object | string): string => {
   if (style && typeof style === 'object') {

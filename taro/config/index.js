@@ -2,7 +2,7 @@ const alias = require('./alias')
 
 const config = {
   projectName: 'goddess-hat',
-  date: '2019-11-2',
+  date: '2020-01-28',
   designWidth: 750,
   deviceRatio: {
     640: 2.34 / 4,
@@ -11,34 +11,41 @@ const config = {
   },
   sourceRoot: 'src',
   outputRoot: 'dist',
-  babel: {
-    sourceMap: true,
-    presets: [
-      [
-        'env',
-        {
-          modules: false
-        }
-      ]
-    ],
-    plugins: [
-      'transform-decorators-legacy',
-      'transform-class-properties',
-      'transform-object-rest-spread',
-      ['transform-runtime', {
-        helpers: false,
-        polyfill: false,
-        regenerator: true,
-        moduleName: 'babel-runtime'
-      }]
-    ]
-  },
+  // babel: {
+  //   sourceMap: true,
+  //   presets: [
+  //     [
+  //       'env',
+  //       {
+  //         modules: false
+  //       }
+  //     ]
+  //   ],
+  //   plugins: [
+  //     'transform-decorators-legacy',
+  //     'transform-class-properties',
+  //     'transform-object-rest-spread',
+  //     ['transform-runtime', {
+  //       helpers: false,
+  //       polyfill: false,
+  //       regenerator: true,
+  //       moduleName: 'babel-runtime'
+  //     }]
+  //   ]
+  // },
   defineConstants: {
     'process.env.SERVER_ENV': JSON.stringify(process.env.SERVER_ENV),
     'process.env.APPID_ENV': JSON.stringify(process.env.APPID_ENV),
     'process.env.MOCK': JSON.stringify(process.env.MOCK),
   },
+  copy: {
+    patterns: [
+    ],
+    options: {
+    }
+  },
   alias,
+  framework: 'react',
   mini: {
     imageUrlLoaderOption: {
       limit: 0
@@ -53,7 +60,7 @@ const config = {
       url: {
         enable: true,
         config: {
-          limit: 10240 // 设定转换尺寸上限
+          limit: 1024 // 设定转换尺寸上限
         }
       },
       cssModules: {

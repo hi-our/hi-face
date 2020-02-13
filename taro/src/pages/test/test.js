@@ -1,4 +1,4 @@
-import Taro, { Component } from '@tarojs/taro'
+import React, { Component } from 'react'
 import { View, Image, Input, Button, Canvas } from '@tarojs/components'
 // import PageWrapper from 'components/page-wrapper'
 import fetch from 'utils/fetch'
