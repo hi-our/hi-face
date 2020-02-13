@@ -13,9 +13,6 @@ const version = config.version
 // @CorePage
 class Thanks extends Component {
 
-  config = {
-    navigationBarTitleText: '致谢',
-  }
   constructor(props) {
     super(props)
     this.state = {

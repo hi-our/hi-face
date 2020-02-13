@@ -23,10 +23,6 @@ const CANVAS_SIZE = '300px'
 
 // @CorePage
 class Index extends Component {
-  config = {
-    navigationBarTitleText: '首页',
-    // navigationStyle: 'custom'
-  }
 
   constructor(props) {
     super(props)

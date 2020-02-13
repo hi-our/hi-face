@@ -76,10 +76,6 @@ const materialList = [
 
 // @CorePage
 class WearMask extends Component {
-  config = {
-    navigationBarTitleText: '快快戴口罩',
-    disableScroll: true
-  }
 
   constructor(props) {
     super(props);
@@ -143,7 +139,9 @@ class WearMask extends Component {
   }
 
   onChooseImage = (event) => {
-    const way = event.target.dataset.way
+    // TODO 兼容写法
+    let way = event.target.dataset.way || event.currentTarget.dataset.way || 'album'
+    
     Taro.chooseImage({
       count: 1,
       sourceType: [way],

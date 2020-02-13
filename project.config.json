@@ -59,15 +59,9 @@
 				},
 				{
 					"id": -1,
-					"name": "pages/spread-game/spread-game",
-					"pathName": "pages/spread-game/spread-game",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
 					"name": "pages/test/test",
 					"pathName": "pages/test/test",
+					"query": "",
 					"scene": null
 				}
 			]

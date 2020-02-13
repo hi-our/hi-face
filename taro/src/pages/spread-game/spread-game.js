@@ -30,10 +30,6 @@ const getMapList = (count) => {
 
 export default class SpreadGame extends Component {
 
-  config = {
-    navigationBarTitleText: '病毒演化模拟器',
-  }
-
   onShareAppMessage() {
     const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
 
