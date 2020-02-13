@@ -1,4 +1,4 @@
-import Taro from 'react'
+import Taro from '@tarojs/taro'
 // import { getPassSdk } from '@/store/user'
 // import { getLogger } from 'utils/logger'
 

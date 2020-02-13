@@ -28,7 +28,7 @@
  * 2. 30 层以上，基于性能考虑，直接清除所有页面栈。清除前会上报，用来发现极端场景，优化交互，避免无限跳转。
  */
 
-import Taro from 'react'
+import Taro from '@tarojs/taro'
 import { $log } from './common'
 
 let __history = [] // 本地缓存的超出页面栈限制后的后续页面

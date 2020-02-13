@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { Block, View, Form, Button, Text, Input, Image } from '@tarojs/components'
 import { connect } from 'react-redux'
 import { getPassSdk, Toast, $bi, getCurPage } from 'utils/common'
@@ -36,8 +37,6 @@ class ComLoginBtn extends Component {
 
   constructor(props) {
     super(props)
-
-    this.externalClasses = ['btn-default']
 
     this.state = {
       showLoginBox: false,
@@ -103,7 +102,7 @@ class ComLoginBtn extends Component {
     this.updateCaptcha()
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.isLogin && !this.props.isLogin) {
       const { userInfo } = this.props
       this.setState({

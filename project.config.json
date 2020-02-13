@@ -1,7 +1,7 @@
 {
 	"miniprogramRoot": "taro/dist/",
 	"cloudfunctionRoot": "cloud/functions/",
-	"projectname": "tencent-test-1-demo",
+	"projectname": "taro-next-react-goddess",
 	"description": "test",
 	"appid": "wxd5e8989ce23206af",
 	"setting": {

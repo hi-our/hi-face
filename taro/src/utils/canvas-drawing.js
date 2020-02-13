@@ -1,4 +1,4 @@
-import Taro from 'react'
+import Taro from '@tarojs/taro'
 import { drawCoverImage, fillText } from './canvas';
 import { getSystemInfo } from 'utils/common'
 import { HAT_IMG } from 'constants/image-test'

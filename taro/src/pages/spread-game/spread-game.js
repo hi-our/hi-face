@@ -1,11 +1,12 @@
 import React, { Component, useState, useEffect, useRef } from 'react';
+import Taro from '@tarojs/taro'
+import { View, Button, Image } from '@tarojs/components'
 import { genderBad } from './gender'
 import  RenderPop from './components/list-model'
 import FlyModal from './components/fly-modal'
-import { View, Button, Image } from '@tarojs/components'
 import { isIphoneSafeArea } from 'utils/common';
 import { COUNT_INIT_STATE } from './status'
-import { MAP_LITE } from './map-lite';
+import { MAP_LITE } from './map-lite'
 
 import './styles.styl'
 

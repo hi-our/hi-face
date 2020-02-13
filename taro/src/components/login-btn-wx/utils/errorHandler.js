@@ -1,4 +1,4 @@
-import Taro from 'react'
+import Taro from '@tarojs/taro'
 import errorMap from './const'
 import hjError from './error'
 

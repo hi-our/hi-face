@@ -1,4 +1,5 @@
-import Taro from 'react'
+import React, { PureComponent } from 'react'
+import Taro from '@tarojs/taro'
 import { View, Image } from '@tarojs/components'
 // cc 机器人的loading图标
 import './styles.global.styl'
@@ -8,7 +9,7 @@ const PREFIX = 'ui'
 const prefixClass = `${PREFIX}-cclogo-loading`
 
 
-export default class LogoLoading extends Taro.PureComponent {
+export default class LogoLoading extends PureComponent {
   
   // TODO 白色比蓝色的稍微大一圈，可以联系设计修改，或者使用scale或style变换
   render() {

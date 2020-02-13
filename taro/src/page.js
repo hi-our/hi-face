@@ -61,7 +61,7 @@ export default function WithPage(TaroComponent) {
     }
 
     // TODO 这个方法可以等待废弃
-    // componentWillReceiveProps(nextProps) {
+    // UNSAFE_componentWillReceiveProps(nextProps) {
     //   console.log('nextProps.isLogin !== this.props.isLogin', nextProps.isLogin,this.props.isLogin)
     //   if (nextProps.isLogin !== this.props.isLogin) {
     //     // 当前页面登录无需回调该方法，只走页面页面自定义登录回调

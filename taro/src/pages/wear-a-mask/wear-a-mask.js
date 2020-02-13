@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo } from 'utils/face-utils'
 import { getImg } from 'utils/canvas-drawing'
-import { TaroCropper } from 'taro-cropper'
+import TaroCropper from 'components/taro-cropper'
 
 import one_face_image from '../../images/one_face.jpeg';
 import two_face_image from '../../images/two_face.jpg';
@@ -751,7 +752,7 @@ class WearMask extends Component {
             
           }
         </View>
-        <View className='cropper-wrap' hidden={!originSrc}>
+        <View className='cropper-wrap' style={{ display: originSrc ? 'block' : 'none' }}>
           <TaroCropper
             src={originSrc}
             cropperWidth={CANVAS_SIZE * 2}

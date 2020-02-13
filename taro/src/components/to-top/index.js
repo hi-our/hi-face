@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { Block, View } from '@tarojs/components'
 import { getSystemInfo } from 'utils/common'
 import './styles.styl'

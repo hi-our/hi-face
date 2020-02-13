@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View, Image, Button, Block } from '@tarojs/components'
 import LoadingImg from '../../images/walkingduck.gif'
 import { networkInfo } from 'utils/common'
