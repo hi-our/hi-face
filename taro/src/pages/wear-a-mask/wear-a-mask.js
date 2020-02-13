@@ -6,55 +6,51 @@ import { getMouthInfo } from 'utils/face-utils'
 import { getImg } from 'utils/canvas-drawing'
 import { TaroCropper } from 'taro-cropper'
 
+import one_face_image from '../../images/one_face.jpeg';
+import two_face_image from '../../images/two_face.jpg';
 
 import './styles.styl'
 
-const { windowWidth } = getSystemInfo()
+const { windowWidth, pixelRatio } = getSystemInfo()
 const CANVAS_SIZE = 300
 const PageDpr = windowWidth / 375
 
 const DPR_CANVAS_SIZE = CANVAS_SIZE * PageDpr
+const SAVE_IMAGE_WIDTH = DPR_CANVAS_SIZE * pixelRatio
 const DEFAULT_MASK_SIZE = 100 * PageDpr
 const MASK_SIZE = 100
 
 
 const resetState = () => {
   return {
+    maskWidth: DEFAULT_MASK_SIZE,
     currentMaskId: 1,
     timeNow: Date.now(),
-    maskSize: DEFAULT_MASK_SIZE,
 
     maskCenterX: DPR_CANVAS_SIZE / 2,
     maskCenterY: DPR_CANVAS_SIZE / 2,
-    cancelCenterX: DPR_CANVAS_SIZE / 2 - DEFAULT_MASK_SIZE / 2 - 2,
-    cancelCenterY: DPR_CANVAS_SIZE / 2 - DEFAULT_MASK_SIZE / 2 - 2,
     resizeCenterX: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
     resizeCenterY: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
-    scale: 1,
     rotate: 0
   }
 }
 
 const setTmpThis = (el, elState) => {
   const {
+    maskWidth,
     maskCenterX,
     maskCenterY,
-    cancelCenterX,
-    cancelCenterY,
     resizeCenterX,
     resizeCenterY,
-    scale,
     rotate
   } = elState
 
+  el.mask_width = maskWidth
   el.mask_center_x = maskCenterX;
   el.mask_center_y = maskCenterY;
-  el.cancel_center_x = cancelCenterX;
-  el.cancel_center_y = cancelCenterY;
   el.resize_center_x = resizeCenterX;
   el.resize_center_y = resizeCenterY;
 
-  el.scale = scale;
   el.rotate = rotate;
 
   el.touch_target = '';
@@ -94,21 +90,32 @@ class WearMask extends Component {
       currentShapeIndex: 0,
       originSrc:  '',
       cutImageSrc: '',
+      posterSrc: '',
+      isShowPoster: false,
       currentJiayouId: 1,
       currentTabIndex: 0,
       isShowMask: false,
-      isSavePicture: false
     }
 
     this.cutImageSrcCanvas = ''
   }
 
-  onShareAppMessage() {
+  onShareAppMessage({ from, target }) {
     const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
+
+    let shareImage = DEFAULT_SHARE_COVER
+    if (from === 'button') {
+      const { dataset = {} } = target
+      const { posterSrc = '' } = dataset
+
+      if (posterSrc) {
+        shareImage = posterSrc
+      }
+    }
 
     return {
       title: '让我们快快戴口罩，抗击疫情吧！',
-      imageUrl: DEFAULT_SHARE_COVER,
+      imageUrl: shareImage,
       path: '/pages/wear-a-mask/wear-a-mask'
     }
   }
@@ -118,6 +125,12 @@ class WearMask extends Component {
 
     this.start_x = 0;
     this.start_y = 0;
+
+    // this.setState({
+    //   cutImageSrc: two_face_image
+    // }, () => {
+    //     this.onAnalyzeFace(two_face_image)
+    // })
 
   }
 
@@ -245,20 +258,18 @@ class WearMask extends Component {
         let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
         let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
 
-        const cancelCenterX = maskCenterX - widthScaleDpr - 2
-        const cancelCenterY = maskCenterY - heightScaleDpr - 2
         const resizeCenterX = maskCenterX + widthScaleDpr - 2
         const resizeCenterY = maskCenterY + heightScaleDpr - 2
+
+        const maskWidth = faceWidth * 1.2 / dpr
+
         return {
+          maskWidth,
           currentMaskId: 1,
-          timeNow: Date.now(),
-          maskSize: DEFAULT_MASK_SIZE,
+          timeNow: Date.now() * Math.random(),
           maskCenterX,
           maskCenterY,
-          scale,
           rotate,
-          cancelCenterX,
-          cancelCenterY,
           resizeCenterX,
           resizeCenterY,
         }
@@ -315,28 +326,27 @@ class WearMask extends Component {
       currentJiayouId,
       cutImageSrc
     } = this.state
-    this.setState({
-      isSavePicture: true
-    })
 
     const pc = Taro.createCanvasContext('canvasMask')
+    const tmpUsePageDpr = PageDpr * pixelRatio
     
-    pc.clearRect(0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE);
+    pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH);
     let tmpCutImage = this.cutImageSrcCanvas || await getImg(cutImageSrc)
-    pc.drawImage(tmpCutImage, 0, 0, DPR_CANVAS_SIZE, DPR_CANVAS_SIZE)
+    pc.drawImage(tmpCutImage, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
     
     // 形状
     shapeList.forEach(shape => {
       pc.save()
       const {
-        scale,
+        maskWidth,
         rotate,
         maskCenterX,
         maskCenterY,
         currentMaskId,
       } = shape
-      const maskSize = 100 * scale;
-      pc.translate(maskCenterX, maskCenterY);
+      const maskSize = maskWidth *  pixelRatio
+
+      pc.translate(maskCenterX * pixelRatio, maskCenterY * pixelRatio);
       pc.rotate((rotate * Math.PI) / 180)
   
       pc.drawImage(
@@ -355,25 +365,35 @@ class WearMask extends Component {
       pc.drawImage(
         require(`../../images/jiayou-${currentJiayouId}.png`),
         0,
-        132 * PageDpr,
-        300 * PageDpr,
-        169 * PageDpr,
-        // 0,
-        // 0,
-        // 600 * PageDpr,
-        // 338 * PageDpr,
+        132 * tmpUsePageDpr,
+        300 * tmpUsePageDpr,
+        169 * tmpUsePageDpr,
       )
-      // pc.restore()
     }
 
     pc.draw()
     
   }
 
+  saveImageToPhotosAlbum = (tempFilePath) => {
+    Taro.saveImageToPhotosAlbum({
+      filePath: tempFilePath,
+      success: res2 => {
+        Taro.showToast({
+          title: '图片保存成功'
+        })
+        console.log('保存成功 :', res2);
+      },
+      fail(e) {
+        Taro.showToast({
+          title: '图片未保存成功'
+        })
+        console.log('图片未保存成功:' + e);
+      }
+    });
+  }
+
   downloadImage = async () => {
-
-    let tmask = this
-
     Taro.showLoading({
       title: '图片生成中'
     })
@@ -382,60 +402,40 @@ class WearMask extends Component {
       await this.drawCanvas()
 
       Taro.canvasToTempFilePath({
+        canvasId: 'canvasMask',
         x: 0,
         y: 0,
-        height: DPR_CANVAS_SIZE,
-        width: DPR_CANVAS_SIZE,
-        destHeight: 300 * 2,
-        destWidth: 300 * 2,
-        canvasId: 'canvasMask',
+        height: DPR_CANVAS_SIZE * 3,
+        width: DPR_CANVAS_SIZE * 3,
         success: res => {
-          Taro.saveImageToPhotosAlbum({
-            filePath: res.tempFilePath,
-            success: res2 => {
-              tmask.saveFinally()
-              Taro.hideLoading()
-              Taro.showToast({
-                title: '图片保存成功'
-              })
-              console.log('保存成功 :', res2);
-            },
-            fail(e) {
-              tmask.saveFinally()
-              Taro.hideLoading()
-              Taro.showToast({
-                title: '图片未保存成功'
-              })
-              console.log('图片未保存成功:' + e);
-            }
-          });
+          Taro.hideLoading()
+          this.setState({
+            posterSrc: res.tempFilePath,
+            isShowPoster: true
+          })
         },
         fail: () => {
-          tmask.saveFinally()
           Taro.hideLoading()
           Taro.showToast({
-            title: '图片未保存成功'
+            title: '图片生成失败，请重试'
           })
         }
       })
 
     } catch (error) {
-      this.saveFinally()
       Taro.hideLoading()
       Taro.showToast({
-        title: '图片保存失败，请重试'
+        title: '图片生成失败，请重试'
       })
       console.log('error :', error)
     }
-    
-    
   }
 
-  saveFinally = () => this.setState({ isSavePicture: false})
 
   chooseMask = (maskId) => {
     let { shapeList, currentShapeIndex } = this.state
-    if (currentShapeIndex >= 0) {
+
+    if (shapeList.length > 0 && currentShapeIndex >= 0) {
       shapeList[currentShapeIndex] = {
         ...shapeList[currentShapeIndex],
         currentMaskId: maskId
@@ -463,6 +463,13 @@ class WearMask extends Component {
     })
   }
 
+
+  checkedShape = (e) => {
+    this.setState({
+      currentShapeIndex: -1
+    })
+  }
+
   touchStart = (e) => {
     const { type = '', shapeIndex = 0 } = e.target.dataset
  
@@ -481,7 +488,9 @@ class WearMask extends Component {
   }
   touchEnd = (e) => {
     if (this.touch_target !== '' || this.touch_target !== 'cancel') {
-      setTmpThis(this, this.state.shapeList[this.touch_shape_index])
+      if (this.state.shapeList[this.touch_shape_index]) {
+        setTmpThis(this, this.state.shapeList[this.touch_shape_index])
+      }
     }
   }
   touchMove = (e) => {
@@ -489,8 +498,6 @@ class WearMask extends Component {
     const {
       maskCenterX,
       maskCenterY,
-      cancelCenterX,
-      cancelCenterY,
       resizeCenterX,
       resizeCenterY,
     } = shapeList[this.touch_shape_index]
@@ -504,8 +511,6 @@ class WearMask extends Component {
         ...shapeList[this.touch_shape_index],
         maskCenterX: maskCenterX + moved_x,
         maskCenterY: maskCenterY + moved_y,
-        cancelCenterX: cancelCenterX + moved_x,
-        cancelCenterY: cancelCenterY + moved_y,
         resizeCenterX: resizeCenterX + moved_x,
         resizeCenterY: resizeCenterY + moved_y
       }
@@ -517,8 +522,6 @@ class WearMask extends Component {
       let oneState = {
         resizeCenterX: resizeCenterX + moved_x,
         resizeCenterY: resizeCenterY + moved_y,
-        cancelCenterX: 2 * maskCenterX - resizeCenterX,
-        cancelCenterY: 2 * maskCenterY - resizeCenterY
       }
 
       let diff_x_before = this.resize_center_x - this.mask_center_x;
@@ -528,16 +531,19 @@ class WearMask extends Component {
       let distance_before = Math.sqrt(
         diff_x_before * diff_x_before + diff_y_before * diff_y_before
       );
+
       let distance_after = Math.sqrt(
         diff_x_after * diff_x_after + diff_y_after * diff_y_after
       );
+
       let angle_before = (Math.atan2(diff_y_before, diff_x_before) / Math.PI) * 180;
       let angle_after = (Math.atan2(diff_y_after, diff_x_after) / Math.PI) * 180;
-    
+
       let twoState = {
-        scale: (distance_after / distance_before) * this.scale,
+        maskWidth: (distance_after / distance_before) * this.mask_width ,
         rotate: angle_after - angle_before + this.rotate
       }
+
       shapeList[this.touch_shape_index] = {
         ...shapeList[this.touch_shape_index],
         ...oneState,
@@ -571,24 +577,78 @@ class WearMask extends Component {
     })
   }
 
+  previewPhoto = () => {
+    const { posterSrc } = this.state
+    if (posterSrc !== '') Taro.previewImage({ urls: [posterSrc] })
+  }
+
+  onHidePoster = () => {
+    this.setState({
+      isShowPoster: false
+    })
+  }
+
+  savePoster = () => {
+    const { posterSrc } = this.state
+
+    if (posterSrc) {
+      this.saveImageToPhotosAlbum(posterSrc)
+    }
+  }
+
+
+
+  renderPoster = () => {
+    const { posterSrc, isShowPoster } = this.state
+    return (
+      <View className={`poster-dialog ${isShowPoster ? 'show': ''}`}>
+        <View className='poster-dialog-main'>
+          <Image className='poster-image' src={posterSrc}></Image>
+          <View className='poster-dialog-close' onClick={this.onHidePoster} />
+          <View className='poster-footer-btn'>
+            <View className='poster-btn-save' onClick={this.savePoster}>
+              <Image
+                className='icon'
+                src='https://n1image.hjfile.cn/res7/2019/01/03/740198f541ce91859ed060882d986e09.png'
+              />
+              保存到相册
+            </View>
+            <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
+              <Image
+                className='icon-wechat'
+                src='https://n1image.hjfile.cn/res7/2019/03/20/21af29d7755905b08d9f517223df5314.png'
+              />
+              分享给朋友
+            </Button>
+          </View>
+        </View>
+        
+      </View>
+    )
+  }
+
   render() {
     const {
       originSrc,
       cutImageSrc,
       isShowMask,
-      isSavePicture,
       currentTabIndex,
       currentJiayouId,
       shapeList,
-      currentShapeIndex
+      currentShapeIndex,
     } = this.state
 
-    let maskCanvasStyle = {
-      top: isSavePicture ? '0' : '-9999px'
+
+    let tabsTips = ''
+    if (currentTabIndex === 0) {
+      tabsTips = currentShapeIndex >= 0 ? '点击更换口罩' : '点击新增口罩'
+    } else if (currentTabIndex === 1) {
+      tabsTips = currentJiayouId >= 1 ? '点击更换文案图片' : '点击新增文案图片'
     }
 
     return (
       <View className='mask-page'>
+        <Canvas className='canvas-mask' style={{ width: DPR_CANVAS_SIZE * pixelRatio + 'px', height: DPR_CANVAS_SIZE * pixelRatio + 'px' }} canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />
         <View className='main-wrap'>
           <View
             className='image-position'
@@ -607,55 +667,52 @@ class WearMask extends Component {
                     className='image-selected'
                   />
                   {
-                    !isSavePicture && isShowMask && shapeList.map((shape, shapeIndex) => {
+                    isShowMask && shapeList.map((shape, shapeIndex) => {
 
                       const {
+                        maskWidth,
                         currentMaskId,
                         timeNow,
-                        maskSize,
                         maskCenterX,
                         maskCenterY,
-                        cancelCenterX,
-                        cancelCenterY,
                         resizeCenterX,
                         resizeCenterY,
-                        scale,
                         rotate
                       } = shape
 
+                      let transX = maskCenterX - maskWidth / 2 - 2 + 'px'
+                      let transY = maskCenterY - maskWidth / 2 - 2 + 'px'
+
                       let maskStyle = {
-                        top: maskCenterY - maskSize / 2 - 2 + 'px',
-                        left: maskCenterX - maskSize / 2 - 2 + 'px',
-                        transform: `rotate(${rotate + 'deg'}) scale(${scale})`
+                        width: maskWidth + 'px',
+                        height: maskWidth + 'px',
+                        transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`
                       }
 
-                      let cancelStyle = {
-                        top: cancelCenterY - 10 + 'px',
-                        left: cancelCenterX - 10 + 'px'
-                      }
-
-                      let handleStyle = {
-                        top: resizeCenterY - 10 + 'px',
-                        left: resizeCenterX - 10 + 'px'
-                      }
+                      // let handleStyle = {
+                      //   top: resizeCenterY - 10 + 'px',
+                      //   left: resizeCenterX - 10 + 'px'
+                      // }
 
                       return (
-                        <Block key={timeNow}>
-                          <Image className="mask" data-type='mask' data-shape-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} style={maskStyle} />
+                        <View className='mask-container' key={timeNow} style={maskStyle}>
+                          <Image className="mask" data-type='mask' data-shape-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} />
                           {
                             currentShapeIndex === shapeIndex && (
                               <Block>
-                                <View className='image-btn-cancel' data-type='cancel' data-shape-index={shapeIndex} style={cancelStyle} onClick={this.removeShape}></View>
-                                <View className='image-btn-handle' data-shape-index={shapeIndex} data-type='rotate-resize' style={handleStyle}></View>
+                                <View className='image-btn-remove' data-shape-index={shapeIndex}  onClick={this.removeShape}></View>
+                                <View className='image-btn-resize' data-shape-index={shapeIndex} data-type='rotate-resize'></View>
+                                {/* <View className='image-btn-resize-test' style={handleStyle}></View> */}
+                                <View className='image-btn-checked' data-shape-index={shapeIndex}  onClick={this.checkedShape}></View>
                               </Block>
                             )
                           }
-                        </Block>
+                        </View>
                       )
                     })
                   }
                   {
-                    !isSavePicture && isShowMask && currentJiayouId > 0 && (
+                    isShowMask && currentJiayouId > 0 && (
                       <View className="image-jiayou">
                         <Image id='mask' src={require(`../../images/jiayou-${currentJiayouId}.png`)} />
                         <View className='image-btn-jiayou' onClick={this.chooseJiayouId}></View>
@@ -665,12 +722,9 @@ class WearMask extends Component {
                 </View>
               )
               : (
-                <View className='to-choose'></View>
+                <View className='to-choose' data-way="album" onClick={this.onChooseImage}></View>
                 )
               }
-            <View className='canvas-mask-good' style={maskCanvasStyle}>
-              <Canvas className='canvas-mask' canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />
-            </View>
           </View>
           {cutImageSrc
             ? (
@@ -685,12 +739,10 @@ class WearMask extends Component {
             ) 
             : (
               <View className='button-wrap'>
+                <View className="buttom-tips">更多选择</View>
                 <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
                 <Button className='button-camera' type="default" data-way="camera" onClick={this.onChooseImage}>
                   使用相机
-                </Button>
-                <Button className='button-gallery' type="default" data-way="album" onClick={this.onChooseImage}>
-                  相册选择
                 </Button>
               </View>
             )
@@ -714,6 +766,28 @@ class WearMask extends Component {
           cutImageSrc
             ? (
               <View className='tab-wrap'>
+                <View className='tab-hd'>
+                  {
+                    materialList.map((item, itemIndex) => {
+                      return (
+                        <View
+                          key={item.name}
+                          className={`tab-hd-item ${currentTabIndex === itemIndex ? 'tab-hd-active' : ''}`}
+                          onClick={this.chooseTab.bind(this, itemIndex)}
+                        >
+                          <Image
+                            className='tab-hd-image'
+                            src={item.icon}
+                            mode='aspectFit'
+                          />
+                        </View>
+                      )
+                    })
+                  }
+                  <View className='tab-hd-tips'>
+                    提示：{tabsTips}
+                  </View>
+                </View>
                 <View className='tab-bd'>
                   {
                     materialList.map((item, itemIndex) => {
@@ -743,25 +817,7 @@ class WearMask extends Component {
                     })
                   }
                 </View>
-                <View className='tab-hd'>
-                  {
-                    materialList.map((item, itemIndex) => {
-                      return (
-                        <View
-                          key={item.name}
-                          className={`tab-hd-item ${currentTabIndex === itemIndex ? 'tab-hd-active' : ''}`}
-                          onClick={this.chooseTab.bind(this, itemIndex)}
-                        >
-                          <Image
-                            className='tab-hd-image'
-                            src={item.icon}
-                            mode='aspectFit'
-                          />
-                        </View>
-                      )
-                    })
-                  }
-                </View>
+                
               </View>
             )
             : (
@@ -773,8 +829,15 @@ class WearMask extends Component {
             )
         }
 
-        {!originSrc && <View className='virus-btn' onClick={this.goSpreadGame}>病毒演化器</View>}
-        {!originSrc && <Button className='share-btn' openType='share'>分享给朋友<View className='share-btn-icon'></View></Button>}
+        {!originSrc && (
+          <Block>
+            <View className='virus-btn' onClick={this.goSpreadGame}>病毒演化器</View>
+            <Button className='share-btn' openType='share'>分享给朋友<View className='share-btn-icon'></View></Button>
+          </Block>
+        )}
+        {
+          this.renderPoster()
+        }
         
       </View>
     )

@@ -1,15 +1,15 @@
-import Taro, { useState, useEffect, useRef } from '@tarojs/taro';
+import Taro, { useState } from '@tarojs/taro';
 import { View, Image, Icon, Switch, Block, Slider } from '@tarojs/components';
-import maskImg from '../../../../images/spread-1.jpg'
-import flyImg from '../../../../images/spread-2.jpg'
-import travleImg from '../../../../images/spread-3.jpg'
-import wayImg from '../../../../images/spread-3.jpeg'
-import gatherImg from '../../../../images/spread-4.jpeg'
-import homeImg from '../../../../images/spread-5.jpeg'
-
 import FlyModal from '../fly-modal'
 import { COUNT_INIT_STATE } from '../../status';
 import './styles.styl'
+
+const maskImg = 'https://n1image.hjfile.cn/res7/2020/02/12/e7e70f8d3c2588d38754f1b510107a2e.jpg'
+const flyImg = 'https://n1image.hjfile.cn/res7/2020/02/12/282f8e02b471ebd770292eefb9a23a08.jpg'
+const travleImg = 'https://n1image.hjfile.cn/res7/2020/02/12/b3def398373e6130d6d1d3c2c7eca13d.jpg'
+const wayImg = 'https://n1image.hjfile.cn/res7/2020/02/12/927ea084f0a192c833e8ba48a22dbb98.jpeg'
+const gatherImg = 'https://n1image.hjfile.cn/res7/2020/02/12/f9a5b430fde569699e78765c4a738ee7.jpeg'
+const homeImg = 'https://n1image.hjfile.cn/res7/2020/02/12/daeb1409dd1c557c40ca9740fce5b31b.jpeg'
 
 export default class RenderPop extends Taro.Component {
 

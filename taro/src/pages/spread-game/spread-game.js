@@ -2,8 +2,7 @@ import Taro, { useState, useEffect, useRef } from '@tarojs/taro';
 import { genderBad } from './gender'
 import  RenderPop from './components/list-model'
 import { FlyModal } from './components/fly-modal'
-import guideImg from '../../images/spread-6.png'
-import { View, Button, Image, Block } from '@tarojs/components'
+import { View, Button, Image } from '@tarojs/components'
 import { isIphoneSafeArea } from 'utils/common';
 import { COUNT_INIT_STATE } from './status'
 import { MAP_LITE } from './map-lite';
@@ -11,6 +10,8 @@ import { MAP_LITE } from './map-lite';
 import './styles.styl'
 
 const isIphoneX = isIphoneSafeArea()
+
+const guideImg = 'https://n1image.hjfile.cn/res7/2020/02/12/56dac2e61f9485e8b5e59de473c41fd7.png'
 
 const getMapList = (count) => {
   let mapList = []
