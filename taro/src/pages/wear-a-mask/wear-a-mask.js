@@ -675,6 +675,8 @@ class WearMask extends Component {
                         timeNow,
                         maskCenterX,
                         maskCenterY,
+                        resizeCenterX,
+                        resizeCenterY,
                         rotate
                       } = shape
 
@@ -687,6 +689,11 @@ class WearMask extends Component {
                         transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`
                       }
 
+                      // let handleStyle = {
+                      //   top: resizeCenterY - 10 + 'px',
+                      //   left: resizeCenterX - 10 + 'px'
+                      // }
+
                       return (
                         <View className='mask-container' key={timeNow} style={maskStyle}>
                           <Image className="mask" data-type='mask' data-shape-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} />
@@ -695,6 +702,7 @@ class WearMask extends Component {
                               <Block>
                                 <View className='image-btn-remove' data-shape-index={shapeIndex}  onClick={this.removeShape}></View>
                                 <View className='image-btn-resize' data-shape-index={shapeIndex} data-type='rotate-resize'></View>
+                                {/* <View className='image-btn-resize-test' style={handleStyle}></View> */}
                                 <View className='image-btn-checked' data-shape-index={shapeIndex}  onClick={this.checkedShape}></View>
                               </Block>
                             )
