@@ -7,17 +7,16 @@
   justify-content space-between
 
 .main-wrap
-  margin 15px 12px
   background #fff
-  padding 25px
+  padding 10px
 
 .to-choose
   border 1px dashed #efefef
   width 298px
   height 298px
   margin 0 auto
-  background url(https://n1image.hjfile.cn/res7/2020/02/01/e97ba6b3752e00d4876a227582e19ed7.png) no-repeat center
-  background-size auto 100px
+  background url(https://n1image.hjfile.cn/res7/2020/02/13/4b391f3e41cef2d8f387822443eb533b.png) no-repeat center
+  background-size auto 150px
 
 .image-position
   position relative
@@ -88,7 +87,14 @@
   color #2f3742
   line-height 1.5
   text-align center
+  flex-wrap wrap
 
+.buttom-tips
+  width 100%
+  text-align center
+  color #95A1AF
+  font-size 12px
+  margin-bottom 5px
 
 .button-remove
   padding-top 40px
@@ -109,13 +115,30 @@
 
 .button-avatar
 .button-camera
-.button-gallery
   font-size 12px
   line-height 1.25
-  width 50px
   padding 10px
-  border-radius 25px
   margin 0 10px
+  background transparent!important
+
+.button-avatar:before
+  content ''
+  display block
+  margin 0 auto 3px
+  width 30px
+  height 30px
+  background url(https://n1image.hjfile.cn/res7/2020/02/13/e3c3acc4b66e3715eb59ebc9625527bf.png) no-repeat center
+  background-size contain
+
+
+.button-camera:before
+  content ''
+  display block
+  margin 0 auto 3px
+  width 30px
+  height 30px
+  background url(https://n1image.hjfile.cn/res7/2020/02/13/046303789dd41a2f232d799ee18e2a52.png) no-repeat center
+  background-size contain
 
 .mask-container
   height 100px
@@ -217,8 +240,8 @@
   padding 5px
   line-height 1
   border-radius 0 0 15px 15px 
-  background-color #4fa938
-  color #fff
+  box-shadow inset 0 0 0 1px #4fa938
+  color #4fa938
   text-align center
 
   &:after
@@ -240,8 +263,8 @@
   padding 5px
   line-height 1
   border-radius 0 0 15px 15px 
-  background-color #2f5aff
-  color #fff
+  box-shadow inset 0 0 0 1px #2f5aff
+  color #2f5aff
   text-align center
 
 .share-btn-icon

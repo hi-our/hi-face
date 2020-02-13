@@ -731,12 +731,10 @@ class WearMask extends Component {
             ) 
             : (
               <View className='button-wrap'>
+                <View className="buttom-tips">更多选择</View>
                 <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
                 <Button className='button-camera' type="default" data-way="camera" onClick={this.onChooseImage}>
                   使用相机
-                </Button>
-                <Button className='button-gallery' type="default" data-way="album" onClick={this.onChooseImage}>
-                  相册选择
                 </Button>
               </View>
             )
