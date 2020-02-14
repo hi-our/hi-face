@@ -4,6 +4,7 @@ import {Canvas, CoverView, View} from '@tarojs/components';
 import './index.scss';
 // @ts-ignore
 import {CanvasTouch, CanvasTouchEvent} from "@tarojs/components/types/common";
+import { isAndroid } from 'utils/common';
 import {CSSProperties} from "react";
 
 
@@ -445,6 +446,8 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
         height: this.cropperHeight - 2,
         destWidth: this.cropperWidth * this.systemInfo.pixelRatio,
         destHeight: this.cropperHeight * this.systemInfo.pixelRatio,
+        fileType: 'jpg',
+        quality: isAndroid() ? 0.8 : 1,
         success: res => {
           switch (process.env.TARO_ENV) {
             case 'alipay':
