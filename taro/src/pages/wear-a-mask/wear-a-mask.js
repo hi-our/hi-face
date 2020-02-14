@@ -103,12 +103,10 @@ class WearMask extends Component {
     let shareImage = DEFAULT_SHARE_COVER
     if (from === 'button') {
       const { dataset = {} } = target
-      const { posterSrc = '' } = dataset
+      const { src = '' } = dataset
 
-      console.log('posterSrc :', posterSrc);
-
-      if (posterSrc) {
-        shareImage = posterSrc
+      if (src) {
+        shareImage = src
       }
     }
 
@@ -196,6 +194,7 @@ class WearMask extends Component {
         }
       })
     } catch (error) {
+      Taro.hideLoading()
       Taro.showToast({
         icon: 'none',
         title: '图片包含违规信息，请更换'
@@ -494,9 +493,9 @@ class WearMask extends Component {
   }
 
   removeShape = (e) => {
-    const { shapeIndex = 0 } = e.target.dataset
+    const { index = 0 } = e.target.dataset
     const { shapeList } = this.state
-    shapeList.splice(shapeIndex, 1);
+    shapeList.splice(index, 1);
     this.setState({
       shapeList,
       currentShapeIndex: -1
@@ -511,13 +510,17 @@ class WearMask extends Component {
   }
 
   touchStart = (e) => {
-    const { type = '', shapeIndex = 0 } = e.target.dataset
+
+    const { type = '', index = 0 } = e.target.dataset
  
     this.touch_target = type;
-    this.touch_shape_index = shapeIndex;
-    if (this.touch_target == 'mask' && shapeIndex !== this.state.currentShapeIndex) {
+    this.touch_shape_index = index
+
+    console.log('this.touch_shape_index :', this.touch_shape_index);
+    
+    if (this.touch_target == 'mask' && index !== this.state.currentShapeIndex) {
       this.setState({
-        currentShapeIndex: shapeIndex
+        currentShapeIndex: index
       })
     }
 
@@ -654,7 +657,7 @@ class WearMask extends Component {
               />
               保存到相册
             </View>
-            <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
+            <Button className='poster-btn-share' openType='share' data-src={posterSrc}>
               <Image
                 className='icon-wechat'
                 src='https://n1image.hjfile.cn/res7/2019/03/20/21af29d7755905b08d9f517223df5314.png'
@@ -696,11 +699,7 @@ class WearMask extends Component {
           >
             {cutImageSrc
               ? (
-                <View
-                  className='image-wrap'
-                  onTouchStart={this.touchStart}
-                  onTouchMove={this.touchMove}
-                  onTouchEnd={this.touchEnd}
+                <View className='image-wrap' onTouchStart={this.touchStart} onTouchMove={this.touchMove} onTouchEnd={this.touchEnd}
                 >
                   <Image
                     src={cutImageSrc}
@@ -710,15 +709,7 @@ class WearMask extends Component {
                   {
                     isShowMask && shapeList.map((shape, shapeIndex) => {
 
-                      const {
-                        maskWidth,
-                        currentMaskId,
-                        timeNow,
-                        maskCenterX,
-                        maskCenterY,
-                        resizeCenterX,
-                        resizeCenterY,
-                        rotate
+                      const {maskWidth,currentMaskId,timeNow,maskCenterX,maskCenterY,resizeCenterX,resizeCenterY, rotate
                       } = shape
 
                       let transX = maskCenterX - maskWidth / 2 - 2 + 'px'
@@ -730,21 +721,16 @@ class WearMask extends Component {
                         transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`
                       }
 
-                      // let handleStyle = {
-                      //   top: resizeCenterY - 10 + 'px',
-                      //   left: resizeCenterX - 10 + 'px'
-                      // }
-
                       return (
                         <View className='mask-container' key={timeNow} style={maskStyle}>
-                          <Image className="mask" data-type='mask' data-shape-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} />
+                          <Image className="mask" data-type='mask' data-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} />
                           {
                             currentShapeIndex === shapeIndex && (
                               <Block>
-                                <View className='image-btn-remove' data-shape-index={shapeIndex}  onClick={this.removeShape}></View>
-                                <View className='image-btn-resize' data-shape-index={shapeIndex} data-type='rotate-resize'></View>
+                                <View className='image-btn-remove' data-index={shapeIndex}  onClick={this.removeShape}></View>
+                                <View className='image-btn-resize' data-index={shapeIndex} data-type='rotate-resize'></View>
                                 {/* <View className='image-btn-resize-test' style={handleStyle}></View> */}
-                                <View className='image-btn-checked' data-shape-index={shapeIndex}  onClick={this.checkedShape}></View>
+                                <View className='image-btn-checked' data-index={shapeIndex}  onClick={this.checkedShape}></View>
                               </Block>
                             )
                           }
@@ -847,7 +833,6 @@ class WearMask extends Component {
                                       if (item.name === 'jiayou') this.chooseJiayouId(imgId)
                                       
                                     }}
-                                    data-mask-id={imgId}
                                   />
                                 )
                               })
@@ -872,7 +857,7 @@ class WearMask extends Component {
 
         {!originSrc && (
           <Block>
-            <View className='virus-btn' onClick={this.goSpreadGame}>病毒演化器</View>
+            {/* <View className='virus-btn' onClick={this.goSpreadGame}>病毒演化器</View> */}
             <Button className='share-btn' openType='share'>分享给朋友<View className='share-btn-icon'></View></Button>
           </Block>
         )}
