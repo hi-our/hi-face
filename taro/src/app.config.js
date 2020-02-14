@@ -12,7 +12,7 @@ export default {
     navigationBarTextStyle: 'black'
   },
   networkTimeout: {
-    request: 10000,
+    request: 20000,
     downloadFile: 100
   },
   tabBar: {

@@ -81,6 +81,11 @@ export const getSystemInfo = () => {
   return _systemInfo
 }
 
+export const isAndroid = () => {
+  const _systemInfo2 = getSystemInfo()
+  return _systemInfo2.platform === 'android'
+}
+
 
 /** 判断是否是 IphoneX、iPhone 11 系列 */
 export const isIphoneSafeArea = () => {

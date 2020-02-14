@@ -137,9 +137,11 @@ class WearMask extends Component {
     this.taroCropper = node;
   }
 
-  onChooseImage = (event) => {
+  onChooseImage = (way) => {
+
+    // console.log('event :', event);
     // TODO 兼容写法
-    let way = event.target.dataset.way || event.currentTarget.dataset.way || 'album'
+    // let way = event.target.dataset.way || 'album'
     
     Taro.chooseImage({
       count: 1,
@@ -180,14 +182,14 @@ class WearMask extends Component {
       quality: 50 // 压缩质量
     })
 
-    console.log('resImage :', resImage);
+  
     const uploadFile = promisify(Taro.cloud.uploadFile)
     const { fileID } = await uploadFile({
-      cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.png`, // 随机图片名
+      cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
       filePath: resImage.tempFilePath,
     })
 
-    console.log('fileID :', fileID);
+    this.my_file_id = fileID
 
     const couldRes = await cloudCallFunction({
       name: 'analyze-face',
@@ -196,6 +198,13 @@ class WearMask extends Component {
       }
     })
 
+    this.myDeleteFile(fileID)
+
+    return couldRes
+  }
+
+  myDeleteFile = (fileID) => {
+    this.my_file_id = ''
     Taro.cloud.deleteFile({
       fileList: [fileID],
       success: res => {
@@ -206,8 +215,6 @@ class WearMask extends Component {
         console.log('临时图片删除失败', error)
       },
     })
-
-    return couldRes
   }
 
   // TODO 其他小程序再说
@@ -284,6 +291,11 @@ class WearMask extends Component {
       Taro.hideLoading()
 
     } catch (error) {
+      console.log('error :', error);
+      if (this.my_file_id) {
+        this.myDeleteFile(this.my_file_id)
+      }
+
       Taro.hideLoading()
       const { status, errCode, errMsg} = error
       
@@ -305,7 +317,7 @@ class WearMask extends Component {
         isShowMask: true,
       })
       setTmpThis(this, shapeList[0])
-      console.log('error :', error);
+      
     }
   }
 
@@ -719,7 +731,7 @@ class WearMask extends Component {
                 </View>
               )
               : (
-                <View className='to-choose' data-way="album" onClick={this.onChooseImage}></View>
+                <View className='to-choose' data-way="album" onClick={this.onChooseImage.bind(this, 'album')}></View>
                 )
               }
           </View>
@@ -738,7 +750,7 @@ class WearMask extends Component {
               <View className='button-wrap'>
                 <View className="buttom-tips">更多选择</View>
                 <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
-                <Button className='button-camera' type="default" data-way="camera" onClick={this.onChooseImage}>
+                <Button className='button-camera' type="default" data-way="camera" onClick={this.onChooseImage.bind(this, 'camera')}>
                   使用相机
                 </Button>
               </View>
