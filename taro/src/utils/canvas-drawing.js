@@ -2,6 +2,7 @@ import Taro from '@tarojs/taro'
 import { drawCoverImage, fillText } from './canvas';
 import { getSystemInfo } from 'utils/common'
 import { HAT_IMG } from 'constants/image-test'
+import promisify from './promisify';
 
 import FaceImageTest from '../images/one_face.jpeg'
 import HatImgTest from '../images/hat.png'
@@ -47,20 +48,22 @@ const base64src = async (base64data) => {
 
 export const srcToBase64Main = async (src, callback) => {
   try {
-    fsm.readFile({
+    const readFile = promisify(fileSystemManager.readFile)
+    const data = await readFile({
       filePath: src,
       encoding: 'base64',
-      success: function (data) {
-        // console.log(data.data)
-        callback(data.data)
-      }
     })
-
+    callback(data.data)
     
   } catch (error) {
+    
     console.log('error :', error);
   }
 }
+
+
+// 文件管理
+export const fsmReadFile = promisify(fsm.readFile)
 
 /**
  * 获取图片

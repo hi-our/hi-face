@@ -4,7 +4,7 @@ import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/co
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo } from 'utils/face-utils'
-import { getImg } from 'utils/canvas-drawing'
+import { getImg, fsmReadFile } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
 
 import one_face_image from '../../images/one_face.jpeg';
@@ -177,6 +177,33 @@ class WearMask extends Component {
 
   cloudCanvasToAnalyze = async (tempFilePaths) => {
 
+    try {
+      
+      const resImage = await Taro.compressImage({
+        src: tempFilePaths, // 图片路径
+        quality: 50 // 压缩质量
+      })
+
+      const file = await fsmReadFile({
+        filePath: resImage.tempFilePath
+      })
+
+      const res = await cloudCallFunction({
+        name: 'open-api',
+        data: {
+          action: 'imgSecCheck',
+          file: file.data
+        }
+      })
+    } catch (error) {
+      Taro.showToast({
+        icon: 'none',
+        title: '图片包含违规信息，请更换'
+      })
+      console.log('error :', error);
+      throw error
+    }
+
     return new Promise((resolve, reject) => {
       // 上传图片
       Taro.cloud.uploadFile({
@@ -289,6 +316,18 @@ class WearMask extends Component {
 
     } catch (error) {
       Taro.hideLoading()
+      const { errCode, errMsg} = error
+      
+      if (Math.abs(errCode) && errMsg.includes('87014')) {
+        Taro.showToast({
+          icon: 'none',
+          title: '图中包含违规内容，请更换'
+        })
+        this.setState({
+          cutImageSrc: ''
+        })
+        return
+      }
       let shapeList =  [
         resetState()
       ]
@@ -604,7 +643,8 @@ class WearMask extends Component {
     return (
       <View className={`poster-dialog ${isShowPoster ? 'show': ''}`}>
         <View className='poster-dialog-main'>
-          <Image className='poster-image' src={posterSrc} onClick={this.previewPoster}></Image>
+          <Image className='poster-image' src={posterSrc} onClick={this.previewPoster} showMenuByLongpress></Image>
+          <View className='poster-image-tips'>点击可预览大图，长按可分享图片</View>
           <View className='poster-dialog-close' onClick={this.onHidePoster} />
           <View className='poster-footer-btn'>
             <View className='poster-btn-save' onClick={this.savePoster}>

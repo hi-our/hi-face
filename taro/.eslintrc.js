@@ -64,7 +64,6 @@ module.exports = {
     "getApp": true,
     "getCurrentPages": true,
     "SERVER_ENV": true,
-    "faceapi": true,
   }
 }
 

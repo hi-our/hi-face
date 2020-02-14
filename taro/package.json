@@ -45,7 +45,6 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "redux": "^4.0.0",
-    "taro-cropper": "^1.0.9",
     "react-redux": "^7.0.0",
     "@tarojs/react": "3.0.0-alpha.1",
     "react": "^16.10.0"

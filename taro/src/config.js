@@ -15,6 +15,7 @@ module.exports = {
   webViewDomain: `https://${env !== 'prod' ? env : ''}www.cctalk.com`,
   projectId: '9900', // 小程序类目
   businessId: '1000',
+  cloudEnv: env === 'prod' ? 'production-topjt' : 'development-v9y2f',
 
   // 打点配置
   wxaKey: '305cbe4769be61c9fb9366cfe0df0710', // 必填 请在此行填写从BI的utrack平台接入时获取的wxa_key
