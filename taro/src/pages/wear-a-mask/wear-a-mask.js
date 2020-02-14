@@ -4,7 +4,8 @@ import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo } from 'utils/face-utils'
 import { getImg, fsmReadFile } from 'utils/canvas-drawing'
-import { TaroCropper } from 'taro-cropper'
+import TaroCropper from 'components/taro-cropper'
+import promisify from 'utils/promisify';
 
 import one_face_image from '../../images/one_face.jpeg';
 import two_face_image from '../../images/two_face.jpg';
@@ -177,69 +178,39 @@ class WearMask extends Component {
   }
 
   cloudCanvasToAnalyze = async (tempFilePaths) => {
-
-    try {
-      
-      const resImage = await Taro.compressImage({
-        src: tempFilePaths, // 图片路径
-        quality: 50 // 压缩质量
-      })
-
-      const file = await fsmReadFile({
-        filePath: resImage.tempFilePath
-      })
-
-      const res = await cloudCallFunction({
-        name: 'open-api',
-        data: {
-          action: 'imgSecCheck',
-          file: file.data
-        }
-      })
-    } catch (error) {
-      Taro.showToast({
-        icon: 'none',
-        title: '图片包含违规信息，请更换'
-      })
-      console.log('error :', error);
-      throw error
-    }
-
-    return new Promise((resolve, reject) => {
-      // 上传图片
-      Taro.cloud.uploadFile({
-        cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.png`, // 随机图片名
-        filePath: tempFilePaths, // 本地的图片路径
-        success: (uploadRes) => {
-          const { fileID } = uploadRes
-          cloudCallFunction({
-            name: 'analyze-face',
-            data: {
-              fileID
-            }
-          }).then(cloudRes => {
-            resolve(cloudRes)
-            Taro.cloud.deleteFile({
-              fileList: [fileID],
-              success: res => {
-                // handle success
-                console.log('临时图片删除成功', res.fileList)
-              },
-              fail: error => {
-                console.log('临时图片删除失败', error)
-              },
-            })
-          }).catch(error => {
-            console.log('error :', error);
-            reject(error)
-          })
-        },
-        fail: (error) => {
-          console.log('error :', error);
-          reject(error)
-        }
-      })
+    const resImage = await Taro.compressImage({
+      src: tempFilePaths, // 图片路径
+      quality: 50 // 压缩质量
     })
+
+    console.log('resImage :', resImage);
+    const uploadFile = promisify(Taro.cloud.uploadFile)
+    const { fileID } = await uploadFile({
+      cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.png`, // 随机图片名
+      filePath: resImage.tempFilePath,
+    })
+
+    console.log('fileID :', fileID);
+
+    const couldRes = await cloudCallFunction({
+      name: 'analyze-face',
+      data: {
+        fileID
+      }
+    })
+
+    Taro.cloud.deleteFile({
+      fileList: [fileID],
+      success: res => {
+        // handle success
+        console.log('临时图片删除成功', res.fileList)
+      },
+      fail: error => {
+        console.log('临时图片删除失败', error)
+      },
+    })
+
+    return couldRes
   }
 
   // TODO 其他小程序再说
@@ -317,9 +288,9 @@ class WearMask extends Component {
 
     } catch (error) {
       Taro.hideLoading()
-      const { errCode, errMsg} = error
+      const { status, errCode, errMsg} = error
       
-      if (Math.abs(errCode) && errMsg.includes('87014')) {
+      if (status >= 87014) {
         Taro.showToast({
           icon: 'none',
           title: '图中包含违规内容，请更换'
