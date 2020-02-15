@@ -108,7 +108,7 @@ class Thanks extends Component {
             }
           </View>
         </View>
-          <View className='version'>ver.{version}</View>
+          <View className='version'>Ver.{version}，基于 Taro 框架 React 版开发</View>
       </PageWrapper>
     )
   }
