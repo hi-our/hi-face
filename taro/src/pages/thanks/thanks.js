@@ -4,9 +4,10 @@ import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/co
 
 import { cloudCallFunction } from 'utils/fetch'
 import PageWrapper from 'components/page-wrapper';
+import * as config from 'config'
+
 import './styles.styl'
 
-import * as config from 'config'
 
 
 const version = config.version

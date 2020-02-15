@@ -4,6 +4,7 @@ module.exports = {
   "extends": [
     'taro/react',
   ],
+  
   // "rules": {
   //   "quotes": [1, "single"],
   //   "quote-props": [1, "as-needed"],
@@ -47,9 +48,9 @@ module.exports = {
   //   "useJSXTextNode": true,
   //   "project": "./tsconfig.json"
   // },
-  // "plugins": [
-  //   "typescript"
-  // ],
+  "plugins": [
+    "import"
+  ],
   "settings": {
     "import/resolver": {
       alias: {
