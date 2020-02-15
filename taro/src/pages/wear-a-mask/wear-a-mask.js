@@ -8,9 +8,10 @@ import { getImg, fsmReadFile } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
 import promisify from 'utils/promisify';
 
-import one_face_image from '../../images/one_face.jpeg';
-import two_face_image from '../../images/two_face.jpg';
-
+// import one_face_image from '../../images/one_face.jpeg';
+// import two_face_image from '../../images/two_face.jpg';
+import iconCategoryMask from '../../images/icon-category-mask.png'
+import iconCategoryJiayou from '../../images/icon-category-jiayou.png'
 import './styles.styl'
 
 const { windowWidth, pixelRatio } = getSystemInfo()
@@ -63,13 +64,13 @@ const setTmpThis = (el, elState) => {
 const materialList = [
   {
     name: 'mask',
-    icon: require('../../images/icon-category-mask.png'),
+    icon: iconCategoryMask,
     imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     type: 'multi'
   },
   {
     name: 'jiayou',
-    icon: require('../../images/icon-category-jiayou.png'),
+    icon: iconCategoryJiayou,
     imgList: [1, 2, 3, 4, 5, 6],
     type: 'single'
   }
@@ -98,6 +99,20 @@ class WearMask extends Component {
     this.cutImageSrcCanvas = ''
   }
 
+  async componentDidMount() {
+    setTmpThis(this, this.state.shapeList[0])
+
+    this.start_x = 0;
+    this.start_y = 0;
+
+    // this.setState({
+    //   cutImageSrc: two_face_image
+    // }, () => {
+    //     this.onAnalyzeFace(two_face_image)
+    // })
+
+  }
+
   onShareAppMessage({ from, target }) {
     const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
 
@@ -116,20 +131,6 @@ class WearMask extends Component {
       imageUrl: shareImage,
       path: '/pages/wear-a-mask/wear-a-mask'
     }
-  }
-
-  async componentDidMount() {
-    setTmpThis(this, this.state.shapeList[0])
-
-    this.start_x = 0;
-    this.start_y = 0;
-
-    // this.setState({
-    //   cutImageSrc: two_face_image
-    // }, () => {
-    //     this.onAnalyzeFace(two_face_image)
-    // })
-
   }
 
 
@@ -482,7 +483,7 @@ class WearMask extends Component {
   }
 
 
-  checkedShape = (e) => {
+  checkedShape = () => {
     this.setState({
       currentShapeIndex: -1
     })
@@ -508,7 +509,7 @@ class WearMask extends Component {
       this.start_y = e.touches[0].clientY;
     }
   }
-  touchEnd = (e) => {
+  touchEnd = () => {
     if (this.touch_target !== '' || this.touch_target !== 'cancel') {
       if (this.state.shapeList[this.touch_shape_index]) {
         setTmpThis(this, this.state.shapeList[this.touch_shape_index])
@@ -696,7 +697,8 @@ class WearMask extends Component {
           >
             {cutImageSrc
               ? (
-                <View className='image-wrap' onTouchStart={this.touchStart} onTouchMove={this.touchMove} onTouchEnd={this.touchEnd}
+                <View 
+                  className='image-wrap' onTouchStart={this.touchStart} onTouchMove={this.touchMove} onTouchEnd={this.touchEnd}
                 >
                   <Image
                     src={cutImageSrc}
@@ -706,7 +708,13 @@ class WearMask extends Component {
                   {
                     isShowMask && shapeList.map((shape, shapeIndex) => {
 
-                      const {maskWidth,currentMaskId,timeNow,maskCenterX,maskCenterY,resizeCenterX,resizeCenterY, rotate
+                      const {
+                        maskWidth,
+                        currentMaskId,
+                        timeNow,
+                        maskCenterX,
+                        maskCenterY,
+                        rotate
                       } = shape
 
                       let transX = maskCenterX - maskWidth / 2 - 2 + 'px'
@@ -720,7 +728,7 @@ class WearMask extends Component {
 
                       return (
                         <View className='mask-container' key={timeNow} style={maskStyle}>
-                          <Image className="mask" data-type='mask' data-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} />
+                          <Image className='mask' data-type='mask' data-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} />
                           {
                             currentShapeIndex === shapeIndex && (
                               <Block>
@@ -737,7 +745,7 @@ class WearMask extends Component {
                   }
                   {
                     isShowMask && currentJiayouId > 0 && (
-                      <View className="image-jiayou">
+                      <View className='image-jiayou'>
                         <Image id='mask' src={require(`../../images/jiayou-${currentJiayouId}.png`)} />
                         <View className='image-btn-jiayou' onClick={this.chooseJiayouId}></View>
                       </View>
@@ -746,7 +754,7 @@ class WearMask extends Component {
                 </View>
               )
               : (
-                <View className='to-choose' data-way="album" onClick={this.onChooseImage.bind(this, 'album')}></View>
+                <View className='to-choose' data-way='album' onClick={this.onChooseImage.bind(this, 'album')}></View>
                 )
               }
           </View>
@@ -763,9 +771,9 @@ class WearMask extends Component {
             ) 
             : (
               <View className='button-wrap'>
-                <View className="buttom-tips">更多选择</View>
-                <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
-                <Button className='button-camera' type="default" data-way="camera" onClick={this.onChooseImage.bind(this, 'camera')}>
+                <View className='buttom-tips'>更多选择</View>
+                <Button className='button-avatar' type='default' data-way='avatar' openType='getUserInfo' onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
+                <Button className='button-camera' type='default' data-way='camera' onClick={this.onChooseImage.bind(this, 'camera')}>
                   使用相机
                 </Button>
               </View>
@@ -818,7 +826,7 @@ class WearMask extends Component {
                     materialList.map((item, itemIndex) => {
                       return (
                         <View key={item.name} style={{ display: currentTabIndex === itemIndex ? ' block' : 'none' }}>
-                          <ScrollView className="mask-select-wrap" scrollX>
+                          <ScrollView className='mask-select-wrap' scrollX>
                             {
                               item.imgList.map((imgId) => {
                                 return (
