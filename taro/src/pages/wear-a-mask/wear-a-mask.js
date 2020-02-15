@@ -160,6 +160,10 @@ class WearMask extends Component {
     if (e.detail.userInfo) {
       //用户按了允许授权按钮
       // TODO写法，用于更换图片
+      Taro.showToast({
+        icon: 'none',
+        title: '获取头像...'
+      })
       let avatarUrl = await getImg(e.detail.userInfo.avatarUrl)
       this.onCut(avatarUrl)
     } else {
@@ -182,6 +186,12 @@ class WearMask extends Component {
       quality: 50 // 压缩质量
     })
 
+    fsmReadFile({
+      filePath: resImage.tempFilePath
+    }).then(res => {
+      const { byteLength = 0 } = res.data
+      console.log('文件大小: ', (byteLength / 1024).toFixed(2) + 'KB');
+    }).catch(error => console.log('文件读取error :', error))
   
     const uploadFile = promisify(Taro.cloud.uploadFile)
     const { fileID } = await uploadFile({
@@ -419,6 +429,10 @@ class WearMask extends Component {
       title: '图片生成中'
     })
 
+    this.setState({
+      posterSrc: '',
+    })
+
     try {
       await this.drawCanvas()
 
@@ -429,11 +443,16 @@ class WearMask extends Component {
         height: DPR_CANVAS_SIZE * 3,
         width: DPR_CANVAS_SIZE * 3,
         success: res => {
-          Taro.hideLoading()
+          // 兼容安卓手机
           this.setState({
             posterSrc: res.tempFilePath,
-            isShowPoster: true
           })
+          setTimeout(() => {
+            Taro.hideLoading()
+            this.setState({
+              isShowPoster: true
+            })
+          }, 300);
         },
         fail: () => {
           Taro.hideLoading()
@@ -628,7 +647,7 @@ class WearMask extends Component {
     return (
       <View className={`poster-dialog ${isShowPoster ? 'show': ''}`}>
         <View className='poster-dialog-main'>
-          <Image className='poster-image' src={posterSrc} onClick={this.previewPoster} showMenuByLongpress></Image>
+          {!!posterSrc && <Image className='poster-image' src={posterSrc} onClick={this.previewPoster} showMenuByLongpress></Image>}
           <View className='poster-image-tips'>点击可预览大图，长按可分享图片</View>
           <View className='poster-dialog-close' onClick={this.onHidePoster} />
           <View className='poster-footer-btn'>
