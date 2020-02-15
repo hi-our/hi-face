@@ -63,12 +63,6 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
 
   constructor(props) {
     super(props);
-    this.update = this.update.bind(this);
-    this.handleOnTouchMove = this.handleOnTouchMove.bind(this);
-    this.handleOnTouchStart = this.handleOnTouchStart.bind(this);
-    this.handleOnTouchEnd = this.handleOnTouchEnd.bind(this);
-    this._drawCropperCorner = this._drawCropperCorner.bind(this);
-    this._drawCropperContent = this._drawCropperContent.bind(this);
     this.systemInfo = Taro.getSystemInfoSync();
     this.state = {
       scale: 1,
@@ -177,7 +171,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
    * 绘制裁剪框的四个角
    * @private
    */
-  _drawCropperCorner() {
+  _drawCropperCorner = () => {
     const {
       themeColor
     } = this.props;
@@ -226,7 +220,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
    * @param reverse
    * @private
    */
-  _drawCropperContent(
+  _drawCropperContent = (
     // props: TaroCropperComponentProps,
     src: string | HTMLImageElement,
     deviationX: number,
@@ -234,7 +228,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
     imageWidth: number,
     imageHeight: number,
     drawWidth: number,
-    drawHeight: number) {
+    drawHeight: number) => {
     this._drawCropperCorner();
     const cropperStartX = (this.width - this.cropperWidth) / 2;
     const cropperStartY = (this.height - this.cropperHeight) / 2;
@@ -252,7 +246,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
       0, 0, this.cropperWidth, this.cropperHeight);
   }
 
-  update() {
+  update = () => {
     if (!this.imageInfo) {            // 图片资源无效则不执行更新操作
       this._drawCropperCorner();
       this.cropperCanvasContext.draw();
@@ -387,14 +381,14 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
   }
 
 
-  handleOnTouchEnd() {
+  handleOnTouchEnd = () => {
     this.oldScale = this.newScale;
     this.imageLeftOrigin = this.imageLeft;
     this.imageTopOrigin = this.imageTop
   }
 
 
-  handleOnTouchStart(e: CanvasTouchEvent) {
+  handleOnTouchStart = (e: CanvasTouchEvent) => {
     const {
       src
     } = this.props;
@@ -412,7 +406,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
     }
   }
 
-  handleOnTouchMove(e: CanvasTouchEvent) {
+  handleOnTouchMove = (e: CanvasTouchEvent) => {
     const {
       src
     } = this.props;
