@@ -89,7 +89,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
   /**
    * 根据props更新长等信息
    */
-  updateInfo(props: TaroCropperComponentProps) {
+  updateInfo = (props: TaroCropperComponentProps) => {
     const {
       width,
       height,
