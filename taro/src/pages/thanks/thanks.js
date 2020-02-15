@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 
 import { cloudCallFunction } from 'utils/fetch'
