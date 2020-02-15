@@ -1,7 +1,7 @@
 import Taro, {CanvasContext, getImageInfo, getSystemInfoSync} from '@tarojs/taro';
 import {Canvas, CoverView, View} from '@tarojs/components';
 
-import './index.scss';
+import './index.styl';
 // @ts-ignore
 import {CanvasTouch, CanvasTouchEvent} from "@tarojs/components/types/common";
 import { isAndroid } from 'utils/common';
@@ -18,6 +18,7 @@ interface TaroCropperComponentProps {
   themeColor: string,               // 主题色（裁剪框的四个角的绘制颜色）
   maxScale: number,                 // 最大放大倍数，maxScale >= 1
   fullScreen: boolean,              // 组件充满全屏，此时width和height设置无效
+  fullScreenCss: boolean,           // 使用CSS全屏高度
   src: string,                      // 要裁剪的图片路径,
   onCut: (src: string) => void,     // 点击底部的完成按钮，执行裁剪，成功则触发该回调
   onCancel: () => void,             // 点击取消按钮回调
@@ -45,6 +46,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     themeColor: '#00ff00',
     maxScale: 3,
     fullScreen: false,
+    fullScreenCss: false,
     hideFinishText: false,
     hideCancelText: true,
     finishText: '完成',
@@ -485,6 +487,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       height,
       cropperCanvasId,
       fullScreen,
+      fullScreenCss,
       themeColor,
       hideFinishText,
       cropperWidth,
@@ -496,14 +499,19 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       cancelText
     } = this.props;
 
+    console.log('this.systemInfo.windowHeight :', this.systemInfo.windowHeight);
+
     const _width = fullScreen ? this.systemInfo.windowWidth : this._getRealPx(width);
     const _height = fullScreen ? this.systemInfo.windowHeight : this._getRealPx(height);
     const _cropperWidth = this._getRealPx(cropperWidth);
     const _cropperHeight = this._getRealPx(cropperHeight);
+    const isFullScreenCss = fullScreen && fullScreenCss
 
-    const canvasStyle: CSSProperties = {
-      background: 'rgba(0, 0, 0, 0.8)',
-      position: 'relative',
+    const croperStyle = isFullScreenCss ? {} : {
+      position: 'relative'
+    }
+
+    const canvasStyle: CSSProperties = isFullScreenCss ? {} : {
       width: `${_width}px`,
       height: `${_height}px`
     };
@@ -573,12 +581,11 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       </CoverView>
     }
     return (
-      <View style={{
-        position: 'relative'
-      }}>
+      <View className={`taro-cropper ${isFullScreenCss ? 'taro-cropper-fullscreen' : ''}`} style={croperStyle}>
         <Canvas
           canvasId={cropperCutCanvasId}
           style={cutCanvasStyle}
+          className={`cut-canvas-item ${isFullScreenCss ? 'cut-canvas-fullscreen' : ''}`}
 
         />
         <Canvas
@@ -587,6 +594,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
           onTouchEnd={this.handleOnTouchEnd}
           canvasId={cropperCanvasId}
           style={canvasStyle}
+          className={`canvas-item ${isFullScreenCss ? 'canvas-fullscreen' : ''}`}
           disableScroll
         >
         </Canvas>
