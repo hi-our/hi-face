@@ -780,6 +780,7 @@ class WearMask extends Component {
             cropperHeight={CANVAS_SIZE * 2}
             ref={this.catTaroCropper}
             fullScreen
+            fullScreenCss
             onCut={this.onCut}
             hideCancelText={false}
             onCancel={this.onCancel}
