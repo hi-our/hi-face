@@ -312,7 +312,7 @@ class WearMask extends Component {
       }
 
       Taro.hideLoading()
-      const { status, errCode, errMsg} = error
+      const { status } = error
       
       if (status >= 87014) {
         Taro.showToast({
@@ -354,6 +354,26 @@ class WearMask extends Component {
       ],
       cutImageSrc: ''
     })
+  }
+
+  downloadImage = async () => {
+    Taro.showLoading({
+      title: '图片生成中'
+    })
+
+    this.setState({
+      posterSrc: '',
+    })
+
+    try {
+      await this.drawCanvas()
+    } catch (error) {
+      Taro.hideLoading()
+      Taro.showToast({
+        title: '图片生成失败，请重试'
+      })
+      console.log('error :', error)
+    }
   }
 
   drawCanvas = async () => {
@@ -407,57 +427,22 @@ class WearMask extends Component {
       )
     }
 
-    pc.draw()
-    
-  }
-
-  saveImageToPhotosAlbum = (tempFilePath) => {
-    Taro.saveImageToPhotosAlbum({
-      filePath: tempFilePath,
-      success: res2 => {
-        Taro.showToast({
-          title: '图片保存成功'
-        })
-        console.log('保存成功 :', res2);
-      },
-      fail(e) {
-        Taro.showToast({
-          title: '图片未保存成功'
-        })
-        console.log('图片未保存成功:' + e);
-      }
-    });
-  }
-
-  downloadImage = async () => {
-    Taro.showLoading({
-      title: '图片生成中'
-    })
-
-    this.setState({
-      posterSrc: '',
-    })
-
-    try {
-      await this.drawCanvas()
-
+    pc.draw(true, () => {
       Taro.canvasToTempFilePath({
         canvasId: 'canvasMask',
         x: 0,
         y: 0,
         height: DPR_CANVAS_SIZE * 3,
         width: DPR_CANVAS_SIZE * 3,
+        fileType: 'jpg',
+        quality: 0.9,
         success: res => {
           // 兼容安卓手机
+          Taro.hideLoading()
           this.setState({
             posterSrc: res.tempFilePath,
+            isShowPoster: true
           })
-          setTimeout(() => {
-            Taro.hideLoading()
-            this.setState({
-              isShowPoster: true
-            })
-          }, 300);
         },
         fail: () => {
           Taro.hideLoading()
@@ -466,16 +451,9 @@ class WearMask extends Component {
           })
         }
       })
-
-    } catch (error) {
-      Taro.hideLoading()
-      Taro.showToast({
-        title: '图片生成失败，请重试'
-      })
-      console.log('error :', error)
-    }
+    })
+    
   }
-
 
   chooseMask = (maskId) => {
     let { shapeList, currentShapeIndex } = this.state
@@ -639,6 +617,24 @@ class WearMask extends Component {
     if (posterSrc) {
       this.saveImageToPhotosAlbum(posterSrc)
     }
+  }
+
+  saveImageToPhotosAlbum = (tempFilePath) => {
+    Taro.saveImageToPhotosAlbum({
+      filePath: tempFilePath,
+      success: res2 => {
+        Taro.showToast({
+          title: '图片保存成功'
+        })
+        console.log('保存成功 :', res2);
+      },
+      fail(e) {
+        Taro.showToast({
+          title: '图片未保存成功'
+        })
+        console.log('图片未保存成功:' + e);
+      }
+    });
   }
 
 
