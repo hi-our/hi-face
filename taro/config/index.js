@@ -11,28 +11,7 @@ const config = {
   },
   sourceRoot: 'src',
   outputRoot: 'dist',
-  // babel: {
-  //   sourceMap: true,
-  //   presets: [
-  //     [
-  //       'env',
-  //       {
-  //         modules: false
-  //       }
-  //     ]
-  //   ],
-  //   plugins: [
-  //     'transform-decorators-legacy',
-  //     'transform-class-properties',
-  //     'transform-object-rest-spread',
-  //     ['transform-runtime', {
-  //       helpers: false,
-  //       polyfill: false,
-  //       regenerator: true,
-  //       moduleName: 'babel-runtime'
-  //     }]
-  //   ]
-  // },
+  plugins: [],
   defineConstants: {
     'process.env.SERVER_ENV': JSON.stringify(process.env.SERVER_ENV),
     'process.env.APPID_ENV': JSON.stringify(process.env.APPID_ENV),
@@ -76,7 +55,6 @@ const config = {
   h5: {
     publicPath: '/',
     staticDirectory: 'static',
-    esnextModules: ['taro-cropper'],
     postcss: {
       autoprefixer: {
         enable: true,

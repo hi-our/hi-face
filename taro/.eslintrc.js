@@ -2,7 +2,7 @@ const alias = require('./config/alias')
 
 module.exports = {
   "extends": [
-    "react"
+    'taro/react',
   ],
   // "rules": {
   //   "quotes": [1, "single"],
