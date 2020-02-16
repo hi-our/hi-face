@@ -32,7 +32,7 @@ class App extends Component {
       navigationBarTextStyle: 'black'
     },
     networkTimeout: {
-      request: 10000,
+      request: 20000,
       downloadFile: 100
     },
     tabBar: {
@@ -61,7 +61,9 @@ class App extends Component {
   componentDidMount () {
 
     if (process.env.TARO_ENV === 'weapp') {
-      Taro.cloud.init({})
+      Taro.cloud.init({
+        env: config.cloudEnv
+      })
     }
     
     // this.onUserLogin()

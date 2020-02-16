@@ -2,6 +2,49 @@ const tencentcloud = require('./tencentcloud-sdk-nodejs')
 const tcb = require('tcb-admin-node')
 const config = require('./config')
 
+const cloud = require('wx-server-sdk')
+
+// 初始化云函数
+cloud.init({
+  // API 调用都保持和云函数当前所在环境一致
+  env: cloud.DYNAMIC_CURRENT_ENV
+})
+
+if (typeof Promise.allSettled !== "function") {
+  Promise.allSettled = function (promises) {
+    return new Promise(function (resolve, reject) {
+      if (!Array.isArray(promises)) {
+        return reject(
+          new TypeError("arguments must be an array")
+        );
+      }
+      var resolvedCounter = 0;
+      var promiseNum = promises.length;
+      var resolvedValues = new Array(promiseNum);
+      for (var i = 0; i < promiseNum; i++) {
+        (function (i) {
+          Promise.resolve(promises[i]).then(
+            function (value) {
+              resolvedCounter++;
+              resolvedValues[i] = value;
+              if (resolvedCounter == promiseNum) {
+                return resolve(resolvedValues);
+              }
+            },
+            function (reason) {
+              resolvedCounter++;
+              resolvedValues[i] = reason;
+              if (resolvedCounter == promiseNum) {
+                return reject(reason);
+              }
+            }
+          );
+        })(i);
+      }
+    });
+  };
+}
+
 const status = require('./status')
 
 // 腾讯云的id和key
@@ -22,8 +65,6 @@ const Credential = tencentcloud.common.Credential;
 const ClientProfile = tencentcloud.common.ClientProfile;
 const HttpProfile = tencentcloud.common.HttpProfile;
 
-console.log('Credential :', tencentcloud);
-
 let httpProfile = new HttpProfile();
 httpProfile.endpoint = "iai.tencentcloudapi.com";
 let clientProfile = new ClientProfile();
@@ -40,30 +81,7 @@ let cred = new Credential(secretId, secretKey);
 // 实例化要请求产品(以cvm为例)的client对象
 let client = new IaIClient(cred, "ap-shanghai", clientProfile);
 
-exports.main = async (event) => {
-  const { fileID = '', base64Main = '' } = event
-
-  let Image = ''
-
-  if (fileID) {
-    let { fileContent } = await tcb.downloadFile({
-      fileID
-    })
-
-    Image = fileContent.toString('base64')
-  } else if (base64Main) {
-    Image = base64Main
-  } else {
-    let errorString = '请设置 fileID或base64Main'
-    console.log(errorString)
-    return {
-      data: {},
-      time: new Date(),
-      status: -10086,
-      message: errorString
-    }
-  }
-
+const analyzeFace = (Image) => {
   let faceReq = new models.DetectFaceRequest()
 
   let query_string = JSON.stringify({
@@ -99,4 +117,90 @@ exports.main = async (event) => {
       })
     })
   });
+}
+
+/**
+* 函数imgSecCheck
+* 参数 event:{
+*    file //上传的文件
+*  }
+*   
+*/
+
+async function imgSecCheck(imageBuffer) {
+
+  try {
+    const result = await cloud.openapi.security.imgSecCheck({
+      media: {
+        contentType: 'image/png',
+        value: imageBuffer
+      }
+    })
+    return {
+      data: {},
+      time: new Date(),
+      status: result.errCode || 0,
+      message: result.errMsg || ''
+    }
+    
+  } catch (error) {
+    return {
+      data: {},
+      time: new Date(),
+      status: error.errCode || 0,
+      message: error.errMsg || ''
+    }
+  }
+
+}
+
+exports.main = async (event) => {
+  const { fileID = '', base64Main = '' } = event
+
+  let Image = ''
+  let fileContent = ''
+
+  if (fileID) {
+    let { fileContent } = await tcb.downloadFile({
+      fileID
+    })
+
+
+
+    // const data = images(fileContent).resize(300).encode('jpg', { quality: 60  })
+    // console.log('data :', data);
+
+    Image = fileContent.toString('base64')
+
+    return Promise.allSettled([imgSecCheck(fileContent), analyzeFace(Image)]).then((results) => {
+      let checkResult = results[0]
+      let faceResult = results[1]
+      if (checkResult.status) {
+        return checkResult
+      }
+
+      return faceResult
+    }).catch(error => {
+      console.log('error :', error);
+    })
+  } else if (base64Main) {
+    Image = base64Main
+    return await analyzeFace(Image)
+  } else {
+    let errorString = '请设置 fileID或base64Main'
+    console.log(errorString)
+    return {
+      data: {},
+      time: new Date(),
+      status: -10086,
+      message: errorString
+    }
+  }
+
+  return {
+    data: {},
+    time: new Date(),
+    status: 0,
+    message: ''
+  }
 }

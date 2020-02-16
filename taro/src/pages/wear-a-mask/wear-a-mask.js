@@ -3,8 +3,9 @@ import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/co
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo } from 'utils/face-utils'
-import { getImg } from 'utils/canvas-drawing'
-import { TaroCropper } from 'taro-cropper'
+import { getImg, fsmReadFile } from 'utils/canvas-drawing'
+import TaroCropper from 'components/taro-cropper'
+import promisify from 'utils/promisify';
 
 import one_face_image from '../../images/one_face.jpeg';
 import two_face_image from '../../images/two_face.jpg';
@@ -141,8 +142,12 @@ class WearMask extends Component {
     this.taroCropper = node;
   }
 
-  onChooseImage = (event) => {
-    const way = event.target.dataset.way
+  onChooseImage = (way) => {
+
+    // console.log('event :', event);
+    // TODO 兼容写法
+    // let way = event.target.dataset.way || 'album'
+    
     Taro.chooseImage({
       count: 1,
       sourceType: [way],
@@ -160,6 +165,10 @@ class WearMask extends Component {
     if (e.detail.userInfo) {
       //用户按了允许授权按钮
       // TODO写法，用于更换图片
+      Taro.showToast({
+        icon: 'none',
+        title: '获取头像...'
+      })
       let avatarUrl = await getImg(e.detail.userInfo.avatarUrl)
       this.onCut(avatarUrl)
     } else {
@@ -177,41 +186,49 @@ class WearMask extends Component {
   }
 
   cloudCanvasToAnalyze = async (tempFilePaths) => {
+    const resImage = await Taro.compressImage({
+      src: tempFilePaths, // 图片路径
+      quality: 50 // 压缩质量
+    })
 
-    return new Promise((resolve, reject) => {
-      // 上传图片
-      Taro.cloud.uploadFile({
-        cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.png`, // 随机图片名
-        filePath: tempFilePaths, // 本地的图片路径
-        success: (uploadRes) => {
-          const { fileID } = uploadRes
-          cloudCallFunction({
-            name: 'analyze-face',
-            data: {
-              fileID
-            }
-          }).then(cloudRes => {
-            resolve(cloudRes)
-            Taro.cloud.deleteFile({
-              fileList: [fileID],
-              success: res => {
-                // handle success
-                console.log('临时图片删除成功', res.fileList)
-              },
-              fail: error => {
-                console.log('临时图片删除失败', error)
-              },
-            })
-          }).catch(error => {
-            console.log('error :', error);
-            reject(error)
-          })
-        },
-        fail: (error) => {
-          console.log('error :', error);
-          reject(error)
-        }
-      })
+    fsmReadFile({
+      filePath: resImage.tempFilePath
+    }).then(res => {
+      const { byteLength = 0 } = res.data
+      console.log('文件大小: ', (byteLength / 1024).toFixed(2) + 'KB');
+    }).catch(error => console.log('文件读取error :', error))
+  
+    const uploadFile = promisify(Taro.cloud.uploadFile)
+    const { fileID } = await uploadFile({
+      cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
+      filePath: resImage.tempFilePath,
+    })
+
+    this.my_file_id = fileID
+
+    const couldRes = await cloudCallFunction({
+      name: 'analyze-face',
+      data: {
+        fileID
+      }
+    })
+
+    this.myDeleteFile(fileID)
+
+    return couldRes
+  }
+
+  myDeleteFile = (fileID) => {
+    this.my_file_id = ''
+    Taro.cloud.deleteFile({
+      fileList: [fileID],
+      success: res => {
+        // handle success
+        console.log('临时图片删除成功', res.fileList)
+      },
+      fail: error => {
+        console.log('临时图片删除失败', error)
+      },
     })
   }
 
@@ -289,7 +306,24 @@ class WearMask extends Component {
       Taro.hideLoading()
 
     } catch (error) {
+      console.log('error :', error);
+      if (this.my_file_id) {
+        this.myDeleteFile(this.my_file_id)
+      }
+
       Taro.hideLoading()
+      const { status } = error
+      
+      if (status >= 87014) {
+        Taro.showToast({
+          icon: 'none',
+          title: '图中包含违规内容，请更换'
+        })
+        this.setState({
+          cutImageSrc: ''
+        })
+        return
+      }
       let shapeList =  [
         resetState()
       ]
@@ -298,7 +332,7 @@ class WearMask extends Component {
         isShowMask: true,
       })
       setTmpThis(this, shapeList[0])
-      console.log('error :', error);
+      
     }
   }
 
@@ -320,6 +354,26 @@ class WearMask extends Component {
       ],
       cutImageSrc: ''
     })
+  }
+
+  downloadImage = async () => {
+    Taro.showLoading({
+      title: '图片生成中'
+    })
+
+    this.setState({
+      posterSrc: '',
+    })
+
+    try {
+      await this.drawCanvas()
+    } catch (error) {
+      Taro.hideLoading()
+      Taro.showToast({
+        title: '图片生成失败，请重试'
+      })
+      console.log('error :', error)
+    }
   }
 
   drawCanvas = async () => {
@@ -373,43 +427,17 @@ class WearMask extends Component {
       )
     }
 
-    pc.draw()
-    
-  }
-
-  saveImageToPhotosAlbum = (tempFilePath) => {
-    Taro.saveImageToPhotosAlbum({
-      filePath: tempFilePath,
-      success: res2 => {
-        Taro.showToast({
-          title: '图片保存成功'
-        })
-        console.log('保存成功 :', res2);
-      },
-      fail(e) {
-        Taro.showToast({
-          title: '图片未保存成功'
-        })
-        console.log('图片未保存成功:' + e);
-      }
-    });
-  }
-
-  downloadImage = async () => {
-    Taro.showLoading({
-      title: '图片生成中'
-    })
-
-    try {
-      await this.drawCanvas()
-
+    pc.draw(true, () => {
       Taro.canvasToTempFilePath({
         canvasId: 'canvasMask',
         x: 0,
         y: 0,
         height: DPR_CANVAS_SIZE * 3,
         width: DPR_CANVAS_SIZE * 3,
+        fileType: 'jpg',
+        quality: 0.9,
         success: res => {
+          // 兼容安卓手机
           Taro.hideLoading()
           this.setState({
             posterSrc: res.tempFilePath,
@@ -423,16 +451,9 @@ class WearMask extends Component {
           })
         }
       })
-
-    } catch (error) {
-      Taro.hideLoading()
-      Taro.showToast({
-        title: '图片生成失败，请重试'
-      })
-      console.log('error :', error)
-    }
+    })
+    
   }
-
 
   chooseMask = (maskId) => {
     let { shapeList, currentShapeIndex } = this.state
@@ -598,6 +619,24 @@ class WearMask extends Component {
     }
   }
 
+  saveImageToPhotosAlbum = (tempFilePath) => {
+    Taro.saveImageToPhotosAlbum({
+      filePath: tempFilePath,
+      success: res2 => {
+        Taro.showToast({
+          title: '图片保存成功'
+        })
+        console.log('保存成功 :', res2);
+      },
+      fail(e) {
+        Taro.showToast({
+          title: '图片未保存成功'
+        })
+        console.log('图片未保存成功:' + e);
+      }
+    });
+  }
+
 
 
   renderPoster = () => {
@@ -605,7 +644,8 @@ class WearMask extends Component {
     return (
       <View className={`poster-dialog ${isShowPoster ? 'show': ''}`}>
         <View className='poster-dialog-main'>
-          <Image className='poster-image' src={posterSrc} onClick={this.previewPoster}></Image>
+          {!!posterSrc && <Image className='poster-image' src={posterSrc} onClick={this.previewPoster} showMenuByLongpress></Image>}
+          <View className='poster-image-tips'>点击可预览大图，长按可分享图片</View>
           <View className='poster-dialog-close' onClick={this.onHidePoster} />
           <View className='poster-footer-btn'>
             <View className='poster-btn-save' onClick={this.savePoster}>
@@ -724,7 +764,7 @@ class WearMask extends Component {
                 </View>
               )
               : (
-                <View className='to-choose' data-way="album" onClick={this.onChooseImage}></View>
+                <View className='to-choose' data-way="album" onClick={this.onChooseImage.bind(this, 'album')}></View>
                 )
               }
           </View>
@@ -743,7 +783,7 @@ class WearMask extends Component {
               <View className='button-wrap'>
                 <View className="buttom-tips">更多选择</View>
                 <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
-                <Button className='button-camera' type="default" data-way="camera" onClick={this.onChooseImage}>
+                <Button className='button-camera' type="default" data-way="camera" onClick={this.onChooseImage.bind(this, 'camera')}>
                   使用相机
                 </Button>
               </View>
@@ -758,6 +798,7 @@ class WearMask extends Component {
             cropperHeight={CANVAS_SIZE * 2}
             ref={this.catTaroCropper}
             fullScreen
+            fullScreenCss
             onCut={this.onCut}
             hideCancelText={false}
             onCancel={this.onCancel}
@@ -833,7 +874,7 @@ class WearMask extends Component {
 
         {!originSrc && (
           <Block>
-            <View className='virus-btn' onClick={this.goSpreadGame}>病毒演化器</View>
+            {/* <View className='virus-btn' onClick={this.goSpreadGame}>病毒演化器</View> */}
             <Button className='share-btn' openType='share'>分享给朋友<View className='share-btn-icon'></View></Button>
           </Block>
         )}

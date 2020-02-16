@@ -548,18 +548,6 @@ tcb-admin-node@1.19.1:
     request "^2.87.0"
     xml2js "^0.4.19"
 
-tcb-admin-node@latest:
-  version "1.20.0"
-  resolved "https://registry.yarnpkg.com/tcb-admin-node/-/tcb-admin-node-1.20.0.tgz#cc541c2a502dd2cb8329f3b231cace7e4560da9a"
-  integrity sha512-Z7EVFzEw//pHxuM1gjYn71TwBVfQqY5T7W/OtjM5yTvETb4xMudHyemMxJa3ehJJnwmg64r98pqC8SZd2j2osQ==
-  dependencies:
-    "@cloudbase/database" "^0.9.10"
-    is-regex "^1.0.4"
-    jsonwebtoken "^8.5.1"
-    lodash.merge "^4.6.1"
-    request "^2.87.0"
-    xml2js "^0.4.19"
-
 tough-cookie@~2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/tough-cookie/-/tough-cookie-2.5.0.tgz#cd9fb2a0aa1d5a12b473bd9fb96fa3dcff65ade2"

@@ -1,5 +1,5 @@
 {
-  "name": "analyze-face",
+  "name": "open-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "tcb-admin-node": "latest",
     "wx-server-sdk": "latest"
   }
 }
