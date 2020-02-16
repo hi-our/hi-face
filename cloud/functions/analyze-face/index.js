@@ -161,9 +161,7 @@ function toBuffer(ab) {
 }
 
 exports.main = async (event) => {
-  const { fileID = '', base64Main = '', fileBuffer } = event
-
-  // console.log('fileBuffer :', base64Main, toBuffer(fileBuffer));
+  const { fileID = '', base64Main = '' } = event
 
   let Image = ''
 
@@ -172,11 +170,6 @@ exports.main = async (event) => {
     let { fileContent } = await tcb.downloadFile({
       fileID
     })
-
-
-
-    // const data = images(fileContent).resize(300).encode('jpg', { quality: 60  })
-    // console.log('data :', data);
 
     Image = fileContent.toString('base64')
 
@@ -192,20 +185,9 @@ exports.main = async (event) => {
       console.log('error :', error);
       
     })
-  } 
-  // else if (fileBuffer) {
-  //   console.log('fileBuffer :', fileBuffer);
-  //   return {
-  //     data: {},
-  //     time: new Date(),
-  //     status: 0,
-  //     message: ''
-  //   }
-  // }
-   else if (base64Main) {
+  } else if (base64Main) {
     Image = base64Main
-    // return await analyzeFace(Image)
-    return Promise.allSettled([imgSecCheck(Buffer.from(Image, 'utf-8')), analyzeFace(Image)]).then((results) => {
+    return Promise.allSettled([imgSecCheck(new Buffer(Image, 'base64')), analyzeFace(Image)]).then((results) => {
       let checkResult = results[0]
       let faceResult = results[1]
       console.log('checkResult :', checkResult);
@@ -218,21 +200,15 @@ exports.main = async (event) => {
       console.log('error :', error);
 
     })
-  } else {
-    let errorString = '请设置 fileID或base64Main'
-    console.log(errorString)
-    return {
-      data: {},
-      time: new Date(),
-      status: -10086,
-      message: errorString
-    }
   }
-
+  
+  let errorString = '请设置 fileID或base64Main'
+  console.log(errorString)
   return {
     data: {},
     time: new Date(),
-    status: 0,
-    message: ''
+    status: -10086,
+    message: errorString
   }
+
 }
