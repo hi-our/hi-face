@@ -3,7 +3,7 @@ import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/co
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo } from 'utils/face-utils'
-import { getImg, fsmReadFile } from 'utils/canvas-drawing'
+import { getImg, fsmReadFile, srcToBase64Main } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
 import promisify from 'utils/promisify';
 
@@ -192,31 +192,38 @@ class WearMask extends Component {
       quality: 50 // 压缩质量
     })
 
-    fsmReadFile({
-      filePath: resImage.tempFilePath
-    }).then(res => {
-      const { byteLength = 0 } = res.data
-      console.log('文件大小: ', (byteLength / 1024).toFixed(2) + 'KB');
-    }).catch(error => console.log('文件读取error :', error))
+    let oldTime = Date.now()
+    let base64Main = await srcToBase64Main(resImage.tempFilePath)
+    console.log('base64Main :', base64Main);
+    // const fileRes = await fsmReadFile({
+    //   filePath: resImage.tempFilePath
+    // })
+    // const { byteLength = 0 } = fileRes.data
+    // console.log('fileRes.data :', fileRes.data);
+    // console.log('文件大小: ', (byteLength / 1024).toFixed(2) + 'KB');
   
-    const uploadFile = promisify(Taro.cloud.uploadFile)
-    const { fileID } = await uploadFile({
-      cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
-      filePath: resImage.tempFilePath,
-    })
+    // const uploadFile = promisify(Taro.cloud.uploadFile)
+    // const { fileID } = await uploadFile({
+    //   cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
+    //   filePath: resImage.tempFilePath,
+    // })
 
-    this.my_file_id = fileID
+    // this.my_file_id = fileID
 
     const couldRes = await cloudCallFunction({
       name: 'analyze-face',
       data: {
-        fileID
+        // fileID,
+        base64Main
       }
     })
 
-    this.myDeleteFile(fileID)
+    console.log('couldRes :', couldRes);
+    console.log(((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
 
-    return couldRes
+    // this.myDeleteFile(fileID)
+
+    return {}
   }
 
   myDeleteFile = (fileID) => {
@@ -263,47 +270,47 @@ class WearMask extends Component {
     try {
 
       const res2 = await this.cloudCanvasToAnalyze(cutImageSrc)
-      console.log('图片分析的结果 :', res2);
+      // console.log('图片分析的结果 :', res2);
 
-      const info = getMouthInfo(res2)
-      let shapeList = info.map(item => {
-        let { faceWidth, angle, mouthMidPoint, ImageWidth } = item
-        let dpr = ImageWidth / CANVAS_SIZE * (375 / windowWidth)
-        const maskCenterX = mouthMidPoint.X / dpr
-        const maskCenterY = mouthMidPoint.Y / dpr
-        const scale = faceWidth / MASK_SIZE / dpr
-        const rotate = angle / Math.PI * 180
+      // const info = getMouthInfo(res2)
+      // let shapeList = info.map(item => {
+      //   let { faceWidth, angle, mouthMidPoint, ImageWidth } = item
+      //   let dpr = ImageWidth / CANVAS_SIZE * (375 / windowWidth)
+      //   const maskCenterX = mouthMidPoint.X / dpr
+      //   const maskCenterY = mouthMidPoint.Y / dpr
+      //   const scale = faceWidth / MASK_SIZE / dpr
+      //   const rotate = angle / Math.PI * 180
 
-        // 角度计算有点难
-        let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
-        let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+      //   // 角度计算有点难
+      //   let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+      //   let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
 
-        const resizeCenterX = maskCenterX + widthScaleDpr - 2
-        const resizeCenterY = maskCenterY + heightScaleDpr - 2
+      //   const resizeCenterX = maskCenterX + widthScaleDpr - 2
+      //   const resizeCenterY = maskCenterY + heightScaleDpr - 2
 
-        const maskWidth = faceWidth * 1.2 / dpr
+      //   const maskWidth = faceWidth * 1.2 / dpr
 
-        return {
-          maskWidth,
-          currentMaskId: 1,
-          timeNow: Date.now() * Math.random(),
-          maskCenterX,
-          maskCenterY,
-          reserve: 1,
-          rotate,
-          resizeCenterX,
-          resizeCenterY,
-        }
+      //   return {
+      //     maskWidth,
+      //     currentMaskId: 1,
+      //     timeNow: Date.now() * Math.random(),
+      //     maskCenterX,
+      //     maskCenterY,
+      //     reserve: 1,
+      //     rotate,
+      //     resizeCenterX,
+      //     resizeCenterY,
+      //   }
 
-      })
+      // })
 
-      setTmpThis(this, shapeList[0])
+      // setTmpThis(this, shapeList[0])
 
-      this.setState({
-        currentShapeIndex: 0,
-        shapeList,
-        isShowMask: true,
-      })
+      // this.setState({
+      //   currentShapeIndex: 0,
+      //   shapeList,
+      //   isShowMask: true,
+      // })
 
       Taro.hideLoading()
 

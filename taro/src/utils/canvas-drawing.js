@@ -46,14 +46,15 @@ const base64src = async (base64data) => {
   }
 };
 
-export const srcToBase64Main = async (src, callback) => {
+export const srcToBase64Main = async (src) => {
   try {
-    const readFile = promisify(fileSystemManager.readFile)
+    const readFile = promisify(fsm.readFile)
     const data = await readFile({
       filePath: src,
       encoding: 'base64',
     })
-    callback(data.data)
+    
+    return (data.data)
     
   } catch (error) {
     

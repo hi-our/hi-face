@@ -9,6 +9,7 @@ export const cloudCallFunction = ({ name, data = {}, config = {} }) => {
       data,
       config
     }).then(callRes => {
+      console.log('callRes :', callRes);
       const { errMsg = '', result } = callRes
       if (errMsg.includes('ok')) {
         let apiResult = result
