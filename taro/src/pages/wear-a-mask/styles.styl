@@ -72,11 +72,6 @@
   height 20px
   background url(https://n1image.hjfile.cn/res7/2020/02/09/2c591b8d9d1c75d1e4d8804e710dc086.png) no-repeat center / contain
 
-// .cropper-wrap
-//   position fixed
-//   left 0
-//   top 0
-
 .button-wrap
   margin-top 20px
   display flex
@@ -140,8 +135,7 @@
   position absolute
   left 0
   top 0
-  border dashed 2px yellow
-  z-index 1
+  border dashed 1px yellow
 
 .mask
   width 100%
@@ -202,7 +196,8 @@
   
 .image-btn-resize,
 .image-btn-remove 
-.image-btn-checked 
+.image-btn-checked
+.image-btn-reverse
   position absolute
   z-index 1
   width:20 * 1.3px
@@ -229,6 +224,13 @@
   margin-right -10 * 1.3px
   margin-top -10 * 1.3px
   background url(https://n1image.hjfile.cn/res7/2020/02/11/0b05b7bc398a85da11ff1eb97ed03e1f.png) no-repeat center / contain
+
+.image-btn-reverse
+  left 0
+  bottom 0
+  margin-left -10 * 1.3px
+  margin-bottom -10 * 1.3px
+  background url(https://n1image.hjfile.cn/res7/2020/02/16/0807e31c8557a250cc24f9e089fbb41d.png) no-repeat center / contain
 
 .virus-btn
   position fixed
@@ -282,7 +284,7 @@
   bottom: 0;
   justify-content center
   align-items center
-  z-index 1
+  z-index 10
   background-color rgba(0, 0, 0, .8)
   &.show
     display flex

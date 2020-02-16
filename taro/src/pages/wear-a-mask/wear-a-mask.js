@@ -32,7 +32,8 @@ const resetState = () => {
     maskCenterY: DPR_CANVAS_SIZE / 2,
     resizeCenterX: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
     resizeCenterY: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
-    rotate: 0
+    rotate: 0,
+    reserve: 1
   }
 }
 
@@ -288,6 +289,7 @@ class WearMask extends Component {
           timeNow: Date.now() * Math.random(),
           maskCenterX,
           maskCenterY,
+          reserve: 1,
           rotate,
           resizeCenterX,
           resizeCenterY,
@@ -399,11 +401,13 @@ class WearMask extends Component {
         maskCenterX,
         maskCenterY,
         currentMaskId,
+        reserve,
       } = shape
       const maskSize = maskWidth *  pixelRatio
 
       pc.translate(maskCenterX * pixelRatio, maskCenterY * pixelRatio);
       pc.rotate((rotate * Math.PI) / 180)
+      pc.scale(reserve, 1)
   
       pc.drawImage(
         require(`../../images/mask-${currentMaskId}.png`),
@@ -483,6 +487,19 @@ class WearMask extends Component {
     this.setState({
       shapeList,
       currentShapeIndex: -1
+    })
+  }
+
+  reverseShape = (e) => {
+    const { shapeIndex = 0 } = e.target.dataset
+    const { shapeList } = this.state
+    shapeList[shapeIndex] = {
+      ...shapeList[shapeIndex],
+      reserve: 0 - shapeList[shapeIndex].reserve
+    }
+
+    this.setState({
+      shapeList
     })
   }
 
@@ -719,6 +736,7 @@ class WearMask extends Component {
                         maskCenterY,
                         resizeCenterX,
                         resizeCenterY,
+                        reserve,
                         rotate
                       } = shape
 
@@ -728,7 +746,12 @@ class WearMask extends Component {
                       let maskStyle = {
                         width: maskWidth + 'px',
                         height: maskWidth + 'px',
-                        transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`
+                        transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`,
+                        zIndex: shapeIndex === currentShapeIndex ? 2 : 1
+                      }
+
+                      let maskImageStyle = {
+                        transform: `scale(${reserve}, 1)`,
                       }
 
                       // let handleStyle = {
@@ -738,13 +761,13 @@ class WearMask extends Component {
 
                       return (
                         <View className='mask-container' key={timeNow} style={maskStyle}>
-                          <Image className="mask" data-type='mask' data-shape-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} />
+                          <Image className="mask" data-type='mask' data-shape-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} style={maskImageStyle} />
                           {
                             currentShapeIndex === shapeIndex && (
                               <Block>
                                 <View className='image-btn-remove' data-shape-index={shapeIndex}  onClick={this.removeShape}></View>
                                 <View className='image-btn-resize' data-shape-index={shapeIndex} data-type='rotate-resize'></View>
-                                {/* <View className='image-btn-resize-test' style={handleStyle}></View> */}
+                                <View className='image-btn-reverse' data-shape-index={shapeIndex} onClick={this.reverseShape}></View>
                                 <View className='image-btn-checked' data-shape-index={shapeIndex}  onClick={this.checkedShape}></View>
                               </Block>
                             )
