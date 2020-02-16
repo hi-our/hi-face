@@ -407,10 +407,9 @@ class WearMask extends Component {
 
       pc.translate(maskCenterX * pixelRatio, maskCenterY * pixelRatio);
       pc.rotate((rotate * Math.PI) / 180)
-      pc.scale(reserve, 1)
   
       pc.drawImage(
-        require(`../../images/mask-${currentMaskId}.png`),
+        require(`../../images/mask-${currentMaskId}${reserve < 0 ? '-reverse' : ''}.png`),
         -maskSize / 2,
         -maskSize / 2,
         maskSize,
