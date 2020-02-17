@@ -429,7 +429,6 @@ class WearMask extends Component {
         fileType: 'jpg',
         quality: 0.9,
         success: res => {
-          // 兼容安卓手机
           Taro.hideLoading()
           this.setState({
             posterSrc: res.tempFilePath,

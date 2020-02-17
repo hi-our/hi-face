@@ -111,7 +111,7 @@ class Thanks extends Component {
             }
           </View>
         </View>
-          <View className='version'>ver.{version}</View>
+          <View className='version'>Ver.{version}，基于 Taro 及小程序云开发</View>
       </PageWrapper>
     )
   }
