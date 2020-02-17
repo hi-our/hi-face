@@ -499,8 +499,6 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       cancelText
     } = this.props;
 
-    console.log('this.systemInfo.windowHeight :', this.systemInfo.windowHeight);
-
     const _width = fullScreen ? this.systemInfo.windowWidth : this._getRealPx(width);
     const _height = fullScreen ? this.systemInfo.windowHeight : this._getRealPx(height);
     const _cropperWidth = this._getRealPx(cropperWidth);

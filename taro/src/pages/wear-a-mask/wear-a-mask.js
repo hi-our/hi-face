@@ -3,7 +3,7 @@ import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/co
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo } from 'utils/face-utils'
-import { getImg, fsmReadFile } from 'utils/canvas-drawing'
+import { getImg, fsmReadFile, srcToBase64Main } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
 import promisify from 'utils/promisify';
 
@@ -32,7 +32,8 @@ const resetState = () => {
     maskCenterY: DPR_CANVAS_SIZE / 2,
     resizeCenterX: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
     resizeCenterY: DPR_CANVAS_SIZE / 2 + DEFAULT_MASK_SIZE / 2 - 2,
-    rotate: 0
+    rotate: 0,
+    reserve: 1
   }
 }
 
@@ -188,32 +189,24 @@ class WearMask extends Component {
   cloudCanvasToAnalyze = async (tempFilePaths) => {
     const resImage = await Taro.compressImage({
       src: tempFilePaths, // 图片路径
-      quality: 50 // 压缩质量
+      quality: 10 // 压缩质量
     })
 
-    fsmReadFile({
-      filePath: resImage.tempFilePath
-    }).then(res => {
-      const { byteLength = 0 } = res.data
-      console.log('文件大小: ', (byteLength / 1024).toFixed(2) + 'KB');
-    }).catch(error => console.log('文件读取error :', error))
-  
-    const uploadFile = promisify(Taro.cloud.uploadFile)
-    const { fileID } = await uploadFile({
-      cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
+    let oldTime = Date.now()
+
+    let { data: base64Main } = await fsmReadFile({
       filePath: resImage.tempFilePath,
+      encoding: 'base64',
     })
-
-    this.my_file_id = fileID
 
     const couldRes = await cloudCallFunction({
       name: 'analyze-face',
       data: {
-        fileID
+        base64Main
       }
     })
 
-    this.myDeleteFile(fileID)
+    console.log(((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
 
     return couldRes
   }
@@ -288,6 +281,7 @@ class WearMask extends Component {
           timeNow: Date.now() * Math.random(),
           maskCenterX,
           maskCenterY,
+          reserve: 1,
           rotate,
           resizeCenterX,
           resizeCenterY,
@@ -307,9 +301,6 @@ class WearMask extends Component {
 
     } catch (error) {
       console.log('error :', error);
-      if (this.my_file_id) {
-        this.myDeleteFile(this.my_file_id)
-      }
 
       Taro.hideLoading()
       const { status } = error
@@ -399,6 +390,7 @@ class WearMask extends Component {
         maskCenterX,
         maskCenterY,
         currentMaskId,
+        reserve,
       } = shape
       const maskSize = maskWidth *  pixelRatio
 
@@ -406,7 +398,7 @@ class WearMask extends Component {
       pc.rotate((rotate * Math.PI) / 180)
   
       pc.drawImage(
-        require(`../../images/mask-${currentMaskId}.png`),
+        require(`../../images/mask-${currentMaskId}${reserve < 0 ? '-reverse' : ''}.png`),
         -maskSize / 2,
         -maskSize / 2,
         maskSize,
@@ -483,6 +475,19 @@ class WearMask extends Component {
     this.setState({
       shapeList,
       currentShapeIndex: -1
+    })
+  }
+
+  reverseShape = (e) => {
+    const { shapeIndex = 0 } = e.target.dataset
+    const { shapeList } = this.state
+    shapeList[shapeIndex] = {
+      ...shapeList[shapeIndex],
+      reserve: 0 - shapeList[shapeIndex].reserve
+    }
+
+    this.setState({
+      shapeList
     })
   }
 
@@ -719,6 +724,7 @@ class WearMask extends Component {
                         maskCenterY,
                         resizeCenterX,
                         resizeCenterY,
+                        reserve,
                         rotate
                       } = shape
 
@@ -728,7 +734,12 @@ class WearMask extends Component {
                       let maskStyle = {
                         width: maskWidth + 'px',
                         height: maskWidth + 'px',
-                        transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`
+                        transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`,
+                        zIndex: shapeIndex === currentShapeIndex ? 2 : 1
+                      }
+
+                      let maskImageStyle = {
+                        transform: `scale(${reserve}, 1)`,
                       }
 
                       // let handleStyle = {
@@ -738,13 +749,13 @@ class WearMask extends Component {
 
                       return (
                         <View className='mask-container' key={timeNow} style={maskStyle}>
-                          <Image className="mask" data-type='mask' data-shape-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} />
+                          <Image className="mask" data-type='mask' data-shape-index={shapeIndex} src={require(`../../images/mask-${currentMaskId}.png`)} style={maskImageStyle} />
                           {
                             currentShapeIndex === shapeIndex && (
                               <Block>
                                 <View className='image-btn-remove' data-shape-index={shapeIndex}  onClick={this.removeShape}></View>
                                 <View className='image-btn-resize' data-shape-index={shapeIndex} data-type='rotate-resize'></View>
-                                {/* <View className='image-btn-resize-test' style={handleStyle}></View> */}
+                                <View className='image-btn-reverse' data-shape-index={shapeIndex} onClick={this.reverseShape}></View>
                                 <View className='image-btn-checked' data-shape-index={shapeIndex}  onClick={this.checkedShape}></View>
                               </Block>
                             )

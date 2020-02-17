@@ -154,21 +154,22 @@ async function imgSecCheck(imageBuffer) {
 
 }
 
+function toBuffer(ab) {
+
+  let buf = Buffer.from(ab)
+  return buf;
+}
+
 exports.main = async (event) => {
   const { fileID = '', base64Main = '' } = event
 
   let Image = ''
-  let fileContent = ''
+
 
   if (fileID) {
     let { fileContent } = await tcb.downloadFile({
       fileID
     })
-
-
-
-    // const data = images(fileContent).resize(300).encode('jpg', { quality: 60  })
-    // console.log('data :', data);
 
     Image = fileContent.toString('base64')
 
@@ -182,25 +183,32 @@ exports.main = async (event) => {
       return faceResult
     }).catch(error => {
       console.log('error :', error);
+      
     })
   } else if (base64Main) {
     Image = base64Main
-    return await analyzeFace(Image)
-  } else {
-    let errorString = '请设置 fileID或base64Main'
-    console.log(errorString)
-    return {
-      data: {},
-      time: new Date(),
-      status: -10086,
-      message: errorString
-    }
-  }
+    return Promise.allSettled([imgSecCheck(new Buffer(Image, 'base64')), analyzeFace(Image)]).then((results) => {
+      let checkResult = results[0]
+      let faceResult = results[1]
+      console.log('checkResult :', checkResult);
+      if (checkResult.status) {
+        return checkResult
+      }
 
+      return faceResult
+    }).catch(error => {
+      console.log('error :', error);
+
+    })
+  }
+  
+  let errorString = '请设置 fileID或base64Main'
+  console.log(errorString)
   return {
     data: {},
     time: new Date(),
-    status: 0,
-    message: ''
+    status: -10086,
+    message: errorString
   }
+
 }
