@@ -56,8 +56,7 @@
 对于新手或实验性项目来说，这个配合足够用。如果想升级，小程序还提供了非常完整的升级方案。具体可以在下面这个链接上进行查看。
 https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference/quota.html
 
-那么最为吸引我使用小程序云开发的理由是啥呢？
-nodejs高度自定义，
+那么最为吸引我使用小程序云开发的理由是啥呢？以nodejs为载体的云开发环境可以高度自定义。
 * `wx-server-sdk`来调用小程序开放接口
 * `tcb-admin-node`让你可以在服务端（如腾讯云云函数或CVM等）使用Node.js服务访问TCB的的服务。
 * `tencentcloud-sdk-nodejs`，调用腾讯云的诸多服务，如人脸识别、五官分析等等
