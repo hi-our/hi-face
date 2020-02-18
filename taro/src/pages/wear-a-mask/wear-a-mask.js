@@ -4,7 +4,7 @@ import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/co
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo } from 'utils/face-utils'
-import { getImg, fsmReadFile } from 'utils/canvas-drawing'
+import { getImg, fsmReadFile, srcToBase64Main } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
 import promisify from 'utils/promisify';
 
@@ -185,32 +185,24 @@ class WearMask extends Component {
   cloudCanvasToAnalyze = async (tempFilePaths) => {
     const resImage = await Taro.compressImage({
       src: tempFilePaths, // 图片路径
-      quality: 50 // 压缩质量
+      quality: 10 // 压缩质量
     })
 
-    fsmReadFile({
-      filePath: resImage.tempFilePath
-    }).then(res => {
-      const { byteLength = 0 } = res.data
-      console.log('文件大小: ', (byteLength / 1024).toFixed(2) + 'KB');
-    }).catch(error => console.log('文件读取error :', error))
-  
-    const uploadFile = promisify(Taro.cloud.uploadFile)
-    const { fileID } = await uploadFile({
-      cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
+    let oldTime = Date.now()
+
+    let { data: base64Main } = await fsmReadFile({
       filePath: resImage.tempFilePath,
+      encoding: 'base64',
     })
-
-    this.my_file_id = fileID
 
     const couldRes = await cloudCallFunction({
       name: 'analyze-face',
       data: {
-        fileID
+        base64Main
       }
     })
 
-    this.myDeleteFile(fileID)
+    console.log(((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
 
     return couldRes
   }
@@ -305,9 +297,6 @@ class WearMask extends Component {
 
     } catch (error) {
       console.log('error :', error);
-      if (this.my_file_id) {
-        this.myDeleteFile(this.my_file_id)
-      }
 
       Taro.hideLoading()
       const { status } = error
@@ -436,7 +425,6 @@ class WearMask extends Component {
         fileType: 'jpg',
         quality: 0.9,
         success: res => {
-          // 兼容安卓手机
           Taro.hideLoading()
           this.setState({
             posterSrc: res.tempFilePath,
