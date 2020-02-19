@@ -170,8 +170,19 @@ class WearMask extends Component {
         icon: 'none',
         title: '获取头像...'
       })
-      let avatarUrl = await getImg(e.detail.userInfo.avatarUrl)
-      this.onCut(avatarUrl)
+      try {
+        let avatarUrl = await getImg(e.detail.userInfo.avatarUrl)
+        if (avatarUrl) {
+          this.onCut(avatarUrl)
+        }
+        
+      } catch (error) {
+        console.log('avatarUrl download error:', error);
+        Taro.showToast({
+          icon: 'none',
+          title: '获取失败，请使用相册'
+        })
+      }
     } else {
       //用户按了拒绝按钮
     }
@@ -300,12 +311,12 @@ class WearMask extends Component {
       Taro.hideLoading()
 
     } catch (error) {
-      console.log('error :', error);
+      console.log('onAnalyzeFace error :', error);
 
       Taro.hideLoading()
       const { status } = error
       
-      if (status >= 87014) {
+      if (status === 87014) {
         Taro.showToast({
           icon: 'none',
           title: '图中包含违规内容，请更换'
@@ -315,16 +326,22 @@ class WearMask extends Component {
         })
         return
       }
-      let shapeList =  [
-        resetState()
-      ]
-      this.setState({
-        shapeList,
-        isShowMask: true,
-      })
-      setTmpThis(this, shapeList[0])
-      
+
+      this.onAnalyzeFaceFail()
     }
+  }
+
+  onAnalyzeFaceFail = () => {
+    // 获取失败，走默认渲染
+    let shapeList = [
+      resetState()
+    ]
+
+    this.setState({
+      shapeList,
+      isShowMask: true,
+    })
+    setTmpThis(this, shapeList[0])
   }
 
   onCancel = () => {
