@@ -1,0 +1,26 @@
+{
+  "name": "baidu-aip-sdk",
+  "version": "2.4.5",
+  "description": "百度AI开放平台Nodejs SDK, 文档以及详情请访问官网: https://ai.baidu.com",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "baidu-aip",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Baidu-AIP/nodejs-sdk.git"
+  },
+  "dependencies": {
+    "debug": "^2.6.0",
+    "iconv-lite": "^0.4.15",
+    "keep-alive-agent": "0.0.1",
+    "request": "^2.79.0",
+    "underscore": "^1.8.3"
+  },
+  "optionalDependencies": {
+    "should": "^13.2.0",
+    "mocha": "^4.0.1"
+  }
+}
