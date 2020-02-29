@@ -43,6 +43,12 @@ class App extends Component {
       selectedColor: '#2f5aff',
       list: [
         {
+          pagePath: 'pages/queen-king/queen-king',
+          text: '女王节',
+          iconPath: 'images/tab-bar-crown.png',
+          selectedIconPath: 'images/tab-bar-crown-active.png'
+        },
+        {
           pagePath: 'pages/wear-a-mask/wear-a-mask',
           text: '戴口罩',
           iconPath: 'images/mask-1.png',

@@ -2,7 +2,7 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
-import { getMouthInfo, getMaskShapeList } from 'utils/face-utils'
+import { getMouthInfo, getMaskShapeList, getHatInfo, getHatShapeList } from 'utils/face-utils'
 import { getImg, fsmReadFile, srcToBase64Main } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
 import promisify from 'utils/promisify';
@@ -187,7 +187,12 @@ class QueenKing extends Component {
       console.log('图片分析的结果 :', couldRes);
 
       const mouthList = getMouthInfo(couldRes)
+      const hatList = getHatInfo(couldRes)
+      console.log('hatList :', hatList);
       let shapeList = getMaskShapeList(mouthList, DPR_CANVAS_SIZE, ORIGiN_SHAPE_SIZE)
+      let hatShapeList = getHatShapeList(hatList, DPR_CANVAS_SIZE, ORIGiN_SHAPE_SIZE)
+      console.log('hatShapeList :', hatShapeList);
+      shapeList = shapeList.concat(hatShapeList)
 
       setTmpThis(this, shapeList[0])
 

@@ -68,7 +68,7 @@ const getPos = (k, d, point) => {
   // 取y变小的那一边
   let y = -Math.sqrt((d * d) / (1 + k * k)) + point.Y;
   let x = k * (y - point.Y) + point.X;
-  return { x, y };
+  return { X: x, Y: y };
 };
 
 /**
@@ -105,8 +105,7 @@ export function getHatInfo(results) {
     // 获取脸大小信息
     const faceLength = getFaceLength(getJawPos(outlinePoints), midPointOfEyebrows);
     const faceWidth = getFaceWidth(outlinePoints);
-    console.log('faceLength :', faceLength, faceWidth);
-    console.log('angle :', angle);
+
     return {
       midPointOfEyebrows,
       jawPos,
@@ -197,6 +196,41 @@ export function getMaskShapeList(mouthList, dprCanvasWidth, shapeSize) {
 
     return {
       name: 'mask',
+      shapeWidth,
+      currentShapeId: 1,
+      timeNow: Date.now() * Math.random(),
+      shapeCenterX,
+      shapeCenterY,
+      reserve: 1,
+      rotate,
+      resizeCenterX,
+      resizeCenterY,
+    }
+
+  })
+}
+
+export function getHatShapeList(mouthList, dprCanvasWidth, shapeSize) {
+  return mouthList.map(item => {
+    console.log('item :', item);
+    let { faceWidth, angle, headPos = {}, ImageWidth } = item
+    let dpr = ImageWidth / dprCanvasWidth
+    const shapeCenterX = headPos.X / dpr
+    const shapeCenterY = headPos.Y / dpr
+    const rotate = angle / Math.PI * 180
+    const scale = faceWidth / shapeSize / dpr
+
+    // // 角度计算有点难
+    let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+    let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+
+    const resizeCenterX = shapeCenterX + widthScaleDpr - 2
+    const resizeCenterY = shapeCenterY + heightScaleDpr - 2
+
+    const shapeWidth = faceWidth / 0.6 / dpr
+
+    return {
+      name: 'crown',
       shapeWidth,
       currentShapeId: 1,
       timeNow: Date.now() * Math.random(),
