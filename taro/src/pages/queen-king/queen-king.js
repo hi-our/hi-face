@@ -17,7 +17,7 @@ import {
   DPR_CANVAS_SIZE,
   SAVE_IMAGE_WIDTH,
   DEFAULT_SHAPE_SIZE,
-  getDefalutShape,
+  getDefaultShape,
   setTmpThis,
   materialList
 } from './utils';
@@ -38,7 +38,7 @@ class QueenKing extends Component {
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
       shapeList: [
-        getDefalutShape()
+        getDefaultShape()
       ],
       currentShapeIndex: 0,
       originSrc: '',
@@ -218,7 +218,7 @@ class QueenKing extends Component {
 
       // 获取失败，走默认渲染
       let shapeList = [
-        getDefalutShape()
+        getDefaultShape()
       ]
 
       this.setState({
@@ -243,7 +243,7 @@ class QueenKing extends Component {
     this.cutImageSrcCanvas = ''
     this.setState({
       shapeList: [
-        getDefalutShape()
+        getDefaultShape()
       ],
       cutImageSrc: ''
     })
@@ -288,7 +288,7 @@ class QueenKing extends Component {
     shapeList.forEach(shape => {
       pc.save()
       const {
-        name,
+        shapeName,
         shapeWidth,
         rotate,
         shapeCenterX,
@@ -302,7 +302,7 @@ class QueenKing extends Component {
       pc.rotate((rotate * Math.PI) / 180)
 
       pc.drawImage(
-        require(`../../images/${name}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`),
+        require(`../../images/${shapeName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`),
         -shapeSize / 2,
         -shapeSize / 2,
         shapeSize,
@@ -350,18 +350,19 @@ class QueenKing extends Component {
 
   }
 
-  chooseShape = (shapeId) => {
+  chooseShape = (shapeId, shapeName) => {
     let { shapeList, currentShapeIndex } = this.state
 
     if (shapeList.length > 0 && currentShapeIndex >= 0) {
       shapeList[currentShapeIndex] = {
         ...shapeList[currentShapeIndex],
+        shapeName,
         currentShapeId: shapeId
       }
     } else {
       currentShapeIndex = shapeList.length
       shapeList.push({
-        ...getDefalutShape(),
+        ...getDefaultShape(shapeName),
         currentShapeId: shapeId
       })
     }
@@ -617,7 +618,7 @@ class QueenKing extends Component {
                     isShowShape && shapeList.map((shape, shapeIndex) => {
 
                       const {
-                        name,
+                        categoryName,
                         shapeWidth,
                         currentShapeId,
                         timeNow,
@@ -650,7 +651,7 @@ class QueenKing extends Component {
 
                       return (
                         <View className='shape-container' key={timeNow} style={shapeStyle}>
-                          <Image className="shape" data-type='shape' data-shape-index={shapeIndex} src={require(`../../images/${name}-${currentShapeId}.png`)} style={shapeImageStyle} />
+                          <Image className="shape" data-type='shape' data-shape-index={shapeIndex} src={require(`../../images/${categoryName}-${currentShapeId}.png`)} style={shapeImageStyle} />
                           {
                             currentShapeIndex === shapeIndex && (
                               <Block>
@@ -753,7 +754,7 @@ class QueenKing extends Component {
                                     key={imgId}
                                     src={require(`../../images/${item.name}-${imgId}.png`)}
                                     onClick={() => {
-                                      if (item.name === 'shape') this.chooseShape(imgId)
+                                      if (item.name === 'crown' || item.name === 'text') this.chooseShape(imgId, item.name)
                                       if (item.name === 'jiayou') this.chooseJiayouId(imgId)
 
                                     }}

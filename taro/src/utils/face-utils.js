@@ -230,7 +230,7 @@ export function getHatShapeList(mouthList, dprCanvasWidth, shapeSize) {
     const shapeWidth = faceWidth / 0.6 / dpr
 
     return {
-      name: 'crown',
+      categoryName: 'crown',
       shapeWidth,
       currentShapeId: 1,
       timeNow: Date.now() * Math.random(),

@@ -12,9 +12,9 @@ export const SAVE_IMAGE_WIDTH = DPR_CANVAS_SIZE * pixelRatio
 export const DEFAULT_SHAPE_SIZE = 100 * PAGE_DPR
 
 
-export const getDefalutShape = (name = 'mask') => {
+export const getDefaultShape = (categoryName = 'mask') => {
   return {
-    name,
+    categoryName,
     shapeWidth: DEFAULT_SHAPE_SIZE,
     currentShapeId: 1,
     timeNow: Date.now(),
@@ -55,6 +55,12 @@ export const materialList = [
   {
     name: 'crown',
     cn: '皇冠',
+    imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    type: 'multi'
+  },
+  {
+    name: 'text',
+    cn: '文字',
     imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     type: 'multi'
   },
