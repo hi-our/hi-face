@@ -12,7 +12,7 @@ export const SAVE_IMAGE_WIDTH = DPR_CANVAS_SIZE * pixelRatio
 export const DEFAULT_SHAPE_SIZE = 100 * PAGE_DPR
 
 
-export const resetState = (name = 'mask') => {
+export const getDefalutShape = (name = 'mask') => {
   return {
     name,
     shapeWidth: DEFAULT_SHAPE_SIZE,

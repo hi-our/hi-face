@@ -2,7 +2,7 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
-import { getMouthInfo } from 'utils/face-utils'
+import { getMouthInfo, getMaskShapeList } from 'utils/face-utils'
 import { getImg, fsmReadFile, srcToBase64Main } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
 import promisify from 'utils/promisify';
@@ -17,7 +17,7 @@ import {
   DPR_CANVAS_SIZE,
   SAVE_IMAGE_WIDTH,
   DEFAULT_SHAPE_SIZE,
-  resetState,
+  getDefalutShape,
   setTmpThis,
   materialList
 } from './utils';
@@ -38,7 +38,7 @@ class QueenKing extends Component {
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
       shapeList: [
-        resetState()
+        getDefalutShape()
       ],
       currentShapeIndex: 0,
       originSrc: '',
@@ -148,61 +148,6 @@ class QueenKing extends Component {
     })
   }
 
-  cloudCanvasToAnalyze = async (tempFilePaths) => {
-    const resImage = await Taro.compressImage({
-      src: tempFilePaths, // 图片路径
-      quality: 10 // 压缩质量
-    })
-
-    let oldTime = Date.now()
-
-    let { data: base64Main } = await fsmReadFile({
-      filePath: resImage.tempFilePath,
-      encoding: 'base64',
-    })
-
-    const couldRes = await cloudCallFunction({
-      name: 'analyze-face',
-      data: {
-        base64Main
-      }
-    })
-
-    console.log(((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
-
-    return couldRes
-  }
-
-  myDeleteFile = (fileID) => {
-    this.my_file_id = ''
-    Taro.cloud.deleteFile({
-      fileList: [fileID],
-      success: res => {
-        // handle success
-        console.log('临时图片删除成功', res.fileList)
-      },
-      fail: error => {
-        console.log('临时图片删除失败', error)
-      },
-    })
-  }
-
-  // TODO 其他小程序再说
-  tmpFetchFunction = () => {
-    // srcToBase64Main(cutImageSrc, (base64Main) => {
-    // })
-    // const res2 = await fetch({
-    //   url: apiAnalyzeFace,
-    //   type: 'post',
-    //   data: {
-    //     Image: base64Main,
-    //     Mode: 1,
-    //     FaceModelVersion: '3.0'
-    //   }
-    // })
-  }
-
-
   onAnalyzeFace = async (cutImageSrc) => {
     if (!cutImageSrc) return
 
@@ -216,41 +161,33 @@ class QueenKing extends Component {
 
     try {
 
-      const res2 = await this.cloudCanvasToAnalyze(cutImageSrc)
-      console.log('图片分析的结果 :', res2);
-
-      const info = getMouthInfo(res2)
-      let shapeList = info.map(item => {
-        let { faceWidth, angle, mouthMidPoint, ImageWidth } = item
-        let dpr = ImageWidth / DPR_CANVAS_SIZE
-        const shapeCenterX = mouthMidPoint.X / dpr
-        const shapeCenterY = mouthMidPoint.Y / dpr
-        const scale = faceWidth / ORIGiN_SHAPE_SIZE / dpr
-        const rotate = angle / Math.PI * 180
-
-        // 角度计算有点难
-        let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
-        let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
-
-        const resizeCenterX = shapeCenterX + widthScaleDpr - 2
-        const resizeCenterY = shapeCenterY + heightScaleDpr - 2
-
-        const shapeWidth = faceWidth * 1.2 / dpr
-
-        return {
-          name: 'mask',
-          shapeWidth,
-          currentShapeId: 1,
-          timeNow: Date.now() * Math.random(),
-          shapeCenterX,
-          shapeCenterY,
-          reserve: 1,
-          rotate,
-          resizeCenterX,
-          resizeCenterY,
-        }
-
+      // 压缩图片
+      const resImage = await Taro.compressImage({
+        src: cutImageSrc, // 图片路径
+        quality: 10 // 压缩质量
       })
+
+      let oldTime = Date.now()
+
+      // 转换为base64
+      let { data: base64Main } = await fsmReadFile({
+        filePath: resImage.tempFilePath,
+        encoding: 'base64',
+      })
+
+      const couldRes = await cloudCallFunction({
+        name: 'analyze-face',
+        data: {
+          base64Main
+        }
+      })
+
+      console.log(((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
+
+      console.log('图片分析的结果 :', couldRes);
+
+      const mouthList = getMouthInfo(couldRes)
+      let shapeList = getMaskShapeList(mouthList, DPR_CANVAS_SIZE, ORIGiN_SHAPE_SIZE)
 
       setTmpThis(this, shapeList[0])
 
@@ -281,7 +218,7 @@ class QueenKing extends Component {
 
       // 获取失败，走默认渲染
       let shapeList = [
-        resetState()
+        getDefalutShape()
       ]
 
       this.setState({
@@ -290,10 +227,6 @@ class QueenKing extends Component {
       })
       setTmpThis(this, shapeList[0])
     }
-  }
-
-  onAnalyzeFaceFail = () => {
-    
   }
 
   onCancel = () => {
@@ -310,7 +243,7 @@ class QueenKing extends Component {
     this.cutImageSrcCanvas = ''
     this.setState({
       shapeList: [
-        resetState()
+        getDefalutShape()
       ],
       cutImageSrc: ''
     })
@@ -336,6 +269,7 @@ class QueenKing extends Component {
     }
   }
 
+  // TODO 这个也可以分离？
   drawCanvas = async () => {
     const {
       shapeList,
@@ -426,7 +360,7 @@ class QueenKing extends Component {
     } else {
       currentShapeIndex = shapeList.length
       shapeList.push({
-        ...resetState(),
+        ...getDefalutShape(),
         currentShapeId: shapeId
       })
     }
@@ -482,6 +416,7 @@ class QueenKing extends Component {
       this.start_y = e.touches[0].clientY;
     }
   }
+
   touchEnd = (e) => {
     if (this.touch_target !== '' || this.touch_target !== 'cancel') {
       if (this.state.shapeList[this.touch_shape_index]) {
@@ -489,6 +424,7 @@ class QueenKing extends Component {
       }
     }
   }
+
   touchMove = (e) => {
     let { shapeList } = this.state
     const {
@@ -854,7 +790,6 @@ class QueenKing extends Component {
 
         {!originSrc && (
           <Block>
-            {/* <View className='virus-btn' onClick={this.goSpreadGame}>病毒演化器</View> */}
             <Button className='share-btn' openType='share'>分享给朋友<View className='share-btn-icon'></View></Button>
           </Block>
         )}
