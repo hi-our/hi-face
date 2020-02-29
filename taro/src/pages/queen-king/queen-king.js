@@ -184,15 +184,10 @@ class QueenKing extends Component {
 
       console.log(((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
 
-      console.log('图片分析的结果 :', couldRes);
-
-      const mouthList = getMouthInfo(couldRes)
+      console.log('图片分析的结果 :', couldRes)
       const hatList = getHatInfo(couldRes)
       console.log('hatList :', hatList);
-      let shapeList = getMaskShapeList(mouthList, DPR_CANVAS_SIZE, ORIGiN_SHAPE_SIZE)
-      let hatShapeList = getHatShapeList(hatList, DPR_CANVAS_SIZE, ORIGiN_SHAPE_SIZE)
-      console.log('hatShapeList :', hatShapeList);
-      shapeList = shapeList.concat(hatShapeList)
+      let shapeList = getHatShapeList(hatList, DPR_CANVAS_SIZE, ORIGiN_SHAPE_SIZE)
 
       setTmpThis(this, shapeList[0])
 
@@ -293,6 +288,7 @@ class QueenKing extends Component {
     shapeList.forEach(shape => {
       pc.save()
       const {
+        name,
         shapeWidth,
         rotate,
         shapeCenterX,
@@ -306,7 +302,7 @@ class QueenKing extends Component {
       pc.rotate((rotate * Math.PI) / 180)
 
       pc.drawImage(
-        require(`../../images/shape-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`),
+        require(`../../images/${name}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`),
         -shapeSize / 2,
         -shapeSize / 2,
         shapeSize,
@@ -595,12 +591,7 @@ class QueenKing extends Component {
     } = this.state
 
 
-    let tabsTips = ''
-    if (currentTabIndex === 0) {
-      tabsTips = currentShapeIndex >= 0 ? '点击更换口罩' : '点击新增口罩'
-    } else if (currentTabIndex === 1) {
-      tabsTips = currentJiayouId >= 1 ? '点击更换文案图片' : '点击新增文案图片'
-    }
+    let tabsTips = (currentShapeIndex >= 0 ? '点击更换' : '点击新增') + materialList[currentTabIndex].cn
 
     return (
       <View className='shape-page'>
@@ -674,14 +665,14 @@ class QueenKing extends Component {
                       )
                     })
                   }
-                  {
+                  {/* {
                     isShowShape && currentJiayouId > 0 && (
                       <View className="image-jiayou">
                         <Image id='shape' src={require(`../../images/jiayou-${currentJiayouId}.png`)} />
                         <View className='image-btn-jiayou' onClick={this.chooseJiayouId}></View>
                       </View>
                     )
-                  }
+                  } */}
                 </View>
               )
               : (
@@ -739,11 +730,7 @@ class QueenKing extends Component {
                           className={`tab-hd-item ${currentTabIndex === itemIndex ? 'tab-hd-active' : ''}`}
                           onClick={this.chooseTab.bind(this, itemIndex)}
                         >
-                          <Image
-                            className='tab-hd-image'
-                            src={item.icon}
-                            mode='aspectFit'
-                          />
+                          {item.cn}
                         </View>
                       )
                     })

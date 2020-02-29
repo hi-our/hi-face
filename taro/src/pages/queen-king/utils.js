@@ -53,15 +53,14 @@ export const setTmpThis = (el, elState) => {
 
 export const materialList = [
   {
-    name: 'mask',
-    icon: require('../../images/icon-category-mask.png'),
+    name: 'crown',
+    cn: '皇冠',
     imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     type: 'multi'
   },
-  {
-    name: 'jiayou',
-    icon: require('../../images/icon-category-jiayou.png'),
-    imgList: [1, 2, 3, 4, 5, 6],
-    type: 'single'
-  }
+  // {
+  //   name: 'jiayou',
+  //   imgList: [1, 2, 3, 4, 5, 6],
+  //   type: 'single'
+  // }
 ]
