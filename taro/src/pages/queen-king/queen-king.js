@@ -10,72 +10,22 @@ import promisify from 'utils/promisify';
 import one_face_image from '../../images/one_face.jpeg';
 import two_face_image from '../../images/two_face.jpg';
 
+import {
+  ORIGIN_CANVAS_SIZE,
+  ORIGiN_SHAPE_SIZE,
+  PAGE_DPR,
+  DPR_CANVAS_SIZE,
+  SAVE_IMAGE_WIDTH,
+  DEFAULT_SHAPE_SIZE,
+  resetState,
+  setTmpThis,
+  materialList
+} from './utils';
+
 import './styles.styl'
 
-const { windowWidth, pixelRatio } = getSystemInfo()
-const ORIGIN_CANVAS_SIZE = 300
-const ORIGiN_SHAPE_SIZE = 100
+const { pixelRatio } = getSystemInfo()
 
-
-const PAGE_DPR = windowWidth / 375
-
-const DPR_CANVAS_SIZE = ORIGIN_CANVAS_SIZE * PAGE_DPR
-const SAVE_IMAGE_WIDTH = DPR_CANVAS_SIZE * pixelRatio
-const DEFAULT_SHAPE_SIZE = 100 * PAGE_DPR
-
-
-const resetState = () => {
-  return {
-    shapeWidth: DEFAULT_SHAPE_SIZE,
-    currentShapeId: 1,
-    timeNow: Date.now(),
-
-    shapeCenterX: DPR_CANVAS_SIZE / 2,
-    shapeCenterY: DPR_CANVAS_SIZE / 2,
-    resizeCenterX: DPR_CANVAS_SIZE / 2 + DEFAULT_SHAPE_SIZE / 2 - 2,
-    resizeCenterY: DPR_CANVAS_SIZE / 2 + DEFAULT_SHAPE_SIZE / 2 - 2,
-    rotate: 0,
-    reserve: 1
-  }
-}
-
-const setTmpThis = (el, elState) => {
-  const {
-    shapeWidth,
-    shapeCenterX,
-    shapeCenterY,
-    resizeCenterX,
-    resizeCenterY,
-    rotate
-  } = elState
-
-  el.shape_width = shapeWidth
-  el.shape_center_x = shapeCenterX;
-  el.shape_center_y = shapeCenterY;
-  el.resize_center_x = resizeCenterX;
-  el.resize_center_y = resizeCenterY;
-
-  el.rotate = rotate;
-
-  el.touch_target = '';
-  el.touch_shape_index = -1;
-
-}
-
-const materialList = [
-  {
-    name: 'mask',
-    icon: require('../../images/icon-category-mask.png'),
-    imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    type: 'multi'
-  },
-  {
-    name: 'jiayou',
-    icon: require('../../images/icon-category-jiayou.png'),
-    imgList: [1, 2, 3, 4, 5, 6],
-    type: 'single'
-  }
-]
 
 class QueenKing extends Component {
   config = {
@@ -329,21 +279,21 @@ class QueenKing extends Component {
         return
       }
 
-      this.onAnalyzeFaceFail()
+      // 获取失败，走默认渲染
+      let shapeList = [
+        resetState()
+      ]
+
+      this.setState({
+        shapeList,
+        isShowShape: true,
+      })
+      setTmpThis(this, shapeList[0])
     }
   }
 
   onAnalyzeFaceFail = () => {
-    // 获取失败，走默认渲染
-    let shapeList = [
-      resetState()
-    ]
-
-    this.setState({
-      shapeList,
-      isShowShape: true,
-    })
-    setTmpThis(this, shapeList[0])
+    
   }
 
   onCancel = () => {
@@ -713,7 +663,7 @@ class QueenKing extends Component {
 
     return (
       <View className='shape-page'>
-        <Canvas className='canvas-shape' style={{ width: DPR_CANVAS_SIZE * pixelRatio + 'px', height: DPR_CANVAS_SIZE * pixelRatio + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
+        <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
         <View className='main-wrap'>
           <View
             className='image-position'

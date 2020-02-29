@@ -177,7 +177,36 @@ export function getMouthInfo(results) {
   })
 }
 
+export function getMaskShapeList(mouthList, dprCanvasWidth, shapeSize) {
+  return mouthList.map(item => {
+    let { faceWidth, angle, mouthMidPoint, ImageWidth } = item
+    let dpr = ImageWidth / dprCanvasWidth
+    const shapeCenterX = mouthMidPoint.X / dpr
+    const shapeCenterY = mouthMidPoint.Y / dpr
+    const scale = faceWidth / shapeSize / dpr
+    const rotate = angle / Math.PI * 180
 
-export const getBase64Main = (fullSrc) => {
-  return fullSrc.split(',')[1]
+    // 角度计算有点难
+    let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+    let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+
+    const resizeCenterX = shapeCenterX + widthScaleDpr - 2
+    const resizeCenterY = shapeCenterY + heightScaleDpr - 2
+
+    const shapeWidth = faceWidth * 1.2 / dpr
+
+    return {
+      name: 'mask',
+      shapeWidth,
+      currentShapeId: 1,
+      timeNow: Date.now() * Math.random(),
+      shapeCenterX,
+      shapeCenterY,
+      reserve: 1,
+      rotate,
+      resizeCenterX,
+      resizeCenterY,
+    }
+
+  })
 }

@@ -46,6 +46,10 @@ const base64src = async (base64data) => {
   }
 };
 
+export const getBase64Main = (fullSrc) => {
+  return fullSrc.split(',')[1]
+}
+
 export const srcToBase64Main = async (src) => {
   try {
     const readFile = promisify(fsm.readFile)
