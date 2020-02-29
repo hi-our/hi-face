@@ -12,10 +12,7 @@ var SECRET_KEY = config.SECRET_KEY;
 var client = new AipImageProcessClient(APP_ID, API_KEY, SECRET_KEY);
 
 // 接口文档 https://cloud.baidu.com/doc/IMAGEPROCESS/s/xk3bclo77
-
-// 云函数入口函数
-exports.main = async (event, context) => {
-
+const styleTrans = (event, context) => {
   const { base64Main = '', type } = event
   return client.styleTrans(base64Main, type).then(res => {
     console.log('res :', res);
@@ -41,6 +38,10 @@ exports.main = async (event, context) => {
     })
   }).catch(error => {
     console.log('error :', error);
-
   })
+}
+
+// 云函数入口函数
+exports.main = async (event, context) => {
+  return styleTrans(event, context)
 }
