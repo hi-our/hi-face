@@ -247,6 +247,8 @@ class QueenKing extends Component {
 
   onRemoveImage = () => {
     this.cutImageSrcCanvas = ''
+    this.styleMap = getDefaultStyleMap()
+
     this.setState({
       shapeList: [
         getDefaultShape()
@@ -555,8 +557,63 @@ class QueenKing extends Component {
     });
   }
 
-  changeStyleType = (type) => {
-    console.log('changeStyleType :', type);
+  changeStyleType = async (type) => {
+    const { origin: cutImageSrc } = this.styleMap
+
+    if (this.styleMap[type]) {
+      this.setState({
+        cutImageSrc: this.styleMap[type]
+      })
+      return
+    }
+
+    if (!cutImageSrc) return
+
+    Taro.showLoading({
+      title: '绘制中，请稍后....'
+    })
+
+    this.styleReq = true
+
+    try {
+
+      let oldTime = Date.now()
+
+      // 转换为base64
+      let { data: base64Main } = await fsmReadFile({
+        filePath: cutImageSrc,
+        encoding: 'base64',
+      })
+
+      const couldRes = await cloudCallFunction({
+        name: 'image-cartoon',
+        data: {
+          base64Main,
+          type
+        }
+      })
+
+      this.styleReq = false
+
+      console.log('图片转换花费时间', ((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
+
+      console.log('图片分析结果 :', couldRes)
+
+      let cutImageSrcNow = 'data:image/jpg;base64,' + couldRes.base64Main
+      this.styleMap[type] = cutImageSrcNow
+      this.setState({
+        currentStyleType: type,
+        cutImageSrc: cutImageSrcNow,
+      })
+
+      Taro.hideLoading()
+
+    } catch (error) {
+      console.log('onAnalyzeFace error :', error);
+
+      Taro.hideLoading()
+      this.styleReq = false
+    }
   }
 
 

@@ -31,9 +31,11 @@ const styleTrans = (event, context) => {
     }
     // 请求异常返回，打印异常信息
     return ({
-      data: image,
+      data: {
+        base64Main: image
+      },
       time: new Date(),
-      status: '',
+      status: 0,
       message: ''
     })
   }).catch(error => {
@@ -60,13 +62,17 @@ const selfieAnime = (event, context) => {
         message: status.TRANS_CODE[error_msg] || '图片解析失败'
       })
     }
+
     // 请求异常返回，打印异常信息
     return ({
-      data: image,
+      data: {
+        base64Main: image
+      },
       time: new Date(),
-      status: '',
+      status: 0,
       message: ''
     })
+
   }).catch(error => {
     console.log('error :', error);
   })
@@ -76,6 +82,6 @@ const selfieAnime = (event, context) => {
 exports.main = async (event, context) => {
 
   if (event.type === 'anime') return selfieAnime(event, context)
-  
+
   return styleTrans(event, context)
 }
