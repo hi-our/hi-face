@@ -72,9 +72,9 @@ class QueenKing extends Component {
     }
 
     return {
-      title: '让我们快快戴口罩，抗击疫情吧！',
+      title: '给心爱的女神戴上皇冠吧',
       imageUrl: shareImage,
-      path: '/pages/wear-a-shape/wear-a-shape'
+      path: '/pages/queen-king/queen-king'
     }
   }
 
@@ -860,7 +860,7 @@ class QueenKing extends Component {
             : (
               <View className='bottom-tips-wrap'>
                 <Text>
-                  {'备注：\n选择后会识别图中人脸，并自动戴上口罩\n识别过程需几秒钟，请耐心等待'}
+                  {'备注：\n选择后会识别图中人脸，并自动戴上皇冠\n识别过程需几秒钟，请耐心等待'}
                 </Text>
               </View>
             )
