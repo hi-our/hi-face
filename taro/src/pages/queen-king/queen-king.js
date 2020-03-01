@@ -3,7 +3,7 @@ import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/co
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
 import { getHatInfo, getHatShapeList } from 'utils/face-utils'
-import { getImg, fsmReadFile, srcToBase64Main } from 'utils/canvas-drawing'
+import { getImg, fsmReadFile, srcToBase64Main, base64src } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
 import promisify from 'utils/promisify';
 
@@ -599,7 +599,8 @@ class QueenKing extends Component {
 
       console.log('图片分析结果 :', couldRes)
 
-      let cutImageSrcNow = 'data:image/jpg;base64,' + couldRes.base64Main
+      let cutImageSrcNow = await base64src('data:image/jpg;base64,' + couldRes.base64Main)
+
       this.styleMap[type] = cutImageSrcNow
       this.setState({
         currentStyleType: type,
