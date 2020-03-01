@@ -76,7 +76,7 @@
   background url(https://n1image.hjfile.cn/res7/2020/02/09/2c591b8d9d1c75d1e4d8804e710dc086.png) no-repeat center / contain
 
 .button-wrap
-  margin-top 20px
+  margin-top 10px
   display flex
   justify-content center
   font-size 12px
@@ -84,9 +84,6 @@
   line-height 1.5
   text-align center
   flex-wrap wrap
-
-  @media (max-width 359px)
-    margin-top 15px
 
 .buttom-tips
   width 100%
@@ -164,6 +161,30 @@
    width 100%
    bottom 5px
    white-space nowrap
+
+
+.style-list-wrap
+  padding 0 10px
+  display flex
+  justify-content space-between
+
+.style-item-active
+  .style-item-image
+    box-shadow 0 0 0 1px #2f5aff
+  .style-item-text
+    color #2f5aff
+.style-item-image
+  display block
+  width 45px
+  height 45px
+  border-radius 3px
+
+.style-item-text
+  margin-top 2px
+  font-size 10px
+  line-height 1.25
+  color #2f3742
+  text-align center
 
 .tab-wrap
   .tab-bd

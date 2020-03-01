@@ -2,7 +2,7 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
-import { getMouthInfo, getMaskShapeList, getHatInfo, getHatShapeList } from 'utils/face-utils'
+import { getHatInfo, getHatShapeList } from 'utils/face-utils'
 import { getImg, fsmReadFile, srcToBase64Main } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
 import promisify from 'utils/promisify';
@@ -19,7 +19,9 @@ import {
   DEFAULT_SHAPE_SIZE,
   getDefaultShape,
   setTmpThis,
-  materialList
+  materialList,
+  dataStyleList,
+  getDefaultStyleMap,
 } from './utils';
 
 import './styles.styl'
@@ -40,6 +42,7 @@ class QueenKing extends Component {
       shapeList: [
         getDefaultShape()
       ],
+      currentStyleType: 'origin',
       currentShapeIndex: 0,
       originSrc: '',
       cutImageSrc: '',
@@ -49,7 +52,7 @@ class QueenKing extends Component {
       currentTabIndex: 0,
       isShowShape: false,
     }
-
+    this.styleMap = getDefaultStyleMap()
     this.cutImageSrcCanvas = ''
   }
 
@@ -81,6 +84,7 @@ class QueenKing extends Component {
     this.start_x = 0;
     this.start_y = 0;
 
+    this.styleMap.origin = two_face_image
     this.setState({
       cutImageSrc: two_face_image
     }, () => {
@@ -140,6 +144,8 @@ class QueenKing extends Component {
   }
 
   onCut = (cutImageSrc) => {
+    this.styleMap.origin = cutImageSrc
+    console.log('this.styleMap :', this.styleMap);
     this.setState({
       cutImageSrc,
       originSrc: ''
@@ -549,6 +555,10 @@ class QueenKing extends Component {
     });
   }
 
+  changeStyleType = (type) => {
+    console.log('changeStyleType :', type);
+  }
+
 
 
   renderPoster = () => {
@@ -590,6 +600,7 @@ class QueenKing extends Component {
       currentJiayouId,
       shapeList,
       currentShapeIndex,
+      currentStyleType,
     } = this.state
 
 
@@ -719,6 +730,21 @@ class QueenKing extends Component {
           />
         </View>
 
+        {!!cutImageSrc && (
+          <View className='style-list-wrap'>
+            {
+              dataStyleList.map(item => {
+                const { type, text, image } = item
+                return (
+                  <View className={`style-item ${currentStyleType === type ? 'style-item-active' : ''}`} key={type} onClick={this.changeStyleType.bind(this, type)}>
+                    <Image className='style-item-image' src={image} />
+                    <View className='style-item-text'>{text}</View>
+                  </View>
+                )
+              })
+            }
+          </View>
+        )}
         {
           cutImageSrc
             ? (

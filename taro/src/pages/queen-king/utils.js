@@ -64,9 +64,36 @@ export const materialList = [
     imgList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     type: 'multi'
   },
-  // {
-  //   name: 'jiayou',
-  //   imgList: [1, 2, 3, 4, 5, 6],
-  //   type: 'single'
-  // }
+]
+
+
+export const getDefaultStyleMap = () => ({
+  origin: '',
+  anime: '',
+  cartoon: '',
+  pencil: ''
+})
+
+
+export const dataStyleList = [
+  {
+    type: 'origin',
+    image: 'https://n1image.hjfile.cn/res7/2020/03/01/ca84b69c25bee8196d72986e5df45761.jpg',
+    text: '原画',
+  },
+  {
+    type: 'anime',
+    image: 'https://n1image.hjfile.cn/res7/2020/03/01/cd9490adedde3707de44623a23c350f6.jpeg',
+    text: '动漫头像',
+  },
+  {
+    type: 'cartoon',
+    image: 'https://n1image.hjfile.cn/res7/2020/03/01/3f114d0e9b372640ec5a32388124c6c5.jpeg',
+    text: '卡通画',
+  },
+  {
+    type: 'pencil',
+    image: 'https://n1image.hjfile.cn/res7/2020/03/01/55e3cb54c6b6ceebbd28353a0ae139b1.jpeg',
+    text: '素描',
+  },
 ]

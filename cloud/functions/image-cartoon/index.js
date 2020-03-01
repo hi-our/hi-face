@@ -41,7 +41,41 @@ const styleTrans = (event, context) => {
   })
 }
 
+
+// 接口文档 https://ai.baidu.com/ai-doc/IMAGEPROCESS/Mk4i6olx5
+const selfieAnime = (event, context) => {
+  const { base64Main = '', type } = event
+  return client.selfieAnime(base64Main, type).then(res => {
+    console.log('res :', res);
+    const { error_code = '', error_msg = '', image } = res
+
+    if (error_code) {
+      // 请求异常返回，打印异常信息
+      console.log('code :', error_code);
+
+      return ({
+        data: {},
+        time: new Date(),
+        status: error_code,
+        message: status.TRANS_CODE[error_msg] || '图片解析失败'
+      })
+    }
+    // 请求异常返回，打印异常信息
+    return ({
+      data: image,
+      time: new Date(),
+      status: '',
+      message: ''
+    })
+  }).catch(error => {
+    console.log('error :', error);
+  })
+}
+
 // 云函数入口函数
 exports.main = async (event, context) => {
+
+  if (event.type === 'anime') return selfieAnime(event, context)
+  
   return styleTrans(event, context)
 }
