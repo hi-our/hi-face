@@ -10,6 +10,9 @@
   background #fff
   padding 10px
 
+  @media (max-width 359px)
+    padding 5px
+
 .to-choose
   border 1px dashed #efefef
   width 298px
@@ -82,6 +85,9 @@
   text-align center
   flex-wrap wrap
 
+  @media (max-width 359px)
+    margin-top 15px
+
 .buttom-tips
   width 100%
   text-align center
@@ -89,20 +95,25 @@
   font-size 12px
   margin-bottom 5px
 
-.button-remove
-  padding-top 40px
-  width 60px
-  background url(https://n1image.hjfile.cn/res7/2020/02/01/63e0c77558a7bc50c4f2666b8df449e0.png) no-repeat center top / auto 40px
-  font-size 10px
-
-
-
+.button-remove,
 .button-download
   padding-top 40px
   width 60px
-  margin-left 30px
-  background url(https://n1image.hjfile.cn/res7/2020/02/01/8fb88a2a273c37c6098966681c402f21.png) no-repeat center top / auto 40px
   font-size 10px
+  background-size auto 40px
+  background-repeat no-repeat
+  background-position center top
+
+  @media (max-width 359px)
+    padding-top 32px
+    background-size auto 30px
+
+.button-remove
+  background-image url(https://n1image.hjfile.cn/res7/2020/02/01/63e0c77558a7bc50c4f2666b8df449e0.png)
+
+.button-download
+  background-image url(https://n1image.hjfile.cn/res7/2020/02/01/8fb88a2a273c37c6098966681c402f21.png)
+
 
 .button-avatar
 .button-camera
@@ -179,6 +190,11 @@
     height 50px
     width 50px
     margin 5px
+
+    // @media (max-width 359px) 
+    //   width 35px
+    //   height 35px
+    //   margin 3px
   .tab-bd-image-jiayou
     height 28px
     margin-top 27px

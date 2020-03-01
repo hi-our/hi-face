@@ -288,7 +288,7 @@ class QueenKing extends Component {
     shapeList.forEach(shape => {
       pc.save()
       const {
-        shapeName,
+        categoryName,
         shapeWidth,
         rotate,
         shapeCenterX,
@@ -302,7 +302,7 @@ class QueenKing extends Component {
       pc.rotate((rotate * Math.PI) / 180)
 
       pc.drawImage(
-        require(`../../images/${shapeName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`),
+        require(`../../images/${categoryName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`),
         -shapeSize / 2,
         -shapeSize / 2,
         shapeSize,
@@ -311,17 +311,17 @@ class QueenKing extends Component {
       pc.restore()
     })
 
-    if (currentJiayouId > 0) {
-      pc.save()
+    // if (currentJiayouId > 0) {
+    //   pc.save()
 
-      pc.drawImage(
-        require(`../../images/jiayou-${currentJiayouId}.png`),
-        0,
-        132 * tmpUsePageDpr,
-        300 * tmpUsePageDpr,
-        169 * tmpUsePageDpr,
-      )
-    }
+    //   pc.drawImage(
+    //     require(`../../images/jiayou-${currentJiayouId}.png`),
+    //     0,
+    //     132 * tmpUsePageDpr,
+    //     300 * tmpUsePageDpr,
+    //     169 * tmpUsePageDpr,
+    //   )
+    // }
 
     pc.draw(true, () => {
       Taro.canvasToTempFilePath({
@@ -350,19 +350,20 @@ class QueenKing extends Component {
 
   }
 
-  chooseShape = (shapeId, shapeName) => {
+  chooseShape = (shapeId, categoryName) => {
     let { shapeList, currentShapeIndex } = this.state
+    console.log('categoryName :', categoryName);
 
     if (shapeList.length > 0 && currentShapeIndex >= 0) {
       shapeList[currentShapeIndex] = {
         ...shapeList[currentShapeIndex],
-        shapeName,
+        categoryName,
         currentShapeId: shapeId
       }
     } else {
       currentShapeIndex = shapeList.length
       shapeList.push({
-        ...getDefaultShape(shapeName),
+        ...getDefaultShape(categoryName),
         currentShapeId: shapeId
       })
     }
