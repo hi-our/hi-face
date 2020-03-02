@@ -72,7 +72,7 @@ class QueenKing extends Component {
     }
 
     return {
-      title: '给心爱的女神戴上皇冠吧',
+      title: '给女神戴上皇冠吧！',
       imageUrl: shareImage,
       path: '/pages/queen-king/queen-king'
     }
@@ -84,12 +84,12 @@ class QueenKing extends Component {
     this.start_x = 0;
     this.start_y = 0;
 
-    this.styleMap.origin = two_face_image
-    this.setState({
-      cutImageSrc: two_face_image
-    }, () => {
-        this.onAnalyzeFace(two_face_image)
-    })
+    // this.styleMap.origin = two_face_image
+    // this.setState({
+    //   cutImageSrc: two_face_image
+    // }, () => {
+    //     this.onAnalyzeFace(two_face_image)
+    // })
 
   }
 
