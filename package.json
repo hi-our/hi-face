@@ -34,7 +34,7 @@
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "eslint-plugin-import": "^2.20.1",
-    "eslint-config-taro": "3.0.0-alpha.2",
+    "eslint-config-taro": "3.0.0-alpha.5",
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.8.2",
     "eslint-import-resolver-alias": "^1.1.1",

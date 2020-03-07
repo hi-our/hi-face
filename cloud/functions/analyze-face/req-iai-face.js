@@ -1,5 +1,6 @@
 const tencentcloud = require('./tencentcloud-sdk-nodejs')
 const config = require('./config')
+const status = require('./status')
 
 // 腾讯云的id和key
 let secretId = config.SecretId || ''

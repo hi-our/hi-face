@@ -607,10 +607,10 @@ escape-string-regexp@^1.0.5:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
-eslint-config-taro@3.0.0-alpha.2:
-  version "3.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/eslint-config-taro/-/eslint-config-taro-3.0.0-alpha.2.tgz#ff21ee09396c9b22b616815383b74355d8342146"
-  integrity sha512-yppeMpl9RtnQM6bOTmME4sb/+wQx5gaXsCnAr1R9rlzLBV97j9Waz2H9ywo4sOBnuAA3QnpOFYGGrVqfU+yfTA==
+eslint-config-taro@3.0.0-alpha.5:
+  version "3.0.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/eslint-config-taro/-/eslint-config-taro-3.0.0-alpha.5.tgz#6e51aceb6f30d91afaf930fd0ad0ddd9930a4834"
+  integrity sha512-8vgag9OqUp/lft4t24FVWhbpPGmeMwsMY+lyPBQb+gDp0gLfR0sXiAPUU9bkrKMn5bXpDZ9FUeryztSgKZzJEA==
   dependencies:
     "@typescript-eslint/parser" "^2.x"
     babel-eslint "^10.0.0"
