@@ -85,6 +85,7 @@ export const getImg = async (src) => {
     
   } catch (error) {
     console.log('error :', error);
+    throw error
     
   }
 }
