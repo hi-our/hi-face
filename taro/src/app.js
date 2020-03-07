@@ -20,10 +20,11 @@ const updateManager = process.env.TARO_ENV !== 'h5' ? Taro.getUpdateManager() : 
 class App extends Component {
   config = {
     pages: [
+      'pages/queen-king/queen-king',
       'pages/wear-a-mask/wear-a-mask',
-      'pages/test/test',
+      // 'pages/test/test',
       'pages/thanks/thanks',
-      'pages/spread-game/spread-game',
+      // 'pages/spread-game/spread-game',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -41,6 +42,12 @@ class App extends Component {
       color: '#95a1af',
       selectedColor: '#2f5aff',
       list: [
+        {
+          pagePath: 'pages/queen-king/queen-king',
+          text: '女王节',
+          iconPath: 'images/tab-bar-crown.png',
+          selectedIconPath: 'images/tab-bar-crown-active.png'
+        },
         {
           pagePath: 'pages/wear-a-mask/wear-a-mask',
           text: '戴口罩',

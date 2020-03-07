@@ -26,12 +26,12 @@ const translateHat = (faceWidth, x, y) => {
 };
 
 
-const base64src = async (base64data) => {
+export const base64src = async (base64data) => {
   const [, format, bodyData] = /data:image\/(\w+);base64,(.*)/.exec(base64data) || [];
   if (!format) {
     return (new Error('ERROR_BASE64SRC_PARSE'));
   }
-  const filePath = `${wx.env.USER_DATA_PATH}/${FILE_BASE_NAME}.${format}`;
+  const filePath = `${wx.env.USER_DATA_PATH}/${FILE_BASE_NAME}-${Date.now()}.${format}`;
   const buffer = wx.base64ToArrayBuffer(bodyData);
   try {
     await fsm.writeFile({
@@ -45,6 +45,10 @@ const base64src = async (base64data) => {
     console.log('error :', error);
   }
 };
+
+export const getBase64Main = (fullSrc) => {
+  return fullSrc.split(',')[1]
+}
 
 export const srcToBase64Main = async (src) => {
   try {
@@ -85,6 +89,7 @@ export const getImg = async (src) => {
     
   } catch (error) {
     console.log('error :', error);
+    throw error
     
   }
 }
