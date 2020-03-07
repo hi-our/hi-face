@@ -52,6 +52,21 @@ class QueenKing extends Component {
     this.cutImageSrcCanvas = ''
   }
 
+  async componentDidMount() {
+    setTmpThis(this, this.state.shapeList[0])
+
+    this.start_x = 0;
+    this.start_y = 0;
+
+    // this.styleMap.origin = two_face_image
+    // this.setState({
+    //   cutImageSrc: two_face_image
+    // }, () => {
+    //     this.onAnalyzeFace(two_face_image)
+    // })
+
+  }
+
   onShareAppMessage({ from, target }) {
     const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
 
@@ -72,21 +87,6 @@ class QueenKing extends Component {
       imageUrl: shareImage,
       path: '/pages/queen-king/queen-king'
     }
-  }
-
-  async componentDidMount() {
-    setTmpThis(this, this.state.shapeList[0])
-
-    this.start_x = 0;
-    this.start_y = 0;
-
-    // this.styleMap.origin = two_face_image
-    // this.setState({
-    //   cutImageSrc: two_face_image
-    // }, () => {
-    //     this.onAnalyzeFace(two_face_image)
-    // })
-
   }
 
 
@@ -770,7 +770,7 @@ class QueenKing extends Component {
 
           }
         </View>
-        <View className='cropper-wrap' hidden={!originSrc}>
+        <View className='cropper-wrap' style={{ display: originSrc ? 'block' : 'none' }}>
           <TaroCropper
             src={originSrc}
             cropperWidth={ORIGIN_CANVAS_SIZE * 2}
