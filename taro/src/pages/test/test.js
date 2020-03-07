@@ -5,8 +5,8 @@ import { View, Image, Input, Button, Canvas } from '@tarojs/components'
 import fetch from 'utils/fetch'
 import { apiAnalyzeFace } from 'constants/apis'
 import { getSystemInfo } from 'utils/common'
-import { getHatInfo, getBase64Main } from 'utils/face-utils'
-import { drawing, getDrawerConfig } from 'utils/canvas-drawing'
+import { getHatInfo  } from 'utils/face-utils'
+import { drawing, getDrawerConfig, getBase64Main } from 'utils/canvas-drawing'
 
 import { NOT_FACE, ONE_FACE } from 'constants/image-test'
 // 引入代码

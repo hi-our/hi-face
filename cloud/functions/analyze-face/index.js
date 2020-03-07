@@ -2,6 +2,7 @@ const tcb = require('tcb-admin-node')
 const config = require('./config')
 const reqFace = require('./req-iai-face')
 const reqWxOpenapi = require('./req-wx-openapi')
+const reqTiiaImage = require('./req-tiia-image')
 
 if (typeof Promise.allSettled !== "function") {
   Promise.allSettled = function (promises) {
@@ -51,7 +52,7 @@ tcb.init({
 
 const analyzeFace = reqFace.analyzeFace
 
-const imgSecCheck = reqWxOpenapi.imgSecCheck
+const imageSafeCheck = reqTiiaImage.imageSafeCheck
 
 exports.main = async (event) => {
   const { fileID = '', base64Main = '' } = event
@@ -66,7 +67,7 @@ exports.main = async (event) => {
 
     Image = fileContent.toString('base64')
 
-    return Promise.allSettled([imgSecCheck(fileContent), analyzeFace(Image)]).then((results) => {
+    return Promise.allSettled([imageSafeCheck(Image), analyzeFace(Image)]).then((results) => {
       let checkResult = results[0]
       let faceResult = results[1]
       if (checkResult.status) {
@@ -80,7 +81,7 @@ exports.main = async (event) => {
     })
   } else if (base64Main) {
     Image = base64Main
-    return Promise.allSettled([imgSecCheck(Buffer.from(Image, 'base64')), analyzeFace(Image)]).then((results) => {
+    return Promise.allSettled([imageSafeCheck(Image), analyzeFace(Image)]).then((results) => {
       let checkResult = results[0]
       let faceResult = results[1]
       console.log('checkResult :', checkResult);
