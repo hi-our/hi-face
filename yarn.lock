@@ -1072,10 +1072,10 @@ supports-color@^5.3.0:
   dependencies:
     has-flag "^3.0.0"
 
-tencentcloud-sdk-nodejs@^3.0.117:
-  version "3.0.117"
-  resolved "https://registry.yarnpkg.com/tencentcloud-sdk-nodejs/-/tencentcloud-sdk-nodejs-3.0.117.tgz#54080a7c4c2a630541060f273a717025cab15155"
-  integrity sha512-HZH7b6KcHA2neQLSOAuY5BXqT95MBHfobuqQvtk+nvKOOjwsh/cHJvExone1rmYN6WIAdTyU06GUkZbOZgH2wQ==
+tencentcloud-sdk-nodejs@^3.0.126:
+  version "3.0.126"
+  resolved "https://registry.yarnpkg.com/tencentcloud-sdk-nodejs/-/tencentcloud-sdk-nodejs-3.0.126.tgz#cb964fc8f4baccac07514fefbed5b7451e3afe7f"
+  integrity sha512-zCwleUg1UFF9MJdZ4DCVgdfc2uSoyWd5i8wm/KKIxTmVt+uG+djN5FiEXu3E9gYOqt5SK7++r5F4MKpKSuIwCQ==
   dependencies:
     request "^2.85.0"
 

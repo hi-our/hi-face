@@ -69,9 +69,11 @@ export const materialList = [
 
 export const getDefaultStyleMap = () => ({
   origin: '',
-  anime: '',
-  cartoon: '',
-  pencil: ''
+  childhood: '',
+})
+export const getDefaultAgeMap = () => ({
+  origin: '',
+  childhood: '',
 })
 
 
@@ -79,21 +81,11 @@ export const dataStyleList = [
   {
     type: 'origin',
     image: 'https://n1image.hjfile.cn/res7/2020/03/01/ca84b69c25bee8196d72986e5df45761.jpg',
-    text: '原画',
+    text: '原始',
   },
   {
-    type: 'anime',
+    type: 'childhood',
     image: 'https://n1image.hjfile.cn/res7/2020/03/01/cd9490adedde3707de44623a23c350f6.jpeg',
-    text: '动漫头像',
-  },
-  {
-    type: 'cartoon',
-    image: 'https://n1image.hjfile.cn/res7/2020/03/01/3f114d0e9b372640ec5a32388124c6c5.jpeg',
-    text: '卡通画',
-  },
-  {
-    type: 'pencil',
-    image: 'https://n1image.hjfile.cn/res7/2020/03/01/55e3cb54c6b6ceebbd28353a0ae139b1.jpeg',
-    text: '素描',
+    text: '童年',
   },
 ]

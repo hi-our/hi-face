@@ -21,7 +21,7 @@ import {
   setTmpThis,
   materialList,
   dataStyleList,
-  getDefaultStyleMap,
+  getDefaultAgeMap,
 } from './utils';
 
 import './styles.styl'
@@ -42,7 +42,7 @@ class QueenKing extends Component {
       shapeList: [
         getDefaultShape()
       ],
-      currentStyleType: 'origin',
+      currentAgeType: 'origin',
       currentShapeIndex: 0,
       originSrc: '',
       cutImageSrc: '',
@@ -52,7 +52,7 @@ class QueenKing extends Component {
       currentTabIndex: 0,
       isShowShape: false,
     }
-    this.styleMap = getDefaultStyleMap()
+    this.ageMap = getDefaultAgeMap()
     this.cutImageSrcCanvas = ''
   }
 
@@ -84,7 +84,7 @@ class QueenKing extends Component {
     this.start_x = 0;
     this.start_y = 0;
 
-    // this.styleMap.origin = two_face_image
+    // this.ageMap.origin = two_face_image
     // this.setState({
     //   cutImageSrc: two_face_image
     // }, () => {
@@ -144,8 +144,8 @@ class QueenKing extends Component {
   }
 
   onCut = (cutImageSrc) => {
-    this.styleMap.origin = cutImageSrc
-    console.log('this.styleMap :', this.styleMap);
+    this.ageMap.origin = cutImageSrc
+    console.log('this.ageMap :', this.ageMap);
     this.setState({
       cutImageSrc,
       originSrc: ''
@@ -247,12 +247,13 @@ class QueenKing extends Component {
 
   onRemoveImage = () => {
     this.cutImageSrcCanvas = ''
-    this.styleMap = getDefaultStyleMap()
+    this.ageMap = getDefaultAgeMap()
 
     this.setState({
       shapeList: [
         getDefaultShape()
       ],
+      currentAgeType: 'origin',
       cutImageSrc: ''
     })
   }
@@ -557,12 +558,12 @@ class QueenKing extends Component {
     });
   }
 
-  changeStyleType = async (type) => {
-    const { origin: cutImageSrc } = this.styleMap
+  changeAge = async (type) => {
+    const { origin: cutImageSrc } = this.ageMap
 
-    if (this.styleMap[type]) {
+    if (this.ageMap[type]) {
       this.setState({
-        cutImageSrc: this.styleMap[type]
+        cutImageSrc: this.ageMap[type]
       })
       return
     }
@@ -579,17 +580,35 @@ class QueenKing extends Component {
 
       let oldTime = Date.now()
 
+      // 压缩图片
+      const resImage = await Taro.compressImage({
+        src: cutImageSrc, // 图片路径
+        quality: 10 // 压缩质量
+      })
+
       // 转换为base64
       let { data: base64Main } = await fsmReadFile({
-        filePath: cutImageSrc,
+        filePath: resImage.tempFilePath,
         encoding: 'base64',
       })
 
+      console.log('base64Main :', base64Main);
       const couldRes = await cloudCallFunction({
-        name: 'image-cartoon',
+        name: 'face-transformation',
         data: {
           base64Main,
-          type
+          AgeInfos: [
+            {
+              Age: 10,
+            },
+            {
+              Age: 10,
+            },
+            {
+              Age: 10,
+            },
+          ]
+          // type
         }
       })
 
@@ -601,9 +620,9 @@ class QueenKing extends Component {
 
       let cutImageSrcNow = await base64src('data:image/jpg;base64,' + couldRes.base64Main)
 
-      this.styleMap[type] = cutImageSrcNow
+      this.ageMap[type] = cutImageSrcNow
       this.setState({
-        currentStyleType: type,
+        currentAgeType: type,
         cutImageSrc: cutImageSrcNow,
       })
 
@@ -658,7 +677,7 @@ class QueenKing extends Component {
       currentJiayouId,
       shapeList,
       currentShapeIndex,
-      currentStyleType,
+      currentAgeType,
     } = this.state
 
 
@@ -794,7 +813,7 @@ class QueenKing extends Component {
               dataStyleList.map(item => {
                 const { type, text, image } = item
                 return (
-                  <View className={`style-item ${currentStyleType === type ? 'style-item-active' : ''}`} key={type} onClick={this.changeStyleType.bind(this, type)}>
+                  <View className={`style-item ${currentAgeType === type ? 'style-item-active' : ''}`} key={type} onClick={this.changeAge.bind(this, type)}>
                     <Image className='style-item-image' src={image} />
                     <View className='style-item-text'>{text}</View>
                   </View>

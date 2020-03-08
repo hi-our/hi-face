@@ -3,4 +3,5 @@
 module.exports = {
   SecretId: '',
   SecretKey: '',
+  env: '' // 腾讯云配置的环境，比如 test-v123f 
 };

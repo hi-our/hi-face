@@ -42,12 +42,11 @@ if (typeof Promise.allSettled !== "function") {
 // 腾讯云的id和key
 let secretId = config.SecretId || ''
 let secretKey = config.SecretKey || ''
-let env = config.env || ''
 
 tcb.init({
   secretId,
   secretKey,
-  env
+  env: tcb.getCurrentEnv(),
 })
 
 const analyzeFace = reqFace.analyzeFace
