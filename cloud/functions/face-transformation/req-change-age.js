@@ -62,7 +62,7 @@ const ChangeAgePic = (Image, AgeInfos) => {
 
       const { ResultImage = '' } = response
 
-      console.log('ImageModeration response :', response)
+      console.log('ChangeAgePic response :', response)
       // 请求正常返回，打印response对象
       resolve({
         data: {

@@ -47,6 +47,7 @@ class QueenKing extends Component {
       originSrc: '',
       cutImageSrc: '',
       posterSrc: '',
+      cutFileID: '', // 上传到云存储的文件
       isShowPoster: false,
       currentJiayouId: 1,
       currentTabIndex: 0,
@@ -151,8 +152,28 @@ class QueenKing extends Component {
       originSrc: ''
     }, () => {
       this.onAnalyzeFace(cutImageSrc)
+      
     })
   }
+
+  onUploadFile = async (tempFilePath) => {
+    try {
+      const uploadFile = promisify(Taro.cloud.uploadFile)
+      const { fileID } = await uploadFile({
+        cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
+        filePath: tempFilePath,
+      })
+
+      return fileID
+      
+    } catch (error) {
+      console.log('error :', error)
+      return ''
+    }
+
+  }
+
+  
 
   onAnalyzeFace = async (cutImageSrc) => {
     if (!cutImageSrc) return
@@ -203,6 +224,13 @@ class QueenKing extends Component {
         isShowShape: true,
       })
 
+      const fileID = await this.onUploadFile(cutImageSrc)
+      console.log('fileID :', fileID);
+
+      this.setState({
+        cutFileID: fileID
+      })
+
       Taro.hideLoading()
 
     } catch (error) {
@@ -232,6 +260,11 @@ class QueenKing extends Component {
         isShowShape: true,
       })
       setTmpThis(this, shapeList[0])
+      const fileID = await this.onUploadFile(cutImageSrc)
+      console.log('fileID :', fileID);
+      this.setState({
+        cutFileID: fileID
+      })
     }
   }
 
@@ -254,7 +287,8 @@ class QueenKing extends Component {
         getDefaultShape()
       ],
       currentAgeType: 'origin',
-      cutImageSrc: ''
+      cutImageSrc: '',
+      cutFileID: ''
     })
   }
 
@@ -559,6 +593,7 @@ class QueenKing extends Component {
   }
 
   changeAge = async (type) => {
+    const { cutFileID } = this.state
     const { origin: cutImageSrc } = this.ageMap
 
     if (this.ageMap[type]) {
@@ -580,23 +615,10 @@ class QueenKing extends Component {
 
       let oldTime = Date.now()
 
-      // 压缩图片
-      const resImage = await Taro.compressImage({
-        src: cutImageSrc, // 图片路径
-        quality: 10 // 压缩质量
-      })
-
-      // 转换为base64
-      let { data: base64Main } = await fsmReadFile({
-        filePath: resImage.tempFilePath,
-        encoding: 'base64',
-      })
-
-      console.log('base64Main :', base64Main);
       const couldRes = await cloudCallFunction({
         name: 'face-transformation',
         data: {
-          base64Main,
+          fileID: cutFileID,
           AgeInfos: [
             {
               Age: 10,
