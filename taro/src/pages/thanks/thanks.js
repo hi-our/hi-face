@@ -25,6 +25,12 @@ class Thanks extends Component {
   }
 
   componentDidMount() {
+    setTimeout(() => {
+      this.loadData()
+    }, 3000)
+  }
+
+  loadData = () => {
     cloudCallFunction({
       name: 'thanks-data'
     }).then(res => {

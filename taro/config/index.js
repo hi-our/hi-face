@@ -1,13 +1,18 @@
 const alias = require('./alias')
 
+
+// 兼容web端和小程序端
+const dpr = process.env.TARO_ENV === 'h5' ? 1 : 2
+
+
 const config = {
   projectName: 'goddess-hat',
   date: '2019-11-2',
-  designWidth: 750,
+  designWidth: 375 * dpr,
   deviceRatio: {
-    640: 2.34 / 4,
-    750: 1 / 2,
-    828: 1.81 / 4
+    640: 2.34 / 2 / dpr,
+    750: 1 / 1 / dpr,
+    828: 1.81 / 2 / dpr
   },
   sourceRoot: 'src',
   outputRoot: 'dist',
