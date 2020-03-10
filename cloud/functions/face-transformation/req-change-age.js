@@ -35,8 +35,14 @@ let client = new IaIClient(cred, "ap-guangzhou", clientProfile);
 const ChangeAgePic = (Image, AgeInfos) => {
   let faceReq = new models.ChangeAgePicRequest()
 
+  let Url = ''
+  if (Image.includes('https')) {
+    Url = Image
+  }
+
   let query_string = JSON.stringify({
     Image: Image,
+    Url,
     AgeInfos,
   })
   // 传入json参数

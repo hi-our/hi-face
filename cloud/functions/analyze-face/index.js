@@ -46,7 +46,6 @@ let secretKey = config.SecretKey || ''
 tcb.init({
   secretId,
   secretKey,
-  env: tcb.getCurrentEnv(),
 })
 
 const analyzeFace = reqFace.analyzeFace

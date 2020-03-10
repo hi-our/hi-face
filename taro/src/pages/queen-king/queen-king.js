@@ -47,7 +47,7 @@ class QueenKing extends Component {
       originSrc: '',
       cutImageSrc: '',
       posterSrc: '',
-      cutFileID: '', // 上传到云存储的文件
+      originFileID: '', // 上传到云存储的文件
       isShowPoster: false,
       currentJiayouId: 1,
       currentTabIndex: 0,
@@ -224,14 +224,15 @@ class QueenKing extends Component {
         isShowShape: true,
       })
 
+      Taro.hideLoading()
+
       const fileID = await this.onUploadFile(cutImageSrc)
       console.log('fileID :', fileID);
 
       this.setState({
-        cutFileID: fileID
+        originFileID: fileID
       })
 
-      Taro.hideLoading()
 
     } catch (error) {
       console.log('onAnalyzeFace error :', error);
@@ -263,7 +264,7 @@ class QueenKing extends Component {
       const fileID = await this.onUploadFile(cutImageSrc)
       console.log('fileID :', fileID);
       this.setState({
-        cutFileID: fileID
+        originFileID: fileID
       })
     }
   }
@@ -288,7 +289,7 @@ class QueenKing extends Component {
       ],
       currentAgeType: 'origin',
       cutImageSrc: '',
-      cutFileID: ''
+      originFileID: ''
     })
   }
 
@@ -593,11 +594,12 @@ class QueenKing extends Component {
   }
 
   changeAge = async (type) => {
-    const { cutFileID } = this.state
+    const { originFileID } = this.state
     const { origin: cutImageSrc } = this.ageMap
 
     if (this.ageMap[type]) {
       this.setState({
+        currentAgeType: type,
         cutImageSrc: this.ageMap[type]
       })
       return
@@ -618,7 +620,7 @@ class QueenKing extends Component {
       const couldRes = await cloudCallFunction({
         name: 'face-transformation',
         data: {
-          fileID: cutFileID,
+          fileID: originFileID,
           AgeInfos: [
             {
               Age: 10,
@@ -640,7 +642,11 @@ class QueenKing extends Component {
 
       console.log('图片分析结果 :', couldRes)
 
-      let cutImageSrcNow = await base64src('data:image/jpg;base64,' + couldRes.base64Main)
+      let cutImageSrcNow = 'data:image/jpg;base64,' + couldRes.base64Main
+
+      // let cutImageSrcNow = await base64src('data:image/jpg;base64,' + couldRes.base64Main)
+
+      console.log('cutImageSrcNow :', cutImageSrcNow);
 
       this.ageMap[type] = cutImageSrcNow
       this.setState({
@@ -651,7 +657,7 @@ class QueenKing extends Component {
       Taro.hideLoading()
 
     } catch (error) {
-      console.log('onAnalyzeFace error :', error);
+      console.log('changeAge error :', error);
 
       Taro.hideLoading()
       this.styleReq = false

@@ -109,6 +109,16 @@ https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference/quota.html
 
 **那么效果如何呢？ 总使用时间大约为3秒以内，其中请求时间约为0.8-1.2秒。**
 
+方案6
+上传图片
+传递fileID
+fileID换取图片临时地址
+用临时地址来识别
+
+好处
+文件大小小，路径转buffer转base64，大小变大3倍
+中间传递，2次传递base64，还是挺大的
+
 
 ### 小结
 
