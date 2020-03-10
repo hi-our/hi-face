@@ -15,82 +15,27 @@
 </head>
 <body>
   <div id="app"></div>
-  <script src="https://s5.music.126.net/static_public/5a1b70ea0180f6ca7295a59d/christmas/weights/js/face-api.js"></script>
+  <!-- <script src="//imgcache.qq.com/qcloud/tcbjs/1.3.8/tcb.js"></script>
   <script>
-  const SSD_MOBILENETV1 = 'ssd_mobilenetv1';
-    const TINY_FACE_DETECTOR = 'tiny_face_detector';
-
-    let selectedFaceDetector = SSD_MOBILENETV1;
-
-    // ssd_mobilenetv1 options
-    let minConfidence = 0.5;
-
-    // tiny_face_detector options
-    let inputSize = 512;
-    let scoreThreshold = 0.5;
-
-    function getFaceDetectorOptions() {
-      return selectedFaceDetector === SSD_MOBILENETV1
-        ? new faceapi.SsdMobilenetv1Options({ minConfidence })
-        : new faceapi.TinyFaceDetectorOptions({ inputSize, scoreThreshold });
-    }
-
-    function getCurrentFaceDetectionNet() {
-      if (selectedFaceDetector === SSD_MOBILENETV1) {
-        return faceapi.nets.ssdMobilenetv1;
-      }
-      if (selectedFaceDetector === TINY_FACE_DETECTOR) {
-        return faceapi.nets.tinyFaceDetector;
-      }
-    }
-
-    function isFaceDetectionModelLoaded() {
-      return !!getCurrentFaceDetectionNet().params;
-    }
-
-    async function changeFaceDetector(detector) {
-      selectedFaceDetector = detector;
-      if (!isFaceDetectionModelLoaded()) {
-        await getCurrentFaceDetectionNet().load('/');
-      }
-    }
-
-    async function run() {
-        // 初始化face-api 这里使用ssd moblile
-      await getCurrentFaceDetectionNet().load('/');
-      // 加载Landmark模型
-      await faceapi.loadFaceLandmarkModel('/');
-    }
-    // 初始化加载
-      function ready(fn) {
-        if (document.addEventListener) {
-          document.addEventListener(
-            'DOMContentLoaded',
-            function () {
-              //注销事件, 避免反复触发
-              document.removeEventListener('DOMContentLoaded', arguments.callee, false);
-              fn(); //执行函数
-            },
-            false,
-          );
-        } else if (document.attachEvent) {
-          //IE
-          document.attachEvent('onreadystatechange', function () {
-            if (document.readyState == 'complete') {
-              document.detachEvent('onreadystatechange', arguments.callee);
-              fn(); //函数执行
-            }
-          });
+    window.tcbApp = tcb.init({
+      env: 'development-v9y2f'
+    })
+    console.log('app :', window.tcbApp);
+    window.tcbApp.auth().signInAnonymously().then(() => {
+      console.log('登录云开发成功！')
+      window.tcbApp.callFunction({
+        name: 'hello-world',
+        data: {
+          1: 1
         }
-      }
-
-      ready(function () {
-          run()
-        })
+      }).then(res=> console.log('res ', res))
 
 
+    }).catch(error => {
+      console.log('error :', error);
+    })
 
-  
-  </script>
+
+  </script> -->
 </body>
 </html>
