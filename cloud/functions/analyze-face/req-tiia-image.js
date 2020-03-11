@@ -55,7 +55,7 @@ const imageSafeCheck = (Image) => {
           data: {},
           time: new Date(),
           status: -10086,
-          message: status.FACE_CODE[code] || '图片解析失败'
+          message: 'ImageModeration ' + status.FACE_CODE[code] || code || '图片审核失败'
         })
         return
       }

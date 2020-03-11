@@ -1,7 +1,6 @@
 const tcb = require('tcb-admin-node')
 const config = require('./config')
 const reqFace = require('./req-iai-face')
-const reqWxOpenapi = require('./req-wx-openapi')
 const reqTiiaImage = require('./req-tiia-image')
 
 if (typeof Promise.allSettled !== "function") {

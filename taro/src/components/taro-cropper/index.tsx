@@ -523,7 +523,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
 
     let finish: any = null;
     let cancel: any = null;
-    // const isH5 = process.env.TARO_ENV === 'h5';
+    const isH5 = process.env.TARO_ENV === 'h5';
 
     if (!hideFinishText) {
       const finishStyle: CSSProperties = {
@@ -544,21 +544,21 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
             this.props.onFail && this.props.onFail(err);
           })
       };
-      // if (!isH5) {
-      finish = <CoverView
-        style={finishStyle}
-        onClick={onFinishClick}
-      >
-        {finishText}
-      </CoverView>
-      // } else {
-      //   finish = <View
-      //     style={finishStyle}
-      //     onClick={onFinishClick}
-      //   >
-      //     完成
-      //   </View>
-      // }
+      if (!isH5) {
+        finish = <CoverView
+          style={finishStyle}
+          onClick={onFinishClick}
+        >
+          {finishText}
+        </CoverView>
+      } else {
+        finish = <View
+          style={finishStyle}
+          onClick={onFinishClick}
+        >
+          完成
+        </View>
+      }
     }
 
     if(!hideCancelText) {

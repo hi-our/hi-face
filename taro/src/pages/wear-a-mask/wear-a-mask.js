@@ -3,7 +3,7 @@ import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/co
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo } from 'utils/face-utils'
-import { getImg, fsmReadFile, srcToBase64Main } from 'utils/canvas-drawing'
+import { getImg, fsmReadFile, srcToBase64Main, getBase64Main } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
 import promisify from 'utils/promisify';
 
@@ -197,7 +197,26 @@ class WearMask extends Component {
     })
   }
 
+  cloudCanvasToAnalyzeH5 = async (tempFilePaths) => {
+
+    // console.log('tempFilePaths :', tempFilePaths);
+
+    let oldTime = Date.now()
+    const couldRes = await cloudCallFunction({
+      name: 'analyze-face',
+      data: {
+        base64Main: getBase64Main(tempFilePaths)
+      }
+    })
+
+    console.log(((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
+
+    console.log('couldRes :', couldRes);
+    return couldRes
+  }
+
   cloudCanvasToAnalyze = async (tempFilePaths) => {
+
     const resImage = await Taro.compressImage({
       src: tempFilePaths, // 图片路径
       quality: 10 // 压缩质量
@@ -265,7 +284,9 @@ class WearMask extends Component {
 
     try {
 
-      const res2 = await this.cloudCanvasToAnalyze(cutImageSrc)
+      let cloudFunc = process.env.TARO_ENV === 'h5' ? this.cloudCanvasToAnalyzeH5 : this.cloudCanvasToAnalyze
+
+      const res2 = await cloudFunc(cutImageSrc)
       console.log('图片分析的结果 :', res2);
 
       const info = getMouthInfo(res2)

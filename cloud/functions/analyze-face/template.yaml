@@ -1,0 +1,19 @@
+Resources:
+  development-v9y2f:
+    Type: TencentCloud::Serverless::Namespace
+    analyze-face:
+      Properties:
+        CodeUri: .
+        Description: ''
+        Environment:
+          Variables: {}
+        Events: {}
+        Handler: index.main
+        MemorySize: 256
+        Role: TCB_QcsRole
+        Runtime: Nodejs8.9
+        Timeout: 3
+        VpcConfig:
+          SubnetId: ''
+          VpcId: ''
+      Type: TencentCloud::Serverless::Function
