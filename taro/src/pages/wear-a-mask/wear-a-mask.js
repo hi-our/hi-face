@@ -255,22 +255,6 @@ class WearMask extends Component {
     })
   }
 
-  // TODO 其他小程序再说
-  tmpFetchFunction = () => {
-    // srcToBase64Main(cutImageSrc, (base64Main) => {
-    // })
-    // const res2 = await fetch({
-    //   url: apiAnalyzeFace,
-    //   type: 'post',
-    //   data: {
-    //     Image: base64Main,
-    //     Mode: 1,
-    //     FaceModelVersion: '3.0'
-    //   }
-    // })
-  }
-
-
   onAnalyzeFace = async (cutImageSrc) => {
     if (!cutImageSrc) return
 
@@ -412,12 +396,15 @@ class WearMask extends Component {
       cutImageSrc
     } = this.state
 
-    const pc = Taro.createCanvasContext('canvasMask')
+    const pc = Taro.createCanvasContext('canvasMask', this)
+    console.log('pc :', pc);
     const tmpUsePageDpr = PageDpr * pixelRatio
     
     pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH);
     let tmpCutImage = this.cutImageSrcCanvas || await getImg(cutImageSrc)
+    console.log('1 :', 1);
     pc.drawImage(tmpCutImage, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
+    console.log('2 :', 1, SAVE_IMAGE_WIDTH);
     
     // 形状
     shapeList.forEach(shape => {
@@ -445,42 +432,43 @@ class WearMask extends Component {
       pc.restore()
     })
 
-    if (currentJiayouId > 0) {
-      pc.save()
+    // if (currentJiayouId > 0) {
+    //   pc.save()
 
-      pc.drawImage(
-        require(`../../images/jiayou-${currentJiayouId}.png`),
-        0,
-        132 * tmpUsePageDpr,
-        300 * tmpUsePageDpr,
-        169 * tmpUsePageDpr,
-      )
-    }
+    //   pc.drawImage(
+    //     require(`../../images/jiayou-${currentJiayouId}.png`),
+    //     0,
+    //     132 * tmpUsePageDpr,
+    //     300 * tmpUsePageDpr,
+    //     169 * tmpUsePageDpr,
+    //   )
+    // }
 
-    pc.draw(true, () => {
-      Taro.canvasToTempFilePath({
-        canvasId: 'canvasMask',
-        x: 0,
-        y: 0,
-        height: DPR_CANVAS_SIZE * 3,
-        width: DPR_CANVAS_SIZE * 3,
-        fileType: 'jpg',
-        quality: 0.9,
-        success: res => {
-          Taro.hideLoading()
-          this.setState({
-            posterSrc: res.tempFilePath,
-            isShowPoster: true
-          })
-        },
-        fail: () => {
-          Taro.hideLoading()
-          Taro.showToast({
-            title: '图片生成失败，请重试'
-          })
-        }
-      })
-    })
+    pc.draw(false)
+
+    // Taro.canvasToTempFilePath({
+    //   canvasId: 'canvasMask',
+    //   x: 0,
+    //   y: 0,
+    //   height: DPR_CANVAS_SIZE * 3,
+    //   width: DPR_CANVAS_SIZE * 3,
+    //   fileType: 'jpg',
+    //   quality: 0.9,
+    //   success: res => {
+    //     Taro.hideLoading()
+    //     this.setState({
+    //       posterSrc: res.tempFilePath,
+    //       isShowPoster: true
+    //     })
+    //   },
+    //   fail: () => {
+    //     Taro.hideLoading()
+    //     Taro.showToast({
+    //       title: '图片生成失败，请重试'
+    //     })
+    //   }
+    // })
+    
     
   }
 
@@ -536,13 +524,17 @@ class WearMask extends Component {
   }
 
   touchStart = (e) => {
-    const { type = '', shapeIndex = 0 } = e.target.dataset
+    console.log('touchStart :', e);
+    const { nodeName, offsetParent, dataset } = e.target
+
+    const { type = '', shapeIndex = 0 } = nodeName === 'IMG' ? offsetParent.dataset  : dataset
  
     this.touch_target = type;
     this.touch_shape_index = shapeIndex;
+    console.log('this.state.currentShapeIndex :', this.state.currentShapeIndex);
     if (this.touch_target == 'mask' && shapeIndex !== this.state.currentShapeIndex) {
       this.setState({
-        currentShapeIndex: shapeIndex
+        currentShapeIndex: parseInt(shapeIndex, 10) 
       })
     }
 
@@ -730,6 +722,7 @@ class WearMask extends Component {
       tabsTips = currentJiayouId >= 1 ? '点击更换文案图片' : '点击新增文案图片'
     }
 
+    console.log('currentShapeIndex :', currentShapeIndex);
     return (
       <View className='mask-page'>
         <Canvas className='canvas-mask' style={{ width: DPR_CANVAS_SIZE * pixelRatio + 'px', height: DPR_CANVAS_SIZE * pixelRatio + 'px' }} canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />

@@ -31,8 +31,8 @@ export const base64src = async (base64data) => {
   if (!format) {
     return (new Error('ERROR_BASE64SRC_PARSE'));
   }
-  const filePath = `${wx.env.USER_DATA_PATH}/${FILE_BASE_NAME}-${Date.now()}.${format}`;
-  const buffer = wx.base64ToArrayBuffer(bodyData);
+  const filePath = `${Taro.env.USER_DATA_PATH}/${FILE_BASE_NAME}-${Date.now()}.${format}`;
+  const buffer = Taro.base64ToArrayBuffer(bodyData);
   try {
     await fsm.writeFile({
       filePath,
@@ -76,8 +76,10 @@ export const fsmReadFile = promisify(fsm.readFile)
  * @param {*} callback
  */
 export const getImg = async (src) => {
-  console.log('getImg src :', src);
   if (src.includes(';base64,')) {
+
+    if (process.env.TARO_ENV === 'h5') return src
+
     return await base64src(src)
   }
 
