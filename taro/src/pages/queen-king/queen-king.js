@@ -28,6 +28,8 @@ import './styles.styl'
 
 const { pixelRatio } = getSystemInfo()
 
+const isH5Page = process.env.TARO_ENV === 'h5'
+
 
 class QueenKing extends Component {
   config = {
@@ -37,7 +39,6 @@ class QueenKing extends Component {
 
   constructor(props) {
     super(props)
-    this.isH5Page = process.env.TARO_ENV === 'h5'
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
       shapeList: [
@@ -231,7 +232,7 @@ class QueenKing extends Component {
 
     try {
 
-      let cloudFunc = this.isH5Page ? this.cloudCanvasToAnalyzeH5 : this.cloudCanvasToAnalyze
+      let cloudFunc = isH5Page ? this.cloudCanvasToAnalyzeH5 : this.cloudCanvasToAnalyze
 
       const couldRes = await cloudFunc(cutImageSrc)
 
@@ -250,7 +251,7 @@ class QueenKing extends Component {
 
       Taro.hideLoading()
 
-      if (!this.isH5Page) {
+      if (!isH5Page) {
         const fileID = await this.onUploadFile(cutImageSrc)
         console.log('fileID :', fileID);
   
@@ -372,7 +373,7 @@ class QueenKing extends Component {
       pc.rotate((rotate * Math.PI) / 180)
 
       let oneMaskSrc = require(`../../images/${categoryName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`)
-      let oneImgSrc = this.isH5Page ? await getImg(oneMaskSrc) : oneMaskSrc
+      let oneImgSrc = isH5Page ? await getImg(oneMaskSrc) : oneMaskSrc
   
       pc.drawImage(
         oneImgSrc,
@@ -593,7 +594,7 @@ class QueenKing extends Component {
   }
 
   saveImageToPhotosAlbum = (tempFilePath) => {
-    if (this.isH5Page) {
+    if (isH5Page) {
       downloadImgByBase64(tempFilePath)
     } else {
       Taro.saveImageToPhotosAlbum({
@@ -703,7 +704,7 @@ class QueenKing extends Component {
               />
               保存到相册
             </View>
-            {!this.isH5Page && (
+            {!isH5Page && (
               <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
                 <Image
                   className='icon-wechat'
@@ -836,7 +837,7 @@ class QueenKing extends Component {
               <View className='button-wrap'>
                 <View className="buttom-tips">更多选择</View>
                 {
-                  !this.isH5Page && <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
+                  !isH5Page && <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
                 }
                 <Button className='button-camera' type="default" data-way="camera" onClick={this.onChooseImage.bind(this, 'camera')}>
                   使用相机
@@ -848,7 +849,7 @@ class QueenKing extends Component {
         </View>
         
 
-        {!this.isH5Page && !!cutImageSrc && (
+        {!isH5Page && !!cutImageSrc && (
           <View className='style-list-wrap'>
             {
               dataStyleList.map(item => {
@@ -926,7 +927,7 @@ class QueenKing extends Component {
             )
         }
 
-        {!this.isH5Page && !originSrc && (
+        {!isH5Page && !originSrc && (
           <Block>
             <Button className='share-btn' openType='share'>分享给朋友<View className='share-btn-icon'></View></Button>
           </Block>

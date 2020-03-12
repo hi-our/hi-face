@@ -21,6 +21,8 @@ const SAVE_IMAGE_WIDTH = DPR_CANVAS_SIZE * pixelRatio
 const DEFAULT_MASK_SIZE = 100 * PageDpr
 const MASK_SIZE = 100
 
+const isH5Page = process.env.TARO_ENV === 'h5'
+
 
 const resetState = () => {
   return {
@@ -84,7 +86,6 @@ class WearMask extends Component {
 
   constructor(props) {
     super(props);
-    this.isH5Page = process.env.TARO_ENV === 'h5'
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
       shapeList: [
@@ -269,7 +270,7 @@ class WearMask extends Component {
 
     try {
 
-      let cloudFunc = this.isH5Page ? this.cloudCanvasToAnalyzeH5 : this.cloudCanvasToAnalyze
+      let cloudFunc = isH5Page ? this.cloudCanvasToAnalyzeH5 : this.cloudCanvasToAnalyze
 
       const res2 = await cloudFunc(cutImageSrc)
       console.log('图片分析的结果 :', res2);
@@ -424,7 +425,7 @@ class WearMask extends Component {
       pc.rotate((rotate * Math.PI) / 180)
   
       let oneMaskSrc = require(`../../images/mask-${currentMaskId}${reserve < 0 ? '-reverse' : ''}.png`)
-      let oneImgSrc = this.isH5Page ? await getImg(oneMaskSrc) : oneMaskSrc
+      let oneImgSrc = isH5Page ? await getImg(oneMaskSrc) : oneMaskSrc
   
       pc.drawImage(
         oneImgSrc,
@@ -442,7 +443,7 @@ class WearMask extends Component {
 
       try {
         let jiaYouMaskSrc = require(`../../images/jiayou-${currentJiayouId}.png`)
-        let jiaYouImgSrc = this.isH5Page ? await getImg(jiaYouMaskSrc) : jiaYouMaskSrc
+        let jiaYouImgSrc = isH5Page ? await getImg(jiaYouMaskSrc) : jiaYouMaskSrc
   
         console.log('jiaYouImgSrc :', currentJiayouId, jiaYouImgSrc);
   
@@ -674,7 +675,7 @@ class WearMask extends Component {
   }
 
   saveImageToPhotosAlbum = (tempFilePath) => {
-    if (this.isH5Page) {
+    if (isH5Page) {
       downloadImgByBase64(tempFilePath)
     } else {
       Taro.saveImageToPhotosAlbum({
@@ -713,7 +714,7 @@ class WearMask extends Component {
               />
               保存到相册
             </View>
-            {!this.isH5Page && (
+            {!isH5Page && (
               <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
                 <Image
                   className='icon-wechat'
@@ -939,7 +940,7 @@ class WearMask extends Component {
             )
         }
 
-        {!this.isH5Page && !originSrc && (
+        {!isH5Page && !originSrc && (
           <Block>
             {/* <View className='virus-btn' onClick={this.goSpreadGame}>病毒演化器</View> */}
             <Button className='share-btn' openType='share'>分享给朋友<View className='share-btn-icon'></View></Button>
