@@ -3,7 +3,7 @@ import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/co
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
 import { getMouthInfo } from 'utils/face-utils'
-import { getImg, fsmReadFile, srcToBase64Main, getBase64Main } from 'utils/canvas-drawing'
+import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase64 } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
 import promisify from 'utils/promisify';
 
@@ -674,21 +674,25 @@ class WearMask extends Component {
   }
 
   saveImageToPhotosAlbum = (tempFilePath) => {
-    Taro.saveImageToPhotosAlbum({
-      filePath: tempFilePath,
-      success: res2 => {
-        Taro.showToast({
-          title: '图片保存成功'
-        })
-        console.log('保存成功 :', res2);
-      },
-      fail(e) {
-        Taro.showToast({
-          title: '图片未保存成功'
-        })
-        console.log('图片未保存成功:' + e);
-      }
-    });
+    if (this.isH5Page) {
+      downloadImgByBase64(tempFilePath)
+    } else {
+      Taro.saveImageToPhotosAlbum({
+        filePath: tempFilePath,
+        success: res2 => {
+          Taro.showToast({
+            title: '图片保存成功'
+          })
+          console.log('保存成功 :', res2);
+        },
+        fail(e) {
+          Taro.showToast({
+            title: '图片未保存成功'
+          })
+          console.log('图片未保存成功:' + e);
+        }
+      })
+    }
   }
 
 
@@ -709,13 +713,15 @@ class WearMask extends Component {
               />
               保存到相册
             </View>
-            <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
-              <Image
-                className='icon-wechat'
-                src='https://n1image.hjfile.cn/res7/2019/03/20/21af29d7755905b08d9f517223df5314.png'
-              />
-              分享给朋友
-            </Button>
+            {!this.isH5Page && (
+              <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
+                <Image
+                  className='icon-wechat'
+                  src='https://n1image.hjfile.cn/res7/2019/03/20/21af29d7755905b08d9f517223df5314.png'
+                />
+                分享给朋友
+              </Button>
+            )}
           </View>
         </View>
         
@@ -933,7 +939,7 @@ class WearMask extends Component {
             )
         }
 
-        {!originSrc && (
+        {!this.isH5Page && !originSrc && (
           <Block>
             {/* <View className='virus-btn' onClick={this.goSpreadGame}>病毒演化器</View> */}
             <Button className='share-btn' openType='share'>分享给朋友<View className='share-btn-icon'></View></Button>
