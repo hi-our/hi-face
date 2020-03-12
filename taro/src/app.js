@@ -23,7 +23,7 @@ class App extends Component {
     pages: [
       'pages/wear-a-mask/wear-a-mask',
       'pages/queen-king/queen-king',
-      // 'pages/test/test',
+      'pages/test/test',
       'pages/thanks/thanks',
       // 'pages/spread-game/spread-game',
     ],

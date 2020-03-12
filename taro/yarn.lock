@@ -110,6 +110,11 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
+"@cloudbase/adapter-interface@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@cloudbase/adapter-interface/-/adapter-interface-0.2.0.tgz#bcddc21e3f9fc3167b99cd3e2df24cbb97e07a82"
+  integrity sha512-zdjMf4+MeHvBgGDgpqm1DrA2o+qt/kbzyWXEySIBGW1Pk8wGQAQaarCPC9lda24thq1lPZwGS7N+kNdgb2F4Hw==
+
 "@cloudbase/adapter-interface@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@cloudbase/adapter-interface/-/adapter-interface-0.3.0.tgz#f8e5478ad152b888994dbeb9012db7966a9b087b"
@@ -119,6 +124,21 @@
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@cloudbase/adapter-interface/-/adapter-interface-0.4.0.tgz#c57935b503e7bface4b151df63a87dc564ae9907"
   integrity sha512-vbNQlr4NK5mdsMr3elk4/OdE/opLpZB+8JPTXAQM4/ldcTZtmb1Dnt3T2g9u5LSHDlRjdzyeM5ARvVqUq+2bmw==
+
+"@cloudbase/adapter-qq_mp@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@cloudbase/adapter-qq_mp/-/adapter-qq_mp-0.2.0.tgz#87d1d5dff6bd30b0d7d7f2dc811bd1403231ed54"
+  integrity sha512-0/lL9zdkGnXeSxDV+N9wIGkeEZKADvyPFVTLwWiWIXQbwes86N245UaNlakakG2pOtWVvxIk3w4tTV9f+y7JzQ==
+  dependencies:
+    "@cloudbase/adapter-interface" "^0.4.0"
+    "@cloudbase/adapter-wx_mp" "^0.2.1"
+
+"@cloudbase/adapter-wx_mp@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@cloudbase/adapter-wx_mp/-/adapter-wx_mp-0.2.1.tgz#c4440181115dff9a8da33f9e45ef12d20d3aaae6"
+  integrity sha512-fiICA1dmZ+9Sg8V+Vp4hsrPLbxKOJNQE7p0VAa9h0VdV5gOwZD8jtUFj5kXfXSR8UtIeLdRHrSALNzIX3BMnWg==
+  dependencies:
+    "@cloudbase/adapter-interface" "^0.2.0"
 
 "@cloudbase/adapter-wx_mp@^0.3.0":
   version "0.3.0"

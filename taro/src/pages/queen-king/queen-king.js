@@ -3,7 +3,7 @@ import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/co
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo } from 'utils/common'
 import { getHatInfo, getHatShapeList } from 'utils/face-utils'
-import { getImg, fsmReadFile, srcToBase64Main, base64src } from 'utils/canvas-drawing'
+import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, base64src } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
 import promisify from 'utils/promisify';
 
@@ -36,7 +36,8 @@ class QueenKing extends Component {
   }
 
   constructor(props) {
-    super(props);
+    super(props)
+    this.isH5Page = process.env.TARO_ENV === 'h5'
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
       shapeList: [
@@ -173,7 +174,49 @@ class QueenKing extends Component {
 
   }
 
-  
+  cloudCanvasToAnalyzeH5 = async (tempFilePaths) => {
+
+    // console.log('tempFilePaths :', tempFilePaths);
+
+    let oldTime = Date.now()
+    const couldRes = await cloudCallFunction({
+      name: 'analyze-face',
+      data: {
+        base64Main: getBase64Main(tempFilePaths)
+      }
+    })
+
+    console.log(((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
+
+    console.log('couldRes :', couldRes);
+    return couldRes
+  }
+
+  cloudCanvasToAnalyze = async (tempFilePaths) => {
+
+    const resImage = await Taro.compressImage({
+      src: tempFilePaths, // 图片路径
+      quality: 10 // 压缩质量
+    })
+
+    let oldTime = Date.now()
+
+    let { data: base64Main } = await fsmReadFile({
+      filePath: resImage.tempFilePath,
+      encoding: 'base64',
+    })
+
+    const couldRes = await cloudCallFunction({
+      name: 'analyze-face',
+      data: {
+        base64Main
+      }
+    })
+
+    console.log(((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
+
+    return couldRes
+  }
 
   onAnalyzeFace = async (cutImageSrc) => {
     if (!cutImageSrc) return
@@ -188,28 +231,9 @@ class QueenKing extends Component {
 
     try {
 
-      // 压缩图片
-      const resImage = await Taro.compressImage({
-        src: cutImageSrc, // 图片路径
-        quality: 10 // 压缩质量
-      })
+      let cloudFunc = this.isH5Page ? this.cloudCanvasToAnalyzeH5 : this.cloudCanvasToAnalyze
 
-      let oldTime = Date.now()
-
-      // 转换为base64
-      let { data: base64Main } = await fsmReadFile({
-        filePath: resImage.tempFilePath,
-        encoding: 'base64',
-      })
-
-      const couldRes = await cloudCallFunction({
-        name: 'analyze-face',
-        data: {
-          base64Main
-        }
-      })
-
-      console.log(((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
+      const couldRes = await cloudFunc(cutImageSrc)
 
       console.log('图片分析的结果 :', couldRes)
       const hatList = getHatInfo(couldRes)
@@ -226,12 +250,14 @@ class QueenKing extends Component {
 
       Taro.hideLoading()
 
-      const fileID = await this.onUploadFile(cutImageSrc)
-      console.log('fileID :', fileID);
-
-      this.setState({
-        originFileID: fileID
-      })
+      if (!this.isH5Page) {
+        const fileID = await this.onUploadFile(cutImageSrc)
+        console.log('fileID :', fileID);
+  
+        this.setState({
+          originFileID: fileID
+        })
+      }
 
 
     } catch (error) {
@@ -325,11 +351,11 @@ class QueenKing extends Component {
     const tmpUsePageDpr = PAGE_DPR * pixelRatio
 
     pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH);
-    let tmpCutImage = this.cutImageSrcCanvas || await getImg(cutImageSrc)
+    let tmpCutImage = await getImg(cutImageSrc)
     pc.drawImage(tmpCutImage, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
 
-    // 形状
-    shapeList.forEach(shape => {
+    for (let index = 0; index < shapeList.length; index++) {
+      const shape = shapeList[index];
       pc.save()
       const {
         categoryName,
@@ -341,31 +367,22 @@ class QueenKing extends Component {
         reserve,
       } = shape
       const shapeSize = shapeWidth * pixelRatio
-
+  
       pc.translate(shapeCenterX * pixelRatio, shapeCenterY * pixelRatio);
       pc.rotate((rotate * Math.PI) / 180)
 
+      let oneMaskSrc = require(`../../images/${categoryName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`)
+      let oneImgSrc = this.isH5Page ? await getImg(oneMaskSrc) : oneMaskSrc
+  
       pc.drawImage(
-        require(`../../images/${categoryName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`),
+        oneImgSrc,
         -shapeSize / 2,
         -shapeSize / 2,
         shapeSize,
         shapeSize
       )
       pc.restore()
-    })
-
-    // if (currentJiayouId > 0) {
-    //   pc.save()
-
-    //   pc.drawImage(
-    //     require(`../../images/jiayou-${currentJiayouId}.png`),
-    //     0,
-    //     132 * tmpUsePageDpr,
-    //     300 * tmpUsePageDpr,
-    //     169 * tmpUsePageDpr,
-    //   )
-    // }
+    }
 
     pc.draw(true, () => {
       Taro.canvasToTempFilePath({
@@ -812,7 +829,9 @@ class QueenKing extends Component {
             : (
               <View className='button-wrap'>
                 <View className="buttom-tips">更多选择</View>
-                <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
+                {
+                  !this.isH5Page && <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
+                }
                 <Button className='button-camera' type="default" data-way="camera" onClick={this.onChooseImage.bind(this, 'camera')}>
                   使用相机
                 </Button>
@@ -835,7 +854,7 @@ class QueenKing extends Component {
           />
         </View>
 
-        {!!cutImageSrc && (
+        {!this.isH5Page && !!cutImageSrc && (
           <View className='style-list-wrap'>
             {
               dataStyleList.map(item => {

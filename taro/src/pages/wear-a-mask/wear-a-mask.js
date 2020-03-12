@@ -84,6 +84,7 @@ class WearMask extends Component {
 
   constructor(props) {
     super(props);
+    this.isH5Page = process.env.TARO_ENV === 'h5'
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
       shapeList: [
@@ -268,7 +269,7 @@ class WearMask extends Component {
 
     try {
 
-      let cloudFunc = process.env.TARO_ENV === 'h5' ? this.cloudCanvasToAnalyzeH5 : this.cloudCanvasToAnalyze
+      let cloudFunc = this.isH5Page ? this.cloudCanvasToAnalyzeH5 : this.cloudCanvasToAnalyze
 
       const res2 = await cloudFunc(cutImageSrc)
       console.log('图片分析的结果 :', res2);
@@ -401,13 +402,13 @@ class WearMask extends Component {
     const tmpUsePageDpr = PageDpr * pixelRatio
     
     pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH);
-    let tmpCutImage = this.cutImageSrcCanvas || await getImg(cutImageSrc)
+    let tmpCutImage = await getImg(cutImageSrc)
     console.log('1 :', 1);
     pc.drawImage(tmpCutImage, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
     console.log('2 :', 1, SAVE_IMAGE_WIDTH);
     
-    // 形状
-    shapeList.forEach(shape => {
+    for (let index = 0; index < shapeList.length; index++) {
+      const shape = shapeList[index];
       pc.save()
       const {
         maskWidth,
@@ -418,56 +419,75 @@ class WearMask extends Component {
         reserve,
       } = shape
       const maskSize = maskWidth *  pixelRatio
-
+  
       pc.translate(maskCenterX * pixelRatio, maskCenterY * pixelRatio);
       pc.rotate((rotate * Math.PI) / 180)
   
+      let oneMaskSrc = require(`../../images/mask-${currentMaskId}${reserve < 0 ? '-reverse' : ''}.png`)
+      let oneImgSrc = this.isH5Page ? await getImg(oneMaskSrc) : oneMaskSrc
+  
       pc.drawImage(
-        require(`../../images/mask-${currentMaskId}${reserve < 0 ? '-reverse' : ''}.png`),
+        oneImgSrc,
         -maskSize / 2,
         -maskSize / 2,
         maskSize,
         maskSize
       )
       pc.restore()
+      
+    }
+
+    if (currentJiayouId > 0) {
+      pc.save()
+
+      try {
+        let jiaYouMaskSrc = require(`../../images/jiayou-${currentJiayouId}.png`)
+        let jiaYouImgSrc = this.isH5Page ? await getImg(jiaYouMaskSrc) : jiaYouMaskSrc
+  
+        console.log('jiaYouImgSrc :', currentJiayouId, jiaYouImgSrc);
+  
+        if (jiaYouImgSrc) {
+          pc.drawImage(
+            jiaYouImgSrc,
+            0,
+            132 * tmpUsePageDpr,
+            300 * tmpUsePageDpr,
+            169 * tmpUsePageDpr,
+          )
+
+        }
+        
+      } catch (error) {
+        console.log('error :', error);
+      }
+    }
+
+    pc.draw(true, () => {
+      Taro.canvasToTempFilePath({
+        canvasId: 'canvasMask',
+        x: 0,
+        y: 0,
+        height: DPR_CANVAS_SIZE * 3,
+        width: DPR_CANVAS_SIZE * 3,
+        fileType: 'jpg',
+        quality: 0.9,
+        success: res => {
+          Taro.hideLoading()
+          this.setState({
+            posterSrc: res.tempFilePath,
+            isShowPoster: true
+          })
+        },
+        fail: () => {
+          Taro.hideLoading()
+          Taro.showToast({
+            title: '图片生成失败，请重试'
+          })
+        }
+      })
+
     })
 
-    // if (currentJiayouId > 0) {
-    //   pc.save()
-
-    //   pc.drawImage(
-    //     require(`../../images/jiayou-${currentJiayouId}.png`),
-    //     0,
-    //     132 * tmpUsePageDpr,
-    //     300 * tmpUsePageDpr,
-    //     169 * tmpUsePageDpr,
-    //   )
-    // }
-
-    pc.draw(false)
-
-    // Taro.canvasToTempFilePath({
-    //   canvasId: 'canvasMask',
-    //   x: 0,
-    //   y: 0,
-    //   height: DPR_CANVAS_SIZE * 3,
-    //   width: DPR_CANVAS_SIZE * 3,
-    //   fileType: 'jpg',
-    //   quality: 0.9,
-    //   success: res => {
-    //     Taro.hideLoading()
-    //     this.setState({
-    //       posterSrc: res.tempFilePath,
-    //       isShowPoster: true
-    //     })
-    //   },
-    //   fail: () => {
-    //     Taro.hideLoading()
-    //     Taro.showToast({
-    //       title: '图片生成失败，请重试'
-    //     })
-    //   }
-    // })
     
     
   }

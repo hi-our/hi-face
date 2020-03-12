@@ -31,6 +31,7 @@
   "author": "shenghanqin",
   "license": "MIT",
   "dependencies": {
+    "@cloudbase/adapter-qq_mp": "^0.2.0",
     "@tarojs/cli": "2.0.3",
     "@tarojs/components": "2.0.3",
     "@tarojs/components-qa": "2.0.3",

@@ -70,16 +70,31 @@ export const srcToBase64Main = async (src) => {
 // 文件管理
 export const fsmReadFile = promisify(fsm.readFile)
 
+const getH5Image = (src) => {
+  return new Promise((resolve, reject) => {
+    const image = new Image()
+    image.setAttribute('crossOrigin', 'anonymous');
+    image.src = src
+    image.id = `taro_cropper_${Date.now()}`;
+    image.style.display = 'none';
+    document.body.append(image);
+    image.onload = () => resolve(image)
+    image.onerror = () => reject(image)
+  })
+}
+
 /**
  * 获取图片
  * @param {*} src 图片地址
  * @param {*} callback
  */
 export const getImg = async (src) => {
+  if (process.env.TARO_ENV === 'h5') {
+    let image = await getH5Image(src)
+    return image
+  }
+
   if (src.includes(';base64,')) {
-
-    if (process.env.TARO_ENV === 'h5') return src
-
     return await base64src(src)
   }
 
@@ -130,7 +145,20 @@ const drawHat = async (ctx, config) => {
  */
 export const drawing = async (canvas, options) => {
   const { info, width = 200, height = 200, imgSrc = 'images/default.jpg' } = options;
-  const ctx = Taro.createCanvasContext('canvasHat')
+  console.log('123 :', 123);
+  console.log('canvas :', canvas);
+  let ctx = null
+  try {
+    ctx = Taro.createCanvasContext('canvasHat')
+    debugger
+    ctx = canvas.getContext('2d') //Taro.createCanvasContext('canvasHat')
+    console.log('ctx :', ctx);
+    
+  } catch (error) {
+    console.log('error :', error);
+  }
+
+  if (!ctx) return 
 
   // 重置
   ctx.clearRect(0, 0, width, height)
