@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "description": "基于Tarojs框架的小程序业务框架",
+  "homepage": "http://www.xiaoxili.com/quickly-mask/",
   "templateInfo": {
     "name": "redux",
     "typescript": false,
@@ -26,7 +27,9 @@
     "dev:alipay": "npm run build:alipay -- --watch",
     "dev:tt": "node boot.js && npm run build:tt -- --watch",
     "dev:h5": "npm run build:h5 -- --watch",
-    "dev:rn": "npm run build:rn -- --watch"
+    "dev:rn": "npm run build:rn -- --watch",
+    "predeploy": "npm run release:h5",
+    "deploy": "node ./gh-pages-build.js"
   },
   "author": "shenghanqin",
   "license": "MIT",
@@ -48,6 +51,7 @@
     "@tarojs/taro-weapp": "2.0.3",
     "@tarojs/with-weapp": "2.0.3",
     "babel-runtime": "^6.26.0",
+    "gh-pages": "^2.2.0",
     "nerv-devtools": "^1.5.5",
     "nervjs": "^1.5.5",
     "redux": "^4.0.0",

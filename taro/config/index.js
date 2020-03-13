@@ -15,7 +15,7 @@ const config = {
     828: 1.81 / 2 / dpr
   },
   sourceRoot: 'src',
-  outputRoot: 'dist',
+  outputRoot: process.env.TARO_ENV === 'h5' ? 'dist-h5' : 'dist',
   babel: {
     sourceMap: true,
     presets: [
