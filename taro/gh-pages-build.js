@@ -1,6 +1,8 @@
 var ghpages = require('gh-pages');
 
-ghpages.publish('.dist-h5', {
+console.log('开始执行发布~');
+
+ghpages.publish('dist-h5', {
   // branch: 'master',
   repo: 'https://github.com/shenghanqin/quickly-mask.git'
 }, function(params) {

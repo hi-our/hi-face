@@ -6,7 +6,7 @@ const dpr = process.env.TARO_ENV === 'h5' ? 1 : 2
 
 
 const config = {
-  projectName: 'goddess-hat',
+  projectName: 'quickly-mask',
   date: '2019-11-2',
   designWidth: 375 * dpr,
   deviceRatio: {
