@@ -1,7 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 import { cloudCallFunction } from 'utils/fetch'
-import { getSystemInfo } from 'utils/common'
+import { getSystemInfo, h5PageModalTips } from 'utils/common'
 import { getHatInfo, getHatShapeList } from 'utils/face-utils'
 import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase64 } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
@@ -83,6 +83,10 @@ class QueenKing extends Component {
 
   async componentDidMount() {
     setTmpThis(this, this.state.shapeList[0])
+
+    if (isH5Page) {
+      h5PageModalTips()
+    }
 
     this.start_x = 0;
     this.start_y = 0;
@@ -737,6 +741,7 @@ class QueenKing extends Component {
 
     return (
       <View className='shape-page'>
+        {isH5Page && !cutImageSrc && <View className="header-bar">女神戴皇冠</View>}
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
         <View className='main-wrap'>
           <View

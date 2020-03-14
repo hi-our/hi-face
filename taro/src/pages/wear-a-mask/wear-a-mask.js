@@ -1,7 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 import { cloudCallFunction } from 'utils/fetch'
-import { getSystemInfo } from 'utils/common'
+import { getSystemInfo, h5PageModalTips } from 'utils/common'
 import { getMouthInfo } from 'utils/face-utils'
 import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase64 } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
@@ -131,6 +131,10 @@ class WearMask extends Component {
 
     this.start_x = 0;
     this.start_y = 0;
+
+    if (isH5Page) {
+      h5PageModalTips()
+    }
 
     // this.setState({
     //   cutImageSrc: two_face_image
@@ -752,6 +756,7 @@ class WearMask extends Component {
     console.log('currentShapeIndex :', currentShapeIndex);
     return (
       <View className='mask-page'>
+        {isH5Page && !cutImageSrc && <View className="header-bar">快快戴口罩</View>}
         <Canvas className='canvas-mask' style={{ width: DPR_CANVAS_SIZE * pixelRatio + 'px', height: DPR_CANVAS_SIZE * pixelRatio + 'px' }} canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />
         <View className='main-wrap'>
           <View
@@ -850,7 +855,8 @@ class WearMask extends Component {
             : (
               <View className='button-wrap'>
                 <View className="buttom-tips">更多选择</View>
-                <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
+                {!isH5Page && <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>}
+                
                 <Button className='button-camera' type="default" data-way="camera" onClick={this.onChooseImage.bind(this, 'camera')}>
                   使用相机
                 </Button>

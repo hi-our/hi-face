@@ -109,40 +109,14 @@ export function range(x, min, max, _default) {
   return Math.min(result, max) || _default || min
 }
 
-export function getOriginImgUrl(url = '') {
-  let originUrl = url.split('?').length > 0 ? url.split('?')[0] : url
+let tipsShowOnce = false
+export function h5PageModalTips() {
+  if (tipsShowOnce) return
+  tipsShowOnce = true
 
-  return originUrl || ''
-}
-
-
-/**
- * 传入原始图片url，根据指定宽度获取图片地址，宽度大于`width`的时候会缩放至该宽度（等比）
- * 宽度小于改宽度的时候图片不缩放
- *
- * @export
- * @param {any} url
- * @param {any} width
- * @returns
- */
-export function getImgByWidth(url, maxWidth, prefix = '?imageView2/2/w/') {
-  let origin = getOriginImgUrl(url)
-  return `${origin}${prefix}${maxWidth}`
-}
-
-
-/** 获取当前页面 */
-export const getCurPage = () => {
-  const pages = getCurrentPages()
-  return pages[pages.length - 1]
-}
-
-/**
- * 获取gif第一帧
- */
-export function pickGifFirst(imageUrl) {
-  if (/\.gif/.test(imageUrl)) {
-    return imageUrl + '?imageMogr2/format/png'
-  }
-  return imageUrl
+  Taro.showModal({
+    showCancel: false,
+    title: '提示',
+    content: '本网站为“快快戴口罩”的Web版本，其功能只适用于智能触屏手机使用。微信搜一搜“快快戴口罩”，可以体验完整功能。',
+  })
 }
