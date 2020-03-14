@@ -5,10 +5,11 @@ import { HAT_IMG } from 'constants/image-test'
 import promisify from './promisify';
 
 import FaceImageTest from '../images/one_face.jpeg'
-import HatImgTest from '../images/hat.png'
 
 const fsm = Taro.getFileSystemManager();
 const FILE_BASE_NAME = 'tmp_base64src';
+
+const isH5Page = process.env.TARO_ENV === 'h5'
 
 /* 
  * 根据我当前的圣诞帽元素进行一些偏移(我的图片大小是200*130)， 圣诞帽可佩戴部分的中心 (62,60)  这里需要微调
@@ -114,7 +115,7 @@ const getH5Image = (src) => {
  * @param {*} callback
  */
 export const getImg = async (src) => {
-  if (process.env.TARO_ENV === 'h5') {
+  if (isH5Page) {
     let image = await getH5Image(src)
     return image
   }
@@ -141,9 +142,11 @@ export const getImg = async (src) => {
  * @param {*} ctx 画布实例
  * @param {{}} config 配置
  */
-const drawHat = async (ctx, config) => {
+export const drawHat = async (ctx, config) => {
   const { headPos, angle, faceWidth } = config;
-  const img = await getImg(HatImgTest);
+  let HatImgTest = require('../images/hat.png')
+  console.log('HatImgTest :', HatImgTest);
+  const img = isH5Page ? await getImg(HatImgTest) : HatImgTest
   console.log('img :', img);
 
   ctx.save();
@@ -152,12 +155,12 @@ const drawHat = async (ctx, config) => {
   // 旋转画布到特定角度
   ctx.rotate(angle);
   // 偏移图片，使帽子中心刚好在原点
+  console.log('translateHat(faceWidth, 0, 0) :', translateHat(faceWidth, 0, 0));
   const { x, y, width, height } = translateHat(faceWidth, 0, 0);
-  // console.log('x, y, width, height :', 0, 0, 30, 30);
+  // console.log('X, y, width, height :', 0, 0, 30, 30);
   // 我的圣诞帽子实际佩戴部分长度只有0.75倍整个图片长度
   ctx.drawImage(img, x, y, width, height);
-
-  // ctx.draw()
+  
   // 还原画布绘制状态，如偏移
   ctx.restore()
   

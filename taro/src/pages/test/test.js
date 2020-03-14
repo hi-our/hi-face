@@ -5,13 +5,14 @@ import fetch, { cloudCallFunction } from 'utils/fetch'
 import { apiAnalyzeFace } from 'constants/apis'
 import { getSystemInfo } from 'utils/common'
 import { getHatInfo  } from 'utils/face-utils'
-import { drawing, getDrawerConfig, getBase64Main, getImg } from 'utils/canvas-drawing'
+import { drawing, drawHat, getBase64Main, getImg } from 'utils/canvas-drawing'
 import { fillText } from 'utils/canvas'
 
 import { NOT_FACE, ONE_FACE } from 'constants/image-test'
 // 引入代码
 // import { TaroCanvasDrawer,  } from 'components/taro-plugin-canvas';
-import OneImgTest from '../../images/one_face.jpeg'
+
+const isH5Page = process.env.TARO_ENV === 'h5'
 
 const testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
 const imageData = ONE_FACE
@@ -59,8 +60,8 @@ class Index extends Component {
         }
       })
 
-      const info = getHatInfo(res2)
-      console.log('info :', info);
+      const hatList = getHatInfo(res2)
+      console.log('hatList :', hatList);
 
       // Taro.getImageInfo({
       //   src: imageData
@@ -78,34 +79,19 @@ class Index extends Component {
       //   width: CANVAS_SIZE,
       //   height: CANVAS_SIZE,
       // })
-      const imgSrcTransform = await getImg(imageData);
+
+      let OneImgTest = require('../../images/one_face.jpeg')
+      const imgSrcTransform = isH5Page ? await getImg(OneImgTest) : OneImgTest
       // console.log('imgSrcTransform :', imgSrcTransform);
       console.log('图片加载完 :', CANVAS_SIZE);
-      setTimeout(() => {
-        ctx.drawImage(imgSrcTransform, 0, 0, 300, 300)
-        ctx.save()
-        ctx.draw(true)
-        
-      }, 5000);
+      ctx.drawImage(imgSrcTransform, 0, 0, 300, 300)
+      for (let index = 0; index < hatList.length; index++) {
+        const hatInfo = hatList[index];
+        await drawHat(ctx, hatInfo);
+      }
+      ctx.save()
+      ctx.draw(true)
 
-      // this.setState({
-      //   canvasDrawerConfig: {
-      //     width: 600,
-      //     height: 600,
-      //     debug: true,
-      //     images: [
-      //       {
-      //         x: 0,
-      //         y: 0,
-      //         url: OneImgTest,
-      //         width: 600,
-      //         height: 600,
-      //         borderColor: '#000',
-      //         borderWidth: 1
-      //       }
-      //     ]
-      //   }
-      // }) 
 
       
     } catch (error) {
