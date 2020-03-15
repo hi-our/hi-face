@@ -1,13 +1,8 @@
 import Taro from '@tarojs/taro'
-import { drawCoverImage, fillText } from './canvas';
-import { getSystemInfo } from 'utils/common'
-import { HAT_IMG } from 'constants/image-test'
 import promisify from './promisify';
 
-import FaceImageTest from '../images/one_face.jpeg'
-
-const fsm = Taro.getFileSystemManager();
-const FILE_BASE_NAME = 'tmp_base64src';
+const fsm = Taro.getFileSystemManager()
+const FILE_BASE_NAME = 'tmp_base64src'
 
 const isH5Page = process.env.TARO_ENV === 'h5'
 
@@ -145,19 +140,19 @@ export const getImg = async (src) => {
 export const drawHat = async (ctx, config) => {
   const { headPos, angle, faceWidth } = config;
   let HatImgTest = require('../images/hat.png')
-  console.log('HatImgTest :', HatImgTest);
+
   const img = isH5Page ? await getImg(HatImgTest) : HatImgTest
-  console.log('img :', img);
 
   ctx.save();
 
-  ctx.translate(headPos.x, headPos.y);
+  console.log('headPos.x, headPos.y :', headPos.X, headPos.Y);
+  ctx.translate(headPos.X, headPos.Y);
   // 旋转画布到特定角度
   ctx.rotate(angle);
   // 偏移图片，使帽子中心刚好在原点
   console.log('translateHat(faceWidth, 0, 0) :', translateHat(faceWidth, 0, 0));
   const { x, y, width, height } = translateHat(faceWidth, 0, 0);
-  // console.log('X, y, width, height :', 0, 0, 30, 30);
+  console.log('x, y, width, height :', x, y, width, height);
   // 我的圣诞帽子实际佩戴部分长度只有0.75倍整个图片长度
   ctx.drawImage(img, x, y, width, height);
   
