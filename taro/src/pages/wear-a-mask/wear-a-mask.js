@@ -379,7 +379,7 @@ class WearMask extends Component {
     })
   }
 
-  downloadImage = async () => {
+  generateImage = async () => {
     Taro.showLoading({
       title: '图片生成中'
     })
@@ -851,7 +851,7 @@ class WearMask extends Component {
                 <View className='button-remove' onClick={this.onRemoveImage}>
                   移除图片
                 </View>
-                <View className='button-download' onClick={this.downloadImage}>
+                <View className='button-download' onClick={this.generateImage}>
                   保存图片
                 </View>
               </View>

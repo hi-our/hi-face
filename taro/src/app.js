@@ -25,6 +25,7 @@ class App extends Component {
       'pages/wear-a-mask/wear-a-mask',
       'pages/test/test',
       'pages/thanks/thanks',
+      'pages/avatar-poster/avatar-poster',
       // 'pages/spread-game/spread-game',
     ],
     window: {

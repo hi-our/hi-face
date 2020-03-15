@@ -75,6 +75,21 @@
 					"id": -1,
 					"name": "pages/queen-king/queen-king",
 					"pathName": "pages/queen-king/queen-king",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/avatar-poster/avatar-poster",
+					"pathName": "pages/avatar-poster/avatar-poster",
+					"query": "uuid=4d258e17-c38b-40b4-97d5-6638c8cd9560",
+					"scene": null
+				},
+				{
+					"id": 5,
+					"name": "pages/avatar-poster/avatar-poster",
+					"pathName": "pages/avatar-poster/avatar-poster",
+					"query": "uuid=ae145fef-f0cd-4dea-827d-ad6dbc56ea87",
 					"scene": null
 				}
 			]

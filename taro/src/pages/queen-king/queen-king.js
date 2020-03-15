@@ -44,6 +44,7 @@ class QueenKing extends Component {
       shapeList: [
         getDefaultShape()
       ],
+      shareUUID: '', // 保存图片上传后的图片uuid
       currentAgeType: 'origin',
       currentShapeIndex: 0,
       originSrc: '',
@@ -63,6 +64,7 @@ class QueenKing extends Component {
     const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
 
     let shareImage = DEFAULT_SHARE_COVER
+    let shareUrl = '/pages/queen-king/queen-king'
     if (from === 'button') {
       const { dataset = {} } = target
       const { posterSrc = '' } = dataset
@@ -71,13 +73,19 @@ class QueenKing extends Component {
 
       if (posterSrc) {
         shareImage = posterSrc
+        const { shareUUID } = this.state
+        if (shareUUID) {
+          shareUrl = `/pages/avatar-poster/avatar-poster?uuid=${shareUUID}`
+        }
       }
+
     }
 
+    console.log('shareUrl :', shareUrl);
     return {
       title: '给女神戴上皇冠吧！',
       imageUrl: shareImage,
-      path: '/pages/queen-king/queen-king'
+      path: shareUrl
     }
   }
 
@@ -88,6 +96,7 @@ class QueenKing extends Component {
 
     this.start_x = 0;
     this.start_y = 0;
+
 
     // this.ageMap.origin = two_face_image
     // this.setState({
@@ -166,11 +175,11 @@ class QueenKing extends Component {
     })
   }
 
-  onUploadFile = async (tempFilePath) => {
+  onUploadFile = async (tempFilePath, prefix = 'temp-') => {
     try {
       const uploadFile = promisify(Taro.cloud.uploadFile)
       const { fileID } = await uploadFile({
-        cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
+        cloudPath: `${prefix}-${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
         filePath: tempFilePath,
       })
 
@@ -324,21 +333,32 @@ class QueenKing extends Component {
       ],
       currentAgeType: 'origin',
       cutImageSrc: '',
-      originFileID: ''
+      originFileID: '',
+      shareUUID: ''
     })
   }
 
-  downloadImage = async () => {
-    Taro.showLoading({
-      title: '图片生成中'
-    })
-
+  generateImage = async () => {
+    
     this.setState({
       posterSrc: '',
     })
-
+    
     try {
-      await this.drawCanvas()
+      Taro.showModal({
+        title: '提示',
+        content: '图片会上传到云端，便于分享和下次查看，请确定？',
+        success: (res) => {
+          if (res.confirm) {
+            Taro.showLoading({
+              title: '图片生成中'
+            })
+            this.drawCanvas()
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      })
     } catch (error) {
       Taro.hideLoading()
       Taro.showToast({
@@ -348,16 +368,16 @@ class QueenKing extends Component {
     }
   }
 
+
+
   // TODO 这个也可以分离？
   drawCanvas = async () => {
     const {
       shapeList,
-      currentJiayouId,
       cutImageSrc
     } = this.state
 
     const pc = Taro.createCanvasContext('canvasShape')
-    const tmpUsePageDpr = PAGE_DPR * pixelRatio
 
     pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH);
     let tmpCutImage = await getImg(cutImageSrc)
@@ -402,12 +422,15 @@ class QueenKing extends Component {
         width: DPR_CANVAS_SIZE * 3,
         fileType: 'jpg',
         quality: 0.9,
-        success: res => {
+        success: async (res) => {
+          await this.onSaveImageToCloud(res.tempFilePath)
+
           Taro.hideLoading()
           this.setState({
             posterSrc: res.tempFilePath,
             isShowPoster: true
           })
+
         },
         fail: () => {
           Taro.hideLoading()
@@ -417,8 +440,38 @@ class QueenKing extends Component {
         }
       })
     })
+  }
+
+  onSaveImageToCloud = async (tempFilePath) => {
+    try {
+      // 上传头像图片
+      const fileID = await this.onUploadFile(tempFilePath, 'avatar')
+      console.log('上传头像图片 fileID :', fileID);
+  
+      const { uuid } = await cloudCallFunction({
+        name: 'collection_add_one',
+        data: {
+          collection_name: 'avatars',
+          info: {
+            avatar_fileID: fileID
+          }
+        }
+      })
+      console.log('addRes uuid:', uuid);
+
+      this.setState({
+        shareUUID: uuid
+      })
+      
+    } catch (error) {
+      console.log('error :', error);
+    }
+
+
 
   }
+
+
 
   chooseShape = (shapeId, categoryName) => {
     let { shapeList, currentShapeIndex } = this.state
@@ -837,7 +890,7 @@ class QueenKing extends Component {
                 <View className='button-remove' onClick={this.onRemoveImage}>
                   移除图片
                 </View>
-                <View className='button-download' onClick={this.downloadImage}>
+                <View className='button-download' onClick={this.generateImage}>
                   保存图片
                 </View>
               </View>

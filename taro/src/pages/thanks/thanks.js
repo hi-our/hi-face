@@ -25,9 +25,7 @@ class Thanks extends Component {
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      this.loadData()
-    }, 3000)
+    this.loadData()
   }
 
   loadData = async () => {
