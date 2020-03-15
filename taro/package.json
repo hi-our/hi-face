@@ -49,6 +49,7 @@
     "@tarojs/react": "3.0.0-alpha.7",
     "@tarojs/runtime": "3.0.0-alpha.7",
     "@tarojs/taro": "3.0.0-alpha.7",
+    "@tarojs/webpack-runner": "^2.0.6",
     "react": "^16.10.0",
     "react-redux": "^7.0.0",
     "redux": "^4.0.0",

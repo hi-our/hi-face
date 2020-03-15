@@ -941,7 +941,7 @@ class QueenKing extends Component {
           this.renderPoster()
         }
 
-        <View className='cropper-wrap' hidden={!originSrc}>
+        <View className='cropper-wrap' style={{ display: originSrc ? 'block' : 'none' }}>
           <TaroCropper
             src={originSrc}
             cropperWidth={ORIGIN_CANVAS_SIZE * 2}
