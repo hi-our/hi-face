@@ -109,10 +109,7 @@ export function range(x, min, max, _default) {
   return Math.min(result, max) || _default || min
 }
 
-let tipsShowOnce = false
 export function h5PageModalTips() {
-  if (tipsShowOnce) return
-  tipsShowOnce = true
 
   Taro.showModal({
     showCancel: false,

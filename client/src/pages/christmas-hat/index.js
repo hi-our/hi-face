@@ -15,6 +15,7 @@ import * as faceapi from 'face-api.js';
 const MaxWidth = 600;
 // const boxColor = '#BE80B5';
 const testImg = require('../../img/test.jpg');
+const oneFaceImage = require('../../img/one_face.jpeg');
 
 const INIT_STATE = {
   url: null,
@@ -49,9 +50,9 @@ class ChristmasHat extends Component {
 
   mounting = async () => {
     await loadModels();
-    await this.getImageDimension(testImg);
-    await this.setState({ imageURL: testImg, loading: true });
-    await this.handleImageChange(testImg);
+    await this.getImageDimension(oneFaceImage);
+    await this.setState({ imageURL: oneFaceImage, loading: true });
+    await this.handleImageChange(oneFaceImage);
   };
 
   resetState = () => {

@@ -36,6 +36,8 @@ class Index extends Component {
     }
   }
 
+
+
   componentDidMount() {
     this.testFetch()
   }
@@ -86,10 +88,12 @@ class Index extends Component {
       console.log('图片加载完 :', CANVAS_SIZE);
       ctx.drawImage(imgSrcTransform, 0, 0, 300, 300)
       for (let index = 0; index < hatList.length; index++) {
+        console.log('index :', index);
         const hatInfo = hatList[index];
         await drawHat(ctx, hatInfo);
       }
-      ctx.save()
+      console.log('10 :', 10);
+      // ctx.save()
       ctx.draw(true)
 
 

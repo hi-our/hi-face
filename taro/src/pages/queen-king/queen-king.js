@@ -84,9 +84,7 @@ class QueenKing extends Component {
   async componentDidMount() {
     setTmpThis(this, this.state.shapeList[0])
 
-    if (isH5Page) {
-      h5PageModalTips()
-    }
+    this.showH5Modal()
 
     this.start_x = 0;
     this.start_y = 0;
@@ -98,6 +96,12 @@ class QueenKing extends Component {
     //     this.onAnalyzeFace(two_face_image)
     // })
 
+  }
+
+  showH5Modal = () => {
+    if (isH5Page) {
+      h5PageModalTips()
+    }
   }
 
 
@@ -560,9 +564,9 @@ class QueenKing extends Component {
     this.start_y = current_y;
   }
 
-  goSpreadGame = () => {
+  goTestHat = () => {
     Taro.navigateTo({
-      url: '/pages/spread-game/spread-game'
+      url: '/pages/test/test'
     })
   }
 
@@ -932,9 +936,10 @@ class QueenKing extends Component {
             )
         }
 
-        {!isH5Page && !originSrc && (
+        {!originSrc && (
           <Block>
-            <Button className='share-btn' openType='share'>分享给朋友<View className='share-btn-icon'></View></Button>
+            <View className='test-hat-btn' onClick={this.goTestHat}>圣诞帽测试</View>
+            <Button className='share-btn' openType='share' onClick={this.showH5Modal}>分享给朋友<View className='share-btn-icon'></View></Button>
           </Block>
         )}
         {
