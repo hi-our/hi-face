@@ -1,19 +1,21 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Input, Button, Canvas } from '@tarojs/components'
 // import PageWrapper from 'components/page-wrapper'
-import fetch from 'utils/fetch'
+import fetch, { cloudCallFunction } from 'utils/fetch'
 import { apiAnalyzeFace } from 'constants/apis'
 import { getSystemInfo } from 'utils/common'
 import { getHatInfo  } from 'utils/face-utils'
-import { drawing, getDrawerConfig, getBase64Main } from 'utils/canvas-drawing'
+import { drawing, drawHat, getBase64Main, getImg } from 'utils/canvas-drawing'
+import { fillText } from 'utils/canvas'
 
 import { NOT_FACE, ONE_FACE } from 'constants/image-test'
 // 引入代码
 // import { TaroCanvasDrawer,  } from 'components/taro-plugin-canvas';
-import OneImgTest from '../../images/one_face.jpeg'
+
+const isH5Page = process.env.TARO_ENV === 'h5'
 
 const testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
-const imageData = testImg
+const imageData = ONE_FACE
 
 import './styles.styl'
 
@@ -23,7 +25,7 @@ const CANVAS_SIZE = '300px'
 // @CorePage
 class Index extends Component {
   config = {
-    navigationBarTitleText: '首页',
+    navigationBarTitleText: '圣诞帽测试页',
     // navigationStyle: 'custom'
   }
 
@@ -49,43 +51,47 @@ class Index extends Component {
   }
   testFetch = async () => {
     
+    // console.log('imageData :', imageData);
     try {
-      const res2 = await fetch({
-        url: apiAnalyzeFace,
-        type: 'post',
+      const res2 = await cloudCallFunction({
+        name: 'analyze-face',
         data: {
-          Image: getBase64Main(imageData),
-          Url: testImg,
-          Mode: 1,
-          FaceModelVersion: '3.0'
+          base64Main: getBase64Main(imageData)
         }
       })
 
-      const info = getHatInfo(res2)
-      drawing(this.canvasRef, {
-        info,
-        imgSrc: imageData,
-        width: CANVAS_SIZE,
-        height: CANVAS_SIZE,
-      })
-      this.setState({
-        canvasDrawerConfig: {
-          width: 600,
-          height: 600,
-          debug: true,
-          images: [
-            {
-              x: 0,
-              y: 0,
-              url: OneImgTest,
-              width: 600,
-              height: 600,
-              borderColor: '#000',
-              borderWidth: 1
-            }
-          ]
-        }
-      }) 
+      const hatList = getHatInfo(res2)
+      console.log('hatList :', hatList);
+
+      // Taro.getImageInfo({
+      //   src: imageData
+      // }).then(res => {
+      //   console.log('res imginfo :', res);
+      // })
+      const ctx = Taro.createCanvasContext('canvasHat', this)
+      console.log('ctx :', ctx);
+      ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
+      fillText(ctx, ' ', 55, 233, false, 12, '#687583')
+      
+      // drawing(this.canvasRef, {
+      //   info,
+      //   imgSrc: imageData,
+      //   width: CANVAS_SIZE,
+      //   height: CANVAS_SIZE,
+      // })
+
+      let OneImgTest = require('../../images/one_face.jpeg')
+      const imgSrcTransform = isH5Page ? await getImg(OneImgTest) : OneImgTest
+      // console.log('imgSrcTransform :', imgSrcTransform);
+      console.log('图片加载完 :', CANVAS_SIZE);
+      ctx.drawImage(imgSrcTransform, 0, 0, 300, 300)
+      for (let index = 0; index < hatList.length; index++) {
+        const hatInfo = hatList[index];
+        await drawHat(ctx, hatInfo);
+      }
+      ctx.save()
+      ctx.draw(true)
+
 
       
     } catch (error) {
@@ -178,10 +184,10 @@ class Index extends Component {
     return (
       <View>
         <View>自动戴圣诞帽：</View>
-        <Canvas canvasId='canvasHat' id='canvasHat' style={{ width: CANVAS_SIZE, height: CANVAS_SIZE }} />
+        <Canvas canvasId='canvasHat' ref={r => this.canvasRef = r} style={{ width: CANVAS_SIZE, height: CANVAS_SIZE }} />
         <View>原图：</View>
         <Image src={imageData} style={{ width: CANVAS_SIZE, height: CANVAS_SIZE }}></Image>
-        <View>TaroCanvasDrawer效果，但不够智能</View>
+        {/* <View>TaroCanvasDrawer效果，但不够智能</View> */}
         {/* {!!canvasDrawerConfig && (
           <TaroCanvasDrawer
             config={canvasDrawerConfig}
@@ -189,7 +195,7 @@ class Index extends Component {
             onCreateFail={this.onCanvasCreateFail}
           />
         )} */}
-        <Image className='image-poster' src={shareImage} />
+        {/* <Image className='image-poster' src={shareImage} /> */}
         {/* <Button
           className="weui-btn"
           type="default"

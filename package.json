@@ -1,5 +1,5 @@
 {
-  "name": "goddess-hat",
+  "name": "quickly-mask",
   "version": "1.0.0",
   "description": "Example on using create-react-app with a Node Express Backend",
   "author": {
@@ -13,6 +13,8 @@
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "dev:server": "cd client && yarn build && cd .. && yarn start",
     "start": "NODE_ENV=production node server.js",
+    "dev:server:taro": "cd taro && npm run release:h5 && cd .. && yarn start:taro",
+    "start:taro": "NODE_ENV=production node server-taro.js",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "devDependencies": {
@@ -20,10 +22,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/shenghanqin/goddess-hat.git"
+    "url": "https://github.com/shenghanqin/quickly-mask.git"
   },
   "bugs": {
-    "url": "https://github.com/shenghanqin/goddess-hat/issues"
+    "url": "https://github.com/shenghanqin/quickly-mask/issues"
   },
   "keywords": [
     "node",
@@ -35,6 +37,6 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "request": "^2.88.0",
-    "tencentcloud-sdk-nodejs": "^3.0.117"
+    "tencentcloud-sdk-nodejs": "^3.0.126"
   }
 }

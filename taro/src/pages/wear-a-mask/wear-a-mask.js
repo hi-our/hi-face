@@ -1,9 +1,9 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 import { cloudCallFunction } from 'utils/fetch'
-import { getSystemInfo } from 'utils/common'
+import { getSystemInfo, h5PageModalTips } from 'utils/common'
 import { getMouthInfo } from 'utils/face-utils'
-import { getImg, fsmReadFile, srcToBase64Main } from 'utils/canvas-drawing'
+import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase64 } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
 import promisify from 'utils/promisify';
 
@@ -20,6 +20,8 @@ const DPR_CANVAS_SIZE = CANVAS_SIZE * PageDpr
 const SAVE_IMAGE_WIDTH = DPR_CANVAS_SIZE * pixelRatio
 const DEFAULT_MASK_SIZE = 100 * PageDpr
 const MASK_SIZE = 100
+
+const isH5Page = process.env.TARO_ENV === 'h5'
 
 
 const resetState = () => {
@@ -130,6 +132,10 @@ class WearMask extends Component {
     this.start_x = 0;
     this.start_y = 0;
 
+    if (isH5Page) {
+      h5PageModalTips()
+    }
+
     // this.setState({
     //   cutImageSrc: two_face_image
     // }, () => {
@@ -197,7 +203,26 @@ class WearMask extends Component {
     })
   }
 
+  cloudCanvasToAnalyzeH5 = async (tempFilePaths) => {
+
+    // console.log('tempFilePaths :', tempFilePaths);
+
+    let oldTime = Date.now()
+    const couldRes = await cloudCallFunction({
+      name: 'analyze-face',
+      data: {
+        base64Main: getBase64Main(tempFilePaths)
+      }
+    })
+
+    console.log(((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
+
+    console.log('couldRes :', couldRes);
+    return couldRes
+  }
+
   cloudCanvasToAnalyze = async (tempFilePaths) => {
+
     const resImage = await Taro.compressImage({
       src: tempFilePaths, // 图片路径
       quality: 10 // 压缩质量
@@ -236,22 +261,6 @@ class WearMask extends Component {
     })
   }
 
-  // TODO 其他小程序再说
-  tmpFetchFunction = () => {
-    // srcToBase64Main(cutImageSrc, (base64Main) => {
-    // })
-    // const res2 = await fetch({
-    //   url: apiAnalyzeFace,
-    //   type: 'post',
-    //   data: {
-    //     Image: base64Main,
-    //     Mode: 1,
-    //     FaceModelVersion: '3.0'
-    //   }
-    // })
-  }
-
-
   onAnalyzeFace = async (cutImageSrc) => {
     if (!cutImageSrc) return
 
@@ -265,7 +274,9 @@ class WearMask extends Component {
 
     try {
 
-      const res2 = await this.cloudCanvasToAnalyze(cutImageSrc)
+      let cloudFunc = isH5Page ? this.cloudCanvasToAnalyzeH5 : this.cloudCanvasToAnalyze
+
+      const res2 = await cloudFunc(cutImageSrc)
       console.log('图片分析的结果 :', res2);
 
       const info = getMouthInfo(res2)
@@ -391,15 +402,18 @@ class WearMask extends Component {
       cutImageSrc
     } = this.state
 
-    const pc = Taro.createCanvasContext('canvasMask')
+    const pc = Taro.createCanvasContext('canvasMask', this)
+    console.log('pc :', pc);
     const tmpUsePageDpr = PageDpr * pixelRatio
     
     pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH);
-    let tmpCutImage = this.cutImageSrcCanvas || await getImg(cutImageSrc)
+    let tmpCutImage = await getImg(cutImageSrc)
+    console.log('1 :', 1);
     pc.drawImage(tmpCutImage, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
+    console.log('2 :', 1, SAVE_IMAGE_WIDTH);
     
-    // 形状
-    shapeList.forEach(shape => {
+    for (let index = 0; index < shapeList.length; index++) {
+      const shape = shapeList[index];
       pc.save()
       const {
         maskWidth,
@@ -410,30 +424,47 @@ class WearMask extends Component {
         reserve,
       } = shape
       const maskSize = maskWidth *  pixelRatio
-
+  
       pc.translate(maskCenterX * pixelRatio, maskCenterY * pixelRatio);
       pc.rotate((rotate * Math.PI) / 180)
   
+      let oneMaskSrc = require(`../../images/mask-${currentMaskId}${reserve < 0 ? '-reverse' : ''}.png`)
+      let oneImgSrc = isH5Page ? await getImg(oneMaskSrc) : oneMaskSrc
+  
       pc.drawImage(
-        require(`../../images/mask-${currentMaskId}${reserve < 0 ? '-reverse' : ''}.png`),
+        oneImgSrc,
         -maskSize / 2,
         -maskSize / 2,
         maskSize,
         maskSize
       )
       pc.restore()
-    })
+      
+    }
 
     if (currentJiayouId > 0) {
       pc.save()
 
-      pc.drawImage(
-        require(`../../images/jiayou-${currentJiayouId}.png`),
-        0,
-        132 * tmpUsePageDpr,
-        300 * tmpUsePageDpr,
-        169 * tmpUsePageDpr,
-      )
+      try {
+        let jiaYouMaskSrc = require(`../../images/jiayou-${currentJiayouId}.png`)
+        let jiaYouImgSrc = isH5Page ? await getImg(jiaYouMaskSrc) : jiaYouMaskSrc
+  
+        console.log('jiaYouImgSrc :', currentJiayouId, jiaYouImgSrc);
+  
+        if (jiaYouImgSrc) {
+          pc.drawImage(
+            jiaYouImgSrc,
+            0,
+            132 * tmpUsePageDpr,
+            300 * tmpUsePageDpr,
+            169 * tmpUsePageDpr,
+          )
+
+        }
+        
+      } catch (error) {
+        console.log('error :', error);
+      }
     }
 
     pc.draw(true, () => {
@@ -459,7 +490,10 @@ class WearMask extends Component {
           })
         }
       })
+
     })
+
+    
     
   }
 
@@ -515,13 +549,17 @@ class WearMask extends Component {
   }
 
   touchStart = (e) => {
-    const { type = '', shapeIndex = 0 } = e.target.dataset
+    console.log('touchStart :', e);
+    const { nodeName, offsetParent, dataset } = e.target
+
+    const { type = '', shapeIndex = 0 } = nodeName === 'IMG' ? offsetParent.dataset  : dataset
  
     this.touch_target = type;
     this.touch_shape_index = shapeIndex;
+    console.log('this.state.currentShapeIndex :', this.state.currentShapeIndex);
     if (this.touch_target == 'mask' && shapeIndex !== this.state.currentShapeIndex) {
       this.setState({
-        currentShapeIndex: shapeIndex
+        currentShapeIndex: parseInt(shapeIndex, 10) 
       })
     }
 
@@ -641,21 +679,25 @@ class WearMask extends Component {
   }
 
   saveImageToPhotosAlbum = (tempFilePath) => {
-    Taro.saveImageToPhotosAlbum({
-      filePath: tempFilePath,
-      success: res2 => {
-        Taro.showToast({
-          title: '图片保存成功'
-        })
-        console.log('保存成功 :', res2);
-      },
-      fail(e) {
-        Taro.showToast({
-          title: '图片未保存成功'
-        })
-        console.log('图片未保存成功:' + e);
-      }
-    });
+    if (isH5Page) {
+      downloadImgByBase64(tempFilePath)
+    } else {
+      Taro.saveImageToPhotosAlbum({
+        filePath: tempFilePath,
+        success: res2 => {
+          Taro.showToast({
+            title: '图片保存成功'
+          })
+          console.log('保存成功 :', res2);
+        },
+        fail(e) {
+          Taro.showToast({
+            title: '图片未保存成功'
+          })
+          console.log('图片未保存成功:' + e);
+        }
+      })
+    }
   }
 
 
@@ -676,13 +718,15 @@ class WearMask extends Component {
               />
               保存到相册
             </View>
-            <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
-              <Image
-                className='icon-wechat'
-                src='https://n1image.hjfile.cn/res7/2019/03/20/21af29d7755905b08d9f517223df5314.png'
-              />
-              分享给朋友
-            </Button>
+            {!isH5Page && (
+              <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
+                <Image
+                  className='icon-wechat'
+                  src='https://n1image.hjfile.cn/res7/2019/03/20/21af29d7755905b08d9f517223df5314.png'
+                />
+                分享给朋友
+              </Button>
+            )}
           </View>
         </View>
         
@@ -709,8 +753,10 @@ class WearMask extends Component {
       tabsTips = currentJiayouId >= 1 ? '点击更换文案图片' : '点击新增文案图片'
     }
 
+    console.log('currentShapeIndex :', currentShapeIndex);
     return (
       <View className='mask-page'>
+        {isH5Page && !cutImageSrc && <View className="header-bar">快快戴口罩</View>}
         <Canvas className='canvas-mask' style={{ width: DPR_CANVAS_SIZE * pixelRatio + 'px', height: DPR_CANVAS_SIZE * pixelRatio + 'px' }} canvasId='canvasMask' ref={c => this.canvasMaskRef = c} />
         <View className='main-wrap'>
           <View
@@ -809,7 +855,8 @@ class WearMask extends Component {
             : (
               <View className='button-wrap'>
                 <View className="buttom-tips">更多选择</View>
-                <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
+                {!isH5Page && <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>}
+                
                 <Button className='button-camera' type="default" data-way="camera" onClick={this.onChooseImage.bind(this, 'camera')}>
                   使用相机
                 </Button>
@@ -899,7 +946,7 @@ class WearMask extends Component {
             )
         }
 
-        {!originSrc && (
+        {!isH5Page && !originSrc && (
           <Block>
             {/* <View className='virus-btn' onClick={this.goSpreadGame}>病毒演化器</View> */}
             <Button className='share-btn' openType='share'>分享给朋友<View className='share-btn-icon'></View></Button>

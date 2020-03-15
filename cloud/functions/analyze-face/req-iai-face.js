@@ -53,7 +53,7 @@ const analyzeFace = (Image) => {
           data: {},
           time: new Date(),
           status: -10086,
-          message: status.FACE_CODE[code] || '图片解析失败'
+          message: 'AnalyzeFace ' + + status.FACE_CODE[code] + Image || code || '图片解析失败'
         })
         return
       }

@@ -1,5 +1,6 @@
 import Taro, { Component } from '@tarojs/taro'
 import { Provider } from '@tarojs/redux'
+import * as tcb from 'tcb-js-sdk'
 
 import Index from './pages/test/test'
 import store from '@/store'
@@ -20,9 +21,9 @@ const updateManager = process.env.TARO_ENV !== 'h5' ? Taro.getUpdateManager() : 
 class App extends Component {
   config = {
     pages: [
-      'pages/queen-king/queen-king',
       'pages/wear-a-mask/wear-a-mask',
-      // 'pages/test/test',
+      'pages/queen-king/queen-king',
+      'pages/test/test',
       'pages/thanks/thanks',
       // 'pages/spread-game/spread-game',
     ],
@@ -65,11 +66,29 @@ class App extends Component {
     },
   }
 
-  componentDidMount () {
+  componentWillMount() {
 
     if (process.env.TARO_ENV === 'weapp') {
       Taro.cloud.init({
         env: config.cloudEnv
+      })
+    } else if (process.env.TARO_ENV === 'h5') {
+      // hack写法？呼呼
+      Taro.cloud = tcb.init({
+        env: config.cloudEnv
+      })
+      // console.log('登录云开发成功！')
+      Taro.cloud.auth().signInAnonymously().then(() => {
+        Taro.cloud.callFunction({
+          name: 'thanks-data',
+          data: {
+            1: 1
+          }
+        }).then(res => console.log('res ', res))
+
+
+      }).catch(error => {
+        console.log('error :', error);
       })
     }
     
