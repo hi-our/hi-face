@@ -24,19 +24,29 @@ class Thanks extends Component {
   }
 
   componentDidMount() {
-    cloudCallFunction({
-      name: 'thanks-data'
-    }).then(res => {
+    setTimeout(() => {
+      this.loadData()
+    }, 3000)
+  }
+
+  loadData = async () => {
+    try {
+      const res = await cloudCallFunction({
+        name: 'thanks-data'
+      })
+      console.log('res :', res);
       this.setState({
         pageData: res,
         pageStatus: 'done'
       })
-    }).catch((error) => {
-      this.setState({
-        pageStatus: 'error'
-      })
-      console.log('error :', error);
-    })
+      
+    } catch (error) {
+        this.setState({
+          pageStatus: 'error'
+        })
+        console.log('error :', error);
+      
+    }
   }
 
 

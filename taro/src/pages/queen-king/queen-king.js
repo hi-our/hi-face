@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 import { cloudCallFunction } from 'utils/fetch'
-import { getSystemInfo } from 'utils/common'
+import { getSystemInfo, h5PageModalTips } from 'utils/common'
 import { getHatInfo, getHatShapeList } from 'utils/face-utils'
-import { getImg, fsmReadFile, srcToBase64Main, base64src } from 'utils/canvas-drawing'
+import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase64 } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
 import promisify from 'utils/promisify';
 
@@ -22,49 +22,60 @@ import {
   setTmpThis,
   materialList,
   dataStyleList,
-  getDefaultStyleMap,
+  getDefaultAgeMap,
 } from './utils';
 
 import './styles.styl'
 
 const { pixelRatio } = getSystemInfo()
 
+const isH5Page = process.env.TARO_ENV === 'h5'
+
 
 class QueenKing extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
       shapeList: [
         getDefaultShape()
       ],
-      currentStyleType: 'origin',
+      currentAgeType: 'origin',
       currentShapeIndex: 0,
       originSrc: '',
       cutImageSrc: '',
       posterSrc: '',
+      originFileID: '', // 上传到云存储的文件
       isShowPoster: false,
       currentJiayouId: 1,
       currentTabIndex: 0,
       isShowShape: false,
     }
-    this.styleMap = getDefaultStyleMap()
+    this.ageMap = getDefaultAgeMap()
     this.cutImageSrcCanvas = ''
   }
 
   async componentDidMount() {
     setTmpThis(this, this.state.shapeList[0])
 
+    this.showH5Modal()
+
     this.start_x = 0;
     this.start_y = 0;
 
-    // this.styleMap.origin = two_face_image
+    // this.ageMap.origin = two_face_image
     // this.setState({
     //   cutImageSrc: two_face_image
     // }, () => {
     //     this.onAnalyzeFace(two_face_image)
     // })
 
+  }
+
+  showH5Modal = () => {
+    if (isH5Page) {
+      h5PageModalTips()
+    }
   }
 
   onShareAppMessage({ from, target }) {
@@ -88,7 +99,6 @@ class QueenKing extends Component {
       path: '/pages/queen-king/queen-king'
     }
   }
-
 
   catTaroCropper(node) {
     this.taroCropper = node;
@@ -140,14 +150,76 @@ class QueenKing extends Component {
   }
 
   onCut = (cutImageSrc) => {
-    this.styleMap.origin = cutImageSrc
-    console.log('this.styleMap :', this.styleMap);
+    this.ageMap.origin = cutImageSrc
+    console.log('this.ageMap :', this.ageMap);
     this.setState({
       cutImageSrc,
       originSrc: ''
     }, () => {
       this.onAnalyzeFace(cutImageSrc)
+      
     })
+  }
+
+  onUploadFile = async (tempFilePath) => {
+    try {
+      const uploadFile = promisify(Taro.cloud.uploadFile)
+      const { fileID } = await uploadFile({
+        cloudPath: `${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
+        filePath: tempFilePath,
+      })
+
+      return fileID
+      
+    } catch (error) {
+      console.log('error :', error)
+      return ''
+    }
+
+  }
+
+  cloudCanvasToAnalyzeH5 = async (tempFilePaths) => {
+
+    // console.log('tempFilePaths :', tempFilePaths);
+
+    let oldTime = Date.now()
+    const couldRes = await cloudCallFunction({
+      name: 'analyze-face',
+      data: {
+        base64Main: getBase64Main(tempFilePaths)
+      }
+    })
+
+    console.log(((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
+
+    console.log('couldRes :', couldRes);
+    return couldRes
+  }
+
+  cloudCanvasToAnalyze = async (tempFilePaths) => {
+
+    const resImage = await Taro.compressImage({
+      src: tempFilePaths, // 图片路径
+      quality: 10 // 压缩质量
+    })
+
+    let oldTime = Date.now()
+
+    let { data: base64Main } = await fsmReadFile({
+      filePath: resImage.tempFilePath,
+      encoding: 'base64',
+    })
+
+    const couldRes = await cloudCallFunction({
+      name: 'analyze-face',
+      data: {
+        base64Main
+      }
+    })
+
+    console.log(((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
+
+    return couldRes
   }
 
   onAnalyzeFace = async (cutImageSrc) => {
@@ -163,28 +235,9 @@ class QueenKing extends Component {
 
     try {
 
-      // 压缩图片
-      const resImage = await Taro.compressImage({
-        src: cutImageSrc, // 图片路径
-        quality: 10 // 压缩质量
-      })
+      let cloudFunc = isH5Page ? this.cloudCanvasToAnalyzeH5 : this.cloudCanvasToAnalyze
 
-      let oldTime = Date.now()
-
-      // 转换为base64
-      let { data: base64Main } = await fsmReadFile({
-        filePath: resImage.tempFilePath,
-        encoding: 'base64',
-      })
-
-      const couldRes = await cloudCallFunction({
-        name: 'analyze-face',
-        data: {
-          base64Main
-        }
-      })
-
-      console.log(((Date.now() - oldTime) / 1000).toFixed(1) + '秒')
+      const couldRes = await cloudFunc(cutImageSrc)
 
       console.log('图片分析的结果 :', couldRes)
       const hatList = getHatInfo(couldRes)
@@ -200,6 +253,16 @@ class QueenKing extends Component {
       })
 
       Taro.hideLoading()
+
+      if (!isH5Page) {
+        const fileID = await this.onUploadFile(cutImageSrc)
+        console.log('fileID :', fileID);
+  
+        this.setState({
+          originFileID: fileID
+        })
+      }
+
 
     } catch (error) {
       console.log('onAnalyzeFace error :', error);
@@ -228,6 +291,11 @@ class QueenKing extends Component {
         isShowShape: true,
       })
       setTmpThis(this, shapeList[0])
+      const fileID = await this.onUploadFile(cutImageSrc)
+      console.log('fileID :', fileID);
+      this.setState({
+        originFileID: fileID
+      })
     }
   }
 
@@ -243,13 +311,15 @@ class QueenKing extends Component {
 
   onRemoveImage = () => {
     this.cutImageSrcCanvas = ''
-    this.styleMap = getDefaultStyleMap()
+    this.ageMap = getDefaultAgeMap()
 
     this.setState({
       shapeList: [
         getDefaultShape()
       ],
-      cutImageSrc: ''
+      currentAgeType: 'origin',
+      cutImageSrc: '',
+      originFileID: ''
     })
   }
 
@@ -285,11 +355,11 @@ class QueenKing extends Component {
     const tmpUsePageDpr = PAGE_DPR * pixelRatio
 
     pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH);
-    let tmpCutImage = this.cutImageSrcCanvas || await getImg(cutImageSrc)
+    let tmpCutImage = await getImg(cutImageSrc)
     pc.drawImage(tmpCutImage, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
 
-    // 形状
-    shapeList.forEach(shape => {
+    for (let index = 0; index < shapeList.length; index++) {
+      const shape = shapeList[index];
       pc.save()
       const {
         categoryName,
@@ -301,31 +371,22 @@ class QueenKing extends Component {
         reserve,
       } = shape
       const shapeSize = shapeWidth * pixelRatio
-
+  
       pc.translate(shapeCenterX * pixelRatio, shapeCenterY * pixelRatio);
       pc.rotate((rotate * Math.PI) / 180)
 
+      let oneMaskSrc = require(`../../images/${categoryName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`)
+      let oneImgSrc = isH5Page ? await getImg(oneMaskSrc) : oneMaskSrc
+  
       pc.drawImage(
-        require(`../../images/${categoryName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`),
+        oneImgSrc,
         -shapeSize / 2,
         -shapeSize / 2,
         shapeSize,
         shapeSize
       )
       pc.restore()
-    })
-
-    // if (currentJiayouId > 0) {
-    //   pc.save()
-
-    //   pc.drawImage(
-    //     require(`../../images/jiayou-${currentJiayouId}.png`),
-    //     0,
-    //     132 * tmpUsePageDpr,
-    //     300 * tmpUsePageDpr,
-    //     169 * tmpUsePageDpr,
-    //   )
-    // }
+    }
 
     pc.draw(true, () => {
       Taro.canvasToTempFilePath({
@@ -498,9 +559,9 @@ class QueenKing extends Component {
     this.start_y = current_y;
   }
 
-  goSpreadGame = () => {
+  goTestHat = () => {
     Taro.navigateTo({
-      url: '/pages/spread-game/spread-game'
+      url: '/pages/test/test'
     })
   }
 
@@ -536,29 +597,35 @@ class QueenKing extends Component {
   }
 
   saveImageToPhotosAlbum = (tempFilePath) => {
-    Taro.saveImageToPhotosAlbum({
-      filePath: tempFilePath,
-      success: res2 => {
-        Taro.showToast({
-          title: '图片保存成功'
-        })
-        console.log('保存成功 :', res2);
-      },
-      fail(e) {
-        Taro.showToast({
-          title: '图片未保存成功'
-        })
-        console.log('图片未保存成功:' + e);
-      }
-    });
+    if (isH5Page) {
+      downloadImgByBase64(tempFilePath)
+    } else {
+      Taro.saveImageToPhotosAlbum({
+        filePath: tempFilePath,
+        success: res2 => {
+          Taro.showToast({
+            title: '图片保存成功'
+          })
+          console.log('保存成功 :', res2);
+        },
+        fail(e) {
+          Taro.showToast({
+            title: '图片未保存成功'
+          })
+          console.log('图片未保存成功:' + e);
+        }
+      })
+    }
   }
 
-  changeStyleType = async (type) => {
-    const { origin: cutImageSrc } = this.styleMap
+  changeAge = async (type) => {
+    const { originFileID } = this.state
+    const { origin: cutImageSrc } = this.ageMap
 
-    if (this.styleMap[type]) {
+    if (this.ageMap[type]) {
       this.setState({
-        cutImageSrc: this.styleMap[type]
+        currentAgeType: type,
+        cutImageSrc: this.ageMap[type]
       })
       return
     }
@@ -575,17 +642,22 @@ class QueenKing extends Component {
 
       let oldTime = Date.now()
 
-      // 转换为base64
-      let { data: base64Main } = await fsmReadFile({
-        filePath: cutImageSrc,
-        encoding: 'base64',
-      })
-
       const couldRes = await cloudCallFunction({
-        name: 'image-cartoon',
+        name: 'face-transformation',
         data: {
-          base64Main,
-          type
+          fileID: originFileID,
+          AgeInfos: [
+            {
+              Age: 10,
+            },
+            {
+              Age: 10,
+            },
+            {
+              Age: 10,
+            },
+          ]
+          // type
         }
       })
 
@@ -595,18 +667,22 @@ class QueenKing extends Component {
 
       console.log('图片分析结果 :', couldRes)
 
-      let cutImageSrcNow = await base64src('data:image/jpg;base64,' + couldRes.base64Main)
+      let cutImageSrcNow = 'data:image/jpg;base64,' + couldRes.base64Main
 
-      this.styleMap[type] = cutImageSrcNow
+      // let cutImageSrcNow = await base64src('data:image/jpg;base64,' + couldRes.base64Main)
+
+      console.log('cutImageSrcNow :', cutImageSrcNow);
+
+      this.ageMap[type] = cutImageSrcNow
       this.setState({
-        currentStyleType: type,
+        currentAgeType: type,
         cutImageSrc: cutImageSrcNow,
       })
 
       Taro.hideLoading()
 
     } catch (error) {
-      console.log('onAnalyzeFace error :', error);
+      console.log('changeAge error :', error);
 
       Taro.hideLoading()
       this.styleReq = false
@@ -631,13 +707,15 @@ class QueenKing extends Component {
               />
               保存到相册
             </View>
-            <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
-              <Image
-                className='icon-wechat'
-                src='https://n1image.hjfile.cn/res7/2019/03/20/21af29d7755905b08d9f517223df5314.png'
-              />
-              分享给朋友
-            </Button>
+            {!isH5Page && (
+              <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
+                <Image
+                  className='icon-wechat'
+                  src='https://n1image.hjfile.cn/res7/2019/03/20/21af29d7755905b08d9f517223df5314.png'
+                />
+                分享给朋友
+              </Button>
+            )}
           </View>
         </View>
 
@@ -654,7 +732,7 @@ class QueenKing extends Component {
       currentJiayouId,
       shapeList,
       currentShapeIndex,
-      currentStyleType,
+      currentAgeType,
     } = this.state
 
 
@@ -662,6 +740,7 @@ class QueenKing extends Component {
 
     return (
       <View className='shape-page'>
+        {isH5Page && !cutImageSrc && <View className="header-bar">女神戴皇冠</View>}
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
         <View className='main-wrap'>
           <View
@@ -761,7 +840,9 @@ class QueenKing extends Component {
             : (
               <View className='button-wrap'>
                 <View className="buttom-tips">更多选择</View>
-                <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
+                {
+                  !isH5Page && <Button className="button-avatar" type="default" data-way="avatar" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>使用头像</Button>
+                }
                 <Button className='button-camera' type="default" data-way="camera" onClick={this.onChooseImage.bind(this, 'camera')}>
                   使用相机
                 </Button>
@@ -770,27 +851,15 @@ class QueenKing extends Component {
 
           }
         </View>
-        <View className='cropper-wrap' style={{ display: originSrc ? 'block' : 'none' }}>
-          <TaroCropper
-            src={originSrc}
-            cropperWidth={ORIGIN_CANVAS_SIZE * 2}
-            cropperHeight={ORIGIN_CANVAS_SIZE * 2}
-            ref={this.catTaroCropper}
-            fullScreen
-            fullScreenCss
-            onCut={this.onCut}
-            hideCancelText={false}
-            onCancel={this.onCancel}
-          />
-        </View>
+        
 
-        {!!cutImageSrc && (
+        {!isH5Page && !!cutImageSrc && (
           <View className='style-list-wrap'>
             {
               dataStyleList.map(item => {
                 const { type, text, image } = item
                 return (
-                  <View className={`style-item ${currentStyleType === type ? 'style-item-active' : ''}`} key={type} onClick={this.changeStyleType.bind(this, type)}>
+                  <View className={`style-item ${currentAgeType === type ? 'style-item-active' : ''}`} key={type} onClick={this.changeAge.bind(this, type)}>
                     <Image className='style-item-image' src={image} />
                     <View className='style-item-text'>{text}</View>
                   </View>
@@ -864,12 +933,27 @@ class QueenKing extends Component {
 
         {!originSrc && (
           <Block>
-            <Button className='share-btn' openType='share'>分享给朋友<View className='share-btn-icon'></View></Button>
+            <View className='test-hat-btn' onClick={this.goTestHat}>圣诞帽测试</View>
+            <Button className='share-btn' openType='share' onClick={this.showH5Modal}>分享给朋友<View className='share-btn-icon'></View></Button>
           </Block>
         )}
         {
           this.renderPoster()
         }
+
+        <View className='cropper-wrap' hidden={!originSrc}>
+          <TaroCropper
+            src={originSrc}
+            cropperWidth={ORIGIN_CANVAS_SIZE * 2}
+            cropperHeight={ORIGIN_CANVAS_SIZE * 2}
+            ref={this.catTaroCropper}
+            fullScreen
+            fullScreenCss
+            onCut={this.onCut}
+            hideCancelText={false}
+            onCancel={this.onCancel}
+          />
+        </View>
 
       </View>
     )

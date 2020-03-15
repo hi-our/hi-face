@@ -4,7 +4,7 @@
 
 采用微信小程序编写，实现了自动为头像戴上口罩的功能。
 
-源码地址：https://github.com/shenghanqin/goddess-hat
+源码地址：https://github.com/shenghanqin/quickly-mask
 
 **主要功能**
 

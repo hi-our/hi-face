@@ -1,8 +1,8 @@
 import Taro from '@tarojs/taro'
 import request from './request'
 
+export const cloudCallFunction = async ({ name, data = {}, config = {} }) => {
 
-export const cloudCallFunction = ({ name, data = {}, config = {} }) => {
   return new Promise((resolve, reject) => {
     Taro.cloud.callFunction({
       name,
@@ -10,8 +10,10 @@ export const cloudCallFunction = ({ name, data = {}, config = {} }) => {
       config
     }).then(callRes => {
       console.log('callRes :', callRes);
-      const { errMsg = '', result } = callRes
-      if (result && errMsg.includes('ok')) {
+      const { errMsg = '', result, code = '' } = callRes
+      // code 为web端
+      // errMsg 为小程序端
+      if (result && (errMsg.includes('ok') || !code)) {
         let apiResult = result
         if (apiResult.status === 0) {
           const finalResult = apiResult.data || {}

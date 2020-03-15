@@ -63,6 +63,12 @@
 					"pathName": "pages/test/test",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/queen-king/queen-king",
+					"pathName": "pages/queen-king/queen-king",
+					"scene": null
 				}
 			]
 		}

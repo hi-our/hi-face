@@ -1,4 +1,4 @@
 export default {
-  navigationBarTitleText: '首页',
+  navigationBarTitleText: '圣诞帽测试页',
   // navigationStyle: 'custom'
 }

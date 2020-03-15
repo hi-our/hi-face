@@ -3,7 +3,7 @@ const appId = 'wxd5e8989ce23206af'
 
 module.exports = {
   env,
-  wxName: 'goddess-hat',
+  wxName: 'quickly-mask',
   version: '1.4.0',
   appId,
   userDomain: 'cc',
