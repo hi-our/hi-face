@@ -4,7 +4,7 @@ const appId = 'wxd5e8989ce23206af'
 module.exports = {
   env,
   wxName: 'quickly-mask',
-  version: '1.4.0',
+  version: '1.5.0',
   appId,
   userDomain: 'cc',
   apiHost: `https://${env !== 'prod' ? env : ''}ccdaka.hjapi.com`,
