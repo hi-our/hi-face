@@ -29,9 +29,20 @@ class Thanks extends Component {
   }
 
   loadData = async () => {
+    var testData = ''
+    for (let index = 0; index < 10000; index++) {
+      testData += '0123456789'
+    }
+
+    console.log('testData :', testData)
+    console.log('testData大小为 :', testData.length / 1024 + 'k')
+
     try {
       const res = await cloudCallFunction({
-        name: 'thanks-data'
+        name: 'thanks-data',
+        data: {
+          testData
+        }
       })
       console.log('res :', res);
       this.setState({
