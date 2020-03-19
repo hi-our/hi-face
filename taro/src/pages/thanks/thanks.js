@@ -24,15 +24,24 @@ class Thanks extends Component {
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      this.loadData()
-    }, 3000)
+    this.loadData()
   }
 
   loadData = async () => {
+    var testData = ''
+    for (let index = 0; index < 10000; index++) {
+      testData += '0123456789'
+    }
+
+    console.log('testData :', testData)
+    console.log('testData大小为 :', testData.length / 1024 + 'k')
+
     try {
       const res = await cloudCallFunction({
-        name: 'thanks-data'
+        name: 'thanks-data',
+        data: {
+          testData
+        }
       })
       console.log('res :', res);
       this.setState({
@@ -89,38 +98,40 @@ class Thanks extends Component {
  
     return (
       <PageWrapper status={pageStatus}>
-        <View className='thanks-word'>
-          <Text>{thanksWord}</Text>
-        </View>
-        <View className='author-wrap'>
-          <Image className='author-avatar' src={authorAvatar} />
-          <View className='author-main'>
-            <Text className='author-name'>{authorName}</Text>
-            <Text className='author-desc'>{authorDesc}</Text>
-            <Button className='copy-link-btn' onClick={this.copyToClipboard.bind(this, sourceLink)}>复制源码地址</Button>
+        <View className='thanks-page'>
+          <View className='thanks-word'>
+            <Text>{thanksWord}</Text>
           </View>
+          <View className='author-wrap'>
+            <Image className='author-avatar' src={authorAvatar} />
+            <View className='author-main'>
+              <Text className='author-name'>{authorName}</Text>
+              <Text className='author-desc'>{authorDesc}</Text>
+              <Button className='copy-link-btn' onClick={this.copyToClipboard.bind(this, sourceLink)}>复制源码地址</Button>
+            </View>
 
-        </View>
-        <View className='reference-wrap'>
-          <View className='reference-title'>参考项目</View>
-          <View>
-            {
-              referenceList.map((reference) =>{
-                const { image, desc } = reference
-                return (
-                  <View className='reference-item' key={image}>
-                    <Image className='reference-image' src={image} />
-                    <View className='reference-main'>
-                      <Text className='reference-text'>{desc}</Text>
-                      
-                    </View>
-                  </View>
-                )
-              }) 
-            }
           </View>
+          <View className='reference-wrap'>
+            <View className='reference-title'>参考项目</View>
+            <View>
+              {
+                referenceList.map((reference) =>{
+                  const { image, desc } = reference
+                  return (
+                    <View className='reference-item' key={image}>
+                      <Image className='reference-image' src={image} />
+                      <View className='reference-main'>
+                        <Text className='reference-text'>{desc}</Text>
+                        
+                      </View>
+                    </View>
+                  )
+                }) 
+              }
+            </View>
+          </View>
+          <View className='version'>Ver.{version}，基于 Taro 及小程序云开发</View>
         </View>
-        <View className='version'>Ver.{version}，基于 Taro 及小程序云开发</View>
       </PageWrapper>
     )
   }
