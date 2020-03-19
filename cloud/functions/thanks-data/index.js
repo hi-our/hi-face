@@ -32,6 +32,11 @@ const data = {
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+  const { testData = '' } = event
+  if (testData) {
+    console.log('testData :', testData)
+    console.log('testData大小为 :', testData.length / 1024 + 'k');
+  }
   return {
     data,
     time: new Date(),
