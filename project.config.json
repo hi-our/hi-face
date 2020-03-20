@@ -5,6 +5,7 @@
 	"projectname": "quickly-mask",
 	"description": "test",
 	"appid": "wxd5e8989ce23206af",
+	"qqappid": "1110180763",
 	"setting": {
 		"urlCheck": false,
 		"es6": false,
@@ -22,11 +23,19 @@
 			"ignore": [],
 			"disablePlugins": [],
 			"outputPath": ""
-		}
+		},
+		"remoteDebugLogEnable": false,
+		"nodeModules": true,
+		"uglifyFileName": true
 	},
 	"compileType": "miniprogram",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
+	"scripts": {
+		"beforeCompile": "",
+		"beforePreview": "",
+		"beforeUpload": ""
+	},
 	"condition": {
 		"search": {
 			"current": -1,

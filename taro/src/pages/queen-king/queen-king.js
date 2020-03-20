@@ -29,6 +29,7 @@ import './styles.styl'
 const { pixelRatio } = getSystemInfo()
 
 const isH5Page = process.env.TARO_ENV === 'h5'
+const isQQPage = process.env.TARO_ENV === 'qq'
 
 
 class QueenKing extends Component {
@@ -177,7 +178,6 @@ class QueenKing extends Component {
 
   onUploadFile = async (tempFilePath, prefix = 'temp') => {
     try {
-      debugger
       const uploadFile =  promisify(Taro.cloud.uploadFile)
       const { fileID } = await uploadFile({
         cloudPath: `${prefix}-${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
@@ -213,12 +213,16 @@ class QueenKing extends Component {
 
   cloudCanvasToAnalyze = async (tempFilePaths) => {
 
-    const resImage = await Taro.compressImage({
+    let cccc = isQQPage ? promisify(qq.compressImage) : Taro.compressImage
+
+    const resImage = cccc({
       src: tempFilePaths, // 图片路径
       quality: 10 // 压缩质量
     })
 
     let oldTime = Date.now()
+
+    console.log('resImage :', resImage);
 
     let { data: base64Main } = await fsmReadFile({
       filePath: resImage.tempFilePath,

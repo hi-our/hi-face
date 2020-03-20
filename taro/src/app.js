@@ -1,6 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
 import { Provider } from '@tarojs/redux'
-import * as tcb from 'tcb-js-sdk'
+import tcb from 'tcb-js-sdk'
+import adapterForQQ from '@cloudbase/adapter-qq_mp';
 
 import Index from './pages/test/test'
 import store from '@/store'
@@ -73,10 +74,23 @@ class App extends Component {
       Taro.cloud.init({
         env: config.cloudEnv
       })
-    } else if (process.env.TARO_ENV === 'h5') {
+    } else if (process.env.TARO_ENV === 'h5' || process.env.TARO_ENV === 'qq') {
+      console.log('tcb :', tcb, process.env.TARO_ENV );
+      let initConfig = {}
+      if (process.env.TARO_ENV === 'qq') {
+        tcb.useAdapters([adapterForQQ]);
+        initConfig = {
+          appSign: process.env.appSign,
+          appSecret: {
+            appAccessKeyId: process.env.appAccessKeyId,
+            appAccessKey: process.env.appAccessKey,
+          }
+        }
+      }
       // hack写法？呼呼
       Taro.cloud = tcb.init({
-        env: config.cloudEnv
+        env: config.cloudEnv,
+        ...initConfig
       })
       // console.log('登录云开发成功！')
       Taro.cloud.auth().signInAnonymously().then(() => {

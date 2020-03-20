@@ -173,7 +173,6 @@ export const drawing = async (canvas, options) => {
   let ctx = null
   try {
     ctx = Taro.createCanvasContext('canvasHat')
-    debugger
     ctx = canvas.getContext('2d') //Taro.createCanvasContext('canvasHat')
     console.log('ctx :', ctx);
     
