@@ -177,7 +177,8 @@ class QueenKing extends Component {
 
   onUploadFile = async (tempFilePath, prefix = 'temp') => {
     try {
-      const uploadFile = promisify(Taro.cloud.uploadFile)
+      debugger
+      const uploadFile =  promisify(Taro.cloud.uploadFile)
       const { fileID } = await uploadFile({
         cloudPath: `${prefix}-${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
         filePath: tempFilePath,
@@ -268,29 +269,22 @@ class QueenKing extends Component {
 
       Taro.hideLoading()
 
-      console.log('cutImageSrc :', cutImageSrc);
-      const { data: base64Main } = await fsmReadFile({
-        filePath: cutImageSrc,
-        // encoding: 'utf-8', //'base64',
-      })
-      const base64 = wx.arrayBufferToBase64(base64Main)
-      // 以0.657M的图片为例
-      // 转换为ArrayBuffer，大小还是0.657M
-      // 转换为base64，大小为1.7M
-      // 转换为utf-8，大小为1.2M
-      console.log('base64Main :', base64Main.byteLength)
-      console.log('base64 :', base64);
-      console.log('变大率 :', base64.length, base64.length / (base64Main.byteLength))
+      // 测试大小的代码，没有用
+      // console.log('cutImageSrc :', cutImageSrc);
+      // const { data: base64Main } = await fsmReadFile({
+      //   filePath: cutImageSrc,
+      //   // encoding: 'utf-8', //'base64',
+      // })
+      // const base64 = wx.arrayBufferToBase64(base64Main)
+      // // 以0.657M的图片为例
+      // // 转换为ArrayBuffer，大小还是0.657M
+      // // 转换为base64，大小为1.7M
+      // // 转换为utf-8，大小为1.2M
+      // console.log('base64Main :', base64Main.byteLength)
+      // console.log('base64 :', base64);
+      // console.log('变大率 :', base64.length, base64.length / (base64Main.byteLength))
 
-      if (!isH5Page) {
-        const fileID = await this.onUploadFile(cutImageSrc)
-        console.log('fileID :', fileID);
-        
-  
-        this.setState({
-          originFileID: fileID
-        })
-      }
+      this.uploadOriginImage(cutImageSrc)
 
 
     } catch (error) {
@@ -320,6 +314,12 @@ class QueenKing extends Component {
         isShowShape: true,
       })
       setTmpThis(this, shapeList[0])
+      this.uploadOriginImage(cutImageSrc)
+    }
+  }
+
+  uploadOriginImage = async (cutImageSrc) => {
+    if (!isH5Page) {
       const fileID = await this.onUploadFile(cutImageSrc)
       console.log('fileID :', fileID);
       this.setState({
