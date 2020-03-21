@@ -3,7 +3,9 @@ import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/co
 
 import { cloudCallFunction } from 'utils/fetch'
 import PageWrapper from 'components/page-wrapper'
-import { base64src, downloadImgByBase64 } from 'utils/canvas-drawing';
+import { base64src, downloadImgByBase64 } from 'utils/canvas-drawing'
+import promisify from 'utils/promisify'
+
 import './styles.styl'
 
 import * as config from 'config'
@@ -29,6 +31,7 @@ class AvatarPoster extends Component {
     this.pageUrl = this.pageUUID ? `/pages/avatar-poster/avatar-poster?uuid=${this.pageUUID}` : '/pages/queen-king/queen-king'
     this.state = {
       avatarFileID: '',
+      avatarFileLocal: '',
       agetType: '',
       pageStatus: 'loading'
     }
@@ -70,6 +73,9 @@ class AvatarPoster extends Component {
       const filePath = await base64src(base64Data)
 
       console.log('base64Main :', filePath)
+      this.setState({
+        qrcodeFile: filePath
+      })
     } catch (error) {
       console.log('小程序码生成失败 error :', error);
     }
@@ -90,14 +96,27 @@ class AvatarPoster extends Component {
       this.setState({
         avatarFileID: avatar_fileID,
         agetType: age_type,
-        pageStatus: 'done'
       })
+
+      let avatarFileLocal = await this.onDownloadFile(avatar_fileID)
+
+      this.setState({
+        avatarFileLocal
+      })
+
+      setTimeout(() => {
+        this.onCreatePoster()
+      }, 1000);
 
     } catch (error) {
         this.setState({
           pageStatus: 'error'
         })
         console.log('error :', error);
+    } finally {
+      this.setState({
+        pageStatus: 'done'
+      })
     }
   }
 
@@ -107,19 +126,19 @@ class AvatarPoster extends Component {
     })
   }
 
-  onSaveImage = async () => {
-    const { avatarFileID } = this.state
-    console.log('avatarFileID :', avatarFileID);
-    Taro.cloud.downloadFile({
-      fileID: avatarFileID,
-      success: res => {
-        // get temp file path
-        this.saveImageToPhotosAlbum(res.tempFilePath)
-      },
-      fail: error => {
-        console.log('error2 :', error);
-      }
+  onDownloadFile = async (fileID) => {
+
+    let downloadFile = promisify(Taro.cloud.downloadFile)
+    const { tempFilePath } = await downloadFile({
+      fileID,
     })
+    return tempFilePath
+
+  }
+
+  onSaveImage = async () => {
+    const { avatarFileLocal } = this.state
+    this.saveImageToPhotosAlbum(avatarFileLocal)
   }
 
   saveImageToPhotosAlbum = (tempFilePath) => {
@@ -145,6 +164,43 @@ class AvatarPoster extends Component {
     }
   }
 
+  onCreatePoster = () => {
+    this.setState({
+      isShowPoster: true
+    })
+  }
+
+  renderPoster = () => {
+    const { posterSrc, isShowPoster } = this.state
+    return (
+      <View className={`poster-dialog ${isShowPoster ? 'show' : ''}`}>
+        <View className='poster-dialog-main'>
+          {!!posterSrc && <Image className='poster-image' src={posterSrc} onClick={this.previewPoster} showMenuByLongpress></Image>}
+          <View className='poster-image-tips'>点击可预览大图，长按可分享图片</View>
+          <View className='poster-dialog-close' onClick={this.onHidePoster} />
+          <View className='poster-footer-btn'>
+            <View className='poster-btn-save' onClick={this.savePoster}>
+              <Image
+                className='icon'
+                src='https://n1image.hjfile.cn/res7/2019/01/03/740198f541ce91859ed060882d986e09.png'
+              />
+              保存到相册
+            </View>
+            {!isH5Page && (
+              <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
+                <Image
+                  className='icon-wechat'
+                  src='https://n1image.hjfile.cn/res7/2019/03/20/21af29d7755905b08d9f517223df5314.png'
+                />
+                分享给朋友
+              </Button>
+            )}
+          </View>
+        </View>
+
+      </View>
+    )
+  }
 
 
   render() {
@@ -163,6 +219,7 @@ class AvatarPoster extends Component {
           </View>
           <View className='version'>Ver.{version}，基于 Taro 及小程序云开发</View>
         </View>
+        {this.renderPoster()}
       </PageWrapper>
     )
   }
