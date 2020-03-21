@@ -757,7 +757,6 @@ class WearMask extends Component {
       tabsTips = currentJiayouId >= 1 ? '点击更换文案图片' : '点击新增文案图片'
     }
 
-    console.log('currentShapeIndex :', currentShapeIndex);
     return (
       <View className='mask-page'>
         {isH5Page && !cutImageSrc && <View className="header-bar">快快戴口罩</View>}

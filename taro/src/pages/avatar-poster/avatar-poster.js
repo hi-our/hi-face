@@ -14,7 +14,8 @@ const version = config.version
 class AvatarPoster extends Component {
   config = {
     navigationBarTitleText: '头像分享',
-    navigationStyle: 'custom'
+    navigationStyle: 'custom',
+    disableScroll: true
   }
 
   constructor(props) {
@@ -22,7 +23,8 @@ class AvatarPoster extends Component {
     const { uuid = '' } = this.$router.params
     this.pageUUID = uuid
     this.state = {
-      pageData: {},
+      avatarFileID: '',
+      agetType: '',
       pageStatus: 'loading'
     }
   }
@@ -31,18 +33,38 @@ class AvatarPoster extends Component {
     this.loadData()
   }
 
+  onShareAppMessage() {
+    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
+
+    const { avatarFileID, agetType } = this.state
+
+    let typeMap = {
+      origin: '邀请好友一起来制作头像吧',
+      childhood: '换个头像，一起回归童真'
+    }
+
+    return {
+      title: typeMap[agetType] || typeMap.origin,
+      imageUrl: avatarFileID || DEFAULT_SHARE_COVER,
+      path: this.pageUUID ? `/pages/avatar-poster/avatar-poster?uuid=${this.pageUUID}` : '/pages/queen-king/queen-king'
+    }
+  }
+
+
   loadData = async () => {
     try {
-      const res = await cloudCallFunction({
+      const { avatar_fileID = '', age_type = '' } = await cloudCallFunction({
         name: 'collection_get_one_by_uuid',
         data: {
           collection_name: 'avatars',
           uuid: this.pageUUID
         }
       })
-      console.log('res :', res);
+
+
       this.setState({
-        pageData: res,
+        avatarFileID: avatar_fileID,
+        agetType: age_type,
         pageStatus: 'done'
       })
 
@@ -57,31 +79,28 @@ class AvatarPoster extends Component {
     }
   }
 
-
-  onShareAppMessage() {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
-
-    return {
-      title: '邀请好友？？？？？',
-      imageUrl: DEFAULT_SHARE_COVER,
-      path: this.pageUUID ? `/pages/avatar-poster/avatar-poster?uuid=${this.pageUUID}` : '/pages/queen-king/queen-king'
-    }
+  goHome = () => {
+    Taro.switchTab({
+      url: '/pages/queen-king/queen-king'
+    })
   }
 
+
+
   render() {
-    const { pageData, pageStatus } = this.state
-    const {
-      avatar_fileID = '',
-    } = pageData
+    const { avatarFileID, agetType, pageStatus } = this.state
  
     return (
       <PageWrapper status={pageStatus}>
-        <View className="page-avatar-poster">
-          <View className='page-title'>女神戴皇冠</View>
+        <View className={`page-avatar-poster age-${agetType}`}>
           <View className='page-poster-wrap'>
-            <Image className='page-poster' src={avatar_fileID} />
+            <Image className='page-poster' src={avatarFileID} />
           </View>
-          
+          <View className='button-wrap'>
+            <View className="button-reset" onClick={this.goHome}></View>
+            <View className="button-main">生成分享海报</View>
+            <Button className="button-share" openType='share'>邀请好友</Button>
+          </View>
           <View className='version'>Ver.{version}，基于 Taro 及小程序云开发</View>
         </View>
       </PageWrapper>

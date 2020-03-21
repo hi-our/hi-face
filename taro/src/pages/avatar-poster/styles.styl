@@ -1,33 +1,78 @@
 .page-avatar-poster
   height 100vh
-  background url(https://n1image.hjfile.cn/res7/2020/03/15/107d89ee2b96b8997deaed2b5f275f55.jpg) center no-repeat
+  padding-top 1px
+  background-position center
+  background-repeat no-repeat
   background-size cover
+  box-sizing border-box
+
+.age-origin
+  background-image url(https://n1image.hjfile.cn/res7/2020/03/21/a8bfb32f1f491b9b9c7ea7a3515a896e.jpeg)
+  .page-poster-wrap
+    background #FEE6F6
+.age-childhood
+  background-image url(https://n1image.hjfile.cn/res7/2020/03/21/eadd0c47e27914f625a07d3a7134e612.jpg)
+  .page-poster-wrap
+    background #79C0FF
+
   
-.page-title
-  padding-top 80PX
-  font-size 20px
-  line-height 1.5
-  color #ffffff
-  font-weight 600
-  text-align center
-.version
-  padding 15px 0 20px
-  color #95A1AF
-  font-size 12px
-  text-align center
+
 
 .page-poster-wrap
-  margin 15px auto
+  margin 140px auto auto
   width 300px
   height 300px
   padding 15px
-  background #79C0FF
   border-radius 20px
-  box-shadow inset 1px 1px 3px rgba(255, 255, 255, 1), 0 9px 8px rgba(0, 0, 0, 0.5)
-
+  box-shadow inset 1px 1px 3px rgba(255, 255, 255, 0.3), 0 9px 8px rgba(0, 0, 0, 0.25)
+  
 
 .page-poster
   width 300px
   height 300px
   border-radius: 15px
   overflow hidden
+
+.button-wrap
+  margin 20px auto 0
+  width 330px
+  height 54px
+  display flex
+  justify-content space-between
+
+.button-reset
+  width 56px
+  height 56px
+  background url(https://n1image.hjfile.cn/res7/2020/03/21/3586553f6e961bc4a28fbcf9d1d7c43f.png) no-repeat
+  background-size contain
+
+
+.button-main
+  background linear-gradient(85deg, #FF937D, #FF5A47)
+  width 168px
+  height 54px
+  line-height 54px
+  text-align center
+  font-size 24px
+  color #ffffff
+  border-radius 15px
+
+.button-share
+  display block
+  width 54px
+  height 54px
+  padding 7px
+  line-height 20px
+  font-size 14px
+  color #fff
+  background #FF9B34
+  text-align center
+  border-radius: 50%
+  &:hover
+    background #FFB447
+    
+.version
+  padding 40px 0 20px
+  color #95A1AF
+  font-size 12px
+  text-align center

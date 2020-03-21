@@ -213,9 +213,7 @@ class QueenKing extends Component {
 
   cloudCanvasToAnalyze = async (tempFilePaths) => {
 
-    let cccc = isQQPage ? promisify(qq.compressImage) : Taro.compressImage
-
-    const resImage = cccc({
+    const resImage = await Taro.compressImage({
       src: tempFilePaths, // 图片路径
       quality: 10 // 压缩质量
     })
@@ -462,6 +460,8 @@ class QueenKing extends Component {
   }
 
   onSaveImageToCloud = async (tempFilePath) => {
+    const { currentAgeType } = this.state
+
     try {
       // 上传头像图片
       const fileID = await this.onUploadFile(tempFilePath, 'avatar')
@@ -472,7 +472,8 @@ class QueenKing extends Component {
         data: {
           collection_name: 'avatars',
           info: {
-            avatar_fileID: fileID
+            avatar_fileID: fileID,
+            age_type: currentAgeType
           }
         }
       })
