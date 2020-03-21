@@ -2,10 +2,14 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 
 import { cloudCallFunction } from 'utils/fetch'
-import PageWrapper from 'components/page-wrapper';
+import PageWrapper from 'components/page-wrapper'
+import { base64src, downloadImgByBase64 } from 'utils/canvas-drawing';
 import './styles.styl'
 
 import * as config from 'config'
+
+const isH5Page = process.env.TARO_ENV === 'h5'
+const isQQPage = process.env.TARO_ENV === 'qq'
 
 
 const version = config.version
@@ -22,6 +26,7 @@ class AvatarPoster extends Component {
     super(props)
     const { uuid = '' } = this.$router.params
     this.pageUUID = uuid
+    this.pageUrl = this.pageUUID ? `/pages/avatar-poster/avatar-poster?uuid=${this.pageUUID}` : '/pages/queen-king/queen-king'
     this.state = {
       avatarFileID: '',
       agetType: '',
@@ -31,6 +36,7 @@ class AvatarPoster extends Component {
 
   componentDidMount() {
     this.loadData()
+    this.onCreateQrcode()
   }
 
   onShareAppMessage() {
@@ -46,7 +52,26 @@ class AvatarPoster extends Component {
     return {
       title: typeMap[agetType] || typeMap.origin,
       imageUrl: avatarFileID || DEFAULT_SHARE_COVER,
-      path: this.pageUUID ? `/pages/avatar-poster/avatar-poster?uuid=${this.pageUUID}` : '/pages/queen-king/queen-king'
+      path: this.pageUrl
+    }
+  }
+
+  onCreateQrcode = async () => {
+    try {
+      const { base64Main } = await cloudCallFunction({
+        name: 'open-api',
+        data: {
+          action: 'createQRCode',
+          path: this.pageUrl
+        }
+      })
+
+      let base64Data = 'data:image/jpg;base64,' + base64Main
+      const filePath = await base64src(base64Data)
+
+      console.log('base64Main :', filePath)
+    } catch (error) {
+      console.log('小程序码生成失败 error :', error);
     }
   }
 
@@ -68,14 +93,11 @@ class AvatarPoster extends Component {
         pageStatus: 'done'
       })
 
-
-      
     } catch (error) {
         this.setState({
           pageStatus: 'error'
         })
         console.log('error :', error);
-      
     }
   }
 
@@ -83,6 +105,44 @@ class AvatarPoster extends Component {
     Taro.switchTab({
       url: '/pages/queen-king/queen-king'
     })
+  }
+
+  onSaveImage = async () => {
+    const { avatarFileID } = this.state
+    console.log('avatarFileID :', avatarFileID);
+    Taro.cloud.downloadFile({
+      fileID: avatarFileID,
+      success: res => {
+        // get temp file path
+        this.saveImageToPhotosAlbum(res.tempFilePath)
+      },
+      fail: error => {
+        console.log('error2 :', error);
+      }
+    })
+  }
+
+  saveImageToPhotosAlbum = (tempFilePath) => {
+    console.log('tempFilePath :', tempFilePath);
+    if (isH5Page) {
+      downloadImgByBase64(tempFilePath)
+    } else {
+      Taro.saveImageToPhotosAlbum({
+        filePath: tempFilePath,
+        success: res2 => {
+          Taro.showToast({
+            title: '图片保存成功'
+          })
+          console.log('保存成功 :', res2);
+        },
+        fail(e) {
+          Taro.showToast({
+            title: '图片未保存成功'
+          })
+          console.log('图片未保存成功:' + e);
+        }
+      })
+    }
   }
 
 
@@ -97,7 +157,7 @@ class AvatarPoster extends Component {
             <Image className='page-poster' src={avatarFileID} />
           </View>
           <View className='button-wrap'>
-            <View className="button-reset" onClick={this.goHome}></View>
+            <View className="button-save" onClick={this.onSaveImage}>保存图片</View>
             <View className="button-main">生成分享海报</View>
             <Button className="button-share" openType='share'>邀请好友</Button>
           </View>

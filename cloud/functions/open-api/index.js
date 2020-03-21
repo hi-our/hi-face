@@ -24,6 +24,9 @@ exports.main = async (event, context) => {
     case 'imgSecCheck': {
       return imgSecCheck(event)
     }
+    case 'createQRCode': {
+      return createQRCode(event)
+    }
     default: {
       return
     }
@@ -52,6 +55,44 @@ async function imgSecCheck(event) {
     time: new Date(),
     status: result.errCode || 0,
     message: result.errMsg || ''
+  }
+}
+/**
+* 函数imgSecCheck
+* 参数 event:{
+*    path //路径
+*    width // 宽度
+*  }
+*   
+*/
+
+async function createQRCode(event) {
+  let { path = '', width = 300 } = event
+
+  try {
+    const { errCode, errMsg, buffer } = await cloud.openapi.wxacode.createQRCode({
+      path,
+      width
+    })
+  
+    let base64Main = buffer.toString('base64')
+    
+    return {
+      data: {
+        base64Main
+      },
+      time: new Date(),
+      status: errCode || 0,
+      message: errMsg || ''
+    }
+    
+  } catch (error) {
+    return {
+      data: error,
+      time: new Date(),
+      status: -30000,
+      message: '生成失败'
+    }
   }
 }
 

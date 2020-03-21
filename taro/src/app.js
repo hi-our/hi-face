@@ -37,7 +37,7 @@ class App extends Component {
     },
     networkTimeout: {
       request: 20000,
-      downloadFile: 100
+      downloadFile: 10000
     },
     tabBar: {
       backgroundColor: '#fff',
