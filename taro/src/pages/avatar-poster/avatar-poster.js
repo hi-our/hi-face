@@ -36,13 +36,14 @@ class AvatarPoster extends Component {
       avatarFileLocal: '',
       agetType: '',
       pageStatus: 'loading',
-      isAuthor: false
+      isAuthor: false,
+      errorText: ''
     }
   }
 
   componentDidMount() {
     this.loadData()
-    // this.onCreateQrcode()
+    this.onCreateQrcode()
   }
 
   onShareAppMessage() {
@@ -86,6 +87,7 @@ class AvatarPoster extends Component {
 
 
   loadData = async () => {
+    let hasError = false
     try {
       const { avatar_fileID = '', age_type = '', is_author } = await cloudCallFunction({
         name: 'collection_get_one_by_uuid',
@@ -94,8 +96,6 @@ class AvatarPoster extends Component {
           uuid: this.pageUUID,
         }
       })
-
-      
       
       console.log('is_author :', avatar_fileID, is_author);
       this.setState({
@@ -116,13 +116,15 @@ class AvatarPoster extends Component {
       // }, 1000);
 
     } catch (error) {
-        this.setState({
-          pageStatus: 'error'
-        })
+      hasError = true
+        // this.setState({
+        //   pageStatus: 'error'
+        // })
         console.log('error :', error);
     } finally {
       this.setState({
-        pageStatus: 'done'
+        pageStatus: hasError ? 'error' : 'done',
+        errorText: hasError ? '加载失败' : ''
       })
     }
   }
@@ -181,51 +183,67 @@ class AvatarPoster extends Component {
   }
 
   onCreatePoster = async () => {
-    Taro.showLoading({
-      title: '绘制中...'
-    })
-    const {
-      avatarFileLocal,
-      qrcodeFile
-    } = this.state
-
-    const pc = Taro.createCanvasContext('canvasPoster')
-
-    pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT);
-    // let tmpCutImage = await getImg(avatarFileLocal)
-    pc.drawImage(avatarFileLocal, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
-    pc.drawImage(qrcodeFile, 210 * SAVE_PAGE_DPR, 320 * SAVE_PAGE_DPR, SAVE_CODE_SIZE, SAVE_CODE_SIZE)
-    fillText(pc, '我做了一个新头像，赞我哟', 10 * SAVE_PAGE_DPR, 360 * SAVE_PAGE_DPR, true, 30, '#3d3d3d')
-    fillText(pc, '长按识别小程序，来一起换头像吧', 10 * SAVE_PAGE_DPR, 380 * SAVE_PAGE_DPR, false, 20, '#3d3d3d')
-
-    pc.draw(true, () => {
-      Taro.canvasToTempFilePath({
-        canvasId: 'canvasPoster',
-        x: 0,
-        y: 0,
-        height: DPR_CANVAS_SIZE * 3,
-        width: DPR_CANVAS_SIZE * 3,
-        fileType: 'jpg',
-        quality: 0.9,
-        success: async (res) => {
-          // await this.onSaveImageToCloud(res.tempFilePath)
-
-          console.log('res.tempFilePath :', res.tempFilePath);
-          Taro.hideLoading()
-          this.setState({
-            posterSrc: res.tempFilePath,
-            isShowPoster: true
-          })
-
-        },
-        fail: () => {
-          Taro.hideLoading()
-          Taro.showToast({
-            title: '图片生成失败，请重试'
-          })
-        }
+    try {
+      
+      Taro.showLoading({
+        title: '绘制中...'
       })
-    })
+      const {
+        avatarFileLocal,
+        qrcodeFile
+      } = this.state
+      
+      console.log('avatarFileLocal :', avatarFileLocal);
+  
+      const pc = Taro.createCanvasContext('canvasPoster')
+
+      console.log('pc :', pc);
+  
+      pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT);
+      if (!avatarFileLocal) {
+        return Error('需要重新进入页面')
+      }
+      pc.drawImage(avatarFileLocal, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
+      if (qrcodeFile) {
+        pc.drawImage(qrcodeFile, 210 * SAVE_PAGE_DPR, 320 * SAVE_PAGE_DPR, SAVE_CODE_SIZE, SAVE_CODE_SIZE)
+      }
+      fillText(pc, '我做了一个新头像，赞我哟', 10 * SAVE_PAGE_DPR, 360 * SAVE_PAGE_DPR, true, 30, '#3d3d3d')
+      fillText(pc, '长按识别小程序，来一起换头像吧', 10 * SAVE_PAGE_DPR, 380 * SAVE_PAGE_DPR, false, 20, '#3d3d3d')
+
+      console.log('2 :', 2);
+  
+      pc.draw(true, () => {
+        console.log('3 :', 3);
+        Taro.canvasToTempFilePath({
+          canvasId: 'canvasPoster',
+          x: 0,
+          y: 0,
+          height: DPR_CANVAS_SIZE * 3,
+          width: DPR_CANVAS_SIZE * 3,
+          fileType: 'jpg',
+          quality: 0.9,
+          success: async (res) => {
+            // await this.onSaveImageToCloud(res.tempFilePath)
+  
+            console.log('res.tempFilePath :', res.tempFilePath);
+            Taro.hideLoading()
+            this.setState({
+              posterSrc: res.tempFilePath,
+              isShowPoster: true
+            })
+  
+          },
+          fail: () => {
+            Taro.hideLoading()
+            Taro.showToast({
+              title: '图片生成失败，请重试'
+            })
+          }
+        })
+      })
+    } catch (error) {
+      console.log('error :', error);
+    }
   }
 
   previewPoster = () => {
@@ -281,12 +299,12 @@ class AvatarPoster extends Component {
 
 
   render() {
-    const { avatarFileID, agetType, pageStatus, isAuthor, avatarFileLocal } = this.state
+    const { avatarFileID, agetType, pageStatus, isAuthor, avatarFileLocal, errorText } = this.state
  
     return (
       <Block>
         <Canvas className='canvas-poster' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_HEIGHT + 'px' }} canvasId='canvasPoster' ref={c => this.canvasPosterRef = c} />
-        <PageWrapper status={pageStatus}>
+        <PageWrapper status={pageStatus} errorText={errorText}>
           <View className={`page-avatar-poster age-${agetType}`}>
             <View className='page-poster-wrap'>
               <Image className='page-poster' src={avatarFileLocal || avatarFileID} />

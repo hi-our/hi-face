@@ -100,6 +100,13 @@
 					"pathName": "pages/avatar-poster/avatar-poster",
 					"query": "uuid=21aba77f-b1e5-4377-adbd-7ff502ddea2a",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/self/self",
+					"pathName": "pages/self/self",
+					"query": "",
+					"scene": null
 				}
 			]
 		}

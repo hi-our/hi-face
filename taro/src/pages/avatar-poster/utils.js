@@ -14,3 +14,6 @@ export const DPR_CANVAS_HEIGHT = ORIGIN_CANVAS_SIZE * PAGE_DPR * 1.4
 export const SAVE_IMAGE_WIDTH = DPR_CANVAS_SIZE * pixelRatio
 export const SAVE_IMAGE_HEIGHT = DPR_CANVAS_SIZE * pixelRatio * 1.4
 export const SAVE_CODE_SIZE = ORIGIN_CODE_SIZE * PAGE_DPR * pixelRatio
+
+
+

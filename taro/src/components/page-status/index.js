@@ -31,6 +31,7 @@ export default class PageStatus extends Taro.Component {
 
   render() {
     const { status, errorText, errorCode, loadingType, showRefreshBtn } = this.props
+    console.log('status :', status, errorText);
 
     if (status === 'loading') {
       return (

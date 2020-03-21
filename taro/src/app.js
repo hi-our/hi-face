@@ -24,6 +24,7 @@ class App extends Component {
     pages: [
       'pages/queen-king/queen-king',
       'pages/wear-a-mask/wear-a-mask',
+      'pages/self/self',
       'pages/test/test',
       'pages/thanks/thanks',
       'pages/avatar-poster/avatar-poster',
