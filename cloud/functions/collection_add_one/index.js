@@ -28,7 +28,7 @@ exports.main = async (event, context) => {
         data: {
           create_time: Date.now(),
           update_time: Date.now(),
-          onpen_id: OPENID,
+          open_id: OPENID,
           app_id: APPID,
           uuid: uuidv4(),
           is_delete: false,

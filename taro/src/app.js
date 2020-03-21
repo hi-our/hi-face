@@ -112,6 +112,24 @@ class App extends Component {
     this.setUpdateManager()
   }
 
+  componentDidShow() {
+    // 判断是否登录超时处理
+    // userActions.checkLoginTimeout()
+
+    const { scene, query } = this.$router.params
+    if (query.source) {
+      Taro.setStorageSync('source', query.source)
+    }
+    console.log('scene, query', scene, query)
+
+    this.addToIndexBtn(scene, query)
+
+    //   // 保持小程序使用期间屏幕常亮
+    Taro.setKeepScreenOn({
+      keepScreenOn: true
+    })
+  }
+
   // 用户登录
   onUserLogin = async () => {
     try {
@@ -144,6 +162,19 @@ class App extends Component {
         }
       })
     })
+  }
+
+  /** TODO: 猜测这段代码的逻辑是，是否显示「返回首页」按钮，, query = {}暂时没用到 */
+  addToIndexBtn(code) {
+    const RefreshCode = {
+      '011004': true
+    }
+
+    // 理论上所谓app级别进来小程序的都需要返回首页，然后单独到3个tab里面清除掉
+    let sceneCode = Taro.getStorageSync('showBackToIndexBtn')
+    if (!sceneCode) {
+      Taro.setStorageSync('showBackToIndexBtn', RefreshCode[code] || true)
+    }
   }
 
   // 在 App 类中的 render() 函数没有实际作用

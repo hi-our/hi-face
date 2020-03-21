@@ -3,8 +3,10 @@ import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/co
 
 import { cloudCallFunction } from 'utils/fetch'
 import PageWrapper from 'components/page-wrapper'
-import { base64src, downloadImgByBase64 } from 'utils/canvas-drawing'
+import { base64src, downloadImgByBase64, getImg } from 'utils/canvas-drawing'
+import { fillText } from 'utils/canvas'
 import promisify from 'utils/promisify'
+import { SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT, DPR_CANVAS_SIZE, SAVE_CODE_SIZE, SAVE_PAGE_DPR } from './utils'
 
 import './styles.styl'
 
@@ -33,7 +35,8 @@ class AvatarPoster extends Component {
       avatarFileID: '',
       avatarFileLocal: '',
       agetType: '',
-      pageStatus: 'loading'
+      pageStatus: 'loading',
+      isAuthor: false
     }
   }
 
@@ -64,7 +67,7 @@ class AvatarPoster extends Component {
       const { base64Main } = await cloudCallFunction({
         name: 'open-api',
         data: {
-          action: 'createQRCode',
+          action: 'createMiniCode',
           path: this.pageUrl
         }
       })
@@ -84,17 +87,18 @@ class AvatarPoster extends Component {
 
   loadData = async () => {
     try {
-      const { avatar_fileID = '', age_type = '' } = await cloudCallFunction({
+      const { avatar_fileID = '', age_type = '', is_author } = await cloudCallFunction({
         name: 'collection_get_one_by_uuid',
         data: {
           collection_name: 'avatars',
-          uuid: this.pageUUID
+          uuid: this.pageUUID,
         }
       })
-
-
+      
+      console.log('is_author :', is_author);
       this.setState({
         avatarFileID: avatar_fileID,
+        isAuthor: is_author,
         agetType: age_type,
       })
 
@@ -104,9 +108,9 @@ class AvatarPoster extends Component {
         avatarFileLocal
       })
 
-      setTimeout(() => {
-        this.onCreatePoster()
-      }, 1000);
+      // setTimeout(() => {
+      //   this.onCreatePoster()
+      // }, 1000);
 
     } catch (error) {
         this.setState({
@@ -164,10 +168,71 @@ class AvatarPoster extends Component {
     }
   }
 
-  onCreatePoster = () => {
-    this.setState({
-      isShowPoster: true
+  onCreatePoster = async () => {
+    Taro.showLoading({
+      title: '绘制中...'
     })
+    const {
+      avatarFileLocal,
+      qrcodeFile
+    } = this.state
+
+    const pc = Taro.createCanvasContext('canvasPoster')
+
+    pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT);
+    // let tmpCutImage = await getImg(avatarFileLocal)
+    pc.drawImage(avatarFileLocal, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
+    pc.drawImage(qrcodeFile, 210 * SAVE_PAGE_DPR, 320 * SAVE_PAGE_DPR, SAVE_CODE_SIZE, SAVE_CODE_SIZE)
+    fillText(pc, '我做了一个新头像，赞我哟', 10 * SAVE_PAGE_DPR, 360 * SAVE_PAGE_DPR, true, 30, '#3d3d3d')
+    fillText(pc, '长按识别小程序，来一起换头像吧', 10 * SAVE_PAGE_DPR, 380 * SAVE_PAGE_DPR, false, 20, '#3d3d3d')
+
+    pc.draw(true, () => {
+      Taro.canvasToTempFilePath({
+        canvasId: 'canvasPoster',
+        x: 0,
+        y: 0,
+        height: DPR_CANVAS_SIZE * 3,
+        width: DPR_CANVAS_SIZE * 3,
+        fileType: 'jpg',
+        quality: 0.9,
+        success: async (res) => {
+          // await this.onSaveImageToCloud(res.tempFilePath)
+
+          console.log('res.tempFilePath :', res.tempFilePath);
+          Taro.hideLoading()
+          this.setState({
+            posterSrc: res.tempFilePath,
+            isShowPoster: true
+          })
+
+        },
+        fail: () => {
+          Taro.hideLoading()
+          Taro.showToast({
+            title: '图片生成失败，请重试'
+          })
+        }
+      })
+    })
+  }
+
+  previewPoster = () => {
+    const { posterSrc } = this.state
+    if (posterSrc !== '') Taro.previewImage({ urls: [posterSrc] })
+  }
+
+  onHidePoster = () => {
+    this.setState({
+      isShowPoster: false
+    })
+  }
+
+  savePoster = () => {
+    const { posterSrc } = this.state
+
+    if (posterSrc) {
+      this.saveImageToPhotosAlbum(posterSrc)
+    }
   }
 
   renderPoster = () => {
@@ -204,23 +269,36 @@ class AvatarPoster extends Component {
 
 
   render() {
-    const { avatarFileID, agetType, pageStatus } = this.state
+    const { avatarFileID, agetType, pageStatus, isAuthor } = this.state
  
     return (
-      <PageWrapper status={pageStatus}>
-        <View className={`page-avatar-poster age-${agetType}`}>
-          <View className='page-poster-wrap'>
-            <Image className='page-poster' src={avatarFileID} />
+      <Block>
+        <Canvas className='canvas-poster' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_HEIGHT + 'px' }} canvasId='canvasPoster' ref={c => this.canvasPosterRef = c} />
+        <PageWrapper status={pageStatus}>
+          <View className={`page-avatar-poster age-${agetType}`}>
+            <View className='page-poster-wrap'>
+              <Image className='page-poster' src={avatarFileID} />
+            </View>
+            {
+              isAuthor
+                ? (
+                  <View className='button-wrap'>
+                    <View className="button-save" onClick={this.onSaveImage}>保存图片</View>
+                    <View className="button-main" onClick={this.onCreatePoster}>生成分享海报</View>
+                    <Button className="button-share" openType='share'>邀请好友</Button>
+                  </View>
+                )
+                : (
+                  <View className='button-wrap'>
+                    <View className="button-main" onClick={this.goHome}>我也要玩</View>
+                  </View>
+                )
+            }
+            <View className='version'>Ver.{version}，基于 Taro 及小程序云开发</View>
           </View>
-          <View className='button-wrap'>
-            <View className="button-save" onClick={this.onSaveImage}>保存图片</View>
-            <View className="button-main">生成分享海报</View>
-            <Button className="button-share" openType='share'>邀请好友</Button>
-          </View>
-          <View className='version'>Ver.{version}，基于 Taro 及小程序云开发</View>
-        </View>
-        {this.renderPoster()}
-      </PageWrapper>
+          {this.renderPoster()}
+        </PageWrapper>
+      </Block>
     )
   }
 }

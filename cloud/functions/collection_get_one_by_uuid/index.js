@@ -31,7 +31,10 @@ exports.main = async (event, context) => {
       .get()
     
 
+
     if (data.length) {
+      console.log('data[0] :', data[0]);
+      console.log('PENID === data[0].open_id :', OPENID, data[0].open_id);
       return {
         data: {
           ...data[0],

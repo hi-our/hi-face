@@ -35,7 +35,7 @@ let __history = [] // 本地缓存的超出页面栈限制后的后续页面
 let logOverStack = false
 const MAX_PAGE_STACK = 10 // 微信页面栈限制为 10 层，我们将 proxy 页面设置在第九层
 const isObj = x => !!x && typeof x === 'object' && !Array.isArray(x)
-const tabRoutes = ['/pages/my-daka/my-daka', '/pages/self/self']
+const tabRoutes = ['/pages/queen-king/queen-king', '/pages/self/self']
 const proxyRoute = '/pages/proxy/proxy'
 
 function getUrl(url, data) {
