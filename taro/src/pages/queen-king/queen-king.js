@@ -178,12 +178,17 @@ class QueenKing extends Component {
 
   onUploadFile = async (tempFilePath, prefix = 'temp') => {
     try {
-      const uploadFile =  promisify(Taro.cloud.uploadFile)
-      const { fileID } = await uploadFile({
+
+      let uploadParams = {
         cloudPath: `${prefix}-${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
         filePath: tempFilePath,
-      })
-
+      }
+      if (isH5Page) {
+        const { fileID } = await Taro.cloud.uploadFile(uploadParams)
+        return fileID
+      }
+      const uploadFile =  promisify(Taro.cloud.uploadFile)
+      const { fileID } = await uploadFile(uploadParams)
       return fileID
       
     } catch (error) {
