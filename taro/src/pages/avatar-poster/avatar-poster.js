@@ -42,7 +42,7 @@ class AvatarPoster extends Component {
 
   componentDidMount() {
     this.loadData()
-    this.onCreateQrcode()
+    // this.onCreateQrcode()
   }
 
   onShareAppMessage() {
@@ -94,8 +94,10 @@ class AvatarPoster extends Component {
           uuid: this.pageUUID,
         }
       })
+
       
-      console.log('is_author :', is_author);
+      
+      console.log('is_author :', avatar_fileID, is_author);
       this.setState({
         avatarFileID: avatar_fileID,
         isAuthor: is_author,
@@ -104,6 +106,7 @@ class AvatarPoster extends Component {
 
       let avatarFileLocal = await this.onDownloadFile(avatar_fileID)
 
+      console.log('avatarFileLocal :', avatarFileLocal);
       this.setState({
         avatarFileLocal
       })
@@ -132,11 +135,20 @@ class AvatarPoster extends Component {
 
   onDownloadFile = async (fileID) => {
 
+    if (isH5Page) {
+      let { tempFilePath } = await Taro.cloud.downloadFile({
+        fileID,
+      })
+      return tempFilePath
+    }
+
     let downloadFile = promisify(Taro.cloud.downloadFile)
-    const { tempFilePath } = await downloadFile({
+    let { tempFilePath } = await downloadFile({
       fileID,
     })
+
     return tempFilePath
+    
 
   }
 
@@ -269,7 +281,7 @@ class AvatarPoster extends Component {
 
 
   render() {
-    const { avatarFileID, agetType, pageStatus, isAuthor } = this.state
+    const { avatarFileID, agetType, pageStatus, isAuthor, avatarFileLocal } = this.state
  
     return (
       <Block>
@@ -277,7 +289,7 @@ class AvatarPoster extends Component {
         <PageWrapper status={pageStatus}>
           <View className={`page-avatar-poster age-${agetType}`}>
             <View className='page-poster-wrap'>
-              <Image className='page-poster' src={avatarFileID} />
+              <Image className='page-poster' src={avatarFileLocal || avatarFileID} />
             </View>
             {
               isAuthor

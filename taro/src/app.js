@@ -77,14 +77,12 @@ class App extends Component {
     } else if (process.env.TARO_ENV === 'h5' || process.env.TARO_ENV === 'qq') {
       console.log('tcb :', tcb, process.env.TARO_ENV );
       let initConfig = {}
-      if (process.env.TARO_ENV === 'qq') {
-        tcb.useAdapters([adapterForQQ]);
-        initConfig = {
-          appSign: process.env.appSign,
-          appSecret: {
-            appAccessKeyId: process.env.appAccessKeyId,
-            appAccessKey: process.env.appAccessKey,
-          }
+      tcb.useAdapters([adapterForQQ]);
+      initConfig = {
+        appSign: process.env.appSign,
+        appSecret: {
+          appAccessKeyId: process.env.appAccessKeyId,
+          appAccessKey: process.env.appAccessKey,
         }
       }
       // hack写法？呼呼
@@ -116,18 +114,22 @@ class App extends Component {
     // 判断是否登录超时处理
     // userActions.checkLoginTimeout()
 
-    const { scene, query } = this.$router.params
+    console.log('this.$router :', this.$router);
+    const { scene, query = {} } = this.$router.params
     if (query.source) {
       Taro.setStorageSync('source', query.source)
     }
     console.log('scene, query', scene, query)
 
-    this.addToIndexBtn(scene, query)
+    if (scene) {
+      this.addToIndexBtn(scene)
+  
+      // 保持小程序使用期间屏幕常亮
+      Taro.setKeepScreenOn({
+        keepScreenOn: true
+      })
 
-    //   // 保持小程序使用期间屏幕常亮
-    Taro.setKeepScreenOn({
-      keepScreenOn: true
-    })
+    }
   }
 
   // 用户登录
