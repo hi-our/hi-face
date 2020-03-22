@@ -2,10 +2,12 @@ import Taro from '@tarojs/taro'
 import mirror from 'mirror'
 import * as config from 'config'
 import { LOGIN_STATUS } from 'constants/status'
-import EventEmitter from 'utils/EventEmitter'
+import EventEmitter from 'utils/event-emitter'
 import { cloudCallFunction } from 'utils/fetch';
 
 export const modelName = 'user'
+
+
 
 const defaultUserInfo = {
   clubAuth: '',
@@ -28,15 +30,80 @@ const userActions = mirror.model({
     // userInfo userId才是登录完成的最终状态
     userInfo: Object.assign({}, defaultUserInfo)
   },
+  reducers: {
+    setLoginStatus(state, loginStatus) {
+      return {
+        ...state,
+        loginStatus,
+      }
+    },
+    setLoginInfo(state, payload) {
+      const { userInfo = {}, loginStatus } = payload
+      return {
+        ...state,
+        loginStatus: loginStatus || state.loginStatus,
+        userInfo: {
+          ...state.userInfo,
+          ...userInfo
+        },
+      }
+    },
+  },
   effects: {
-    login() {
-      return cloudCallFunction({
-        name: 'login',
+    loginSuccessEmitter(loginStatus) {
+      if (loginStatus === LOGIN_STATUS.SUCCESS) {
+        Taro.setStorageSync('ClubAuth_Time', Date.now() + 13.9 * 24 * 60 * 60 * 1000)
+      }
+      EventEmitter.emit('login-callback-status', loginStatus)
+    },
+    async login() {
+      
+      try {
+        const userInfo = await cloudCallFunction({
+          name: 'login',
+        })
+        const { wechatInfo = {}, userId } = userInfo
 
-      }).then(res => {
-        console.log('res :', res);
-      })
+        this.setLoginInfo({
+          loginStatus: userId ? LOGIN_STATUS.SUCCESS : '',
+          userInfo
+        })
+        this.loginSuccessEmitter(LOGIN_STATUS.SUCCESS)
+        console.log('userInfo :', userInfo)
 
+        if (!wechatInfo.avatarUrl) {
+          this.getWxInfo()
+        }
+      } catch (error) {
+        this.loginSuccessEmitter(LOGIN_STATUS.TIMEOUT)
+        this.setLoginInfo({ loginStatus: LOGIN_STATUS.TIMEOUT })
+      }
+    },
+    async getWxInfo() {
+      const setting = await Taro.getSetting()
+      if (setting.authSetting['scope.userInfo']) {
+        // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
+        const res = await Taro.getUserInfo({
+          lang: 'zh_CN',
+        })
+        console.log('res', res, res.userInfo)
+
+        cloudCallFunction({
+          name: 'login',
+          data: {
+            type: 'saveWechatInfo',
+            wechatInfo: res.userInfo
+          }
+        }).then(() => {
+          this.setLoginInfo({
+            userInfo: {
+              wechatInfo: res.userInfo
+            }
+          })
+          
+        })
+
+      }
     }
   }
 })
