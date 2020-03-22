@@ -3,7 +3,8 @@ import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/co
 
 import { cloudCallFunction } from 'utils/fetch'
 import PageWrapper from 'components/page-wrapper'
-import { transformList } from './utils';
+import { transformList } from './utils'
+import CorePage from 'page';
 import './styles.styl'
 
 import * as config from 'config'
@@ -11,8 +12,8 @@ import * as config from 'config'
 
 const version = config.version
 
-// @CorePage
-class Thanks extends Component {
+@CorePage
+class Self extends Component {
   config = {
     navigationBarTitleText: '个人中心',
   }
@@ -27,53 +28,27 @@ class Thanks extends Component {
   }
 
   componentDidMount() {
-    this.loadData()
-  }
+    Taro.getSetting({
+      success: setting => {
+        console.log(setting, 'setting')
+        if (setting.authSetting['scope.userInfo']) {
+          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
+          Taro.getUserInfo({
+            success: res => {
+              console.log('res', res, res.userInfo)
+              // 可以将 res 发送给后台解码出 unionId
+              this.setState({
+                userInfo: res.userInfo
+              })
 
-  loadData = async () => {
-    // var testData = ''
-    // for (let index = 0; index < 10000; index++) {
-    //   testData += '0123456789'
-    // }
-
-    // console.log('testData :', testData)
-    // console.log('testData大小为 :', testData.length / 1024 + 'k')
-
-    try {
-      const data = await cloudCallFunction({
-        name: 'collection_query_page',
-        data: {
-          collection_name: 'avatars',
-          orderBy: {
-            field: 'update_time'
-          }
+            }
+          })
         }
-      })
-
-      console.log('data.length :', data.length);
-
-      if (data.length === 0) {
-        this.setState({
-          pageStatus: 'empty',
-          errorText: '数据为空'
-        })
-        return
       }
-      
-      this.setState({
-        list: transformList(data),
-        pageStatus: 'done'
-      })
-
-    } catch (error) {
-      this.setState({
-        pageStatus: 'error',
-        errorText: '加载出错'
-      })
-      console.log('error :', error);
-
-    }
+    })
   }
+
+  
 
 
   onShareAppMessage() {
@@ -110,29 +85,20 @@ class Thanks extends Component {
   }
 
   render() {
+    const { isLogin } = this.props
     const { list, pageStatus, errorText } = this.state
 
 
     return (
-      <PageWrapper status={pageStatus} errorText={errorText}>
-        <View className='avatar-list'>
-          {
-            list.filter(item => item.avatarFileID).map((item) => {
-              console.log('item :', item);
-              const { uuid, avatarFileID } = item
-              console.log('avatarFileID :', avatarFileID);
-              return (
-                <View key={uuid} className="avatar-item" data-uuid={uuid} onClick={this.goOneAvatar.bind(this, uuid)}>
-                  <Image className="avatar-image" src={avatarFileID}></Image>
-                </View>
-              )
-            })
-          }
-
-        </View>
-      </PageWrapper>
+      <View className='user-wrap'>
+        {
+          isLogin
+            ? '登录'
+            : '未登录'
+        }
+      </View>
     )
   }
 }
 
-export default Thanks
+export default Self

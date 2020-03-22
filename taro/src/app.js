@@ -5,7 +5,7 @@ import adapterForQQ from '@cloudbase/adapter-qq_mp';
 
 import Index from './pages/test/test'
 import store from '@/store'
-// import userActions from '@/store/user'
+import userActions from '@/store/user'
 import * as config from 'config'
 
 
@@ -27,6 +27,7 @@ class App extends Component {
       'pages/self/self',
       'pages/test/test',
       'pages/thanks/thanks',
+      'pages/my-avatars/my-avatars',
       'pages/avatar-poster/avatar-poster',
       // 'pages/spread-game/spread-game',
     ],
@@ -59,8 +60,8 @@ class App extends Component {
           selectedIconPath: 'images/mask-2.png'
         },
         {
-          pagePath: 'pages/thanks/thanks',
-          text: '致谢',
+          pagePath: 'pages/self/self',
+          text: '个人中心',
           iconPath: 'images/thank-1.png',
           selectedIconPath: 'images/thank-2.png'
         },
@@ -106,7 +107,7 @@ class App extends Component {
       })
     }
     
-    // this.onUserLogin()
+    this.onUserLogin()
 
     this.setUpdateManager()
   }
@@ -136,7 +137,7 @@ class App extends Component {
   // 用户登录
   onUserLogin = async () => {
     try {
-      // const res = await userActions.login()
+      const res = await userActions.login()
       // wx.bisdk && wx.bisdk.setOpenIdInfo && wx.bisdk.setOpenIdInfo(res)
 
       // 获取注册来源示例
