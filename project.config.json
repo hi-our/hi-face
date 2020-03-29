@@ -8,12 +8,12 @@
 	"qqappid": "1110180763",
 	"setting": {
 		"urlCheck": false,
-		"es6": false,
+		"es6": true,
 		"postcss": false,
-		"minified": false,
+		"minified": true,
 		"newFeature": true,
 		"coverView": true,
-		"autoAudits": false,
+		"autoAudits": true,
 		"showShadowRootInWxmlPanel": true,
 		"scopeDataCheck": false,
 		"checkInvalidKey": true,
@@ -57,7 +57,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 0,
 			"list": [
 				{
 					"id": 0,
