@@ -74,7 +74,8 @@ class App extends Component {
 
     if (process.env.TARO_ENV === 'weapp') {
       Taro.cloud.init({
-        env: config.cloudEnv
+        env: config.cloudEnv,
+        traceUser: true
       })
     } else if (process.env.TARO_ENV === 'h5' || process.env.TARO_ENV === 'qq') {
       console.log('tcb :', tcb, process.env.TARO_ENV );
