@@ -147,7 +147,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
   }
 
 
-  componentDidMount(): void {
+  onReady(): void {
     const {
       cropperCanvasId,
       cropperCutCanvasId
