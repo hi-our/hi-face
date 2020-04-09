@@ -9,6 +9,11 @@ import { isAndroid } from 'utils/common';
 import {CSSProperties} from "react";
 
 
+const pxTransform = function (size) {
+  const designWidth = 750
+  return Taro.pxTransform(size, designWidth)
+}
+
 interface TaroCropperComponentProps {
   cropperCanvasId: string,          // 画布id
   cropperCutCanvasId: string,       // 用于裁剪的canvas id
@@ -147,6 +152,8 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
       cropperCanvasId,
       cropperCutCanvasId
     } = this.props;
+
+    console.log('this :', cropperCanvasId, this);
     this.cropperCanvasContext = Taro.createCanvasContext(cropperCanvasId, this);
     this.cropperCutCanvasContext = Taro.createCanvasContext(cropperCutCanvasId, this);
     this.updateInfo(this.props)
@@ -520,15 +527,16 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
     let cancel: any = null;
     const isH5 = process.env.TARO_ENV === 'h5';
 
+    console.log('Taro :', Taro);
     if (!hideFinishText) {
       const finishStyle: CSSProperties = {
         position: 'absolute',
         display: 'inline-block',
         color: themeColor,
         textAlign: "right",
-        fontSize: Taro.pxTransform(32),
-        bottom: Taro.pxTransform(30),
-        right: Taro.pxTransform(30),
+        fontSize: pxTransform(32),
+        bottom: pxTransform(30),
+        right: pxTransform(30),
       };
       const onFinishClick = () => {
         this.cut()
@@ -562,9 +570,9 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
         display: 'inline-block',
         color: themeColor,
         textAlign: "left",
-        fontSize: Taro.pxTransform(32),
-        bottom: Taro.pxTransform(30),
-        left: Taro.pxTransform(30),
+        fontSize: pxTransform(32),
+        bottom: pxTransform(30),
+        left: pxTransform(30),
       };
       cancel = <CoverView
         style={cancelStyle}
