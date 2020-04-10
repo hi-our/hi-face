@@ -107,6 +107,12 @@
 					"pathName": "pages/self/self",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "face-love",
+					"pathName": "pages/face-love/face-love",
+					"scene": null
 				}
 			]
 		}

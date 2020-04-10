@@ -29,6 +29,7 @@ class App extends Component {
       'pages/thanks/thanks',
       'pages/my-avatars/my-avatars',
       'pages/avatar-poster/avatar-poster',
+      'pages/face-love/face-love',
       // 'pages/spread-game/spread-game',
     ],
     window: {
