@@ -24,14 +24,14 @@ class App extends Component {
     } else if (process.env.TARO_ENV === 'h5' || process.env.TARO_ENV === 'qq') {
       console.log('tcb :', tcb, process.env.TARO_ENV );
       let initConfig = {}
-      tcb.useAdapters([adapterForQQ]);
-      initConfig = {
-        appSign: process.env.appSign,
-        appSecret: {
-          appAccessKeyId: process.env.appAccessKeyId,
-          appAccessKey: process.env.appAccessKey,
-        }
-      }
+      // tcb.useAdapters([adapterForQQ]);
+      // initConfig = {
+      //   appSign: process.env.appSign,
+      //   appSecret: {
+      //     appAccessKeyId: process.env.appAccessKeyId,
+      //     appAccessKey: process.env.appAccessKey,
+      //   }
+      // }
       // hack写法？呼呼
       Taro.cloud = tcb.init({
         env: config.cloudEnv,
@@ -57,6 +57,7 @@ class App extends Component {
     this.setUpdateManager()
   }
 
+  // TODO 这里还要看一下文档
   // componentDidShow() {
   //   // 判断是否登录超时处理
   //   // userActions.checkLoginTimeout()

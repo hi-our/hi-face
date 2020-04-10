@@ -1018,24 +1018,24 @@ class QueenKing extends Component {
         {
           this.renderPoster()
         }
+        <View className='cropper-wrap' style={{ display: originSrc ? 'block' : 'none' }}>
+          <TaroCropper
+            src={originSrc}
+            cropperWidth={ORIGIN_CANVAS_SIZE * 2}
+            cropperHeight={ORIGIN_CANVAS_SIZE * 2}
+            ref={this.catTaroCropper}
+            fullScreen
+            fullScreenCss
+            onCut={this.onCut}
+            hideCancelText={false}
+            onCancel={this.onCancel}
+          />
+        </View> 
 
-        {
+        {/* {
           !!originSrc && (
-            <View className='cropper-wrap' style={{ display: originSrc ? 'block' : 'none' }}>
-              <TaroCropper
-                src={originSrc}
-                cropperWidth={ORIGIN_CANVAS_SIZE * 2}
-                cropperHeight={ORIGIN_CANVAS_SIZE * 2}
-                ref={this.catTaroCropper}
-                fullScreen
-                fullScreenCss
-                onCut={this.onCut}
-                hideCancelText={false}
-                onCancel={this.onCancel}
-              />
-            </View> 
           )
-        }
+        } */}
       </View>
     )
   }

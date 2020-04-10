@@ -35,7 +35,7 @@ class Index extends Component {
 
 
 
-  componentDidMount() {
+  onReady() {
     this.testFetch()
   }
 
@@ -71,17 +71,10 @@ class Index extends Component {
       console.log('ctx :', ctx);
       ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
       fillText(ctx, ' ', 55, 233, false, 12, '#687583')
-      
-      // drawing(this.canvasRef, {
-      //   info,
-      //   imgSrc: imageData,
-      //   width: CANVAS_SIZE,
-      //   height: CANVAS_SIZE,
-      // })
 
       let OneImgTest = require('../../images/one_face.jpeg')
       const imgSrcTransform = isH5Page ? await getImg(OneImgTest) : OneImgTest
-      // console.log('imgSrcTransform :', imgSrcTransform);
+      console.log('imgSrcTransform :', imgSrcTransform);
       console.log('图片加载完 :', CANVAS_SIZE);
       ctx.drawImage(imgSrcTransform, 0, 0, 300, 300)
       for (let index = 0; index < hatList.length; index++) {
@@ -90,19 +83,17 @@ class Index extends Component {
         await drawHat(ctx, hatInfo);
       }
       console.log('10 :', 10);
-      // ctx.save()
       ctx.draw(true)
 
 
       
     } catch (error) {
-      console.log('test error draw :');
-      drawing(this.canvasRef, {
-        imgSrc: imageData,
-        width: CANVAS_SIZE,
-        height: CANVAS_SIZE,
-      })
-      console.log('error :', error);
+      console.log('test error draw :', error);
+      // drawing(this.canvasRef, {
+      //   imgSrc: imageData,
+      //   width: CANVAS_SIZE,
+      //   height: CANVAS_SIZE,
+      // })
     }
   }
 

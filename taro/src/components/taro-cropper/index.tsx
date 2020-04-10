@@ -132,9 +132,11 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
           this.imageLeftOrigin = this.imageLeft = (this.width - this.realImageWidth) / 2;
           this.imageTopOrigin = this.imageTop = (this.height - this.cropperHeight) / 2;
         }
+        console.log('h5 src :', src);
         // h5端返回的如果是blob对象，需要转成image对象才可以用Canvas绘制
         if (process.env.TARO_ENV === 'h5' && src.startsWith('blob:')) {
           return new Promise((resolve, reject) => {
+
             this.image = new Image();
             this.image.src = src;
             this.image.id = `taro_cropper_${src}`;
@@ -150,7 +152,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
 
   }
 
-  componentDidMount(): void {
+  onReady() {
     const {
       cropperCanvasId,
       cropperCutCanvasId
@@ -159,6 +161,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
     console.log('this :', cropperCanvasId, this);
     this.cropperCanvasContext = Taro.createCanvasContext(cropperCanvasId, this);
     this.cropperCutCanvasContext = Taro.createCanvasContext(cropperCutCanvasId, this);
+    console.log('this.cropperCanvasContext :', this.cropperCanvasContext);
     this.updateInfo(this.props)
       .then(() => {
         this.update();

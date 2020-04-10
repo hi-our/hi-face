@@ -93,6 +93,9 @@ export const downloadImgByBase64 = (url) => {
 }
 
 const getH5Image = (src) => {
+  if (typeof src === 'object') src = src.default
+  
+  console.log('getH5Image src :', src);
   return new Promise((resolve, reject) => {
     const image = new Image()
     image.setAttribute('crossOrigin', 'anonymous');
@@ -112,8 +115,13 @@ const getH5Image = (src) => {
  */
 export const getImg = async (src) => {
   if (isH5Page) {
-    let image = await getH5Image(src)
-    return image
+    try {
+      let image = await getH5Image(src)
+      return image
+      
+    } catch (error) {
+      console.log('error :', error);
+    }
   }
 
   if (src.includes(';base64,')) {
@@ -174,7 +182,6 @@ export const drawing = async (canvas, options) => {
   let ctx = null
   try {
     ctx = Taro.createCanvasContext('canvasHat')
-    ctx = canvas.getContext('2d') //Taro.createCanvasContext('canvasHat')
     console.log('ctx :', ctx);
     
   } catch (error) {
