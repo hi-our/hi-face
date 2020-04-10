@@ -2,8 +2,11 @@ export default {
   pages: [
     'pages/queen-king/queen-king',
     'pages/wear-a-mask/wear-a-mask',
-    // 'pages/test/test',
+    'pages/self/self',
+    'pages/test/test',
     'pages/thanks/thanks',
+    'pages/my-avatars/my-avatars',
+    'pages/avatar-poster/avatar-poster',
     // 'pages/spread-game/spread-game',
   ],
   window: {
@@ -14,7 +17,7 @@ export default {
   },
   networkTimeout: {
     request: 20000,
-    downloadFile: 100
+    downloadFile: 10000
   },
   tabBar: {
     backgroundColor: '#fff',
@@ -35,8 +38,8 @@ export default {
         selectedIconPath: 'images/mask-2.png'
       },
       {
-        pagePath: 'pages/thanks/thanks',
-        text: '致谢',
+        pagePath: 'pages/self/self',
+        text: '个人中心',
         iconPath: 'images/thank-1.png',
         selectedIconPath: 'images/thank-2.png'
       },

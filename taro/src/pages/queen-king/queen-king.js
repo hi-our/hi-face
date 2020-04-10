@@ -6,7 +6,7 @@ import { getSystemInfo, h5PageModalTips } from 'utils/common'
 import { getHatInfo, getHatShapeList } from 'utils/face-utils'
 import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase64 } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
-import promisify from 'utils/promisify';
+import promisify from 'utils/promisify'
 
 import one_face_image from '../../images/one_face.jpeg';
 import two_face_image from '../../images/two_face.jpg';
@@ -30,6 +30,7 @@ import './styles.styl'
 const { pixelRatio } = getSystemInfo()
 
 const isH5Page = process.env.TARO_ENV === 'h5'
+const isQQPage = process.env.TARO_ENV === 'qq'
 
 
 class QueenKing extends Component {
@@ -172,12 +173,17 @@ class QueenKing extends Component {
 
   onUploadFile = async (tempFilePath, prefix = 'temp') => {
     try {
-      const uploadFile = promisify(Taro.cloud.uploadFile)
-      const { fileID } = await uploadFile({
+
+      let uploadParams = {
         cloudPath: `${prefix}-${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
         filePath: tempFilePath,
-      })
-
+      }
+      if (isH5Page) {
+        const { fileID } = await Taro.cloud.uploadFile(uploadParams)
+        return fileID
+      }
+      const uploadFile =  promisify(Taro.cloud.uploadFile)
+      const { fileID } = await uploadFile(uploadParams)
       return fileID
       
     } catch (error) {
@@ -213,6 +219,8 @@ class QueenKing extends Component {
     })
 
     let oldTime = Date.now()
+
+    console.log('resImage :', resImage);
 
     let { data: base64Main } = await fsmReadFile({
       filePath: resImage.tempFilePath,
@@ -263,29 +271,22 @@ class QueenKing extends Component {
 
       Taro.hideLoading()
 
-      console.log('cutImageSrc :', cutImageSrc);
-      const { data: base64Main } = await fsmReadFile({
-        filePath: cutImageSrc,
-        // encoding: 'utf-8', //'base64',
-      })
-      const base64 = wx.arrayBufferToBase64(base64Main)
-      // 以0.657M的图片为例
-      // 转换为ArrayBuffer，大小还是0.657M
-      // 转换为base64，大小为1.7M
-      // 转换为utf-8，大小为1.2M
-      console.log('base64Main :', base64Main.byteLength)
-      console.log('base64 :', base64);
-      console.log('变大率 :', base64.length, base64.length / (base64Main.byteLength))
+      // 测试大小的代码，没有用
+      // console.log('cutImageSrc :', cutImageSrc);
+      // const { data: base64Main } = await fsmReadFile({
+      //   filePath: cutImageSrc,
+      //   // encoding: 'utf-8', //'base64',
+      // })
+      // const base64 = wx.arrayBufferToBase64(base64Main)
+      // // 以0.657M的图片为例
+      // // 转换为ArrayBuffer，大小还是0.657M
+      // // 转换为base64，大小为1.7M
+      // // 转换为utf-8，大小为1.2M
+      // console.log('base64Main :', base64Main.byteLength)
+      // console.log('base64 :', base64);
+      // console.log('变大率 :', base64.length, base64.length / (base64Main.byteLength))
 
-      if (!isH5Page) {
-        const fileID = await this.onUploadFile(cutImageSrc)
-        console.log('fileID :', fileID);
-        
-  
-        this.setState({
-          originFileID: fileID
-        })
-      }
+      this.uploadOriginImage(cutImageSrc)
 
 
     } catch (error) {
@@ -315,6 +316,12 @@ class QueenKing extends Component {
         isShowShape: true,
       })
       setTmpThis(this, shapeList[0])
+      this.uploadOriginImage(cutImageSrc)
+    }
+  }
+
+  uploadOriginImage = async (cutImageSrc) => {
+    if (!isH5Page) {
       const fileID = await this.onUploadFile(cutImageSrc)
       console.log('fileID :', fileID);
       this.setState({
@@ -453,6 +460,8 @@ class QueenKing extends Component {
   }
 
   onSaveImageToCloud = async (tempFilePath) => {
+    const { currentAgeType } = this.state
+
     try {
       // 上传头像图片
       const fileID = await this.onUploadFile(tempFilePath, 'avatar')
@@ -463,7 +472,8 @@ class QueenKing extends Component {
         data: {
           collection_name: 'avatars',
           info: {
-            avatar_fileID: fileID
+            avatar_fileID: fileID,
+            age_type: currentAgeType
           }
         }
       })

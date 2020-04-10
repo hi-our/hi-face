@@ -1,0 +1,80 @@
+html
+  .self-page
+    height 100%
+    max-width 640PX
+    margin 0 auto
+
+
+.self-page
+  height 100vh
+  background #f9f9f9
+
+.user-wrap
+  display flex
+  background #ffffff
+  padding 20px
+  .avatar
+    margin-right 20px
+    width 60px
+    height 60px
+    border-radius 50%
+    overflow hidden
+
+    & > image
+      display block
+      width 60px
+      height 60px
+  
+  .user-main
+    display flex
+    flex-direction column
+    justify-content center
+
+  .nick-name
+    font-size 18px
+    line-height 1.5
+    color #2D3742
+  
+  .address-text
+    margin-top 5px
+    font-size 12px
+    line-height 1.5
+    color #A4B0BD
+  
+.list-wrap
+  margin-top 10px
+  background #fff
+
+  .item
+    position relative
+    padding 20px
+    font-size 14px
+    line-height 1.5
+    color #2D3742
+    display flex
+    align-items center
+
+    &:nth-child(n+2)
+      border-top 1px solid #eee
+    
+  .item-image
+    margin-right 30px
+    width 40px
+    height 40px
+  
+  .item-icon
+    position absolute
+    right 10px
+    top 50%
+    margin-top -10px
+    width 20px
+    height 20px
+    background url(https://n1image.hjfile.cn/res7/2020/03/22/978f72bed2a5be8c0fb2993df5dca9b3.png) no-repeat
+    background-size contain
+
+
+.version
+  padding 15px 0 20px
+  color #95A1AF
+  font-size 12px
+  text-align center

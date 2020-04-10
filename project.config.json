@@ -5,14 +5,15 @@
 	"projectname": "taro-next-react-goddess",
 	"description": "test",
 	"appid": "wxd5e8989ce23206af",
+	"qqappid": "1110180763",
 	"setting": {
 		"urlCheck": false,
-		"es6": false,
+		"es6": true,
 		"postcss": false,
-		"minified": false,
+		"minified": true,
 		"newFeature": true,
 		"coverView": true,
-		"autoAudits": false,
+		"autoAudits": true,
 		"showShadowRootInWxmlPanel": true,
 		"scopeDataCheck": false,
 		"checkInvalidKey": true,
@@ -22,11 +23,19 @@
 			"ignore": [],
 			"disablePlugins": [],
 			"outputPath": ""
-		}
+		},
+		"remoteDebugLogEnable": false,
+		"nodeModules": true,
+		"uglifyFileName": true
 	},
 	"compileType": "miniprogram",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
+	"scripts": {
+		"beforeCompile": "",
+		"beforePreview": "",
+		"beforeUpload": ""
+	},
 	"condition": {
 		"search": {
 			"current": -1,
@@ -48,7 +57,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 0,
 			"list": [
 				{
 					"id": 0,
@@ -72,17 +81,24 @@
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "pages/avatar-poster/avatar-poster",
+					"id": 5,
+					"name": "avatar-poster-原图",
 					"pathName": "pages/avatar-poster/avatar-poster",
-					"query": "uuid=4d258e17-c38b-40b4-97d5-6638c8cd9560",
+					"query": "uuid=f1859f4b-40ea-438b-a818-578d3d66c4a9",
 					"scene": null
 				},
 				{
-					"id": 5,
-					"name": "pages/avatar-poster/avatar-poster",
+					"id": -1,
+					"name": "avatar-poster-童年",
 					"pathName": "pages/avatar-poster/avatar-poster",
-					"query": "uuid=ae145fef-f0cd-4dea-827d-ad6dbc56ea87",
+					"query": "uuid=21aba77f-b1e5-4377-adbd-7ff502ddea2a",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/self/self",
+					"pathName": "pages/self/self",
+					"query": "",
 					"scene": null
 				}
 			]

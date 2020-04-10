@@ -1,12 +1,11 @@
 import React, { PureComponent } from 'react';
 import Taro, {CanvasContext, getImageInfo, getSystemInfoSync} from '@tarojs/taro';
 import {Canvas, CoverView, View} from '@tarojs/components';
-
 import './index.styl';
 // @ts-ignore
 import {CanvasTouch, CanvasTouchEvent} from "@tarojs/components/types/common";
-import { isAndroid } from 'utils/common';
 import {CSSProperties} from "react";
+import { easySetFillStyle, easySetLineWidth, easySetStrokeStyle } from "./canvas-util";
 
 
 const pxTransform = function (size) {
@@ -33,6 +32,8 @@ interface TaroCropperComponentProps {
   hideCancelText: boolean,          // 隐藏取消按钮（默认为true）
   finishText: string,               // 完成按钮文字，默认为 '完成'
   cancelText: string,               // 取消按钮文字，默认为 '取消'
+  fileType: 'jpg' | 'png' | string, // 裁剪后导出的图片的格式，只支持 'jpg' 或 'png'。默认为 'jpg'
+  quality: number,                  // 导出图片的质量，取值为 0 ~ 1，默认为1
 }
 
 interface TaroCropperComponentState {
@@ -57,7 +58,10 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
     hideCancelText: true,
     finishText: '完成',
     cancelText: '取消',
-    onCancel: () => {},
+    fileType: 'jpg',
+    quality: 1,
+    onCancel: () => {
+    },
     onCut: () => {
     },
     onFail: () => {
@@ -146,8 +150,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
 
   }
 
-
-  onReady(): void {
+  componentDidMount(): void {
     const {
       cropperCanvasId,
       cropperCutCanvasId
@@ -188,8 +191,8 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
     const cropperStartX = (this.width - this.cropperWidth) / 2;
     const cropperStartY = (this.height - this.cropperHeight) / 2;
     this.cropperCanvasContext.beginPath();
-    this.cropperCanvasContext.setStrokeStyle(themeColor);
-    this.cropperCanvasContext.setLineWidth(lineWidth);
+    easySetStrokeStyle(this.systemInfo, this.cropperCanvasContext, themeColor);
+    easySetLineWidth(this.systemInfo, this.cropperCanvasContext, lineWidth);
     // 左上角
     this.cropperCanvasContext.moveTo(cropperStartX, cropperStartY);
     this.cropperCanvasContext.lineTo(cropperStartX + lineLength, cropperStartY);
@@ -268,7 +271,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
       this.imageLeft, this.imageTop, this.scaleImageWidth, this.scaleImageHeight);
     // 绘制半透明层
     this.cropperCanvasContext.beginPath();
-    this.cropperCanvasContext.setFillStyle('rgba(0, 0, 0, 0.3)');
+    easySetFillStyle(this.systemInfo, this.cropperCanvasContext, 'rgba(0, 0, 0, 0.3)');
     this.cropperCanvasContext.fillRect(0, 0, this.width, this.height);
     this.cropperCanvasContext.fill();
 
@@ -437,9 +440,10 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
     filePath: string,
   }> {
     const {
-      cropperCutCanvasId
+      cropperCutCanvasId,
+      fileType,
+      quality
     } = this.props;
-    console.log(this.systemInfo.pixelRatio);
     return new Promise((resolve, reject) => {
       const scope = process.env.TARO_ENV === 'h5' ? this : this.$scope;
       Taro.canvasToTempFilePath({
@@ -450,8 +454,8 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
         height: this.cropperHeight - 2,
         destWidth: this.cropperWidth * this.systemInfo.pixelRatio,
         destHeight: this.cropperHeight * this.systemInfo.pixelRatio,
-        fileType: 'jpg',
-        quality: isAndroid() ? 0.8 : 1,
+        fileType: fileType,
+        quality: quality,
         success: res => {
           switch (process.env.TARO_ENV) {
             case 'alipay':
@@ -512,6 +516,8 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
     }
 
     const canvasStyle: CSSProperties = isFullScreenCss ? {} : {
+      background: 'rgba(0, 0, 0, 0.8)',
+      position: 'relative',
       width: `${_width}px`,
       height: `${_height}px`
     };

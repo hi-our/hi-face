@@ -32,6 +32,7 @@ export default class PageStatus extends Component {
 
   render() {
     const { status, errorText, errorCode, loadingType, showRefreshBtn } = this.props
+    console.log('status :', status, errorText);
 
     if (status === 'loading') {
       return (

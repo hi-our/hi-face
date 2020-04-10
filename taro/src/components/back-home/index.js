@@ -32,7 +32,7 @@ export default class BackHome extends React.Component {
 
   toIndexPage = () => {
     Taro.switchTab({
-      url: '/pages/my-daka/my-daka'
+      url: '/pages/queen-king/queen-king'
     })
   }
 

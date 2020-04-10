@@ -21,6 +21,8 @@ exports.main = async (event, context) => {
   
   const { OPENID, APPID } = cloud.getWXContext() // 这里获取到的 openId 和 appId 是可信的
 
+  console.log('cloud.getWXContext() :', cloud.getWXContext());
+
   try {
     const { _id } = await db.collection(collection_name)
       .add({
@@ -28,7 +30,7 @@ exports.main = async (event, context) => {
         data: {
           create_time: Date.now(),
           update_time: Date.now(),
-          onpen_id: OPENID,
+          open_id: OPENID,
           app_id: APPID,
           uuid: uuidv4(),
           is_delete: false,

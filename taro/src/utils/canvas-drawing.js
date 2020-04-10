@@ -67,6 +67,7 @@ export const srcToBase64Main = async (src) => {
 export const fsmReadFile = promisify(fsm.readFile)
 
 
+// 这个方法可以简化？
 export const downloadImgByBase64 = (url) => {
   var img = new Image()
   img.onload = function () {
@@ -173,7 +174,6 @@ export const drawing = async (canvas, options) => {
   let ctx = null
   try {
     ctx = Taro.createCanvasContext('canvasHat')
-    debugger
     ctx = canvas.getContext('2d') //Taro.createCanvasContext('canvasHat')
     console.log('ctx :', ctx);
     

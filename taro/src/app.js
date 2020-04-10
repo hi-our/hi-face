@@ -1,9 +1,10 @@
-import Taro from '@tarojs/taro';
 import React, { Component } from 'react'
+import Taro from '@tarojs/taro';
 import { Provider } from 'react-redux'
 import * as tcb from 'tcb-js-sdk'
+import adapterForQQ from '@cloudbase/adapter-qq_mp';
 import store from '@/store'
-// import userActions from '@/store/user'
+import userActions from '@/store/user'
 import * as config from 'config'
 
 
@@ -17,12 +18,24 @@ class App extends Component {
 
     if (process.env.TARO_ENV === 'weapp') {
       Taro.cloud.init({
-        env: config.cloudEnv
+        env: config.cloudEnv,
+        traceUser: true
       })
-    } else if (process.env.TARO_ENV === 'h5') {
+    } else if (process.env.TARO_ENV === 'h5' || process.env.TARO_ENV === 'qq') {
+      console.log('tcb :', tcb, process.env.TARO_ENV );
+      let initConfig = {}
+      tcb.useAdapters([adapterForQQ]);
+      initConfig = {
+        appSign: process.env.appSign,
+        appSecret: {
+          appAccessKeyId: process.env.appAccessKeyId,
+          appAccessKey: process.env.appAccessKey,
+        }
+      }
       // hack写法？呼呼
       Taro.cloud = tcb.init({
-        env: config.cloudEnv
+        env: config.cloudEnv,
+        ...initConfig
       })
       // console.log('登录云开发成功！')
       Taro.cloud.auth().signInAnonymously().then(() => {
@@ -39,15 +52,37 @@ class App extends Component {
       })
     }
     
-    // this.onUserLogin()
+    this.onUserLogin()
 
     this.setUpdateManager()
   }
 
+  // componentDidShow() {
+  //   // 判断是否登录超时处理
+  //   // userActions.checkLoginTimeout()
+
+  //   console.log('this.$router :', this.$router);
+  //   const { scene, query = {} } = this.$router.params
+  //   if (query.source) {
+  //     Taro.setStorageSync('source', query.source)
+  //   }
+  //   console.log('scene, query', scene, query)
+
+  //   if (scene) {
+  //     this.addToIndexBtn(scene)
+  
+  //     // 保持小程序使用期间屏幕常亮
+  //     Taro.setKeepScreenOn({
+  //       keepScreenOn: true
+  //     })
+
+  //   }
+  // }
+
   // 用户登录
   onUserLogin = async () => {
     try {
-      // const res = await userActions.login()
+      const res = await userActions.login()
       // wx.bisdk && wx.bisdk.setOpenIdInfo && wx.bisdk.setOpenIdInfo(res)
 
       // 获取注册来源示例
@@ -76,6 +111,19 @@ class App extends Component {
         }
       })
     })
+  }
+
+  /** TODO: 猜测这段代码的逻辑是，是否显示「返回首页」按钮，, query = {}暂时没用到 */
+  addToIndexBtn(code) {
+    const RefreshCode = {
+      '011004': true
+    }
+
+    // 理论上所谓app级别进来小程序的都需要返回首页，然后单独到3个tab里面清除掉
+    let sceneCode = Taro.getStorageSync('showBackToIndexBtn')
+    if (!sceneCode) {
+      Taro.setStorageSync('showBackToIndexBtn', RefreshCode[code] || true)
+    }
   }
 
   // 在 App 类中的 render() 函数没有实际作用
