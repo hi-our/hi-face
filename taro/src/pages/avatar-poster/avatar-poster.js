@@ -1,4 +1,5 @@
-import Taro, { Component } from '@tarojs/taro'
+import React, { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 
 import { cloudCallFunction } from 'utils/fetch'
@@ -20,11 +21,6 @@ const version = config.version
 
 // @CorePage
 class AvatarPoster extends Component {
-  config = {
-    navigationBarTitleText: '头像分享',
-    navigationStyle: 'custom',
-    disableScroll: true
-  }
 
   constructor(props) {
     super(props)

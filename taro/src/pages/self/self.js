@@ -1,4 +1,6 @@
-import Taro, { Component } from '@tarojs/taro'
+import React, { Component } from 'react'
+import Taro from '@tarojs/taro'
+
 import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 
 import { cloudCallFunction } from 'utils/fetch'
@@ -14,11 +16,7 @@ const version = config.version
 
 @CorePage
 class Self extends Component {
-  config = {
-    navigationBarTitleText: '个人中心',
-    disableScroll: true
-  }
-
+  
   constructor(props) {
     super(props)
     this.state = {
