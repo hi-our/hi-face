@@ -30,21 +30,7 @@ const getResCode = (res) => {
 exports.main = async (event) => {
   const { fileID = '', base64Main = '' } = event
 
-  let Image = ''
-
-
   if (fileID) {
-
-    // console.log('fileID :', fileID);
-    // const res = await tcb.callFunction({
-    //   name: 'image-safe-check',
-    //   data: {
-    //     fileID
-    //   }
-    // })
-
-    // console.log('res :', res);
-
     let imgID = fileID.replace('cloud://', '')
     let index = imgID.indexOf('/')
     let cloudPath = imgID.substr(index)
@@ -62,6 +48,7 @@ exports.main = async (event) => {
           // 处理结果的文件路径，如以’/’开头，则存入指定文件夹中，否则，存入原图文件存储的同目录
           fileid: facePath1 + cloudPath,
           rule: "imageMogr2/thumbnail/!600x600r/cut/600x600/center" // 处理样式参数，与下载时处理图像在url拼接的参数一致
+          // rule: "imageMogr2/thumbnail/!600x600r/scrop/600x600" // 处理样式参数，与下载时处理图像在url拼接的参数一致
         },
         {
           fileid: facePath2 + cloudPath,
@@ -97,15 +84,44 @@ exports.main = async (event) => {
     const { Object: imgList } = ProcessResults
     const faceImageObject = imgList[0]
 
+    console.log(`faceImageObject`, faceImageObject.Location)
+
+    let faceFileId = cloudEnvPath + facePath1 + cloudPath
     let { fileContent } = await tcb.downloadFile({
       fileID: cloudEnvPath + facePath1 + cloudPath
     })
 
     let Image = fileContent.toString('base64')
-    console.log('Image :', Image);
-    // 原图是大图的话，压缩到1M以下
-    const res2 = await detectFace(Image)
-    console.log('res2 :', res2);
+
+    return Promise.allSettled([
+      tcb.callFunction({
+        name: 'image-safe-check',
+        data: {
+          fileID: faceFileId
+        }
+      }), 
+      detectFace(Image)
+    ]).then((results) => {
+      let checkResult = results[0]
+      let faceResult = results[1]
+      if (checkResult.status) {
+        return checkResult
+      }
+
+      return faceResult
+    }).catch(error => {
+      console.log('error :', error);
+
+    })
+
+    
+    // const res2 = await detectFace(Image)
+    // console.log('Image :', Image);
+
+
+    // // 原图是大图的话，压缩到1M以下
+    // const res2 = await detectFace(faceImageObject.Location)
+    // console.log('res2 :', res2);
     // return res
     // let { fileContent } = await tcb.downloadFile({
     //   fileID

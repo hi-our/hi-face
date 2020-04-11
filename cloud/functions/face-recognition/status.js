@@ -68,7 +68,7 @@ const FACE_CODE = {
   'UnsupportedOperation.UnknowMethod': '未知方法名。',
 }
 
-export const DETECT_CODE = {
+const DETECT_CODE = {
   'FailedOperation.ConflictOperation': '操作冲突，请勿同时操作相同的Person。',
   'FailedOperation.DuplicatedGroupDescription': '同一人员库中自定义描述字段不可重复。',
   'FailedOperation.GroupInDeletedState': '当前组正处于删除状态，请等待。',

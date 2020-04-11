@@ -35,7 +35,9 @@ let client = new IaIClient(cred, "ap-shanghai", clientProfile);
 const detectFace = (Image) => {
   let faceReq = new models.DetectFaceRequest()
 
-  let query_string = JSON.stringify({
+  let query_string = JSON.stringify(Image.includes('myqcloud.com') ? {
+    Url: Image
+  } : {
     Image
   })
   // 传入json参数
@@ -73,9 +75,11 @@ const detectFace = (Image) => {
 const analyzeFace = (Image) => {
   let faceReq = new models.DetectFaceRequest()
 
-  let query_string = JSON.stringify({
-    Image
-  })
+  let query_string = JSON.stringify(Image.includes('myqcloud.com') ? {
+    Url: Image
+  } : {
+      Image
+    })
   // 传入json参数
   faceReq.from_json_string(query_string);
 
