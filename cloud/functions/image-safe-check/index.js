@@ -28,32 +28,29 @@ const getResCode = (res) => {
 }
 
 const getCheckResult =(data) => {
-
   const { PornInfo = [], TerroristInfo = [], PoliticsInfo = [] } = data
-  const pornOne = PornInfo[0] || {}
-  const terroristOne = TerroristInfo[0] || {}
-  const politicsOne = PoliticsInfo[0] || {}
+  const pornOne = PornInfo || {}
+  const terroristOne = TerroristInfo || {}
+  const politicsOne = PoliticsInfo || {}
 
   let result = {}
 
-  if (pornOne.HitFlag || terroristOne.HitFlag || politicsOne.HitFlag) {
-    if (pornOne.HitFlag[0] === '0' && terroristOne.HitFlag[0] == '0' && politicsOne.HitFlag[0] == '0') {
-      result.status = 0
-      result.data = { isSuccess: true }
-      result.messge = ''
-    } else {
-      result.status = -1000
-      result.messge = '存在围巾图片'
-    }
-  } else if (pornOne.Code[0] || terroristOne.Code[0] || politicsOne.Code[0]) {
+  if (pornOne.HitFlag === 0 && terroristOne.HitFlag === 0 && politicsOne.HitFlag === 0) {
+    result.status = 0
+    result.data = { isSuccess: true }
+    result.messge = ''
+  } else if (pornOne.HitFlag ||terroristOne.HitFlag || politicsOne.HitFlag) {
+    result.status = -1000
+    result.messge = '存在违禁图片'
+  } else if (pornOne.Code || terroristOne.Code || politicsOne.Code) {
     result.status = -1001
-    result.messge = `pornOne:${pornOne.Code[0]}-terroristOne:${terroristOne.Code[0]}-politicsOne:${politicsOne.Code[0]}`
+    result.messge = `pornOne:${pornOne.Code}-terroristOne:${terroristOne.Code}-politicsOne:${politicsOne.Code}`
   } else {
     result.status = -1002
     result.message = '请求失败'
   }
 
-  console.log('result :', result);
+  console.log('审核结果result :', result);
   return result
 
 }
