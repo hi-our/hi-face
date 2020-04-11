@@ -18,6 +18,14 @@
   height 300px
   background #fff
 
+.to-choose
+  border 1px dashed #efefef
+  width 298px
+  height 298px
+  margin 0 auto
+  background url(https://n1image.hjfile.cn/res7/2020/02/13/4b391f3e41cef2d8f387822443eb533b.png) no-repeat center / auto 150px
+
+
 .image-selected
   width 300px
   height 300px
@@ -27,7 +35,60 @@
 
 .shape-item
   position absolute
-  box-shadow 0 0 0 1px #4ec9b0
+  box-shadow inset 0 0 0 1px #4ec9b0
+
+.face-line
+  position: absolute;
+  opacity: .9;
+  width: 25%;
+  height: 25%;
+
+  &.left-top
+    left: 0;
+    top: 0;
+    border-left: #61E6BD 3px solid;
+    border-top: #61E6BD 3px solid;
+
+  &.right-top
+    right: 0;
+    top: 0;
+    border-right: #61E6BD 3px solid;
+    border-top: #61E6BD 3px solid;
+
+  &.left-bottom
+    left: 0;
+    bottom: 0;
+    border-left: #61E6BD 3px solid;
+    border-bottom: #61E6BD 3px solid;
+
+  &.right-bottom
+    right: 0;
+    bottom: 0;
+    border-right: #61E6BD 3px solid;
+    border-bottom: #61E6BD 3px solid;
+
+
+.shape-item-active
+  box-shadow inset 0 0 0 1px #ed4ba6
+  z-index 1
+
+  .face-line
+    border-color: #ed4ba6
+
+.shape-desc
+  position absolute
+  
+  top -1%
+  width 105px
+  background-color: #61e6bd;
+  padding: 14px 10px;
+
+  &.to-left
+    left 103%
+  &.to-right
+    right 103%
+
+
 
 .main-button
   background #3172EE

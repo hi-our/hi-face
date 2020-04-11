@@ -3,7 +3,7 @@ import { View, Image, Input, Button, Canvas } from '@tarojs/components'
 // import PageWrapper from 'components/page-wrapper'
 import fetch, { cloudCallFunction } from 'utils/fetch'
 import promisify from 'utils/promisify'
-import { PAGE_DPR_RATIO } from './utils';
+import { PAGE_DPR_RATIO, GENDER_STATUS, EXPRESS_MOOD, HAVE_STATUS } from './utils';
 
 // 引入代码
 // import { TaroCanvasDrawer,  } from 'components/taro-plugin-canvas';
@@ -55,24 +55,37 @@ class FaceLove extends Component {
       Taro.hideLoading()
       let shapeList = []
       if (FaceInfos.length > 0) {
-        shapeList = FaceInfos.map((item, itemIndex) => {
-          const { X, Y, Height, Width } = item
+        shapeList = FaceInfos.map((item, shapeIndex) => {
+          const { X, Y, Height, Width, FaceAttributesInfo = {} } = item
+          const { Gender, Age, expression, Beauty, Glass, Hat, Mask } = FaceAttributesInfo
           return {
-            itemIndex,
+            shapeIndex,
             left: X * PAGE_DPR_RATIO,
             top: Y * PAGE_DPR_RATIO,
             width: Width * PAGE_DPR_RATIO,
             height: Height * PAGE_DPR_RATIO,
+            age: Age,
+            genderStr: GENDER_STATUS[Gender],
+            expressionStr: EXPRESS_MOOD[expression],
+            beauty: Beauty,
+            glassStr: HAVE_STATUS[Number(Glass)],
+            hatStr: HAVE_STATUS[Number(Hat)],
+            maskStr: HAVE_STATUS[Number(Mask)],
           }
         })
       }
 
-      // shapeList
-
       this.setState({
         faceFileID: 'cloud://' + faceFileID,
-        currentShapeIndex: 0,
+        currentShapeIndex: FaceInfos.length > 1 ? -1 : 0,
         shapeList
+      }, () => {
+          if (shapeList.length > 1) {
+            Taro.showToast({
+              icon: 'none',
+              title: '绿框可点击'
+            })
+          }
       })
 
       const { mainColor } = await cloudCallFunction({
@@ -122,8 +135,14 @@ class FaceLove extends Component {
 
   }
 
+  onChooseShape = (shapeIndex) => {
+    this.setState({
+      currentShapeIndex: this.state.currentShapeIndex === shapeIndex ? -1 : shapeIndex
+    })
+  }
+
   render() {
-    const { pageMainColor, faceFileID, shapeList } = this.state
+    const { pageMainColor, faceFileID, shapeList, currentShapeIndex } = this.state
     return (
       <View className='face-love-page' style={{ backgroundColor: pageMainColor } }>
         <View className='page-title'>人脸识别</View>
@@ -139,13 +158,34 @@ class FaceLove extends Component {
                   />
                   {
                     shapeList.map((shape) => {
-                      const { left, top, width, height } = shape
-                      return <View key={shape.index} className='shape-item' style={{ left: left+ 'px', top: top + 'px', width: width + 'px', height: height + 'px' }}></View>
+                      const { shapeIndex, left, top, width, height, age, expressionStr, beauty, glassStr, hatStr, maskStr,
+                      } = shape
+
+                      let isActive = currentShapeIndex === shapeIndex
+                      return (
+                        <View key={shapeIndex} onClick={this.onChooseShape.bind(this, shapeIndex)} className={`shape-item ${isActive ? 'shape-item-active' : ''}`} style={{ left: left+ 'px', top: top + 'px', width: width + 'px', height: height + 'px' }}>
+                          <View className="face-line left-top"></View>
+                          <View className="face-line right-top"></View>
+                          <View className="face-line left-bottom"></View>
+                          <View className="face-line right-bottom"></View>
+                          {isActive && (
+                            <View className={`shape-desc ${left > 300 ? 'to-left' : 'to-right'}`}>
+                              <View>年龄: {age}</View>
+                              <View>表情: {expressionStr}</View>
+                              <View>魅力: {beauty}</View>
+                              <View>眼镜: {glassStr}</View>
+                              <View>帽子: {hatStr}</View>
+                              <View>口罩: {maskStr}</View>
+                            </View>
+
+                          )}
+                        </View>
+                      )
                     })
                   }
                 </View>
               )
-              : <View>图片区域</View>
+              : <View className='to-choose' onClick={this.chooseImage}></View>
           }
         </View>
         <View className='main-button' onClick={this.chooseImage}>上传</View>
