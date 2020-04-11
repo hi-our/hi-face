@@ -11,35 +11,12 @@ tcb.init({
 tcb.registerExtension(extCi)
 
 
-const getResCode = (res) => {
-  if (res.statusCode === 200) {
-    let result = res.data
-    console.log('result :', result);
-    if (result.UploadResult) {
-      const finalResult = result.UploadResult
-      if (Object.keys(finalResult).length === 0) return finalResult || {} // 某些接口判断返回data字段是否是空对象的逻辑
-      return finalResult
-    } else {
-      throw result
-    }
-  } else {
-    throw res.data
-  }
-}
-
 const getBase64 = async (fileID) => {
   let { fileContent } = await tcb.downloadFile({
     fileID
   })
 
   return fileContent.toString('base64')
-}
-
-const getImageUrl = async (fileID) => {
-  const { fileList } = await tcb.getTempFileURL({
-    fileList: [fileID]
-  })
-  return fileList[0].tempFileURL
 }
 
 exports.main = async (event) => {
@@ -96,5 +73,14 @@ exports.main = async (event) => {
       console.log('error :', error);
 
     })
+  }
+
+  let errorString = '请设置 fileID'
+  console.log(errorString)
+  return {
+    data: {},
+    time: new Date(),
+    status: -10086,
+    message: errorString
   }
 }
