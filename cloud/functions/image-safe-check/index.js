@@ -57,21 +57,23 @@ const getCheckResult =(data) => {
 
 
 async function imgSecCheck(event) {
-  const { Image } = event
-  if (!Image) {
-    console.log('请设置Image :');
+  const { fileID } = event
+  if (!fileID) {
+    console.log('请设置fileID :');
     return 
   }
 
   try {
-    imgID = Image.substr(59)
-    console.log('imgID :', imgID);
+    imgID = fileID.replace('cloud://', '')
+    let index = imgID.indexOf('/')
+    imgID = imgID.substr(index)
+
+
     const res = await tcb.invokeExtension('CloudInfinite', {
       action: 'DetectType',
       cloudPath: imgID, //需要分析的图像的绝对路径
       operations: { type: ["porn", "terrorist", "politics"] }
     })
-    console.log(res)
 
     let data = getResCode(res)
     result = getCheckResult(data)
