@@ -24,7 +24,7 @@ class FaceLove extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      pageMainColor: 'yellow',
+      pageMainColor: '',
       faceFileID: '',
       shapeList: []
     }
@@ -71,8 +71,21 @@ class FaceLove extends Component {
 
       this.setState({
         faceFileID: 'cloud://' + faceFileID,
+        currentShapeIndex: 0,
         shapeList
       })
+
+      const { mainColor } = await cloudCallFunction({
+        name: 'get-main-color',
+        data: {
+          fileID
+        }
+      })
+
+      this.setState({
+        pageMainColor: mainColor
+      })
+
 
 
       console.log('res :', faceFileID);

@@ -64,6 +64,15 @@ exports.main = async (event) => {
       } else if (colorType === 'rgb') {
         mainColor = colorRgb
       }
+
+      return {
+        data: {
+          mainColor
+        },
+        time: new Date(),
+        status: 0,
+        message: ''
+      }
       
     } catch (error) {
       return {
@@ -73,16 +82,6 @@ exports.main = async (event) => {
         message: JSON.stringify(error)
       }
     }
-
-    return {
-      data: {
-        mainColor
-      },
-      time: new Date(),
-      status: 0,
-      message: ''
-    }
-
 
   }
 
