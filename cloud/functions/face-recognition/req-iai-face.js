@@ -75,7 +75,8 @@ const detectFace = (Image) => {
 const analyzeFace = (Image) => {
   let faceReq = new models.DetectFaceRequest()
 
-  let query_string = JSON.stringify(Image.includes('myqcloud.com') ? {
+  console.log('Image :', Image, Image.includes('http'));
+  let query_string = JSON.stringify(Image.includes('http') ? {
     Url: Image
   } : {
       Image
