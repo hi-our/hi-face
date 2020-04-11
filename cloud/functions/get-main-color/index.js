@@ -48,23 +48,30 @@ exports.main = async (event) => {
   console.log('fileID :', fileID);
 
   if (fileID) {
-    const imgUrl = await getImageUrl(fileID)
-    console.log('imgUrl :', imgUrl);
-
-    // 为给定 ID 的 user 创建请求
-    const res = await fetch.get(imgUrl + '?imageAve')
-    const { RGB } = getResCode(res)
-
-    const colorHex = '#' + RGB.substring(2)
-    const colorRgbaObj = hexToRgba(colorHex, opacity)
-    const colorRgba = colorRgbaObj.rgba
-    const colorRgb = `rgb(${colorRgbaObj.red}, ${colorRgbaObj.green}, ${colorRgbaObj.blue})`
-
-    let mainColor = opacity === 1 ? colorHex : colorRgba
-    if (colorType === 'hex') {
-      mainColor = colorHex
-    } else if (colorType === 'rgb') {
-      mainColor = colorRgb
+    try {
+      const imgUrl = await getImageUrl(fileID)
+      const res = await fetch.get(imgUrl + '?imageAve')
+      const { RGB } = getResCode(res)
+  
+      const colorHex = '#' + RGB.substring(2)
+      const colorRgbaObj = hexToRgba(colorHex, opacity)
+      const colorRgba = colorRgbaObj.rgba
+      const colorRgb = `rgb(${colorRgbaObj.red}, ${colorRgbaObj.green}, ${colorRgbaObj.blue})`
+  
+      let mainColor = opacity === 1 ? colorHex : colorRgba
+      if (colorType === 'hex') {
+        mainColor = colorHex
+      } else if (colorType === 'rgb') {
+        mainColor = colorRgb
+      }
+      
+    } catch (error) {
+      return {
+        data: {},
+        time: new Date(),
+        status: -10087,
+        message: JSON.stringify(error)
+      }
     }
 
     return {

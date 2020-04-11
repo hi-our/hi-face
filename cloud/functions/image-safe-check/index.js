@@ -38,13 +38,13 @@ const getCheckResult =(data) => {
   if (pornOne.HitFlag === 0 && terroristOne.HitFlag === 0 && politicsOne.HitFlag === 0) {
     result.status = 0
     result.data = { isSuccess: true }
-    result.messge = ''
+    result.message = ''
   } else if (pornOne.HitFlag ||terroristOne.HitFlag || politicsOne.HitFlag) {
     result.status = -1000
-    result.messge = '存在违禁图片'
+    result.message = '存在违禁图片'
   } else if (pornOne.Code || terroristOne.Code || politicsOne.Code) {
     result.status = -1001
-    result.messge = `pornOne:${pornOne.Code}-terroristOne:${terroristOne.Code}-politicsOne:${politicsOne.Code}`
+    result.message = `pornOne:${pornOne.Code}-terroristOne:${terroristOne.Code}-politicsOne:${politicsOne.Code}`
   } else {
     result.status = -1002
     result.message = '请求失败'
