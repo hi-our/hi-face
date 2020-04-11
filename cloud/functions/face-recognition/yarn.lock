@@ -528,7 +528,7 @@ querystring@0.2.0:
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
   integrity sha1-sgmEkgO7Jd+CDadW50cAWHhSFiA=
 
-request@^2.87.0:
+request@^2.85.0, request@^2.87.0:
   version "2.88.2"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.2.tgz#d73c918731cb5a87da047e207234146f664d12b3"
   integrity sha512-MsvtOrfG9ZcrOwAW+Qi+F6HbD0CWXEh9ou77uOb7FM2WPhwT7smM833PzanhJLsgXjN89Ir6V2PczXNnMpwKhw==
@@ -601,6 +601,13 @@ tcb-admin-node@1.22.0, tcb-admin-node@latest:
     lodash.merge "^4.6.1"
     request "^2.87.0"
     xml2js "^0.4.19"
+
+tencentcloud-sdk-nodejs@^3.0.150:
+  version "3.0.150"
+  resolved "https://registry.yarnpkg.com/tencentcloud-sdk-nodejs/-/tencentcloud-sdk-nodejs-3.0.150.tgz#9e9f7a33d943da4e005db13555d937d9f8ba40ed"
+  integrity sha512-SxNhh/s8LaaZOlvucUuoUr/noonCcd27h3f9XUPVbRDl2tUdq7LVx4V6ImYUYq8tekMcD5tlGisD0+bluCm2ng==
+  dependencies:
+    request "^2.85.0"
 
 tough-cookie@~2.5.0:
   version "2.5.0"

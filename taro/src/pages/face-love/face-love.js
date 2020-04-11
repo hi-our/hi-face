@@ -45,7 +45,7 @@ class FaceLove extends Component {
     try {
 
       let uploadParams = {
-        cloudPath: `${prefix}-${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
+        cloudPath: `${prefix}/${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
         filePath: tempFilePath,
       }
       if (isH5Page) {
