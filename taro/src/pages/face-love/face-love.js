@@ -57,7 +57,8 @@ class FaceLove extends Component {
       if (FaceInfos.length > 0) {
         shapeList = FaceInfos.map((item, shapeIndex) => {
           const { X, Y, Height, Width, FaceAttributesInfo = {} } = item
-          const { Gender, Age, expression, Beauty, Glass, Hat, Mask } = FaceAttributesInfo
+          const { Gender, Age, Expression, Beauty, Glass, Hat, Mask } = FaceAttributesInfo
+
           return {
             shapeIndex,
             left: X * PAGE_DPR_RATIO,
@@ -66,7 +67,7 @@ class FaceLove extends Component {
             height: Height * PAGE_DPR_RATIO,
             age: Age,
             genderStr: GENDER_STATUS[Gender],
-            expressionStr: EXPRESS_MOOD[expression],
+            expressionStr: EXPRESS_MOOD[parseInt(Expression / 10, 10)],
             beauty: Beauty,
             glassStr: HAVE_STATUS[Number(Glass)],
             hatStr: HAVE_STATUS[Number(Hat)],
@@ -162,6 +163,8 @@ class FaceLove extends Component {
                       } = shape
 
                       let isActive = currentShapeIndex === shapeIndex
+
+                      console.log('expressionStr :', expressionStr);
                       return (
                         <View key={shapeIndex} onClick={this.onChooseShape.bind(this, shapeIndex)} className={`shape-item ${isActive ? 'shape-item-active' : ''}`} style={{ left: left+ 'px', top: top + 'px', width: width + 'px', height: height + 'px' }}>
                           <View className="face-line left-top"></View>
@@ -169,7 +172,7 @@ class FaceLove extends Component {
                           <View className="face-line left-bottom"></View>
                           <View className="face-line right-bottom"></View>
                           {isActive && (
-                            <View className={`shape-desc ${left > 300 ? 'to-left' : 'to-right'}`}>
+                            <View className={`shape-desc ${left > 300 || left < 100 ? 'to-left' : 'to-right'}`}>
                               <View>年龄: {age}</View>
                               <View>表情: {expressionStr}</View>
                               <View>魅力: {beauty}</View>

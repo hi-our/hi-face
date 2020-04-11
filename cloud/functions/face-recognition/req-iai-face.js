@@ -37,10 +37,12 @@ const detectFace = (Image) => {
 
   let query_string = JSON.stringify(Image.includes('http') ? {
     Url: Image,
-    MaxFaceNum: 15
+    MaxFaceNum: 4,
+    NeedFaceAttributes: 1
   } : {
       Image,
-      MaxFaceNum: 15
+      MaxFaceNum: 4,
+      NeedFaceAttributes: 1
     })
   // 传入json参数
   faceReq.from_json_string(query_string);
