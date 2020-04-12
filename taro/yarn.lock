@@ -11148,7 +11148,7 @@ tar@^2.0.0:
     fstream "^1.0.12"
     inherits "2"
 
-taro-cropper@^1.0.9:
+taro-cropper@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/taro-cropper/-/taro-cropper-1.1.0.tgz#c41b066aecf67d8536398f7f069c92a7b16749e7"
   integrity sha512-+FLBUUABvlH99jQ4ROzxwmfqn/B2J0GH8EnL/qHZ5z8kvBNb4Shz/xXUWYa/9zNhV98gCOJRzopc/jd7s4SSYw==

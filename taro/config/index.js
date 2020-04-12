@@ -1,4 +1,7 @@
 const alias = require('./alias')
+const loadEnv = require('../load-env')
+
+loadEnv()
 
 
 // 兼容web端和小程序端
@@ -42,6 +45,9 @@ const config = {
     'process.env.SERVER_ENV': JSON.stringify(process.env.SERVER_ENV),
     'process.env.APPID_ENV': JSON.stringify(process.env.APPID_ENV),
     'process.env.MOCK': JSON.stringify(process.env.MOCK),
+    'process.env.appSign': JSON.stringify(process.env.appSign),
+    'process.env.appAccessKeyId': JSON.stringify(process.env.appAccessKeyId),
+    'process.env.appAccessKey': JSON.stringify(process.env.appAccessKey),
   },
   alias,
   mini: {

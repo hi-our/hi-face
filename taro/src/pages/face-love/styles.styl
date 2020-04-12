@@ -1,0 +1,141 @@
+.face-love-page
+  height 100vh
+  box-sizing border-box
+  padding-top 100px
+  background-image linear-gradient(180deg, rgba(28,37,50,0.45) 0%,rgba(28,37,50,0.7) 76%,rgba(28,37,50,1) 100%)
+  background-repeat no-repeat
+
+.page-title
+  text-align center
+  font-size 24px
+  font-weight 600
+  color #fff
+  line-height 33px
+
+.image-wrap
+  margin 30px auto 0
+  width 300px
+
+.to-choose
+  border 1px dashed #efefef
+  width 298px
+  height 298px
+  margin 0 auto
+  background url(https://n1image.hjfile.cn/res7/2020/02/13/4b391f3e41cef2d8f387822443eb533b.png) no-repeat center / auto 150px
+
+
+.image-selected
+  width 300px
+  height 300px
+
+.shape-wrap
+  position relative
+
+.shape-item
+  position absolute
+.shape-area
+  height 100%
+  box-shadow inset 0 0 0 1px #4ec9b0
+  
+
+.face-line
+  position: absolute;
+  opacity: .9;
+  width: 25%;
+  height: 25%;
+
+  &.left-top
+    left: 0;
+    top: 0;
+    border-left: #61E6BD 3px solid;
+    border-top: #61E6BD 3px solid;
+
+  &.right-top
+    right: 0;
+    top: 0;
+    border-right: #61E6BD 3px solid;
+    border-top: #61E6BD 3px solid;
+
+  &.left-bottom
+    left: 0;
+    bottom: 0;
+    border-left: #61E6BD 3px solid;
+    border-bottom: #61E6BD 3px solid;
+
+  &.right-bottom
+    right: 0;
+    bottom: 0;
+    border-right: #61E6BD 3px solid;
+    border-bottom: #61E6BD 3px solid;
+
+
+.shape-item-active
+  z-index 1
+
+  .shape-area
+    box-shadow inset 0 0 0 1px #ed4ba6
+
+  .face-line
+    border-color: #ed4ba6
+
+.shape-desc
+  position absolute
+  font-size 14px
+  top -1%
+  width 105px
+  background-color: #61e6bd;
+  padding: 14px 10px;
+  white-space nowrap
+
+  &.to-left
+    left 103%
+  &.to-right
+    right 103%
+
+.image-tips
+  margin-top 10px
+  font-size 14px
+  line-height 1.5
+  color #ffffff
+  text-align center
+
+.label-list
+  margin-top 5px
+  display flex
+  flex-wrap wrap
+  justify-content center
+
+.label-item
+  font-size 12px
+  line-height 1.5
+  color #ffffff
+  padding 5px
+  border 1px dotted #ffffff
+  margin 5px
+
+.main-button
+  position fixed
+  left 0
+  right 0
+  bottom 0
+  
+  padding-bottom constant(safe-area-inset-bottom)
+  padding-bottom env(safe-area-inset-bottom)
+
+  background #3172EE
+  font-size 18px
+  line-height 60px
+  font-weight 600
+  color #fff
+  text-align center
+  letter-spacing 3px
+
+  &:before
+    content ''
+    display inline-block
+    width 27px
+    height 27px
+    background url(https://n1image.hjfile.cn/res7/2020/04/12/f6857ca8693d20c87465a0ea1cf236b6.png) no-repeat
+    background-size contain
+    vertical-align middle
+    margin -3px 8px 0 0

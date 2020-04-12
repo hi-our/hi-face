@@ -1,33 +1,187 @@
 .page-avatar-poster
   height 100vh
-  background url(https://n1image.hjfile.cn/res7/2020/03/15/107d89ee2b96b8997deaed2b5f275f55.jpg) center no-repeat
+  padding-top 1px
+  background-position center
+  background-repeat no-repeat
   background-size cover
+  box-sizing border-box
+
+.age-origin
+  background-image url(https://n1image.hjfile.cn/res7/2020/03/21/a8bfb32f1f491b9b9c7ea7a3515a896e.jpeg)
+  .page-poster-wrap
+    background #FEE6F6
+.age-childhood
+  background-image url(https://n1image.hjfile.cn/res7/2020/03/21/eadd0c47e27914f625a07d3a7134e612.jpg)
+  .page-poster-wrap
+    background #79C0FF
+
   
-.page-title
-  padding-top 80PX
-  font-size 20px
-  line-height 1.5
-  color #ffffff
-  font-weight 600
-  text-align center
-.version
-  padding 15px 0 20px
-  color #95A1AF
-  font-size 12px
-  text-align center
+
 
 .page-poster-wrap
-  margin 15px auto
+  margin 140px auto auto
   width 300px
   height 300px
   padding 15px
-  background #79C0FF
   border-radius 20px
-  box-shadow inset 1px 1px 3px rgba(255, 255, 255, 1), 0 9px 8px rgba(0, 0, 0, 0.5)
-
+  box-shadow inset 1px 1px 3px rgba(255, 255, 255, 0.3), 0 9px 8px rgba(0, 0, 0, 0.25)
+  
 
 .page-poster
   width 300px
   height 300px
   border-radius: 15px
   overflow hidden
+
+.button-wrap
+  margin 20px auto 0
+  width 330px
+  height 54px
+  display flex
+  justify-content space-evenly
+
+.button-reset
+  width 56px
+  height 56px
+  background url(https://n1image.hjfile.cn/res7/2020/03/21/3586553f6e961bc4a28fbcf9d1d7c43f.png) no-repeat
+  background-size contain
+
+
+.button-main
+  background linear-gradient(85deg, #FF937D, #FF5A47)
+  width 168px
+  height 54px
+  line-height 54px
+  text-align center
+  font-size 18px
+  color #ffffff
+  border-radius 15px
+
+.button-save
+  display block
+  box-sizing border-box
+  width 54px
+  height 54px
+  padding 7px 8px
+  line-height 20px
+  font-size 14px
+  color #fff
+  background #69a4fd
+  text-align center
+  border-radius: 50%
+
+.button-share
+  display block
+  width 54px
+  height 54px
+  padding 7px 8px
+  line-height 20px
+  font-size 14px
+  color #fff
+  background #FF9B34
+  text-align center
+  border-radius: 50%
+  &:hover
+    background #FFB447
+
+.version
+  padding 40px 0 20px
+  color #95A1AF
+  font-size 12px
+  text-align center
+
+
+
+.poster-dialog
+  display none
+  position fixed
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  justify-content center
+  align-items center
+  z-index 10
+  background-color rgba(0, 0, 0, .8)
+  &.show
+    display flex
+
+.poster-dialog-main
+  position relative
+    
+.poster-image
+  width 300px
+  height 420px
+
+.poster-image-tips
+  position absolute
+  left 0
+  top 5px
+  padding 3px 8px
+  font-size 12px
+  line-height 1.5
+  color #fff
+  background rgba(0, 0, 0, 0.3)
+  border-radius 0 12px 12px 0
+.poster-footer-btn
+  position relative
+  display flex
+  justify-content center
+  margin-top 15px
+  width 100%
+
+  .poster-btn-save
+    display flex
+    justify-content center
+    align-items center
+    width 118px
+    height 40px
+    border 1px solid rgba(255, 255, 255, 1)
+    color #fff
+    // background linear-gradient(60deg, rgba(47, 90, 255, 1) 0%, rgba(0, 147, 255, 1) 100%)
+    font-size 15px
+    font-weight 400
+    line-height 21px
+    border-radius 100px
+
+  .poster-btn-share
+    display flex
+    justify-content center
+    align-items center
+    margin-left 33px
+    width 118px
+    height 40px
+    color #fff
+    font-size 15px
+    font-weight 400
+    line-height 21px
+    border-radius 100px
+    background linear-gradient(60deg, rgba(47, 90, 255, 1) 0, rgba(0, 147, 255, 1) 100%)
+    box-shadow 0 2px 6px 0 rgba(47, 90, 255, .2)
+
+  .icon
+    margin-right 2px
+    width 18px
+    height 18px
+
+  .icon-wechat
+    margin-right 2px
+    width 18px
+    height 14px
+
+.poster-dialog-close
+  position absolute
+  top 0
+  right 0
+  width 36px
+  height 38px
+  background url('https://n1image.hjfile.cn/res7/2019/01/10/b18454c07e26f34cbec2fb10474c4a6c.png') no-repeat center / 36px 38px
+
+
+
+.canvas-poster
+  position absolute
+  left 0
+  top -9999px
+  width 600px
+  height 600px
