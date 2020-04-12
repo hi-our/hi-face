@@ -58,6 +58,7 @@ exports.main = async (event) => {
       const colorRgba = colorRgbaObj.rgba
       const colorRgb = `rgb(${colorRgbaObj.red}, ${colorRgbaObj.green}, ${colorRgbaObj.blue})`
   
+      // 支持多种颜色获取方式
       let mainColor = opacity === 1 ? colorHex : colorRgba
       if (colorType === 'hex') {
         mainColor = colorHex

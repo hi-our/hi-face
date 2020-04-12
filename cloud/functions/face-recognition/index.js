@@ -44,7 +44,12 @@ exports.main = async (event) => {
         {
           // 处理结果的文件路径，如以’/’开头，则存入指定文件夹中，否则，存入原图文件存储的同目录
           fileid: facePath1 + cloudPath,
-          rule: "imageMogr2/thumbnail/!600x600r/cut/600x600/center" // 处理样式参数，与下载时处理图像在url拼接的参数一致
+          rule: "imageMogr2/crop/600x600/center" // 处理样式参数，与下载时处理图像在url拼接的参数一致
+        },
+        {
+          // 处理结果的文件路径，如以’/’开头，则存入指定文件夹中，否则，存入原图文件存储的同目录
+          fileid: facePath1 + cloudPath,
+          rule: "imageMogr2/crop/600x600/center" // 处理样式参数，与下载时处理图像在url拼接的参数一致
         },
       ]
     }
