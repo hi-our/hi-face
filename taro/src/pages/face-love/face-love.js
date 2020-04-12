@@ -27,7 +27,8 @@ class FaceLove extends Component {
     this.state = {
       pageMainColor: '',
       faceImageUrl: '',
-      shapeList: []
+      shapeList: [],
+      labelList: []
     }
   }
 
@@ -88,7 +89,7 @@ class FaceLove extends Component {
 
       this.setState({
         faceImageUrl,
-        currentShapeIndex: FaceInfos.length > 1 ? -1 : 0,
+        currentShapeIndex: 0,
       })
       
       // 延迟加载人脸框
@@ -116,20 +117,16 @@ class FaceLove extends Component {
         pageMainColor: mainColor
       })
 
-      const { Labels } = await cloudCallFunction({
+      const { list } = await cloudCallFunction({
         name: 'detect-image-label',
         data: {
           fileID
         }
       })
 
-      console.log('Labels :', Labels);
-
-
-
-
-
-      console.log('res :', faceFileID);
+      this.setState({
+        labelList: list
+      })
       
     } catch (error) {
       Taro.hideLoading()
@@ -172,7 +169,7 @@ class FaceLove extends Component {
   }
 
   render() {
-    const { pageMainColor, faceImageUrl, shapeList, currentShapeIndex } = this.state
+    const { pageMainColor, faceImageUrl, shapeList, currentShapeIndex, labelList } = this.state
     let tips = '上传带人脸的正面照'
     if (shapeList.length) {
       tips = currentShapeIndex >= 0 ? '点击红色人脸框，可隐藏人脸魅力值' : '点击人脸框，可以显示人脸魅力值'
@@ -224,6 +221,16 @@ class FaceLove extends Component {
               : <View className='to-choose' onClick={this.chooseImage}></View>
           }
           <View className='image-tips'>{tips}</View>
+        </View>
+        <View className='label-list'>
+          {
+            labelList.map((item => {
+              return (
+                <View className='label-item' key={item.name}>{item.name}</View>
+              )
+            }))
+          }
+          
         </View>
         <View className='main-button' onClick={this.chooseImage}>上传</View>
       </View>
