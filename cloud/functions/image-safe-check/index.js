@@ -1,4 +1,4 @@
-const extCi = require("@cloudbase/extension-ci");
+const extCi = require("@cloudbase/extension-ci")
 const tcb = require("tcb-admin-node");
 
 tcb.init({

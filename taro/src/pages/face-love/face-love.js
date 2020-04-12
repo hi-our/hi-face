@@ -116,6 +116,17 @@ class FaceLove extends Component {
         pageMainColor: mainColor
       })
 
+      const { Labels } = await cloudCallFunction({
+        name: 'detect-image-label',
+        data: {
+          fileID
+        }
+      })
+
+      console.log('Labels :', Labels);
+
+
+
 
 
       console.log('res :', faceFileID);
