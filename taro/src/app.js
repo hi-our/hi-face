@@ -22,6 +22,7 @@ const updateManager = process.env.TARO_ENV !== 'h5' ? Taro.getUpdateManager() : 
 class App extends Component {
   config = {
     pages: [
+      'pages/face-love/face-love',
       'pages/queen-king/queen-king',
       'pages/wear-a-mask/wear-a-mask',
       'pages/self/self',
@@ -29,7 +30,6 @@ class App extends Component {
       'pages/thanks/thanks',
       'pages/my-avatars/my-avatars',
       'pages/avatar-poster/avatar-poster',
-      'pages/face-love/face-love',
       // 'pages/spread-game/spread-game',
     ],
     window: {
@@ -55,14 +55,26 @@ class App extends Component {
           selectedIconPath: 'images/tab-bar-crown-active.png'
         },
         {
-          pagePath: 'pages/wear-a-mask/wear-a-mask',
-          text: '戴口罩',
-          iconPath: 'images/mask-1.png',
-          selectedIconPath: 'images/mask-2.png'
+          pagePath: 'pages/face-love/face-love',
+          text: '人像魅力',
+          iconPath: 'images/face-1.png',
+          selectedIconPath: 'images/face-1-active.png'
         },
+        // {
+        //   pagePath: 'pages/wear-a-mask/wear-a-mask',
+        //   text: '戴口罩',
+        //   iconPath: 'images/mask-1.png',
+        //   selectedIconPath: 'images/mask-2.png'
+        // },
+        // {
+        //   pagePath: 'pages/self/self',
+        //   text: '个人中心',
+        //   iconPath: 'images/thank-1.png',
+        //   selectedIconPath: 'images/thank-2.png'
+        // },
         {
-          pagePath: 'pages/self/self',
-          text: '个人中心',
+          pagePath: 'pages/thanks/thanks',
+          text: '致谢',
           iconPath: 'images/thank-1.png',
           selectedIconPath: 'images/thank-2.png'
         },

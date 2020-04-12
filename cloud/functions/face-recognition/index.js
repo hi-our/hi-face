@@ -83,7 +83,8 @@ exports.main = async (event) => {
         ...faceResult,
         data: {
           ...faceResult.data,
-          faceFileID
+          faceFileID,
+          faceImageUrl: imageUrl
         }
       }
     }).catch(error => {

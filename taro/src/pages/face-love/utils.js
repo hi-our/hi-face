@@ -6,7 +6,7 @@ export const ORIGiN_SHAPE_SIZE = 100
 
 
 export const PAGE_DPR = windowWidth / 375
-export const PAGE_DPR_RATIO = PAGE_DPR / pixelRatio
+export const PAGE_DPR_RATIO = PAGE_DPR / 2 // 用的2倍图
 
 export const DPR_CANVAS_SIZE = ORIGIN_CANVAS_SIZE * PAGE_DPR
 export const SAVE_IMAGE_WIDTH = DPR_CANVAS_SIZE * pixelRatio

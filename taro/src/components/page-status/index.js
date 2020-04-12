@@ -1,6 +1,5 @@
 import { View, Image, Button, Block } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import LoadingImg from '../../images/walkingduck.gif'
 import { networkInfo } from 'utils/common'
 import { NETWORK_ERROR_CODE } from 'constants/status'
 import './styles.styl'

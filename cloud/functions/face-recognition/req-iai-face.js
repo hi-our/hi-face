@@ -60,7 +60,7 @@ const detectFace = (Image) => {
           data: {},
           time: new Date(),
           status: -10086,
-          message: 'DetectFace ' + status.DETECT_CODE[code] + Image || code || '图片解析失败'
+          message: 'DetectFace ' + status.DETECT_CODE[code] || code || '图片解析失败'
         })
         return
       }
@@ -101,7 +101,7 @@ const analyzeFace = (Image) => {
           data: {},
           time: new Date(),
           status: -10086,
-          message: 'AnalyzeFace ' + + status.FACE_CODE[code] + Image || code || '图片解析失败'
+          message: 'AnalyzeFace ' + status.FACE_CODE[code] || code || '图片解析失败'
         })
         return
       }

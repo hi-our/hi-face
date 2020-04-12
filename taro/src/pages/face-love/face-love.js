@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image, Input, Button, Canvas } from '@tarojs/components'
+import { View, Image, Input, Button, Canvas, Block } from '@tarojs/components'
 // import PageWrapper from 'components/page-wrapper'
 import fetch, { cloudCallFunction } from 'utils/fetch'
 import promisify from 'utils/promisify'
@@ -18,19 +18,29 @@ class FaceLove extends Component {
   config = {
     navigationBarTitleText: '人像魅力',
     navigationStyle: 'custom',
-    disableScroll: true
+    disableScroll: true,
+    navigationBarTextStyle: 'black'
   }
 
   constructor(props) {
     super(props)
     this.state = {
       pageMainColor: '',
-      faceFileID: '',
+      faceImageUrl: '',
       shapeList: []
     }
   }
 
   chooseImage = async () => {
+    const { cancel } = await Taro.showModal({
+      title: '提示',
+      content: '图片会上传到云端，请确定？',
+      
+    })
+    if (cancel) {
+      console.log('用户点击取消')
+      return
+    }
     const { tempFilePaths } = await Taro.chooseImage({
       count: 1,
       sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -46,7 +56,7 @@ class FaceLove extends Component {
     try {
       const fileID = await this.onUploadFile(originSrc)
   
-      const { faceFileID, FaceInfos = [] } = await cloudCallFunction({
+      const { faceFileID, faceImageUrl, FaceInfos = [] } = await cloudCallFunction({
         name: 'face-recognition',
         data: {
           fileID
@@ -77,17 +87,23 @@ class FaceLove extends Component {
       }
 
       this.setState({
-        faceFileID: 'cloud://' + faceFileID,
+        faceImageUrl,
         currentShapeIndex: FaceInfos.length > 1 ? -1 : 0,
-        shapeList
-      }, () => {
-          if (shapeList.length > 1) {
-            Taro.showToast({
-              icon: 'none',
-              title: '绿框可点击'
-            })
-          }
       })
+      
+      // 延迟加载人脸框
+      setTimeout(() => {
+        this.setState({
+          shapeList
+        })
+        if (shapeList.length > 1) {
+          Taro.showToast({
+            icon: 'none',
+            title: '人脸框可点击',
+            duration: 3000
+          })
+        }
+      }, 1500);
 
       const { mainColor } = await cloudCallFunction({
         name: 'get-main-color',
@@ -106,9 +122,11 @@ class FaceLove extends Component {
       
     } catch (error) {
       Taro.hideLoading()
+      let message = error.message || '识别出错'
+
       Taro.showToast({
         icon: 'none',
-        title: error.message
+        title: message
       })
       console.log('error :', error);
     }
@@ -143,17 +161,21 @@ class FaceLove extends Component {
   }
 
   render() {
-    const { pageMainColor, faceFileID, shapeList, currentShapeIndex } = this.state
+    const { pageMainColor, faceImageUrl, shapeList, currentShapeIndex } = this.state
+    let tips = '上传带人脸的正面照'
+    if (shapeList.length) {
+      tips = currentShapeIndex >= 0 ? '点击红色人脸框，可隐藏人脸魅力值' : '点击人脸框，可以显示人脸魅力值'
+    }
     return (
-      <View className='face-love-page' style={{ backgroundColor: pageMainColor } }>
-        <View className='page-title'>人脸识别</View>
+      <View className='face-love-page' style={{ backgroundColor: pageMainColor }}>
+        <View className='page-title'>人像魅力</View>
         <View className='image-wrap'>
           {
-            !!faceFileID
+            !!faceImageUrl
               ? (
                 <View className='shape-wrap'>
                   <Image
-                    src={faceFileID}
+                    src={faceImageUrl}
                     mode='widthFix'
                     className='image-selected'
                   />
@@ -163,14 +185,14 @@ class FaceLove extends Component {
                       } = shape
 
                       let isActive = currentShapeIndex === shapeIndex
-
-                      console.log('expressionStr :', expressionStr);
                       return (
-                        <View key={shapeIndex} onClick={this.onChooseShape.bind(this, shapeIndex)} className={`shape-item ${isActive ? 'shape-item-active' : ''}`} style={{ left: left+ 'px', top: top + 'px', width: width + 'px', height: height + 'px' }}>
-                          <View className="face-line left-top"></View>
-                          <View className="face-line right-top"></View>
-                          <View className="face-line left-bottom"></View>
-                          <View className="face-line right-bottom"></View>
+                        <View key={shapeIndex} className={`shape-item ${isActive ? 'shape-item-active' : ''}`} style={{ left: left+ 'px', top: top + 'px', width: width + 'px', height: height + 'px' }}>
+                          <View className='shape-area' onClick={this.onChooseShape.bind(this, shapeIndex)}>
+                            <View className="face-line left-top"></View>
+                            <View className="face-line right-top"></View>
+                            <View className="face-line left-bottom"></View>
+                            <View className="face-line right-bottom"></View>
+                          </View>
                           {isActive && (
                             <View className={`shape-desc ${left > 300 || left < 100 ? 'to-left' : 'to-right'}`}>
                               <View>年龄: {age}</View>
@@ -190,6 +212,7 @@ class FaceLove extends Component {
               )
               : <View className='to-choose' onClick={this.chooseImage}></View>
           }
+          <View className='image-tips'>{tips}</View>
         </View>
         <View className='main-button' onClick={this.chooseImage}>上传</View>
       </View>
