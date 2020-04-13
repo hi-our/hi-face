@@ -78,7 +78,6 @@ class FaceLove extends Component {
 
       let shapeList = []
       let cutList = []
-      let showCutList = []
       // TODO 封装方法
       if (FaceInfos.length > 0) {
         shapeList = FaceInfos.map((item, shapeIndex) => {
@@ -87,10 +86,10 @@ class FaceLove extends Component {
 
           return {
             shapeIndex,
-            left: X * PAGE_DPR_RATIO,
-            top: Y * PAGE_DPR_RATIO,
-            width: Width * PAGE_DPR_RATIO,
-            height: Height * PAGE_DPR_RATIO,
+            left: X,
+            top: Y,
+            width: Width,
+            height: Height,
             age: Age,
             genderStr: GENDER_STATUS[Gender],
             expressionStr: EXPRESS_MOOD[parseInt(Expression / 10, 10)],
@@ -119,21 +118,8 @@ class FaceLove extends Component {
       this.setState({
         faceImageUrl,
         currentShapeIndex: 0,
+        shapeList
       })
-      
-      // 延迟加载人脸框
-      setTimeout(() => {
-        this.setState({
-          shapeList
-        })
-        if (shapeList.length > 1) {
-          Taro.showToast({
-            icon: 'none',
-            title: '人脸框可点击',
-            duration: 3000
-          })
-        }
-      }, 1500)
 
       let reqList = [
         await cloudCallFunction({
@@ -254,7 +240,7 @@ class FaceLove extends Component {
 
                       let isActive = currentShapeIndex === shapeIndex
                       return (
-                        <View key={shapeIndex} className={`shape-item ${isActive ? 'shape-item-active' : ''}`} style={{ left: left+ 'px', top: top + 'px', width: width + 'px', height: height + 'px' }}>
+                        <View key={shapeIndex} className={`shape-item ${isActive ? 'shape-item-active' : ''}`} style={{ left: left+ 'rpx', top: top + 'rpx', width: width + 'rpx', height: height + 'rpx' }}>
                           <View className='shape-area' onClick={this.onChooseShape.bind(this, shapeIndex)}>
                             <View className="face-line left-top"></View>
                             <View className="face-line right-top"></View>
