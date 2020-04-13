@@ -75,9 +75,11 @@ class FaceLove extends Component {
         }
       })
       Taro.hideLoading()
+
       let shapeList = []
       let cutList = []
       let showCutList = []
+      // TODO 封装方法
       if (FaceInfos.length > 0) {
         shapeList = FaceInfos.map((item, shapeIndex) => {
           const { X, Y, Height, Width, FaceAttributesInfo = {} } = item
@@ -131,51 +133,52 @@ class FaceLove extends Component {
             duration: 3000
           })
         }
-      }, 1500);
+      }, 1500)
 
-      const { mainColor } = await cloudCallFunction({
-        name: 'get-main-color',
-        data: {
-          fileID
-        }
-      })
+      let reqList = [
+        await cloudCallFunction({
+          name: 'get-main-color',
+          data: {
+            fileID
+          }
+        }),
+        cloudCallFunction({
+          name: 'detect-image-label',
+          data: {
+            fileID
+          }
+        }),
 
-      this.setState({
-        pageMainColor: mainColor
-      })
+      ]
 
-      const { list: labelList } = await cloudCallFunction({
-        name: 'detect-image-label',
-        data: {
-          fileID
-        }
-      })
-
-      
-      this.setState({
-        labelList
-      })
-      
       if (cutList.length) {
-        const { list: imageList } = await cloudCallFunction({
+        reqList.push(cloudCallFunction({
           name: 'cut-image-many',
           data: {
-            fileID,
+            fileID: faceFileID,
             ruleList: cutList
           }
-        })
-
-        showCutList = imageList.map(item => ({
-          ...item,
-          showWidth: 90 * item.height / item.width
         }))
-
-        console.log('imageList :', imageList, showCutList);
-
       }
-      this.setState({
-        showCutList
+
+      // TODO 使用 Promise.all来调用
+      Promise.all(reqList).then(results => {
+        let tmpState = {}
+
+        const { mainColor } = results[0]
+        tmpState.pageMainColor = mainColor
+
+        const { list: labelList } = results[1]
+        tmpState.labelList = labelList
+
+        if (results[2]) {
+          const { list: imageList } = results[2]
+          tmpState.showCutList = imageList
+        }
+
+        this.setState(tmpState)
       })
+
     } catch (error) {
       Taro.hideLoading()
       let message = error.message || '识别出错'
@@ -280,13 +283,22 @@ class FaceLove extends Component {
           <View className='image-tips'>{tips}</View>
           {
             shapeList.length > 0 && (
-              <ScrollView scrollX>
-                <Image src={faceImageUrl} mode='aspectFit' className={`cut-item ${currentShapeIndex === -1 ? 'cut-item-active' : ''}`} />
+              <ScrollView scrollX className='cut-wrap'>
+                <Image src={faceImageUrl}
+                  mode='aspectFit'
+                  onClick={this.onChooseShape.bind(this, -1)}
+                  className={`cut-item ${currentShapeIndex === -1 ? 'cut-item-active' : ''}`}
+                />
                 {
                   showCutList.map(item => {
                     const { fileID, shapeIndex } = item
                     return (
-                      <Image key={fileID} src={'cloud://' + fileID} mode='aspectFit' className={`cut-item ${currentShapeIndex === shapeIndex ? 'cut-item-active' : ''}`} />
+                      <Image
+                        key={fileID}
+                        src={'cloud://' + fileID}
+                        onClick={this.onChooseShape.bind(this, shapeIndex)}
+                        mode='aspectFit' className={`cut-item ${currentShapeIndex === shapeIndex ? 'cut-item-active' : ''}`}
+                      />
                     )
                   })
                 }
