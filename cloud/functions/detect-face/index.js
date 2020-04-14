@@ -45,7 +45,7 @@ exports.main = async (event) => {
 
   try {
     let originImageUrl = await getImageUrl(fileID)
-    let rule = `imageMogr2/thumbnail/!${width}x${height}r/scrop/${width}x${height}`
+    let rule = `imageMogr2/thumbnail/!${width}x${height}r|imageMogr2/scrop/${width}x${height}/`
     console.log('rule :', rule);
 
     let cutImageUrl = originImageUrl + '?' + rule
