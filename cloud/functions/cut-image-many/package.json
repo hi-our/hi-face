@@ -1,5 +1,5 @@
 {
-  "name": "analyze-face",
+  "name": "faceImgSmartCrop",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "latest",
+    "@cloudbase/extension-ci": "^0.1.0",
     "tcb-admin-node": "latest"
   }
 }

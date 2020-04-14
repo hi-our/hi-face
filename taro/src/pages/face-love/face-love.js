@@ -1,9 +1,9 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image, Input, Button, Canvas, Block } from '@tarojs/components'
+import { View, Image, Input, Button, Canvas, Block, ScrollView } from '@tarojs/components'
 // import PageWrapper from 'components/page-wrapper'
 import fetch, { cloudCallFunction } from 'utils/fetch'
 import promisify from 'utils/promisify'
-import { PAGE_DPR_RATIO, GENDER_STATUS, EXPRESS_MOOD, HAVE_STATUS } from './utils';
+import { PAGE_DPR_RATIO, GENDER_STATUS, EXPRESS_MOOD, HAVE_STATUS, STATUS_BAR_HEIGHT } from './utils';
 
 // 引入代码
 // import { TaroCanvasDrawer,  } from 'components/taro-plugin-canvas';
@@ -28,7 +28,18 @@ class FaceLove extends Component {
       pageMainColor: '',
       faceImageUrl: '',
       shapeList: [],
-      labelList: []
+      labelList: [],
+      showCutList: []
+    }
+  }
+
+  onShareAppMessage() {
+    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
+
+    return {
+      title: '人像魅力',
+      imageUrl: DEFAULT_SHARE_COVER,
+      path: '/pages/face-love/face-love'
     }
   }
 
@@ -58,13 +69,16 @@ class FaceLove extends Component {
       const fileID = await this.onUploadFile(originSrc)
   
       const { faceFileID, faceImageUrl, FaceInfos = [] } = await cloudCallFunction({
-        name: 'face-recognition',
+        name: 'detect-face',
         data: {
           fileID
         }
       })
       Taro.hideLoading()
+
       let shapeList = []
+      let cutList = []
+      // TODO 封装方法
       if (FaceInfos.length > 0) {
         shapeList = FaceInfos.map((item, shapeIndex) => {
           const { X, Y, Height, Width, FaceAttributesInfo = {} } = item
@@ -72,10 +86,10 @@ class FaceLove extends Component {
 
           return {
             shapeIndex,
-            left: X * PAGE_DPR_RATIO,
-            top: Y * PAGE_DPR_RATIO,
-            width: Width * PAGE_DPR_RATIO,
-            height: Height * PAGE_DPR_RATIO,
+            left: X,
+            top: Y,
+            width: Width,
+            height: Height,
             age: Age,
             genderStr: GENDER_STATUS[Gender],
             expressionStr: EXPRESS_MOOD[parseInt(Expression / 10, 10)],
@@ -85,49 +99,72 @@ class FaceLove extends Component {
             maskStr: HAVE_STATUS[Number(Mask)],
           }
         })
+
+        cutList = FaceInfos.map((item, shapeIndex) => {
+          const { X, Y, Height, Width } = item
+
+          return {
+            shapeIndex,
+            x: X,
+            y: Y,
+            width: Width,
+            height: Height,
+          }
+        })
       }
+
+      console.log('cutList :', cutList);
 
       this.setState({
         faceImageUrl,
         currentShapeIndex: 0,
+        shapeList
       })
-      
-      // 延迟加载人脸框
-      setTimeout(() => {
-        this.setState({
-          shapeList
-        })
-        if (shapeList.length > 1) {
-          Taro.showToast({
-            icon: 'none',
-            title: '人脸框可点击',
-            duration: 3000
-          })
+
+      let reqList = [
+        await cloudCallFunction({
+          name: 'get-main-color',
+          data: {
+            fileID
+          }
+        }),
+        cloudCallFunction({
+          name: 'detect-image-label',
+          data: {
+            fileID
+          }
+        }),
+
+      ]
+
+      if (cutList.length) {
+        reqList.push(cloudCallFunction({
+          name: 'cut-image-many',
+          data: {
+            fileID: faceFileID,
+            ruleList: cutList
+          }
+        }))
+      }
+
+      // TODO 使用 Promise.all来调用
+      Promise.all(reqList).then(results => {
+        let tmpState = {}
+
+        const { mainColor } = results[0]
+        tmpState.pageMainColor = mainColor
+
+        const { list: labelList } = results[1]
+        tmpState.labelList = labelList
+
+        if (results[2]) {
+          const { list: imageList } = results[2]
+          tmpState.showCutList = imageList
         }
-      }, 1500);
 
-      const { mainColor } = await cloudCallFunction({
-        name: 'get-main-color',
-        data: {
-          fileID
-        }
+        this.setState(tmpState)
       })
 
-      this.setState({
-        pageMainColor: mainColor
-      })
-
-      const { list } = await cloudCallFunction({
-        name: 'detect-image-label',
-        data: {
-          fileID
-        }
-      })
-
-      this.setState({
-        labelList: list
-      })
-      
     } catch (error) {
       Taro.hideLoading()
       let message = error.message || '识别出错'
@@ -169,14 +206,23 @@ class FaceLove extends Component {
   }
 
   render() {
-    const { pageMainColor, faceImageUrl, shapeList, currentShapeIndex, labelList } = this.state
+    const { pageMainColor, faceImageUrl, shapeList, currentShapeIndex, labelList, showCutList } = this.state
     let tips = '上传带人脸的正面照'
     if (shapeList.length) {
       tips = currentShapeIndex >= 0 ? '点击红色人脸框，可隐藏人脸魅力值' : '点击人脸框，可以显示人脸魅力值'
     }
     return (
-      <View className='face-love-page' style={{ backgroundColor: pageMainColor }}>
+      <View className='face-love-page' style={{ backgroundColor: pageMainColor, paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
         <View className='page-title'>人像魅力</View>
+        <View className='label-list'>
+          {
+            labelList.map((item => {
+              return (
+                <View className='label-item' key={item.name}>{item.name}</View>
+              )
+            }))
+          }
+        </View>
         <View className='image-wrap'>
           {
             !!faceImageUrl
@@ -194,7 +240,7 @@ class FaceLove extends Component {
 
                       let isActive = currentShapeIndex === shapeIndex
                       return (
-                        <View key={shapeIndex} className={`shape-item ${isActive ? 'shape-item-active' : ''}`} style={{ left: left+ 'px', top: top + 'px', width: width + 'px', height: height + 'px' }}>
+                        <View key={shapeIndex} className={`shape-item ${isActive ? 'shape-item-active' : ''}`} style={{ left: left+ 'rpx', top: top + 'rpx', width: width + 'rpx', height: height + 'rpx' }}>
                           <View className='shape-area' onClick={this.onChooseShape.bind(this, shapeIndex)}>
                             <View className="face-line left-top"></View>
                             <View className="face-line right-top"></View>
@@ -221,17 +267,32 @@ class FaceLove extends Component {
               : <View className='to-choose' onClick={this.chooseImage}></View>
           }
           <View className='image-tips'>{tips}</View>
-        </View>
-        <View className='label-list'>
           {
-            labelList.map((item => {
-              return (
-                <View className='label-item' key={item.name}>{item.name}</View>
-              )
-            }))
+            shapeList.length > 0 && (
+              <ScrollView scrollX className='cut-wrap'>
+                <Image src={faceImageUrl}
+                  mode='aspectFit'
+                  onClick={this.onChooseShape.bind(this, -1)}
+                  className={`cut-item ${currentShapeIndex === -1 ? 'cut-item-active' : ''}`}
+                />
+                {
+                  showCutList.map(item => {
+                    const { fileID, shapeIndex } = item
+                    return (
+                      <Image
+                        key={fileID}
+                        src={'cloud://' + fileID}
+                        onClick={this.onChooseShape.bind(this, shapeIndex)}
+                        mode='aspectFit' className={`cut-item ${currentShapeIndex === shapeIndex ? 'cut-item-active' : ''}`}
+                      />
+                    )
+                  })
+                }
+              </ScrollView>
+            )
           }
-          
         </View>
+        
         <View className='main-button' onClick={this.chooseImage}>上传</View>
       </View>
     )

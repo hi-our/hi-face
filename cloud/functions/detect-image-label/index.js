@@ -33,8 +33,8 @@ exports.main = async (event) => {
   if (fileID) {
     try {
 
-      imgID = fileID.replace('cloud://', '')
-      let index = imgID.indexOf('/')
+      let imgID = fileID.replace('cloud://', '')
+      let index = let .indexOf('/')
       let cloudPath = imgID.substr(index)
 
       const res = await tcb.invokeExtension("CloudInfinite", {

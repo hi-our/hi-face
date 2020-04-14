@@ -64,14 +64,14 @@ async function imgSecCheck(event) {
   }
 
   try {
-    imgID = fileID.replace('cloud://', '')
+    let imgID = fileID.replace('cloud://', '')
     let index = imgID.indexOf('/')
-    imgID = imgID.substr(index)
+    let cloudPath = imgID.substr(index)
 
 
     const res = await tcb.invokeExtension('CloudInfinite', {
       action: 'DetectType',
-      cloudPath: imgID, //需要分析的图像的绝对路径
+      cloudPath: cloudPath, //需要分析的图像的绝对路径
       operations: { type: ["porn", "terrorist", "politics"] }
     })
 

@@ -9,7 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@cloudbase/extension-ci": "latest",
     "axios": "latest",
-    "tcb-admin-node": "latest"
+    "tcb-admin-node": "latest",
+    "tencentcloud-sdk-nodejs": "^3.0.150",
+    "wx-server-sdk": "latest"
   }
 }
