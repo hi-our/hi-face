@@ -1,7 +1,8 @@
 require('./promise-allSettled')
+
 const extCi = require("@cloudbase/extension-ci");
 const tcb = require('tcb-admin-node')
-const fetch = require('axios')
+const axios = require('axios')
 const detectFace = require('./req-iai-face').detectFace
 
 let env = process.env.TCB_ENV === 'local' ? 'development-v9y2f' : process.env.TCB_ENV
@@ -44,8 +45,76 @@ exports.main = async (event) => {
 
   try {
     let originImageUrl = await getImageUrl(fileID)
-    console.log('originImageUrl :', originImageUrl);
+    let rule = `imageMogr2/thumbnail/!${width}x${height}r/scrop/${width}x${height}`
+    console.log('rule :', rule);
+
+    let cutImageUrl = originImageUrl + '?' + rule
+    console.log('cutImageUrl :', cutImageUrl);
+    let {
+      fileContent,
+      base64Main
+    } = await axios.get(cutImageUrl, {
+      responseType: 'arraybuffer'
+    })
+    .then(response => {
+      let buffer1 = new Buffer(response.data, 'binary')
+      return {
+        fileContent: buffer1,
+        base64Main: buffer1.toString('base64')
+      }
+    })
+
+    let imgID = fileID.replace('cloud://', '')
+    let index = imgID.indexOf('/')
+    let cloudPath = imgID.substr(index)
+
+    console.log('fileContent :', fileContent);
+
+    let facePath = 'detect-face'
+
+    return Promise.allSettled([
+      tcb.callFunction({
+        name: 'image-safe-check',
+        data: {
+          fileID: fileID
+        }
+      }),
+      detectFace(base64Main),
+      tcb.uploadFile({
+        cloudPath: facePath + cloudPath,
+        fileContent: fileContent
+      })
+    ]).then((results) => {
+      let checkResult = results[0]
+      let faceResult = results[1]
+      let fileReult = results[2]
+
+      console.log('fileReult :', fileReult);
+
+      if (checkResult.result.status) {
+
+        return checkResult.result
+      }
+
+      return {
+        ...faceResult,
+        data: {
+          ...faceResult.data,
+          faceFileID: fileReult.fileID,
+          faceImageUrl: cutImageUrl
+        }
+      }
+    })
+
+
+
+
+
+
+    console.log('arrayBuffer :', arrayBuffer);
+
   } catch (error) {
+    console.log('error :', error);
     return {
       data: {},
       time: new Date(),

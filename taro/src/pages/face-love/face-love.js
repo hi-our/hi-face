@@ -69,7 +69,7 @@ class FaceLove extends Component {
       const fileID = await this.onUploadFile(originSrc)
   
       const { faceFileID, faceImageUrl, FaceInfos = [] } = await cloudCallFunction({
-        name: 'face-recognition',
+        name: 'detect-face',
         data: {
           fileID
         }
