@@ -22,7 +22,7 @@ const updateManager = process.env.TARO_ENV !== 'h5' ? Taro.getUpdateManager() : 
 class App extends Component {
   config = {
     pages: [
-      'pages/face-love/face-love',
+      'pages/detect-face/detect-face',
       'pages/queen-king/queen-king',
       'pages/wear-a-mask/wear-a-mask',
       'pages/self/self',
@@ -55,7 +55,7 @@ class App extends Component {
           selectedIconPath: 'images/tab-bar-crown-active.png'
         },
         {
-          pagePath: 'pages/face-love/face-love',
+          pagePath: 'pages/detect-face/detect-face',
           text: '人像魅力',
           iconPath: 'images/face-1.png',
           selectedIconPath: 'images/face-1-active.png'

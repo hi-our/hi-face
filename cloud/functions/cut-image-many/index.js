@@ -11,9 +11,29 @@ tcb.init({
 tcb.registerExtension(extCi);
 
 exports.main = async (event) => {
-  const { fileID = '', ruleList } = event
+  const { fileID = '', imageUrl = '' , ruleList = [] } = event
 
   console.log('fileID :', fileID);
+
+  if (imageUrl) {
+    const list = ruleList.map(item => {
+      const { width, height, x, y } = item
+      let rule = '|imageMogr2/cut/' + width + 'x' + height + 'x' + x + "x" + y
+
+      return {
+        fileImageUrl: imageUrl + rule
+      }
+    })
+
+    return {
+      data: {
+        list
+      },
+      time: new Date(),
+      status: 0,
+      message: ''
+    }
+  }
 
   if (fileID) {
     try {
