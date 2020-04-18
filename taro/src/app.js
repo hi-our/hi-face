@@ -22,7 +22,7 @@ const updateManager = process.env.TARO_ENV !== 'h5' ? Taro.getUpdateManager() : 
 class App extends Component {
   config = {
     pages: [
-      'pages/face-love/face-love',
+      'pages/detect-face/detect-face',
       'pages/queen-king/queen-king',
       'pages/wear-a-mask/wear-a-mask',
       'pages/self/self',
