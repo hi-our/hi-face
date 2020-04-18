@@ -1,16 +1,5 @@
 
 
-## 参加人员
-* @我的猫呀 
-* @丫头别闹放下灯 
-* @凌金隆 
-* @YShun(YaYa) 
-* @专业接外包
-*  @明明
-* @无理。
-* @影子
-*  @星耀映月
-* @第五先生
 ## 设计稿：
 点击如下链接加入  [https://lanhuapp.com/url/g8Bao-TXhou](https://lanhuapp.com/url/g8Bao-TXhou)
 
