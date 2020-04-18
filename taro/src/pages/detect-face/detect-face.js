@@ -77,7 +77,7 @@ class FaceLove extends Component {
       Taro.hideLoading()
 
       let shapeList = []
-      let cutList = []
+      let showCutList = []
       // TODO 封装方法
       if (FaceInfos.length > 0) {
         shapeList = FaceInfos.map((item, shapeIndex) => {
@@ -100,11 +100,14 @@ class FaceLove extends Component {
           }
         })
 
-        cutList = FaceInfos.map((item, shapeIndex) => {
+        showCutList = FaceInfos.map((item, shapeIndex) => {
           const { X, Y, Height, Width } = item
+
+          let rule = '|imageMogr2/cut/' + Width + 'x' + Height + 'x' + X + 'x' + Y
 
           return {
             shapeIndex,
+            cutFileUrl: faceImageUrl + rule,
             x: X,
             y: Y,
             width: Width,
@@ -113,12 +116,13 @@ class FaceLove extends Component {
         })
       }
 
-      console.log('cutList :', cutList);
+      console.log('showCutList :', showCutList);
 
       this.setState({
         faceImageUrl,
         currentShapeIndex: 0,
-        shapeList
+        shapeList,
+        showCutList
       })
 
       let reqList = [
@@ -137,16 +141,6 @@ class FaceLove extends Component {
 
       ]
 
-      if (cutList.length) {
-        reqList.push(cloudCallFunction({
-          name: 'cut-image-many',
-          data: {
-            fileID: faceFileID,
-            ruleList: cutList
-          }
-        }))
-      }
-
       // TODO 使用 Promise.all来调用
       Promise.all(reqList).then(results => {
         let tmpState = {}
@@ -156,11 +150,6 @@ class FaceLove extends Component {
 
         const { list: labelList } = results[1]
         tmpState.labelList = labelList
-
-        if (results[2]) {
-          const { list: imageList } = results[2]
-          tmpState.showCutList = imageList
-        }
 
         this.setState(tmpState)
       })
@@ -277,11 +266,11 @@ class FaceLove extends Component {
                 />
                 {
                   showCutList.map(item => {
-                    const { fileID, shapeIndex } = item
+                    const { fileID, shapeIndex, cutFileUrl } = item
                     return (
                       <Image
                         key={fileID}
-                        src={'cloud://' + fileID}
+                        src={cutFileUrl}
                         onClick={this.onChooseShape.bind(this, shapeIndex)}
                         mode='aspectFit' className={`cut-item ${currentShapeIndex === shapeIndex ? 'cut-item-active' : ''}`}
                       />

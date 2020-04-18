@@ -55,7 +55,7 @@ class App extends Component {
           selectedIconPath: 'images/tab-bar-crown-active.png'
         },
         {
-          pagePath: 'pages/face-love/face-love',
+          pagePath: 'pages/detect-face/detect-face',
           text: '人像魅力',
           iconPath: 'images/face-1.png',
           selectedIconPath: 'images/face-1-active.png'
