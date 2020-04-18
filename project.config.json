@@ -107,6 +107,13 @@
 					"pathName": "pages/self/self",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/wear-a-mask/wear-a-mask",
+					"pathName": "pages/wear-a-mask/wear-a-mask",
+					"query": "",
+					"scene": null
 				}
 			]
 		}
