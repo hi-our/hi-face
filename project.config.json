@@ -2,8 +2,8 @@
 	"miniprogramRoot": "taro/dist/",
 	"cloudfunctionRoot": "cloud/functions/",
 	"cloudfunctionTemplateRoot": "cloud/template/",
-	"projectname": "quickly-mask",
-	"description": "test",
+	"projectname": "hi-face",
+	"description": "Hi头像小程序，由嗨我团队出品。",
 	"appid": "wxd5e8989ce23206af",
 	"qqappid": "1110180763",
 	"setting": {

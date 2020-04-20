@@ -39,7 +39,7 @@ class FaceLove extends Component {
     return {
       title: '人像魅力',
       imageUrl: DEFAULT_SHARE_COVER,
-      path: '/pages/face-love/face-love'
+      path: '/pages/detect-face/detect-face'
     }
   }
 
@@ -201,7 +201,7 @@ class FaceLove extends Component {
       tips = currentShapeIndex >= 0 ? '点击红色人脸框，可隐藏人脸魅力值' : '点击人脸框，可以显示人脸魅力值'
     }
     return (
-      <View className='face-love-page' style={{ backgroundColor: pageMainColor, paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
+      <View className='detect-face-page' style={{ backgroundColor: pageMainColor, paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
         <View className='page-title'>人像魅力</View>
         <View className='label-list'>
           {
