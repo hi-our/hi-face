@@ -237,7 +237,7 @@ class FaceLove extends Component {
                             <View className="face-line right-bottom"></View>
                           </View>
                           {isActive && (
-                            <View className={`shape-desc ${(left > 300 && left < 500 ) || left < 100 ? 'to-left' : 'to-right'}`}>
+                            <View className={`shape-desc ${left + width + 250 > 600 ? 'in-left' : 'in-right'}`}>
                               <View>年龄: {age}</View>
                               <View>表情: {expressionStr}</View>
                               <View>魅力: {beauty}</View>
