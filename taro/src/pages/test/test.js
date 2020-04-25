@@ -36,7 +36,9 @@ class Index extends Component {
 
 
   onReady() {
-    this.testFetch()
+    setTimeout(() => {
+      this.testFetch()
+    }, 3000);
   }
 
   onShareAppMessage() {

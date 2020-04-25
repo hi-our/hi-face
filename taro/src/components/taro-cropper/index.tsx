@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import Taro, {CanvasContext, getImageInfo, getSystemInfoSync} from '@tarojs/taro';
 import {Canvas, CoverView, View} from '@tarojs/components';
 import './index.styl';
@@ -40,7 +40,7 @@ interface TaroCropperComponentState {
   scale: number,
 }
 
-class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, TaroCropperComponentState> {
+class TaroCropperComponent extends Component<TaroCropperComponentProps, TaroCropperComponentState> {
 
   static defaultProps = {
     width: 750,
@@ -73,6 +73,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
   constructor(props) {
     super(props);
     this.systemInfo = Taro.getSystemInfoSync();
+    console.log('1 :', 1);
     this.state = {
       scale: 1,
     }
@@ -157,6 +158,8 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
       cropperCanvasId,
       cropperCutCanvasId
     } = this.props;
+
+    console.log('2 :>> ', 2);
 
     console.log('this :', cropperCanvasId, this);
     this.cropperCanvasContext = Taro.createCanvasContext(cropperCanvasId, this);
@@ -266,6 +269,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
       return;
     }
 
+    console.log('this.image :', this.image);
     const src = process.env.TARO_ENV === 'h5' ? this.image : this.imageInfo.path;
 
 
@@ -281,8 +285,8 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
     // 绘制裁剪框内部的区域
     this._drawCropperContent(src, this.imageLeft, this.imageTop,
       this.imageInfo.width, this.imageInfo.height, this.scaleImageWidth, this.scaleImageHeight);
-    this.cropperCanvasContext.draw(false);
-    this.cropperCutCanvasContext.draw(false);
+    this.cropperCanvasContext.draw(true);
+    this.cropperCutCanvasContext.draw(true);
   }
 
   /**
@@ -292,6 +296,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
    */
   UNSAFE_componentWillReceiveProps(nextProps: Readonly<TaroCropperComponentProps>, nextContext: any): void {
     if (JSON.stringify(nextProps) != JSON.stringify(this.props)) {
+      console.log('nextProps :', nextProps);
       this.updateInfo(nextProps)
         .then(() => {
           this.update();
@@ -531,6 +536,8 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
       width: `${_cropperWidth}px`,
       height: `${_cropperHeight}px`,
     };
+
+    console.log('cutCanvasStyle :', cutCanvasStyle, canvasStyle);
 
     let finish: any = null;
     let cancel: any = null;

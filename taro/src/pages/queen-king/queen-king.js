@@ -1012,7 +1012,11 @@ class QueenKing extends Component {
         {!originSrc && (
           <Block>
             <View className='test-hat-btn' onClick={this.goTestHat}>圣诞帽测试</View>
-            <Button className='share-btn' openType='share' onClick={this.showH5Modal}>分享给朋友<View className='share-btn-icon'></View></Button>
+            {
+              isH5Page
+                ? <View className='share-btn' onClick={this.showH5Modal}>分享给朋友<View className='share-btn-icon'></View></View>
+                : <Button className='share-btn' openType='share' onClick={this.showH5Modal}>分享给朋友<View className='share-btn-icon'></View></Button>
+            }
           </Block>
         )}
         {
