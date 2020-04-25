@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "concurrently": "^4.1.0",
-    "babel-eslint": "^8.2.1",
+    "babel-eslint": "^10.1.0",
     "eslint": "^4.19.1",
     "eslint-config-prettier": "2.9.0",
     "eslint-config-standard": "11.0.0",

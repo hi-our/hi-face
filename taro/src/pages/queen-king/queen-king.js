@@ -98,14 +98,6 @@ class QueenKing extends Component {
     this.start_x = 0;
     this.start_y = 0;
 
-
-    // this.ageMap.origin = two_face_image
-    // this.setState({
-    //   cutImageSrc: two_face_image
-    // }, () => {
-    //     this.onAnalyzeFace(two_face_image)
-    // })
-
   }
 
   showH5Modal = () => {
@@ -120,11 +112,6 @@ class QueenKing extends Component {
   }
 
   onChooseImage = (way) => {
-
-    // console.log('event :', event);
-    // TODO 兼容写法
-    // let way = event.target.dataset.way || 'album'
-
     Taro.chooseImage({
       count: 1,
       sourceType: [way],
@@ -275,21 +262,6 @@ class QueenKing extends Component {
       })
 
       Taro.hideLoading()
-
-      // 测试大小的代码，没有用
-      // console.log('cutImageSrc :', cutImageSrc);
-      // const { data: base64Main } = await fsmReadFile({
-      //   filePath: cutImageSrc,
-      //   // encoding: 'utf-8', //'base64',
-      // })
-      // const base64 = wx.arrayBufferToBase64(base64Main)
-      // // 以0.657M的图片为例
-      // // 转换为ArrayBuffer，大小还是0.657M
-      // // 转换为base64，大小为1.7M
-      // // 转换为utf-8，大小为1.2M
-      // console.log('base64Main :', base64Main.byteLength)
-      // console.log('base64 :', base64);
-      // console.log('变大率 :', base64.length, base64.length / (base64Main.byteLength))
 
       this.uploadOriginImage(cutImageSrc)
 
@@ -701,6 +673,7 @@ class QueenKing extends Component {
     }
   }
 
+  // 人像变换，腾讯云内测，暂时隐藏入口
   changeAge = async (type) => {
     const { originFileID } = this.state
     const { origin: cutImageSrc } = this.ageMap
@@ -757,6 +730,7 @@ class QueenKing extends Component {
       console.log('cutImageSrcNow :', cutImageSrcNow);
 
       this.ageMap[type] = cutImageSrcNow
+
       this.setState({
         currentAgeType: type,
         cutImageSrc: cutImageSrcNow,
@@ -894,14 +868,6 @@ class QueenKing extends Component {
                       )
                     })
                   }
-                  {/* {
-                    isShowShape && currentJiayouId > 0 && (
-                      <View className="image-jiayou">
-                        <Image id='shape' src={require(`../../images/jiayou-${currentJiayouId}.png`)} />
-                        <View className='image-btn-jiayou' onClick={this.chooseJiayouId}></View>
-                      </View>
-                    )
-                  } */}
                 </View>
               )
               : (
@@ -936,7 +902,7 @@ class QueenKing extends Component {
         </View>
         
 
-        {!isH5Page && !!cutImageSrc && (
+        {/* {!isH5Page && !!cutImageSrc && (
           <View className='style-list-wrap'>
             {
               dataStyleList.map(item => {
@@ -950,7 +916,7 @@ class QueenKing extends Component {
               })
             }
           </View>
-        )}
+        )} */}
         {
           cutImageSrc
             ? (

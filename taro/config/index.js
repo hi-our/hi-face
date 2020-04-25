@@ -19,6 +19,7 @@ const config = {
   },
   sourceRoot: 'src',
   outputRoot: process.env.TARO_ENV === 'h5' ? 'dist-h5' : 'dist',
+  
   babel: {
     sourceMap: true,
     presets: [
@@ -40,6 +41,13 @@ const config = {
         moduleName: 'babel-runtime'
       }]
     ]
+  },
+  copy: {
+    patterns: [
+      { from: 'sitemap.json', to: '/dist/sitemap.json' }
+    ],
+    options: {
+    }
   },
   defineConstants: {
     'process.env.SERVER_ENV': JSON.stringify(process.env.SERVER_ENV),
