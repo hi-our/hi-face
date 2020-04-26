@@ -1,8 +1,9 @@
-const extCi = require("@cloudbase/extension-ci")
+const extCi = require('@cloudbase/extension-ci')
 const tcb = require('tcb-admin-node')
-let env = process.env.TCB_ENV === 'local' ? 'development-v9y2f' : process.env.TCB_ENV
+
+// let env = process.env.TCB_ENV === 'local' ? 'production-topjt' : process.env.TCB_ENV
 tcb.init({
-  env
+  env: 'production-topjt'
 })
 
 tcb.registerExtension(extCi);
@@ -34,11 +35,11 @@ exports.main = async (event) => {
     try {
 
       let imgID = fileID.replace('cloud://', '')
-      let index = let .indexOf('/')
+      let index = imgID.indexOf('/')
       let cloudPath = imgID.substr(index)
 
-      const res = await tcb.invokeExtension("CloudInfinite", {
-        action: "DetectLabel",
+      const res = await tcb.invokeExtension('CloudInfinite', {
+        action: 'DetectLabel',
         cloudPath: cloudPath // 需要分析的图像的绝对路径，与tcb.uploadFile中一致
       })
 

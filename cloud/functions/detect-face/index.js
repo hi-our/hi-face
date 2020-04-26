@@ -5,10 +5,10 @@ const tcb = require('tcb-admin-node')
 const axios = require('axios')
 const detectFace = require('./req-iai-face').detectFace
 
-let env = process.env.TCB_ENV === 'local' ? 'development-v9y2f' : process.env.TCB_ENV
+// let env = process.env.TCB_ENV // === 'local' ? 'development-v9y2f' : process.env.TCB_ENV
 
 tcb.init({
-  env
+  env: 'production-topjt'
 })
 tcb.registerExtension(extCi)
 
