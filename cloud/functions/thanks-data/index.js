@@ -8,7 +8,7 @@ const data = {
   authorAvatar: 'https://n1image.hjfile.cn/res7/2020/02/02/19ad178fc9dc54eca7b050a6ad3077d0.jpg',
   authorName: '小溪里',
   authorDesc: 'Blog: xiaoxili.com\nEmail: shenghanqin@163.com\nGitHub: github.com/shenghanqin',
-  sourceLink: 'https://github.com/shenghanqin/quickly-mask',
+  sourceLink: 'https://github.com/hi-our/hi-face',
   referenceList: [
     {
       image: 'https://n1image.hjfile.cn/res7/2020/02/04/d6fec5814eb7f6d5f058942ca5e5f9b6.png',
