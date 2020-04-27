@@ -2,7 +2,7 @@
 const cloud = require('wx-server-sdk')
 const fetch = require('axios')
 
-let env = process.env.TCB_ENV === 'local' ? 'development-v9y2f' : process.env.TCB_ENV
+let env = 'production-topjt'
 
 // console.log('tcb.getCurrentEnv() :', tcb.getCurrentEnv());
 // tcb.init({
