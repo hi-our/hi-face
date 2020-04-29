@@ -3,7 +3,7 @@ const extCi = require("@cloudbase/extension-ci");
 const tcb = require('tcb-admin-node')
 const detectFace = require('./req-iai-face').detectFace
 
-let env = process.env.TCB_ENV === 'local' ? 'development-v9y2f' : process.env.TCB_ENV
+let env = 'production-topjt'
 
 tcb.init({
   env

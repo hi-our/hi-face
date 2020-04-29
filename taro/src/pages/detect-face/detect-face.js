@@ -34,12 +34,12 @@ class FaceLove extends Component {
   }
 
   onShareAppMessage() {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
+    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/04/26/2041af2867f22e62f8fce32b29cd1fb0.png'
 
     return {
       title: '人像魅力',
       imageUrl: DEFAULT_SHARE_COVER,
-      path: '/pages/face-love/face-love'
+      path: '/pages/detect-face/detect-face'
     }
   }
 
@@ -201,7 +201,7 @@ class FaceLove extends Component {
       tips = currentShapeIndex >= 0 ? '点击红色人脸框，可隐藏人脸魅力值' : '点击人脸框，可以显示人脸魅力值'
     }
     return (
-      <View className='face-love-page' style={{ backgroundColor: pageMainColor, paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
+      <View className='detect-face-page' style={{ backgroundColor: pageMainColor, paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
         <View className='page-title'>人像魅力</View>
         <View className='label-list'>
           {
@@ -237,7 +237,7 @@ class FaceLove extends Component {
                             <View className="face-line right-bottom"></View>
                           </View>
                           {isActive && (
-                            <View className={`shape-desc ${(left > 300 && left < 500 ) || left < 100 ? 'to-left' : 'to-right'}`}>
+                            <View className={`shape-desc ${left + width + 250 > 600 ? 'in-left' : 'in-right'}`}>
                               <View>年龄: {age}</View>
                               <View>表情: {expressionStr}</View>
                               <View>魅力: {beauty}</View>

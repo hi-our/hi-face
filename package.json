@@ -1,5 +1,5 @@
 {
-  "name": "quickly-mask",
+  "name": "hi-face",
   "version": "1.0.0",
   "description": "Example on using create-react-app with a Node Express Backend",
   "author": {
@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "concurrently": "^4.1.0",
-    "babel-eslint": "^8.2.1",
+    "babel-eslint": "^10.1.0",
     "eslint": "^4.19.1",
     "eslint-config-prettier": "2.9.0",
     "eslint-config-standard": "11.0.0",
@@ -30,10 +30,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/shenghanqin/quickly-mask.git"
+    "url": "https://github.com/hi-our/hi-face.git"
   },
   "bugs": {
-    "url": "https://github.com/shenghanqin/quickly-mask/issues"
+    "url": "https://github.com/hi-our/hi-face/issues"
   },
   "keywords": [
     "node",

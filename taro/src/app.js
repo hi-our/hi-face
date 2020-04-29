@@ -42,6 +42,7 @@ class App extends Component {
       request: 20000,
       downloadFile: 10000
     },
+    sitemapLocation: "sitemap.json",
     tabBar: {
       backgroundColor: '#fff',
       borderStyle: 'white',

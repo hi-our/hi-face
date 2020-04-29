@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "latest",
-    "tcb-admin-node": "latest"
+    "tcb-admin-node": "latest",
+    "wx-server-sdk": "latest"
   }
 }

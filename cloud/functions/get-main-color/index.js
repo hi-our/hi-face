@@ -1,11 +1,23 @@
-const tcb = require('tcb-admin-node')
+// const tcb = require('tcb-admin-node')
+const cloud = require('wx-server-sdk')
 const fetch = require('axios')
 
-let env = process.env.TCB_ENV === 'local' ? 'development-v9y2f' : process.env.TCB_ENV
+let env = 'production-topjt'
 
-tcb.init({
-  env
+// console.log('tcb.getCurrentEnv() :', tcb.getCurrentEnv());
+// tcb.init({
+//   env: tcb.getCurrentEnv()
+// })
+
+
+cloud.init({
+  env: cloud.DYNAMIC_CURRENT_ENV
 })
+
+
+
+
+
 
 function hexToRgba(hex = '', opacity) {
   var RGBA = 'rgba(' + parseInt('0x' + hex.slice(1, 3)) + ',' + parseInt('0x' + hex.slice(3, 5)) + ',' + parseInt('0x' + hex.slice(5, 7)) + ',' + opacity + ')'
@@ -18,7 +30,7 @@ function hexToRgba(hex = '', opacity) {
 }
 
 const getImageUrl = async (fileID) => {
-  const { fileList } = await tcb.getTempFileURL({
+  const { fileList } = await cloud.getTempFileURL({
     fileList: [fileID]
   })
   return fileList[0].tempFileURL
