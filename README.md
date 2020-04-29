@@ -4,7 +4,7 @@
 
 采用微信小程序编写，实现了自动为头像戴上口罩的功能。
 
-源码地址：https://github.com/shenghanqin/quickly-mask
+源码地址：https://github.com/hi-our/hi-face
 
 **主要功能**
 
