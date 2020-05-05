@@ -1,17 +1,12 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image, Input, Button, Canvas, Block, ScrollView } from '@tarojs/components'
-// import PageWrapper from 'components/page-wrapper'
-import fetch, { cloudCallFunction } from 'utils/fetch'
+import { View, Image, ScrollView } from '@tarojs/components'
+import { cloudCallFunction } from 'utils/fetch'
 import promisify from 'utils/promisify'
-import { PAGE_DPR_RATIO, GENDER_STATUS, EXPRESS_MOOD, HAVE_STATUS, STATUS_BAR_HEIGHT, getFaceShapes, getFaceCutList } from './utils';
-
-// 引入代码
-// import { TaroCanvasDrawer,  } from 'components/taro-plugin-canvas';
+import { STATUS_BAR_HEIGHT, getFaceShapes, getFaceCutList } from './utils';
 
 const isH5Page = process.env.TARO_ENV === 'h5'
 
 import './styles.styl';
-
 
 // @CorePage
 class FaceLove extends Component {
@@ -63,9 +58,11 @@ class FaceLove extends Component {
       title: '识别中...'
     })
 
-    let fileID = await this.onUploadFile(tempFilePaths[0])
+    const fileID = await this.onUploadFile(tempFilePaths[0])
 
-    let reqList = [
+    if (!fileID) return
+
+    const reqList = [
       cloudCallFunction({
         name: 'detect-face',
         data: {
@@ -129,6 +126,7 @@ class FaceLove extends Component {
       return fileID
 
     } catch (error) {
+      Taro.showLoading()
       console.log('error :', error)
       return ''
     }
