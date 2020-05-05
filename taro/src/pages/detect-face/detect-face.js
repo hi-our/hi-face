@@ -3,7 +3,7 @@ import { View, Image, Input, Button, Canvas, Block, ScrollView } from '@tarojs/c
 // import PageWrapper from 'components/page-wrapper'
 import fetch, { cloudCallFunction } from 'utils/fetch'
 import promisify from 'utils/promisify'
-import { PAGE_DPR_RATIO, GENDER_STATUS, EXPRESS_MOOD, HAVE_STATUS, STATUS_BAR_HEIGHT } from './utils';
+import { PAGE_DPR_RATIO, GENDER_STATUS, EXPRESS_MOOD, HAVE_STATUS, STATUS_BAR_HEIGHT, getFaceShapes, getFaceCutList } from './utils';
 
 // 引入代码
 // import { TaroCanvasDrawer,  } from 'components/taro-plugin-canvas';
@@ -59,111 +59,58 @@ class FaceLove extends Component {
       sourceType: ['album', 'camera'],
     })
 
-    let originSrc = tempFilePaths[0]
-    
     Taro.showLoading({
       title: '识别中...'
     })
 
-    try {
-      const fileID = await this.onUploadFile(originSrc)
-  
-      const { faceFileID, faceImageUrl, FaceInfos = [] } = await cloudCallFunction({
+    let fileID = await this.onUploadFile(tempFilePaths[0])
+
+    let reqList = [
+      cloudCallFunction({
         name: 'detect-face',
         data: {
           fileID
         }
-      })
+      }),
+      cloudCallFunction({
+        name: 'get-main-color',
+        data: {
+          fileID
+        }
+      }),
+      cloudCallFunction({
+        name: 'detect-image-label',
+        data: {
+          fileID
+        }
+      }),
+    ]
+
+    Promise.all(reqList).then(results => {
       Taro.hideLoading()
 
-      let shapeList = []
-      let showCutList = []
-      // TODO 封装方法
-      if (FaceInfos.length > 0) {
-        shapeList = FaceInfos.map((item, shapeIndex) => {
-          const { X, Y, Height, Width, FaceAttributesInfo = {} } = item
-          const { Gender, Age, Expression, Beauty, Glass, Hat, Mask } = FaceAttributesInfo
-
-          return {
-            shapeIndex,
-            left: X,
-            top: Y,
-            width: Width,
-            height: Height,
-            age: Age,
-            genderStr: GENDER_STATUS[Gender],
-            expressionStr: EXPRESS_MOOD[parseInt(Expression / 10, 10)],
-            beauty: Beauty,
-            glassStr: HAVE_STATUS[Number(Glass)],
-            hatStr: HAVE_STATUS[Number(Hat)],
-            maskStr: HAVE_STATUS[Number(Mask)],
-          }
-        })
-
-        showCutList = FaceInfos.map((item, shapeIndex) => {
-          const { X, Y, Height, Width } = item
-
-          let rule = '|imageMogr2/cut/' + Width + 'x' + Height + 'x' + X + 'x' + Y
-
-          return {
-            shapeIndex,
-            cutFileUrl: faceImageUrl + rule,
-            x: X,
-            y: Y,
-            width: Width,
-            height: Height,
-          }
-        })
-      }
-
-      console.log('showCutList :', showCutList);
+      const { faceImageUrl, FaceInfos = [] } = results[0]
+      const { mainColor } = results[1]
+      const { list: labelList } = results[2]
 
       this.setState({
+        pageMainColor: mainColor,
+        labelList,
         faceImageUrl,
         currentShapeIndex: 0,
-        shapeList,
-        showCutList
+        shapeList: getFaceShapes(FaceInfos),
+        showCutList: getFaceCutList(FaceInfos, faceImageUrl),
       })
 
-      let reqList = [
-        await cloudCallFunction({
-          name: 'get-main-color',
-          data: {
-            fileID
-          }
-        }),
-        cloudCallFunction({
-          name: 'detect-image-label',
-          data: {
-            fileID
-          }
-        }),
-
-      ]
-
-      // TODO 使用 Promise.all来调用
-      Promise.all(reqList).then(results => {
-        let tmpState = {}
-
-        const { mainColor } = results[0]
-        tmpState.pageMainColor = mainColor
-
-        const { list: labelList } = results[1]
-        tmpState.labelList = labelList
-
-        this.setState(tmpState)
-      })
-
-    } catch (error) {
+    }).catch(error => {
       Taro.hideLoading()
-      let message = error.message || '识别出错'
+      const { message, errMsg } = error || {}
 
       Taro.showToast({
         icon: 'none',
-        title: message
+        title: message || errMsg || '识别出错'
       })
-      console.log('error :', error);
-    }
+    })
   }
 
   onUploadFile = async (tempFilePath, prefix = 'temp') => {
