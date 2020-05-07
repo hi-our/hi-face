@@ -210,24 +210,22 @@ export function getMaskShapeList(mouthList, dprCanvasWidth, shapeSize) {
   })
 }
 
-export function getHatShapeList(mouthList, dprCanvasWidth, shapeSize) {
+export function getHatShapeList(mouthList) {
   return mouthList.map(item => {
     console.log('item :', item);
-    let { faceWidth, angle, headPos = {}, ImageWidth } = item
-    let dpr = ImageWidth / dprCanvasWidth
-    const shapeCenterX = headPos.X / dpr
-    const shapeCenterY = headPos.Y / dpr
+    let { faceWidth, angle, headPos = {} } = item
+    const shapeCenterX = headPos.X
+    const shapeCenterY = headPos.Y
     const rotate = angle / Math.PI * 180
-    const scale = faceWidth / shapeSize / dpr
 
-    // // 角度计算有点难
-    let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
-    let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+    // 角度计算有点难
+    let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * faceWidth
+    let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * faceWidth
 
     const resizeCenterX = shapeCenterX + widthScaleDpr - 2
     const resizeCenterY = shapeCenterY + heightScaleDpr - 2
 
-    const shapeWidth = faceWidth / 0.6 / dpr
+    const shapeWidth = faceWidth / 0.6
 
     return {
       categoryName: 'crown',

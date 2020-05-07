@@ -832,24 +832,64 @@ class QueenKing extends Component {
                         rotate
                       } = shape
 
-                      let transX = shapeCenterX - shapeWidth / 2 - 2 + 'px'
-                      let transY = shapeCenterY - shapeWidth / 2 - 2 + 'px'
+                      let transX = shapeCenterX - shapeWidth / 2 - 2 + 'rpx'
+                      let transY = shapeCenterY - shapeWidth / 2 - 2 + 'rpx'
 
                       let shapeStyle = {
-                        width: shapeWidth + 'px',
-                        height: shapeWidth + 'px',
+                        width: shapeWidth + 'rpx',
+                        height: shapeWidth + 'rpx',
                         transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`,
                         zIndex: shapeIndex === currentShapeIndex ? 2 : 1
                       }
+                      let shapeCenterStyle = {
+                        left: shapeCenterX + 'rpx',
+                        top: shapeCenterY + 'rpx',
+
+                      }
+                      return <View className='image-btn-center' key={timeNow} style={shapeCenterStyle}></View>
+                    })
+                  }
+                  {
+                    isShowShape && shapeList.map((shape, shapeIndex) => {
+
+                      const {
+                        categoryName,
+                        shapeWidth,
+                        currentShapeId,
+                        timeNow,
+                        shapeCenterX,
+                        shapeCenterY,
+                        resizeCenterX,
+                        resizeCenterY,
+                        reserve,
+                        rotate
+                      } = shape
+
+                      let transX = shapeCenterX - shapeWidth / 2 - 2 + 'rpx'
+                      let transY = shapeCenterY - shapeWidth / 2 - 2 + 'rpx'
+
+                      let shapeStyle = {
+                        width: shapeWidth + 'rpx',
+                        height: shapeWidth + 'rpx',
+                        transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`,
+                        zIndex: shapeIndex === currentShapeIndex ? 2 : 1
+                      }
+                      let shapeCenterStyle = {
+                        left: shapeCenterX + 'rpx',
+                        top: shapeCenterY + 'rpx',
+                        
+                      }
+
+                      console.log('shapeStyle :>> ', shapeStyle);
 
                       let shapeImageStyle = {
                         transform: `scale(${reserve}, 1)`,
                       }
 
-                      // let handleStyle = {
-                      //   top: resizeCenterY - 10 + 'px',
-                      //   left: resizeCenterX - 10 + 'px'
-                      // }
+                      let handleStyle = {
+                        top: resizeCenterY - 10 + 'px',
+                        left: resizeCenterX - 10 + 'px'
+                      }
 
                       return (
                         <View className='shape-container' key={timeNow} style={shapeStyle}>
@@ -857,6 +897,7 @@ class QueenKing extends Component {
                           {
                             currentShapeIndex === shapeIndex && (
                               <Block>
+
                                 <View className='image-btn-remove' data-shape-index={shapeIndex} onClick={this.removeShape}></View>
                                 <View className='image-btn-resize' data-shape-index={shapeIndex} data-type='rotate-resize'></View>
                                 <View className='image-btn-reverse' data-shape-index={shapeIndex} onClick={this.reverseShape}></View>
@@ -993,8 +1034,9 @@ class QueenKing extends Component {
         <View className='cropper-wrap' hidden={!originSrc}>
           <TaroCropper
             src={originSrc}
-            cropperWidth={ORIGIN_CANVAS_SIZE * 2}
-            cropperHeight={ORIGIN_CANVAS_SIZE * 2}
+            cropperWidth={ORIGIN_CANVAS_SIZE * 2 / PAGE_DPR}
+            cropperHeight={ORIGIN_CANVAS_SIZE * 2 / PAGE_DPR}
+            pixelRatio={2}
             ref={this.catTaroCropper}
             fullScreen
             fullScreenCss
