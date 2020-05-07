@@ -8,7 +8,7 @@ export const ORIGiN_SHAPE_SIZE = 100
 export const PAGE_DPR = windowWidth / 375
 
 export const DPR_CANVAS_SIZE = ORIGIN_CANVAS_SIZE * PAGE_DPR
-export const SAVE_IMAGE_WIDTH = DPR_CANVAS_SIZE * pixelRatio
+export const SAVE_IMAGE_WIDTH = ORIGIN_CANVAS_SIZE * 2
 export const DEFAULT_SHAPE_SIZE = 100 * PAGE_DPR
 
 

@@ -389,9 +389,9 @@ class QueenKing extends Component {
         currentShapeId,
         reserve,
       } = shape
-      const shapeSize = shapeWidth * pixelRatio
+      const shapeSize = shapeWidth
   
-      pc.translate(shapeCenterX * pixelRatio, shapeCenterY * pixelRatio);
+      pc.translate(shapeCenterX, shapeCenterY);
       pc.rotate((rotate * Math.PI) / 180)
 
       let oneMaskSrc = require(`../../images/${categoryName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`)
@@ -559,8 +559,8 @@ class QueenKing extends Component {
 
     var current_x = e.touches[0].clientX;
     var current_y = e.touches[0].clientY;
-    var moved_x = current_x - this.start_x;
-    var moved_y = current_y - this.start_y;
+    var moved_x = (current_x - this.start_x) * 2 / PAGE_DPR
+    var moved_y = (current_y - this.start_y) * 2 / PAGE_DPR;
     if (this.touch_target == 'shape') {
       shapeList[this.touch_shape_index] = {
         ...shapeList[this.touch_shape_index],
