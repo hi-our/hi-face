@@ -113,7 +113,13 @@ export function getHatInfo(results) {
       angle,
       faceWidth,
       faceLength,
-      ImageWidth, ImageHeight
+      ImageWidth, ImageHeight,
+      faceInfo: {
+        X: parseInt(headPos.X),
+        Y: parseInt(headPos.Y),
+        Width: parseInt(faceWidth),
+        Height: parseInt(faceLength)
+      }
     };
   }
   return FaceShapeSet.map(face => {
@@ -213,19 +219,22 @@ export function getMaskShapeList(mouthList, dprCanvasWidth, shapeSize) {
 export function getHatShapeList(mouthList) {
   return mouthList.map(item => {
     console.log('item :', item);
-    let { faceWidth, angle, headPos = {} } = item
-    const shapeCenterX = headPos.X
-    const shapeCenterY = headPos.Y
+    let { faceWidth, angle, headPos = {}, ImageWidth } = item
+
+    let dpr = 600 / ImageWidth // 头像宽高为132，达不到600
+    const shapeCenterX = headPos.X * dpr
+    const shapeCenterY = headPos.Y * dpr
     const rotate = angle / Math.PI * 180
 
+  
     // 角度计算有点难
-    let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * faceWidth
-    let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * faceWidth
+    let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * faceWidth * dpr
+    let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * faceWidth * dpr
 
     const resizeCenterX = shapeCenterX + widthScaleDpr - 2
     const resizeCenterY = shapeCenterY + heightScaleDpr - 2
 
-    const shapeWidth = faceWidth / 0.6
+    const shapeWidth = faceWidth / 0.6 * dpr
 
     return {
       categoryName: 'crown',

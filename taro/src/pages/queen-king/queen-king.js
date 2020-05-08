@@ -56,6 +56,7 @@ class QueenKing extends Component {
       currentJiayouId: 1,
       currentTabIndex: 0,
       isShowShape: false,
+      faceList: []
     }
     this.ageMap = getDefaultAgeMap()
     this.cutImageSrcCanvas = ''
@@ -153,7 +154,7 @@ class QueenKing extends Component {
 
   onCut = (cutImageSrc) => {
     this.ageMap.origin = cutImageSrc
-    console.log('this.ageMap :', this.ageMap);
+
     this.setState({
       cutImageSrc,
       originSrc: ''
@@ -251,7 +252,11 @@ class QueenKing extends Component {
       console.log('图片分析的结果 :', couldRes)
       const hatList = getHatInfo(couldRes)
       console.log('hatList :', hatList);
+
+      let faceList = hatList.map(item => item.faceInfo)
       let shapeList = getHatShapeList(hatList, DPR_CANVAS_SIZE, ORIGiN_SHAPE_SIZE)
+
+      console.log('faceList :>> ', faceList);
 
       setTmpThis(this, shapeList[0])
 
@@ -259,6 +264,7 @@ class QueenKing extends Component {
         currentShapeIndex: 0,
         shapeList,
         isShowShape: true,
+        faceList
       })
 
       Taro.hideLoading()
@@ -674,8 +680,8 @@ class QueenKing extends Component {
   }
 
   // 人像变换，腾讯云内测，暂时隐藏入口
-  changeAge = async (type) => {
-    const { originFileID } = this.state
+  changeAge = async (type, age = 10) => {
+    const { originFileID, faceList } = this.state
     const { origin: cutImageSrc } = this.ageMap
 
     if (this.ageMap[type]) {
@@ -685,6 +691,8 @@ class QueenKing extends Component {
       })
       return
     }
+
+    let AgeInfos = faceList.filter((item, index) => index < 3).map(item => ({ FaceRect: item, Age: age }))
 
     if (!cutImageSrc) return
 
@@ -702,18 +710,7 @@ class QueenKing extends Component {
         name: 'face-transformation',
         data: {
           fileID: originFileID,
-          AgeInfos: [
-            {
-              Age: 10,
-            },
-            {
-              Age: 10,
-            },
-            {
-              Age: 10,
-            },
-          ]
-          // type
+          AgeInfos
         }
       })
 
@@ -844,53 +841,12 @@ class QueenKing extends Component {
                       let shapeCenterStyle = {
                         left: shapeCenterX + 'rpx',
                         top: shapeCenterY + 'rpx',
-
-                      }
-                      return <View className='image-btn-center' key={timeNow} style={shapeCenterStyle}></View>
-                    })
-                  }
-                  {
-                    isShowShape && shapeList.map((shape, shapeIndex) => {
-
-                      const {
-                        categoryName,
-                        shapeWidth,
-                        currentShapeId,
-                        timeNow,
-                        shapeCenterX,
-                        shapeCenterY,
-                        resizeCenterX,
-                        resizeCenterY,
-                        reserve,
-                        rotate
-                      } = shape
-
-                      let transX = shapeCenterX - shapeWidth / 2 - 2 + 'rpx'
-                      let transY = shapeCenterY - shapeWidth / 2 - 2 + 'rpx'
-
-                      let shapeStyle = {
-                        width: shapeWidth + 'rpx',
-                        height: shapeWidth + 'rpx',
-                        transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`,
-                        zIndex: shapeIndex === currentShapeIndex ? 2 : 1
-                      }
-                      let shapeCenterStyle = {
-                        left: shapeCenterX + 'rpx',
-                        top: shapeCenterY + 'rpx',
                         
                       }
-
-                      console.log('shapeStyle :>> ', shapeStyle);
 
                       let shapeImageStyle = {
                         transform: `scale(${reserve}, 1)`,
                       }
-
-                      let handleStyle = {
-                        top: resizeCenterY - 10 + 'px',
-                        left: resizeCenterX - 10 + 'px'
-                      }
-
                       return (
                         <View className='shape-container' key={timeNow} style={shapeStyle}>
                           <Image className="shape" data-type='shape' data-shape-index={shapeIndex} src={require(`../../images/${categoryName}-${currentShapeId}.png`)} style={shapeImageStyle} />
@@ -943,21 +899,23 @@ class QueenKing extends Component {
         </View>
         
 
-        {/* {!isH5Page && !!cutImageSrc && (
+        {!isH5Page && !!cutImageSrc && (
           <View className='style-list-wrap'>
             {
               dataStyleList.map(item => {
-                const { type, text, image } = item
+                const { type, text, image, age } = item
                 return (
-                  <View className={`style-item ${currentAgeType === type ? 'style-item-active' : ''}`} key={type} onClick={this.changeAge.bind(this, type)}>
-                    <Image className='style-item-image' src={image} />
+                  <View className={`style-item ${currentAgeType === type ? 'style-item-active' : ''}`} key={type} onClick={this.changeAge.bind(this, type, age)}>
+                    {/* <Image className='style-item-image' src={image} /> */}
+
+                    <View className='style-item-circle'></View>
                     <View className='style-item-text'>{text}</View>
                   </View>
                 )
               })
             }
           </View>
-        )} */}
+        )}
         {
           cutImageSrc
             ? (

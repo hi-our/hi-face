@@ -82,10 +82,24 @@ export const dataStyleList = [
     type: 'origin',
     image: 'https://n1image.hjfile.cn/res7/2020/03/01/ca84b69c25bee8196d72986e5df45761.jpg',
     text: '原始',
+    age: 0
   },
   {
     type: 'childhood',
     image: 'https://n1image.hjfile.cn/res7/2020/03/01/cd9490adedde3707de44623a23c350f6.jpeg',
     text: '童年',
+    age: 10
+  },
+  {
+    type: 'youth',
+    image: 'https://n1image.hjfile.cn/res7/2020/03/01/cd9490adedde3707de44623a23c350f6.jpeg',
+    text: '青年',
+    age: 25
+  },
+  {
+    type: 'elderly',
+    image: 'https://n1image.hjfile.cn/res7/2020/03/01/cd9490adedde3707de44623a23c350f6.jpeg',
+    text: '老年',
+    age: 80
   },
 ]
