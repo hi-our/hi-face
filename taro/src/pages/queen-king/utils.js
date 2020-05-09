@@ -91,10 +91,10 @@ export const dataStyleList = [
     age: 10
   },
   {
-    type: 'youth',
+    type: 'middle-aged',
     image: 'https://n1image.hjfile.cn/res7/2020/03/01/cd9490adedde3707de44623a23c350f6.jpeg',
-    text: '青年',
-    age: 25
+    text: '中年',
+    age: 50
   },
   {
     type: 'elderly',

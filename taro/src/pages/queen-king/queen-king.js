@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
+import { View, Image, Text, Button, Canvas, ScrollView, Block, Checkbox, Label } from '@tarojs/components'
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo, h5PageModalTips } from 'utils/common'
 import { getHatInfo, getHatShapeList } from 'utils/face-utils'
@@ -56,7 +56,8 @@ class QueenKing extends Component {
       currentJiayouId: 1,
       currentTabIndex: 0,
       isShowShape: false,
-      faceList: []
+      faceList: [],
+      isLifeChecked: false
     }
     this.ageMap = getDefaultAgeMap()
     this.cutImageSrcCanvas = ''
@@ -160,7 +161,6 @@ class QueenKing extends Component {
       originSrc: ''
     }, () => {
       this.onAnalyzeFace(cutImageSrc)
-      
     })
   }
 
@@ -334,11 +334,13 @@ class QueenKing extends Component {
       currentAgeType: 'origin',
       cutImageSrc: '',
       originFileID: '',
+      isLifeChecked: false,
       shareUUID: ''
     })
   }
 
   generateImage = async () => {
+    const {isLifeChecked} = this.state
     
     this.setState({
       posterSrc: '',
@@ -353,7 +355,8 @@ class QueenKing extends Component {
             Taro.showLoading({
               title: '图片生成中'
             })
-            this.drawCanvas()
+            isLifeChecked ? this.drawCanvasFour() : this.drawCanvas()
+
           } else if (res.cancel) {
             console.log('用户点击取消')
           }
@@ -412,6 +415,88 @@ class QueenKing extends Component {
       )
       pc.restore()
     }
+
+    pc.draw(true, () => {
+      Taro.canvasToTempFilePath({
+        canvasId: 'canvasShape',
+        x: 0,
+        y: 0,
+        height: DPR_CANVAS_SIZE * 3,
+        width: DPR_CANVAS_SIZE * 3,
+        fileType: 'jpg',
+        quality: 0.9,
+        success: async (res) => {
+          await this.onSaveImageToCloud(res.tempFilePath)
+
+          Taro.hideLoading()
+          this.setState({
+            posterSrc: res.tempFilePath,
+            isShowPoster: true
+          })
+
+        },
+        fail: () => {
+          Taro.hideLoading()
+          Taro.showToast({
+            title: '图片生成失败，请重试'
+          })
+        }
+      })
+    })
+  }
+  drawCanvasFour = async () => {
+    const {
+      shapeList,
+    } = this.state
+
+    const pc = Taro.createCanvasContext('canvasShape')
+
+    pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH);
+
+    for (let yLength = 0; yLength < 2; yLength++) {
+      for (let xLength = 0; xLength < 2; xLength++) {
+        console.log('xLength :>> ', xLength, yLength);
+        let type = dataStyleList[(xLength + yLength * 2)].type
+        console.log('type :>> ', type);
+        let tmpCutImage = await getImg(this.ageMap[type])
+        let xLengthPos = xLength * SAVE_IMAGE_WIDTH / 2
+        let yLengthPos = yLength * SAVE_IMAGE_WIDTH / 2
+        pc.drawImage(tmpCutImage, xLengthPos, yLengthPos, SAVE_IMAGE_WIDTH / 2, SAVE_IMAGE_WIDTH / 2)
+
+        for (let index = 0; index < shapeList.length; index++) {
+          const shape = shapeList[index];
+          pc.save()
+          const {
+            categoryName,
+            shapeWidth,
+            rotate,
+            shapeCenterX,
+            shapeCenterY,
+            currentShapeId,
+            reserve,
+          } = shape
+          const shapeSize = shapeWidth / 2
+
+          pc.translate(shapeCenterX / 2 + xLengthPos, shapeCenterY / 2 + yLengthPos);
+          pc.rotate((rotate * Math.PI) / 180)
+
+          let oneMaskSrc = require(`../../images/${categoryName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`)
+          let oneImgSrc = isH5Page ? await getImg(oneMaskSrc) : oneMaskSrc
+
+          pc.drawImage(
+            oneImgSrc,
+            -shapeSize / 2,
+            -shapeSize / 2,
+            shapeSize,
+            shapeSize
+          )
+          pc.restore()
+        }
+      }
+      
+    }
+
+    
 
     pc.draw(true, () => {
       Taro.canvasToTempFilePath({
@@ -743,7 +828,23 @@ class QueenKing extends Component {
     }
   }
 
+  toggleLifeChecked = () => {
+    this.setState({
+      isLifeChecked: !this.state.isLifeChecked
+    })
+    
+    if (Object.keys(this.ageMap).length < 4) {
+      this.doLifeChangeAge()
+    }
 
+  }
+
+  doLifeChangeAge = () => {
+    dataStyleList.map(async (item) => {
+      const { age, type } = item
+      await this.changeAge(type, age)
+    })
+  }
 
   renderPoster = () => {
     const { posterSrc, isShowPoster } = this.state
@@ -787,8 +888,10 @@ class QueenKing extends Component {
       shapeList,
       currentShapeIndex,
       currentAgeType,
+      isLifeChecked
     } = this.state
 
+    console.log('isLifeChecked :>> ', isLifeChecked);
 
     let tabsTips = (currentShapeIndex >= 0 ? '点击更换' : '点击新增') + materialList[currentTabIndex].cn
 
@@ -900,21 +1003,31 @@ class QueenKing extends Component {
         
 
         {!isH5Page && !!cutImageSrc && (
-          <View className='style-list-wrap'>
-            {
-              dataStyleList.map(item => {
-                const { type, text, image, age } = item
-                return (
-                  <View className={`style-item ${currentAgeType === type ? 'style-item-active' : ''}`} key={type} onClick={this.changeAge.bind(this, type, age)}>
-                    {/* <Image className='style-item-image' src={image} /> */}
+          <Block>
+            
+            <View className='style-list-wrap'>
+              <View className='style-item-text'>
+                <Label onClick={this.toggleLifeChecked}>
+                  <Checkbox checked={isLifeChecked}></Checkbox>保存图片时，生成相守一生图
+                </Label>
+              </View>
+            </View>
+            <View className='style-list-wrap' style={{ opacity: isLifeChecked ? '0.6' : 1 }}>
+              {
+                dataStyleList.map(item => {
+                  const { type, text, image, age } = item
+                  return (
+                    <View className={`style-item ${currentAgeType === type ? 'style-item-active' : ''}`} key={type} onClick={this.changeAge.bind(this, type, age)}>
+                      {/* <Image className='style-item-image' src={image} /> */}
 
-                    <View className='style-item-circle'></View>
-                    <View className='style-item-text'>{text}</View>
-                  </View>
-                )
-              })
-            }
-          </View>
+                      <View className='style-item-circle'></View>
+                      <View className='style-item-text'>{text}</View>
+                    </View>
+                  )
+                })
+              }
+            </View>       
+          </Block>
         )}
         {
           cutImageSrc
