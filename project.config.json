@@ -114,6 +114,13 @@
 					"pathName": "pages/wear-a-mask/wear-a-mask",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/avatar-edit/avatar-edit",
+					"pathName": "pages/avatar-edit/avatar-edit",
+					"query": "",
+					"scene": null
 				}
 			]
 		}
