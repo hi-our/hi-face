@@ -5,7 +5,7 @@ import TaroCropper from 'components/taro-cropper'
 
 import './styles.styl'
 
-export default class BackHome extends Taro.Component {
+export default class ImageChoose extends Taro.Component {
   config = {
     component: true
   }

@@ -218,7 +218,6 @@ export function getMaskShapeList(mouthList, dprCanvasWidth, shapeSize) {
 
 export function getHatShapeList(mouthList) {
   return mouthList.map(item => {
-    console.log('item :', item);
     let { faceWidth, angle, headPos = {}, ImageWidth } = item
 
     let dpr = 600 / ImageWidth // 头像宽高为132，达不到600
