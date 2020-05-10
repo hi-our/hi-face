@@ -32,9 +32,13 @@ class AvatarEdit extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      pageStatus: 'loading',
+      themeData: {},
+      errorText: '',
+      shapeCategoryList: [],
       cutImageSrc: '',
       isShowShape: false,
-      posterSrc: ''
+      posterSrc: '',
     }
   }
 
@@ -50,8 +54,29 @@ class AvatarEdit extends Component {
     }
   }
 
-  loadData = (themeId) => {
-    console.log('themeId :>> ', themeId);
+  loadData = async (themeId) => {
+    try {
+      const themeData = await cloudCallFunction({
+        name: 'collection_get_theme_data',
+        data: {
+          themeId: themeId
+        }
+      })
+
+      const { shapeCategoryList } = themeData
+      this.setState({
+        pageStatus: 'done',
+        themeData,
+        shapeCategoryList
+      })
+      
+    } catch (error) {
+      console.log('error :>> ', error);
+      this.setState({
+        pageStatus: 'error',
+        errorText: '加载失败'
+      })
+    }
   }
 
 
@@ -418,29 +443,37 @@ class AvatarEdit extends Component {
 
 
   render() {
-    const { isShowShape, cutImageSrc, shapeList } = this.state
+    const { isShowShape, cutImageSrc, shapeList, pageStatus } = this.state
     return (
-      <View className='avatar-edit-page' style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
-        <View className='page-title'>人像魅力</View>
+      <Block>
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
-        <View className='main-wrap'>
-          {isShowShape
-            ? (
-              <ShapeEdit
-                cutImageSrc={cutImageSrc}
-                shapeListOut={shapeList}
-                onGenerateImage={this.onGenerateImage}
-                onRemoveImage={this.onRemoveImage}
-              />
+        <View className='avatar-edit-page' style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
+
+          <View className='page-title'>头像编辑</View>
+          <View className='main-wrap'>
+            {isShowShape
+              ? (
+                <ShapeEdit
+                  cutImageSrc={cutImageSrc}
+                  shapeListOut={shapeList}
+                  onGenerateImage={this.onGenerateImage}
+                  onRemoveImage={this.onRemoveImage}
+                />
+                )
+              : (
+                <ImageChoose
+                  onChoose={this.onChoose}
+                />
               )
-            : (
-              <ImageChoose
-                onChoose={this.onChoose}
-              />
-            )
-          }  
+            }
+            {
+              pageStatus === 'done'
+                ? <View>1</View>
+                : <View>2</View>
+            }
+          </View>
         </View>
-      </View>
+      </Block>
     )
   }
 }
