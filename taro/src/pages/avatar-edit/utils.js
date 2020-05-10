@@ -28,3 +28,26 @@ export const getDefaultShape = (categoryName = 'crown') => {
     reserve: 1
   }
 }
+
+export const dataStyleList = [
+  {
+    type: 'origin',
+    text: '原始',
+    age: 0
+  },
+  {
+    type: 'childhood',
+    text: '童年',
+    age: 10
+  },
+  {
+    type: 'middle-aged',
+    text: '中年',
+    age: 50
+  },
+  {
+    type: 'elderly',
+    text: '老年',
+    age: 80
+  },
+]

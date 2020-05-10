@@ -1,12 +1,13 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 
-import { STATUS_BAR_HEIGHT, SAVE_IMAGE_WIDTH, getDefaultShape } from './utils'
+import { STATUS_BAR_HEIGHT, SAVE_IMAGE_WIDTH, getDefaultShape, dataStyleList } from './utils'
 import ImageChoose from './components/image-choose'
 import ShapeEdit from './components/shape-edit'
 import { getHatInfo, getHatShapeList } from 'utils/face-utils'
 import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase64 } from 'utils/canvas-drawing'
 import { cloudCallFunction } from 'utils/fetch'
+import promisify from 'utils/promisify'
 
 import './styles.styl'
 
@@ -27,7 +28,8 @@ class AvatarEdit extends Component {
     super(props)
     this.state = {
       cutImageSrc: '',
-      isShowShape: false
+      isShowShape: false,
+      posterSrc: ''
     }
   }
 
@@ -140,6 +142,259 @@ class AvatarEdit extends Component {
     return couldRes
   }
 
+  onRemoveImage = () => {
+    this.cutImageSrcCanvas = ''
+    // this.ageMap = getDefaultAgeMap()
+
+    this.setState({
+      // currentAgeType: 'origin',
+      cutImageSrc: '',
+      isShowShape: false,
+      // originFileID: '',
+      // isLifeChecked: false,
+      shareUUID: ''
+    })
+  }
+
+  onGenerateImage  = async () => {
+    const { isLifeChecked } = this.state
+
+    this.setState({
+      posterSrc: '',
+    })
+
+    try {
+      Taro.showModal({
+        title: '提示',
+        content: '图片会上传到云端，便于分享和下次查看，请确定？',
+        success: (res) => {
+          if (res.confirm) {
+            Taro.showLoading({
+              title: '图片生成中'
+            })
+            isLifeChecked ? this.drawCanvasFour() : this.drawCanvas()
+
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      })
+    } catch (error) {
+      Taro.hideLoading()
+      Taro.showToast({
+        title: '图片生成失败，请重试'
+      })
+      console.log('error :', error)
+    }
+  }
+
+
+
+  // TODO 这个也可以分离？
+  drawCanvas = async () => {
+    const {
+      shapeList,
+      cutImageSrc
+    } = this.state
+
+    const pc = Taro.createCanvasContext('canvasShape')
+
+    pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH);
+    let tmpCutImage = await getImg(cutImageSrc)
+    pc.drawImage(tmpCutImage, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
+
+    for (let index = 0; index < shapeList.length; index++) {
+      const shape = shapeList[index];
+      pc.save()
+      const {
+        categoryName,
+        shapeWidth,
+        rotate,
+        shapeCenterX,
+        shapeCenterY,
+        currentShapeId,
+        reserve,
+      } = shape
+      const shapeSize = shapeWidth
+
+      pc.translate(shapeCenterX, shapeCenterY);
+      pc.rotate((rotate * Math.PI) / 180)
+
+      let oneMaskSrc = require(`../../images/${categoryName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`)
+      let oneImgSrc = isH5Page ? await getImg(oneMaskSrc) : oneMaskSrc
+
+      pc.drawImage(
+        oneImgSrc,
+        -shapeSize / 2,
+        -shapeSize / 2,
+        shapeSize,
+        shapeSize
+      )
+      pc.restore()
+    }
+
+    pc.draw(true, () => {
+      Taro.canvasToTempFilePath({
+        canvasId: 'canvasShape',
+        x: 0,
+        y: 0,
+        height: SAVE_IMAGE_WIDTH * 3,
+        width: SAVE_IMAGE_WIDTH * 3,
+        fileType: 'jpg',
+        quality: 0.9,
+        success: async (res) => {
+          await this.onSaveImageToCloud(res.tempFilePath)
+
+          Taro.hideLoading()
+          this.setState({
+            posterSrc: res.tempFilePath,
+            isShowPoster: true
+          })
+
+        },
+        fail: () => {
+          Taro.hideLoading()
+          Taro.showToast({
+            title: '图片生成失败，请重试'
+          })
+        }
+      })
+    })
+  }
+  drawCanvasFour = async () => {
+    const {
+      shapeList,
+    } = this.state
+
+    const pc = Taro.createCanvasContext('canvasShape')
+
+    pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH);
+
+    for (let yLength = 0; yLength < 2; yLength++) {
+      for (let xLength = 0; xLength < 2; xLength++) {
+        console.log('xLength :>> ', xLength, yLength);
+        let type = dataStyleList[(xLength + yLength * 2)].type
+        console.log('type :>> ', type);
+        let tmpCutImage = await getImg(this.ageMap[type])
+        let xLengthPos = xLength * SAVE_IMAGE_WIDTH / 2
+        let yLengthPos = yLength * SAVE_IMAGE_WIDTH / 2
+        pc.drawImage(tmpCutImage, xLengthPos, yLengthPos, SAVE_IMAGE_WIDTH / 2, SAVE_IMAGE_WIDTH / 2)
+
+        for (let index = 0; index < shapeList.length; index++) {
+          const shape = shapeList[index];
+          pc.save()
+          const {
+            categoryName,
+            shapeWidth,
+            rotate,
+            shapeCenterX,
+            shapeCenterY,
+            currentShapeId,
+            reserve,
+          } = shape
+          const shapeSize = shapeWidth / 2
+
+          pc.translate(shapeCenterX / 2 + xLengthPos, shapeCenterY / 2 + yLengthPos);
+          pc.rotate((rotate * Math.PI) / 180)
+
+          let oneMaskSrc = require(`../../images/${categoryName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`)
+          let oneImgSrc = isH5Page ? await getImg(oneMaskSrc) : oneMaskSrc
+
+          pc.drawImage(
+            oneImgSrc,
+            -shapeSize / 2,
+            -shapeSize / 2,
+            shapeSize,
+            shapeSize
+          )
+          pc.restore()
+        }
+      }
+
+    }
+
+    pc.draw(true, () => {
+      Taro.canvasToTempFilePath({
+        canvasId: 'canvasShape',
+        x: 0,
+        y: 0,
+        height: SAVE_IMAGE_WIDTH * 3,
+        width: SAVE_IMAGE_WIDTH * 3,
+        fileType: 'jpg',
+        quality: 0.9,
+        success: async (res) => {
+          await this.onSaveImageToCloud(res.tempFilePath)
+
+          Taro.hideLoading()
+          this.setState({
+            posterSrc: res.tempFilePath,
+            isShowPoster: true
+          })
+
+        },
+        fail: () => {
+          Taro.hideLoading()
+          Taro.showToast({
+            title: '图片生成失败，请重试'
+          })
+        }
+      })
+    })
+  }
+
+  onSaveImageToCloud = async (tempFilePath) => {
+    const { currentAgeType } = this.state
+
+    try {
+      // 上传头像图片
+      const fileID = await this.onUploadFile(tempFilePath, 'avatar')
+      console.log('上传头像图片 fileID :', fileID);
+
+      const { uuid } = await cloudCallFunction({
+        name: 'collection_add_one',
+        data: {
+          collection_name: 'avatars',
+          info: {
+            avatar_fileID: fileID,
+            age_type: currentAgeType
+          }
+        }
+      })
+      console.log('addRes uuid:', uuid);
+
+      this.setState({
+        shareUUID: uuid
+      })
+
+    } catch (error) {
+      console.log('error :', error);
+    }
+  }
+
+  onUploadFile = async (tempFilePath, prefix = 'temp') => {
+    try {
+
+      let uploadParams = {
+        cloudPath: `${prefix}-${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
+        filePath: tempFilePath,
+      }
+      if (isH5Page) {
+        const { fileID } = await Taro.cloud.uploadFile(uploadParams)
+        return fileID
+      }
+      const uploadFile = promisify(Taro.cloud.uploadFile)
+      const { fileID } = await uploadFile(uploadParams)
+      return fileID
+
+    } catch (error) {
+      console.log('error :', error)
+      return ''
+    }
+
+  }
+
+
+
   render() {
     const { isShowShape, cutImageSrc, shapeList } = this.state
     return (
@@ -152,6 +407,8 @@ class AvatarEdit extends Component {
               <ShapeEdit
                 cutImageSrc={cutImageSrc}
                 shapeListOut={shapeList}
+                onGenerateImage={this.onGenerateImage}
+                onRemoveImage={this.onRemoveImage}
               />
               )
             : (
@@ -159,8 +416,7 @@ class AvatarEdit extends Component {
                 onChoose={this.onChoose}
               />
             )
-          }
-          
+          }  
         </View>
       </View>
     )

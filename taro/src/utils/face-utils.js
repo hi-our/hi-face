@@ -124,8 +124,6 @@ export function getHatInfo(results) {
   }
   return FaceShapeSet.map(face => {
     const { LeftEyeBrow, RightEyeBrow, FaceProfile } = face
-    console.log('FaceProfile :', FaceProfile);
-
     return getFaceInfo(LeftEyeBrow, RightEyeBrow, FaceProfile);
   });
 }
