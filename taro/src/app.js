@@ -7,6 +7,7 @@ import Index from './pages/test/test'
 import store from '@/store'
 import userActions from '@/store/user'
 import * as config from 'config'
+import globalActions from '@/store/global'
 
 
 import './app.styl'
@@ -92,6 +93,9 @@ class App extends Component {
         env: config.cloudEnv,
         traceUser: true
       })
+
+      // 检查过审开关是否开启
+      globalActions.getGlobalConfig()
     } else if (process.env.TARO_ENV === 'h5' || process.env.TARO_ENV === 'qq') {
       console.log('tcb :', tcb, process.env.TARO_ENV );
       let initConfig = {}

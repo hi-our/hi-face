@@ -78,7 +78,7 @@ export default class ShapeEdit extends Taro.Component {
 
       shapeCenterX: saveImageWidth,
       shapeCenterY: saveImageWidth,
-      resizeCenterX: saveImageWidth + defaultShapeSize - 2,
+      resizeCenterX: saveImageWidth + defaultShapeSize,
       resizeCenterY: saveImageWidth + defaultShapeSize - 2,
       rotate: 0,
       reserve: 1

@@ -1,7 +1,8 @@
 import Taro, { Component } from '@tarojs/taro'
+import { connect } from '@tarojs/redux'
 import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
-
 import { STATUS_BAR_HEIGHT, SAVE_IMAGE_WIDTH, getDefaultShape, dataStyleList } from './utils'
+import PageWrapper from 'components/page-wrapper'
 import ImageChoose from './components/image-choose'
 import ShapeEdit from './components/shape-edit'
 import { getHatInfo, getHatShapeList } from 'utils/face-utils'
@@ -14,7 +15,11 @@ import './styles.styl'
 const isH5Page = process.env.TARO_ENV === 'h5'
 const isQQPage = process.env.TARO_ENV === 'qq'
 
+const pageConfigName = 'avatar-edit'
 
+@connect(state => ({
+  pageConfig: state.global[pageConfigName]
+}), null)
 
 // @CorePage
 class AvatarEdit extends Component {
@@ -32,6 +37,23 @@ class AvatarEdit extends Component {
       posterSrc: ''
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    const { pageConfig: prevConfig } = this.props
+    const { pageConfig: nextConfig } = nextProps
+
+    if (prevConfig !== nextConfig) {
+      console.log('1 :>> ', 1)
+      
+      const { themeId } = nextConfig
+      this.loadData(themeId)
+    }
+  }
+
+  loadData = (themeId) => {
+    console.log('themeId :>> ', themeId);
+  }
+
 
   onChoose = (cutImageSrc) => {
     this.setState({
