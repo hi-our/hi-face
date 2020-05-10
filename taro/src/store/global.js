@@ -46,7 +46,7 @@ export default mirror.model({
 
         let configList = ['for-check', 'avatar-edit']
         const list = await cloudCallFunction({
-          name: 'collocation_get_configs',
+          name: 'collection_get_configs',
           data: {
             configList
           }
