@@ -52,17 +52,17 @@ class App extends Component {
       selectedColor: '#2f5aff',
       list: [
         {
-          pagePath: 'pages/queen-king/queen-king',
+          pagePath: 'pages/avatar-edit/avatar-edit',
           text: '女王节',
           iconPath: 'images/tab-bar-crown.png',
           selectedIconPath: 'images/tab-bar-crown-active.png'
         },
-        {
-          pagePath: 'pages/detect-face/detect-face',
-          text: '人像魅力',
-          iconPath: 'images/face-1.png',
-          selectedIconPath: 'images/face-1-active.png'
-        },
+        // {
+        //   pagePath: 'pages/detect-face/detect-face',
+        //   text: '人像魅力',
+        //   iconPath: 'images/face-1.png',
+        //   selectedIconPath: 'images/face-1-active.png'
+        // },
         // {
         //   pagePath: 'pages/wear-a-mask/wear-a-mask',
         //   text: '戴口罩',

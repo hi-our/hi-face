@@ -214,11 +214,12 @@ export function getMaskShapeList(mouthList, dprCanvasWidth, shapeSize) {
   })
 }
 
-export function getHatShapeList(mouthList) {
+export function getHatShapeList(mouthList, shapeItem, saveImageWidth = 600) {
+  const { imageFileID = '', _id: shapeId } = shapeItem || {}
   return mouthList.map(item => {
     let { faceWidth, angle, headPos = {}, ImageWidth } = item
 
-    let dpr = 600 / ImageWidth // 头像宽高为132，达不到600
+    let dpr = saveImageWidth / ImageWidth // 头像宽高为132，达不到600
     const shapeCenterX = headPos.X * dpr
     const shapeCenterY = headPos.Y * dpr
     const rotate = angle / Math.PI * 180
@@ -234,7 +235,9 @@ export function getHatShapeList(mouthList) {
     const shapeWidth = faceWidth / 0.6 * dpr
 
     return {
-      categoryName: 'crown',
+      shapeId,
+      timeNow: Date.now(),
+      imageFileID,
       shapeWidth,
       currentShapeId: 1,
       timeNow: Date.now() * Math.random(),

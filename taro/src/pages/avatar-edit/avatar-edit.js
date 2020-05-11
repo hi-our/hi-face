@@ -5,6 +5,7 @@ import { STATUS_BAR_HEIGHT, SAVE_IMAGE_WIDTH, getDefaultShape, dataStyleList } f
 import PageWrapper from 'components/page-wrapper'
 import ImageChoose from './components/image-choose'
 import ShapeEdit from './components/shape-edit'
+import TabCategoryList from './components/tab-category-list'
 import { getHatInfo, getHatShapeList } from 'utils/face-utils'
 import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase64 } from 'utils/canvas-drawing'
 import { cloudCallFunction } from 'utils/fetch'
@@ -91,6 +92,12 @@ class AvatarEdit extends Component {
   onAnalyzeFace = async (cutImageSrc) => {
     if (!cutImageSrc) return
 
+    const { shapeCategoryList = [] } = this.state
+    const { shapeList: shapeListRes } = shapeCategoryList[0]
+    const shapeOne = shapeListRes[0]
+    console.log('shapeOne :>> ', shapeOne);
+    
+
     Taro.showLoading({
       title: '识别中...'
     })
@@ -106,18 +113,19 @@ class AvatarEdit extends Component {
       const couldRes = await cloudFunc(cutImageSrc)
 
       console.log('图片分析的结果 :', couldRes)
-      const hatList = getHatInfo(couldRes)
+      const hatList = getHatInfo(couldRes, shapeOne)
       console.log('hatList :', hatList);
 
-      let faceList = hatList.map(item => item.faceInfo)
-      let shapeList = getHatShapeList(hatList, SAVE_IMAGE_WIDTH)
+      // let faceList = hatList.map(item => item.faceInfo)
+      let shapeList = getHatShapeList(hatList, shapeOne, SAVE_IMAGE_WIDTH)
+      console.log('shapeList :>> ', shapeList);
 
-      console.log('faceList :>> ', faceList);
+      // console.log('faceList :>> ', faceList);
 
       this.setState({
         shapeList,
         isShowShape: true,
-        faceList
+        // faceList
       })
 
       Taro.hideLoading()
@@ -440,17 +448,27 @@ class AvatarEdit extends Component {
 
   }
 
+  chooseShape = (shape) => {
+    if (this.shapeEditRef) {
+      this.shapeEditRef.chooseShape(shape)
+    }
+    console.log('shape :>> ', shape);
+  }
+
 
 
   render() {
-    const { isShowShape, cutImageSrc, shapeList, pageStatus } = this.state
+    const { isShowShape, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList } = this.state
+    const { themeName, shareImage } = themeData
     return (
       <Block>
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
         <View className='avatar-edit-page' style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
-
-          <View className='page-title'>头像编辑</View>
           <View className='main-wrap'>
+            <View className='page-title'>
+              {!!shareImage && <Image className='page-title-icon' src={shareImage} />}
+              {themeName || '头像编辑'}
+            </View>
             {isShowShape
               ? (
                 <ShapeEdit
@@ -458,6 +476,7 @@ class AvatarEdit extends Component {
                   shapeListOut={shapeList}
                   onGenerateImage={this.onGenerateImage}
                   onRemoveImage={this.onRemoveImage}
+                  ref={edit => this.shapeEditRef = edit}
                 />
                 )
               : (
@@ -466,11 +485,12 @@ class AvatarEdit extends Component {
                 />
               )
             }
-            {
-              pageStatus === 'done'
-                ? <View>1</View>
-                : <View>2</View>
-            }
+          </View>
+          <View style={{ display: pageStatus === 'done' && isShowShape  ? 'block' : 'none' }}>
+            <TabCategoryList
+              categoryList={shapeCategoryList}
+              chooseShape={this.chooseShape}
+            />
           </View>
         </View>
       </Block>

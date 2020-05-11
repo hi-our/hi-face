@@ -31,6 +31,25 @@ exports.main = async (event, context) => {
         })
         .end()
       if (categoryErrMsg === 'collection.aggregate:ok') {
+        let imageMap = {}
+        let imageList = []
+        shapeCategoryList.forEach(catItem => {
+          // shapeCategoryMap[catItem._id] = catItem
+          catItem.shapeList.forEach(shapeItem => {
+            const { imageFileID, imageReverseFileID } = shapeItem
+            if (imageFileID) imageList.push(imageFileID)
+            if (imageReverseFileID) imageList.push(imageReverseFileID)
+            // shapeMap[shapeItem._id] = shapeItem
+          })
+        })
+        const { fileList } = await cloud.getTempFileURL({
+          fileList: imageList
+        })
+        console.log('shapeCategoryMap :>> ', imageList, fileList);
+        fileList.forEach(({ fileID, tempFileURL }) => {
+          imageMap[fileID] = tempFileURL
+        })
+        console.log('imageMap :>> ', imageMap);
         themeData.shapeCategoryList = shapeCategoryList
       }
 

@@ -40,7 +40,7 @@ export default class ShapeEdit extends Taro.Component {
     cutImageSrc: '',
     shapeListOut: [],
     saveImageWidth: 600,
-    defaultShapeSize: 100,
+    defaultShapeSize: 200,
     onGenerateImage: () => {},
     onRemoveImage: () => {},
   }
@@ -49,11 +49,8 @@ export default class ShapeEdit extends Taro.Component {
     super(props)
     const { shapeListOut } = this.props
 
-    if (shapeListOut.length === 0) {
-
-    }
     this.state = {
-      shapeList: shapeListOut.length === 0 ? [this.getDefaultShape()] : shapeListOut,
+      shapeList: shapeListOut,
       currentShapeIndex: 0
     }
 
@@ -73,33 +70,33 @@ export default class ShapeEdit extends Taro.Component {
     return {
       categoryName,
       shapeWidth: defaultShapeSize,
-      currentShapeId: 1,
       timeNow: Date.now(),
 
-      shapeCenterX: saveImageWidth,
-      shapeCenterY: saveImageWidth,
-      resizeCenterX: saveImageWidth + defaultShapeSize,
-      resizeCenterY: saveImageWidth + defaultShapeSize - 2,
+      shapeCenterX: saveImageWidth / 2,
+      shapeCenterY: saveImageWidth / 2,
+      resizeCenterX: saveImageWidth / 2 + defaultShapeSize / 2 - 2,
+      resizeCenterY: saveImageWidth / 2 + defaultShapeSize / 2 - 2,
       rotate: 0,
       reserve: 1
     }
   }
 
-  chooseShape = (shapeId, categoryName) => {
+  chooseShape = ({ shapeId, imageFileID }) => {
     let { shapeList, currentShapeIndex } = this.state
-    console.log('categoryName :', categoryName);
+    console.log('shapeId, imageFileID :>> ', shapeId, imageFileID, currentShapeIndex);
 
     if (shapeList.length > 0 && currentShapeIndex >= 0) {
       shapeList[currentShapeIndex] = {
         ...shapeList[currentShapeIndex],
-        categoryName,
-        currentShapeId: shapeId
+        shapeId,
+        imageFileID
       }
     } else {
       currentShapeIndex = shapeList.length
       shapeList.push({
-        ...this.getDefaultShape(categoryName),
-        currentShapeId: shapeId
+        ...this.getDefaultShape(),
+        shapeId: shapeId,
+        imageFileID
       })
     }
     this.setState({
@@ -260,10 +257,9 @@ export default class ShapeEdit extends Taro.Component {
             shapeList.map((shape, shapeIndex) => {
 
               const {
-                categoryName,
-                shapeWidth,
-                currentShapeId,
                 timeNow,
+                imageFileID,
+                shapeWidth,
                 shapeCenterX,
                 shapeCenterY,
                 resizeCenterX,
@@ -288,8 +284,7 @@ export default class ShapeEdit extends Taro.Component {
 
               return (
                 <View className='shape-container' key={timeNow} style={shapeStyle}>
-                  {/* <Image className="shape" data-type='shape' data-shape-index={shapeIndex} src={require(`../../../images/${categoryName}-${currentShapeId}.png`)} style={shapeImageStyle} /> */}
-                  <View className="shape-image" data-type='shape' data-shape-index={shapeIndex} style={shapeImageStyle} />
+                  <Image className="shape-image" data-type='shape' data-shape-index={shapeIndex} src={imageFileID} style={shapeImageStyle} />
                   {
                     currentShapeIndex === shapeIndex && (
                       <Block>
