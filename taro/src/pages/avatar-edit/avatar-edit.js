@@ -2,13 +2,14 @@ import Taro, { Component } from '@tarojs/taro'
 import { connect } from '@tarojs/redux'
 import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 import { STATUS_BAR_HEIGHT, SAVE_IMAGE_WIDTH, getDefaultShape, dataStyleList } from './utils'
-import PageWrapper from 'components/page-wrapper'
+import PageLoading from 'components/page-status'
 import ImageChoose from './components/image-choose'
 import ShapeEdit from './components/shape-edit'
 import TabCategoryList from './components/tab-category-list'
 import PosterDialog from './components/poster-dialog'
 import { getHatInfo, getHatShapeList } from 'utils/face-utils'
 import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase64 } from 'utils/canvas-drawing'
+import { h5PageModalTips } from 'utils/common'
 import { cloudCallFunction } from 'utils/fetch'
 import promisify from 'utils/promisify'
 
@@ -58,8 +59,9 @@ class AvatarEdit extends Component {
 
   onShareAppMessage({ from, target }) {
     const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/04/26/2041af2867f22e62f8fce32b29cd1fb0.png'
+    const { themeData } = this.state
+    let { shareImage = DEFAULT_SHARE_COVER, shareTitle = '给女神戴上皇冠吧！' } = themeData
 
-    let shareImage = DEFAULT_SHARE_COVER
     let shareUrl = '/pages/avatar-edit/avatar-edit'
     if (from === 'button') {
       const { dataset = {} } = target
@@ -79,7 +81,7 @@ class AvatarEdit extends Component {
 
     console.log('shareUrl :', shareUrl);
     return {
-      title: '给女神戴上皇冠吧！',
+      title: shareTitle,
       imageUrl: shareImage,
       path: shareUrl
     }
@@ -110,6 +112,11 @@ class AvatarEdit extends Component {
     }
   }
 
+  showH5Modal = () => {
+    if (isH5Page) {
+      h5PageModalTips()
+    }
+  }
 
   onChoose = (cutImageSrc) => {
     this.setState({
@@ -411,11 +418,12 @@ class AvatarEdit extends Component {
     console.log('posterSrc :>> ', posterSrc);
     return (
       <Block>
+        <PageLoading status={pageStatus} loadingType='fullscreen'></PageLoading>
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
         <View className='avatar-edit-page' style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
           <View className='main-wrap'>
             <View className='page-title'>
-              {!!shareImage && <Image className='page-title-icon' src={shareImage} />}
+              <Image className='page-title-icon' src={shareImage} />
               {themeName || '头像编辑'}
             </View>
             {isShowShape
@@ -443,6 +451,12 @@ class AvatarEdit extends Component {
           </View>
         </View>
         <PosterDialog isH5Page={isH5Page} isShowPoster={isShowPoster} posterSrc={posterSrc} />
+        {!isShowShape && (
+          <Block>
+            <View className='test-hat-btn' onClick={this.goTestHat} style={{ top: STATUS_BAR_HEIGHT + 54 + 'px' }}>圣诞帽测试</View>
+            <Button className='share-btn' openType='share' onClick={this.showH5Modal} style={{ top: STATUS_BAR_HEIGHT + 54 + 'px' }}>分享给朋友<View className='share-btn-icon'></View></Button>
+          </Block>
+        )}
       </Block>
     )
   }
