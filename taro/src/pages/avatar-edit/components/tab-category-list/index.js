@@ -33,7 +33,7 @@ export default class ImageChoose extends Taro.Component {
   }
 
   render() {
-    const { categoryList, chooseShape } = this.props
+    const { categoryList, chooseShape, imageMap } = this.props
     const { currentTabIndex } = this.state
     console.log('categoryList :>> ', categoryList);
     let tabsTips = ''
@@ -67,12 +67,12 @@ export default class ImageChoose extends Taro.Component {
                   <ScrollView className="shape-select-wrap" scrollX>
                     {
                       item.shapeList.map((shapeItem) => {
-                        const { imageFileID, _id: shapeId } = shapeItem 
+                        const { imageUrl, _id: shapeId } = shapeItem 
                         return (
                           <Image
                             className={`tab-bd-image  tab-bd-image-${item.name}`}
                             key={shapeId}
-                            src={imageFileID}
+                            src={imageUrl}
                             onClick={() => chooseShape(shapeItem)}
                           />
                         )

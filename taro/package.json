@@ -12,6 +12,7 @@
   "scripts": {
     "start": "npm run watch",
     "watch": "SERVER_ENV=yz MOCK=true npm run dev:weapp",
+    "build": "SERVER_ENV=yz NODE_ENV=production npm run dev:weapp",
     "release": "SERVER_ENV=prod NODE_ENV=production npm run build:weapp",
     "start:h5": "npm run watch:h5",
     "watch:h5": "SERVER_ENV=yz MOCK=true npm run dev:h5",

@@ -81,22 +81,22 @@ export default class ShapeEdit extends Taro.Component {
     }
   }
 
-  chooseShape = ({ shapeId, imageFileID }) => {
+  chooseShape = ({ shapeId, imageUrl }) => {
     let { shapeList, currentShapeIndex } = this.state
-    console.log('shapeId, imageFileID :>> ', shapeId, imageFileID, currentShapeIndex);
+    console.log('shapeId, imageUrl :>> ', shapeId, imageUrl, currentShapeIndex);
 
     if (shapeList.length > 0 && currentShapeIndex >= 0) {
       shapeList[currentShapeIndex] = {
         ...shapeList[currentShapeIndex],
         shapeId,
-        imageFileID
+        imageUrl
       }
     } else {
       currentShapeIndex = shapeList.length
       shapeList.push({
         ...this.getDefaultShape(),
         shapeId: shapeId,
-        imageFileID
+        imageUrl
       })
     }
     this.setState({
@@ -258,7 +258,7 @@ export default class ShapeEdit extends Taro.Component {
 
               const {
                 timeNow,
-                imageFileID,
+                imageUrl,
                 shapeWidth,
                 shapeCenterX,
                 shapeCenterY,
@@ -284,7 +284,7 @@ export default class ShapeEdit extends Taro.Component {
 
               return (
                 <View className='shape-container' key={timeNow} style={shapeStyle}>
-                  <Image className="shape-image" data-type='shape' data-shape-index={shapeIndex} src={imageFileID} style={shapeImageStyle} />
+                  <Image className="shape-image" data-type='shape' data-shape-index={shapeIndex} src={imageUrl} style={shapeImageStyle} />
                   {
                     currentShapeIndex === shapeIndex && (
                       <Block>

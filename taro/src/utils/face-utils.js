@@ -215,7 +215,7 @@ export function getMaskShapeList(mouthList, dprCanvasWidth, shapeSize) {
 }
 
 export function getHatShapeList(mouthList, shapeItem, saveImageWidth = 600) {
-  const { imageFileID = '', _id: shapeId } = shapeItem || {}
+  const { imageUrl = '', _id: shapeId } = shapeItem || {}
   return mouthList.map(item => {
     let { faceWidth, angle, headPos = {}, ImageWidth } = item
 
@@ -237,7 +237,7 @@ export function getHatShapeList(mouthList, shapeItem, saveImageWidth = 600) {
     return {
       shapeId,
       timeNow: Date.now(),
-      imageFileID,
+      imageUrl,
       shapeWidth,
       currentShapeId: 1,
       timeNow: Date.now() * Math.random(),

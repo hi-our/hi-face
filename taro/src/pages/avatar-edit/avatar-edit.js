@@ -32,11 +32,13 @@ class AvatarEdit extends Component {
 
   constructor(props) {
     super(props)
+    this.imageMap = {}
     this.state = {
       pageStatus: 'loading',
       themeData: {},
       errorText: '',
       shapeCategoryList: [],
+      imageMap: {},
       cutImageSrc: '',
       isShowShape: false,
       posterSrc: '',
@@ -64,11 +66,12 @@ class AvatarEdit extends Component {
         }
       })
 
-      const { shapeCategoryList } = themeData
+      const { shapeCategoryList, imageMap } = themeData
       this.setState({
         pageStatus: 'done',
         themeData,
-        shapeCategoryList
+        shapeCategoryList,
+        imageMap
       })
       
     } catch (error) {
@@ -212,7 +215,6 @@ class AvatarEdit extends Component {
   }
 
   onGenerateImage  = async () => {
-    const { isLifeChecked } = this.state
 
     this.setState({
       posterSrc: '',
@@ -227,7 +229,7 @@ class AvatarEdit extends Component {
             Taro.showLoading({
               title: '图片生成中'
             })
-            isLifeChecked ? this.drawCanvasFour() : this.drawCanvas()
+            this.drawCanvas()
 
           } else if (res.cancel) {
             console.log('用户点击取消')
@@ -267,7 +269,8 @@ class AvatarEdit extends Component {
         rotate,
         shapeCenterX,
         shapeCenterY,
-        currentShapeId,
+        imageUrl,
+        imageReverseUrl,
         reserve,
       } = shape
       const shapeSize = shapeWidth
@@ -275,8 +278,7 @@ class AvatarEdit extends Component {
       pc.translate(shapeCenterX, shapeCenterY);
       pc.rotate((rotate * Math.PI) / 180)
 
-      let oneMaskSrc = require(`../../images/${categoryName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`)
-      let oneImgSrc = isH5Page ? await getImg(oneMaskSrc) : oneMaskSrc
+      let oneImgSrc = await getImg(reserve < 0 ? imageReverseUrl : imageUrl)
 
       pc.drawImage(
         oneImgSrc,
@@ -300,85 +302,7 @@ class AvatarEdit extends Component {
         success: async (res) => {
           await this.onSaveImageToCloud(res.tempFilePath)
 
-          Taro.hideLoading()
-          this.setState({
-            posterSrc: res.tempFilePath,
-            isShowPoster: true
-          })
-
-        },
-        fail: () => {
-          Taro.hideLoading()
-          Taro.showToast({
-            title: '图片生成失败，请重试'
-          })
-        }
-      })
-    })
-  }
-  drawCanvasFour = async () => {
-    const {
-      shapeList,
-    } = this.state
-
-    const pc = Taro.createCanvasContext('canvasShape')
-
-    pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH);
-
-    for (let yLength = 0; yLength < 2; yLength++) {
-      for (let xLength = 0; xLength < 2; xLength++) {
-        console.log('xLength :>> ', xLength, yLength);
-        let type = dataStyleList[(xLength + yLength * 2)].type
-        console.log('type :>> ', type);
-        let tmpCutImage = await getImg(this.ageMap[type])
-        let xLengthPos = xLength * SAVE_IMAGE_WIDTH / 2
-        let yLengthPos = yLength * SAVE_IMAGE_WIDTH / 2
-        pc.drawImage(tmpCutImage, xLengthPos, yLengthPos, SAVE_IMAGE_WIDTH / 2, SAVE_IMAGE_WIDTH / 2)
-
-        for (let index = 0; index < shapeList.length; index++) {
-          const shape = shapeList[index];
-          pc.save()
-          const {
-            categoryName,
-            shapeWidth,
-            rotate,
-            shapeCenterX,
-            shapeCenterY,
-            currentShapeId,
-            reserve,
-          } = shape
-          const shapeSize = shapeWidth / 2
-
-          pc.translate(shapeCenterX / 2 + xLengthPos, shapeCenterY / 2 + yLengthPos);
-          pc.rotate((rotate * Math.PI) / 180)
-
-          let oneMaskSrc = require(`../../images/${categoryName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`)
-          let oneImgSrc = isH5Page ? await getImg(oneMaskSrc) : oneMaskSrc
-
-          pc.drawImage(
-            oneImgSrc,
-            -shapeSize / 2,
-            -shapeSize / 2,
-            shapeSize,
-            shapeSize
-          )
-          pc.restore()
-        }
-      }
-
-    }
-
-    pc.draw(true, () => {
-      Taro.canvasToTempFilePath({
-        canvasId: 'canvasShape',
-        x: 0,
-        y: 0,
-        height: SAVE_IMAGE_WIDTH * 3,
-        width: SAVE_IMAGE_WIDTH * 3,
-        fileType: 'jpg',
-        quality: 0.9,
-        success: async (res) => {
-          await this.onSaveImageToCloud(res.tempFilePath)
+          console.log('res.tempFilePath :>> ', res.tempFilePath);
 
           Taro.hideLoading()
           this.setState({
@@ -396,7 +320,6 @@ class AvatarEdit extends Component {
       })
     })
   }
-
   onSaveImageToCloud = async (tempFilePath) => {
     const { currentAgeType } = this.state
 
@@ -410,8 +333,8 @@ class AvatarEdit extends Component {
         data: {
           collection_name: 'avatars',
           info: {
-            avatar_fileID: fileID,
-            age_type: currentAgeType
+            avatarFileID: fileID,
+            ageType: currentAgeType
           }
         }
       })
@@ -452,13 +375,18 @@ class AvatarEdit extends Component {
     if (this.shapeEditRef) {
       this.shapeEditRef.chooseShape(shape)
     }
+
+
+
     console.log('shape :>> ', shape);
   }
 
-
+  setLocalImageMap = (imageFileID, imageUrl) => {
+    getImg(imageUrl).then(url => this.localImageMap[imageFileID] = url)
+  }
 
   render() {
-    const { isShowShape, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList } = this.state
+    const { isShowShape, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, imageMap } = this.state
     const { themeName, shareImage } = themeData
     return (
       <Block>

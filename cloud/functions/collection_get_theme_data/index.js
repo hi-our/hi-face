@@ -49,8 +49,18 @@ exports.main = async (event, context) => {
         fileList.forEach(({ fileID, tempFileURL }) => {
           imageMap[fileID] = tempFileURL
         })
+        shapeCategoryList.forEach(catItem => {
+          // shapeCategoryMap[catItem._id] = catItem
+          catItem.shapeList.forEach(shapeItem => {
+            const { imageFileID, imageReverseFileID } = shapeItem
+            if (imageFileID) shapeItem.imageUrl = imageMap[imageFileID]
+            if (imageReverseFileID) shapeItem.imageReverseUrl = imageMap[imageReverseFileID]
+            // shapeMap[shapeItem._id] = shapeItem
+          })
+        })
         console.log('imageMap :>> ', imageMap);
         themeData.shapeCategoryList = shapeCategoryList
+        themeData.imageMap = imageMap
       }
 
       return {

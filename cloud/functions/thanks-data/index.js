@@ -1,7 +1,9 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
 
-cloud.init()
+cloud.init({
+  env: cloud.DYNAMIC_CURRENT_ENV
+})
 
 const data = {
   thanksWord: '感谢我家小雪的默默支持及照顾。\n感谢老娘舅群小伙伴的支持，包括范老师、苏老师、拉总、俊总。\n感谢公司小伙伴的支持，包括华翔、Coco。',

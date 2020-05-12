@@ -4,7 +4,9 @@ const uuid = require('uuid')
 
 
 const uuidv4 = uuid.v4
-cloud.init()
+cloud.init({
+  env: cloud.DYNAMIC_CURRENT_ENV
+})
 
 const db = cloud.database()
 
@@ -24,16 +26,22 @@ exports.main = async (event, context) => {
   console.log('cloud.getWXContext() :', cloud.getWXContext());
 
   try {
+    const result = await db.collection('users').where({
+      wxOpenId: OPENID
+    }).get()
+    const {  user_id = '', userId = ''} = result.data[0] || {}
+    console.log('user_id', result.data, user_id)
     const { _id } = await db.collection(collection_name)
       .add({
         // data 字段表示需新增的 JSON 数据
         data: {
-          create_time: Date.now(),
-          update_time: Date.now(),
-          open_id: OPENID,
-          app_id: APPID,
+          createTime: Date.now(),
+          updateTime: Date.now(),
+          openId: OPENID,
+          appId: APPID,
           uuid: uuidv4(),
-          is_delete: false,
+          isDelete: false,
+          userId: userId || user_id || 0,
           ...info
         }
       })
@@ -57,7 +65,7 @@ exports.main = async (event, context) => {
     }
 
   } catch (error) {
-    console.log(err)
+    console.log(error)
     return {
       data: {
         error

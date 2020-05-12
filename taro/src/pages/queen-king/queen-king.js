@@ -540,8 +540,8 @@ class QueenKing extends Component {
         data: {
           collection_name: 'avatars',
           info: {
-            avatar_fileID: fileID,
-            age_type: currentAgeType
+            avatarFileID: fileID,
+            ageType: currentAgeType
           }
         }
       })
