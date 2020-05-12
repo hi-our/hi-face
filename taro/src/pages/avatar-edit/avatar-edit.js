@@ -33,13 +33,11 @@ class AvatarEdit extends Component {
 
   constructor(props) {
     super(props)
-    this.imageMap = {}
     this.state = {
       pageStatus: 'loading',
       themeData: {},
-      errorText: '',
       shapeCategoryList: [],
-      imageMap: {},
+      currentAgeType: 'origin', // 原图
       cutImageSrc: '',
       isShowShape: false,
       posterSrc: '',
@@ -58,6 +56,35 @@ class AvatarEdit extends Component {
     }
   }
 
+  onShareAppMessage({ from, target }) {
+    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/04/26/2041af2867f22e62f8fce32b29cd1fb0.png'
+
+    let shareImage = DEFAULT_SHARE_COVER
+    let shareUrl = '/pages/avatar-edit/avatar-edit'
+    if (from === 'button') {
+      const { dataset = {} } = target
+      const { posterSrc = '' } = dataset
+
+      console.log('posterSrc :', posterSrc);
+
+      if (posterSrc) {
+        shareImage = posterSrc
+        const { shareUUID } = this.state
+        if (shareUUID) {
+          shareUrl = `/pages/avatar-poster/avatar-poster?uuid=${shareUUID}`
+        }
+      }
+
+    }
+
+    console.log('shareUrl :', shareUrl);
+    return {
+      title: '给女神戴上皇冠吧！',
+      imageUrl: shareImage,
+      path: shareUrl
+    }
+  }
+
   loadData = async (themeId) => {
     try {
       const themeData = await cloudCallFunction({
@@ -67,12 +94,11 @@ class AvatarEdit extends Component {
         }
       })
 
-      const { shapeCategoryList, imageMap } = themeData
+      const { shapeCategoryList } = themeData
       this.setState({
         pageStatus: 'done',
         themeData,
         shapeCategoryList,
-        imageMap
       })
       
     } catch (error) {
@@ -376,14 +402,6 @@ class AvatarEdit extends Component {
     if (this.shapeEditRef) {
       this.shapeEditRef.chooseShape(shape)
     }
-
-
-
-    console.log('shape :>> ', shape);
-  }
-
-  setLocalImageMap = (imageFileID, imageUrl) => {
-    getImg(imageUrl).then(url => this.localImageMap[imageFileID] = url)
   }
 
   render() {
