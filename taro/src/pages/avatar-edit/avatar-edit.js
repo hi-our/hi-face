@@ -6,6 +6,7 @@ import PageWrapper from 'components/page-wrapper'
 import ImageChoose from './components/image-choose'
 import ShapeEdit from './components/shape-edit'
 import TabCategoryList from './components/tab-category-list'
+import PosterDialog from './components/poster-dialog'
 import { getHatInfo, getHatShapeList } from 'utils/face-utils'
 import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase64 } from 'utils/canvas-drawing'
 import { cloudCallFunction } from 'utils/fetch'
@@ -386,8 +387,10 @@ class AvatarEdit extends Component {
   }
 
   render() {
-    const { isShowShape, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, imageMap } = this.state
+    const { isShowShape, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc, isShowPoster } = this.state
     const { themeName, shareImage } = themeData
+
+    console.log('posterSrc :>> ', posterSrc);
     return (
       <Block>
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
@@ -421,6 +424,7 @@ class AvatarEdit extends Component {
             />
           </View>
         </View>
+        <PosterDialog isH5Page={isH5Page} isShowPoster={isShowPoster} posterSrc={posterSrc} />
       </Block>
     )
   }
