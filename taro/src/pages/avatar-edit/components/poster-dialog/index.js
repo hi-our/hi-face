@@ -30,6 +30,11 @@ export default class PosterDialog extends Taro.Component {
     if (posterSrc !== '') Taro.previewImage({ urls: [posterSrc] })
   }
 
+  onShowPoster = () => {
+    this.setState({
+      isShowPoster: true
+    })
+  }
   onHidePoster = () => {
     this.setState({
       isShowPoster: false
@@ -102,7 +107,6 @@ export default class PosterDialog extends Taro.Component {
     const { isShowPoster } = this.state
     const { posterSrc, isH5Page } = this.props
 
-    console.log('posterSrc :>> ', posterSrc);
     return (
       <View className={`poster-dialog ${posterSrc && isShowPoster ? 'show' : ''}`}>
         <View className='poster-dialog-main'>

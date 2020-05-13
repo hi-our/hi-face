@@ -23,12 +23,12 @@ exports.main = async (event, context) => {
     let { data = [] } = await db.collection(collection_name)
       .where({
         uuid,
-        is_delete: false
+        isDelete: false
       })
       .field({
         _id: false,
-        is_delete: false,
-        app_id: false,
+        isDelete: false,
+        appId: false,
       })
       .get()
     
@@ -36,11 +36,11 @@ exports.main = async (event, context) => {
 
     if (data.length) {
       console.log('data[0] :', data[0]);
-      console.log('PENID === data[0].open_id :', OPENID, data[0].open_id);
+      console.log('PENID === data[0].openId :', OPENID, data[0].openId);
       return {
         data: {
           ...data[0],
-          is_author: OPENID === data[0].open_id
+          isAuthor: OPENID === data[0].openId
         },
         time: new Date(),
         status: 0,

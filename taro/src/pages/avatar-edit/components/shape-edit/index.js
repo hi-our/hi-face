@@ -64,11 +64,10 @@ export default class ShapeEdit extends Taro.Component {
     }
   }
 
-  getDefaultShape = (categoryName = 'crown') => {
+  getDefaultShape = () => {
     const { saveImageWidth, defaultShapeSize } = this.props
 
     return {
-      categoryName,
       shapeWidth: defaultShapeSize,
       timeNow: Date.now(),
 

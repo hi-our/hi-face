@@ -11,9 +11,31 @@ const $ = db.command.aggregate
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-  const { themeId } = event
+  let { themeId } = event
 
   try {
+
+    if (!themeId) {
+      let configRes = await cloud.callFunction({
+        name: 'collection_get_configs',
+        data: {
+          configName: 'avatar-edit'
+        }
+      })
+
+      let result = configRes.result.data
+      themeId = result.themeId
+    }
+
+    if (!themeId) {
+      return {
+        data: '',
+        status: -20001,
+        message: '未成功设置themeID',
+        time: new Date()
+      }
+    }
+
     const { errMsg, data } = await db.collection('themes').doc(themeId).get()
     console.log('result :>> ', data);
     let themeData = data
@@ -34,12 +56,10 @@ exports.main = async (event, context) => {
         let imageMap = {}
         let imageList = []
         shapeCategoryList.forEach(catItem => {
-          // shapeCategoryMap[catItem._id] = catItem
           catItem.shapeList.forEach(shapeItem => {
             const { imageFileID, imageReverseFileID } = shapeItem
             if (imageFileID) imageList.push(imageFileID)
             if (imageReverseFileID) imageList.push(imageReverseFileID)
-            // shapeMap[shapeItem._id] = shapeItem
           })
         })
         const { fileList } = await cloud.getTempFileURL({
@@ -50,15 +70,13 @@ exports.main = async (event, context) => {
           imageMap[fileID] = tempFileURL
         })
         shapeCategoryList.forEach(catItem => {
-          // shapeCategoryMap[catItem._id] = catItem
           catItem.shapeList.forEach(shapeItem => {
             const { imageFileID, imageReverseFileID } = shapeItem
             if (imageFileID) shapeItem.imageUrl = imageMap[imageFileID]
             if (imageReverseFileID) shapeItem.imageReverseUrl = imageMap[imageReverseFileID]
-            // shapeMap[shapeItem._id] = shapeItem
           })
         })
-        console.log('imageMap :>> ', imageMap);
+        
         themeData.shapeCategoryList = shapeCategoryList
         themeData.imageMap = imageMap
       }

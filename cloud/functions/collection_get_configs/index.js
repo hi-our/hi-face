@@ -24,13 +24,12 @@ const _ = db.command
 exports.main = async (event, context) => {
 
   const { configName = '', configList } = event
-  console.log('typeof configList :>> ', typeof configList);
-  const orList = configList.map(item => ({
-    name: item
-  }))
 
   let dbNow = db.collection('configs').limit(10)
   if (configList && configList.length) {
+    const orList = configList.map(item => ({
+      name: item
+    }))
     dbNow = dbNow.where(_.or(orList)).field({
       content: true
     })
@@ -41,19 +40,29 @@ exports.main = async (event, context) => {
   }
 
 
-  let { data } = await dbNow.get()
-  data = data.map(item => {
-    return safeJsonParse(item.content)
-  })
-
+  try {
+    let { data } = await dbNow.get()
+    data = data.map(item => {
+      return safeJsonParse(item.content)
+    })
   
-  let result = data.length === 1 ? data[0] : data
-  console.log('result :>> ', result);
-  
-  return {
-    data: result,
-    status: 0,
-    message: '',
-    time: new Date()
+    
+    let result = data.length === 1 ? data[0] : data
+    console.log('result :>> ', result);
+    
+    return {
+      data: result,
+      status: 0,
+      message: '',
+      time: new Date()
+    }
+    
+  } catch (error) {
+    return {
+      data: '',
+      status: -30200,
+      message: JSON.stringify(error || {}),
+      time: new Date()
+    }
   }
 }

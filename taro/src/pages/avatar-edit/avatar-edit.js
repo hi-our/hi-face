@@ -18,10 +18,9 @@ import './styles.styl'
 const isH5Page = process.env.TARO_ENV === 'h5'
 const isQQPage = process.env.TARO_ENV === 'qq'
 
-const pageConfigName = 'avatar-edit'
 
 @connect(state => ({
-  pageConfig: state.global[pageConfigName]
+  forCheck: state.global.forCheck
 }), null)
 
 // @CorePage
@@ -40,21 +39,13 @@ class AvatarEdit extends Component {
       shapeCategoryList: [],
       currentAgeType: 'origin', // 原图
       cutImageSrc: '',
-      isShowShape: false,
       posterSrc: '',
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { pageConfig: prevConfig } = this.props
-    const { pageConfig: nextConfig } = nextProps
-
-    if (prevConfig !== nextConfig) {
-      console.log('1 :>> ', 1)
-      
-      const { themeId } = nextConfig
-      this.loadData(themeId)
-    }
+  
+  componentDidMount() {
+    this.loadData()
   }
 
   onShareAppMessage({ from, target }) {
@@ -87,16 +78,18 @@ class AvatarEdit extends Component {
     }
   }
 
-  loadData = async (themeId) => {
+  loadData = async () => {
     try {
       const themeData = await cloudCallFunction({
-        name: 'collection_get_theme_data',
-        data: {
-          themeId: themeId
-        }
+        name: 'collection_get_theme_data'
       })
 
-      const { shapeCategoryList } = themeData
+      const { shapeCategoryList, themeName } = themeData
+
+      Taro.setTabBarItem({
+        index: 0,
+        text: themeName,
+      })
       this.setState({
         pageStatus: 'done',
         themeData,
@@ -119,10 +112,27 @@ class AvatarEdit extends Component {
   }
 
   onChoose = (cutImageSrc) => {
+    const { forCheck } = this.props
     this.setState({
       cutImageSrc
     }, () => {
-        this.onAnalyzeFace(cutImageSrc)
+      console.log('forCheck :>> ', forCheck);
+        if (!forCheck) {
+          this.onAnalyzeFace(cutImageSrc)
+        } else {
+          this.setDafaultFace()
+        }
+    })
+  }
+
+  setDafaultFace = () => {
+    Taro.showToast({
+      icon: 'none',
+      title: '请手动添加贴纸'
+    })
+    this.setState({
+      shapeList: [],
+      isShowShape: true,
     })
   }
 
@@ -340,8 +350,9 @@ class AvatarEdit extends Component {
 
           Taro.hideLoading()
           this.setState({
-            posterSrc: res.tempFilePath,
-            isShowPoster: true
+            posterSrc: res.tempFilePath
+          }, () => {
+              this.posterRef.onShowPoster()
           })
 
         },
@@ -412,10 +423,9 @@ class AvatarEdit extends Component {
   }
 
   render() {
-    const { isShowShape, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc, isShowPoster } = this.state
+    const { isShowShape, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc } = this.state
     const { themeName, shareImage } = themeData
 
-    console.log('posterSrc :>> ', posterSrc);
     return (
       <Block>
         <PageLoading status={pageStatus} loadingType='fullscreen'></PageLoading>
@@ -450,7 +460,7 @@ class AvatarEdit extends Component {
             />
           </View>
         </View>
-        <PosterDialog isH5Page={isH5Page} isShowPoster={isShowPoster} posterSrc={posterSrc} />
+        <PosterDialog isH5Page={isH5Page} ref={poster => this.posterRef = poster} posterSrc={posterSrc} />
         {!isShowShape && (
           <Block>
             <View className='test-hat-btn' onClick={this.goTestHat} style={{ top: STATUS_BAR_HEIGHT + 54 + 'px' }}>圣诞帽测试</View>

@@ -2,9 +2,7 @@
   {
     "name": "collection_get_configs",
     "value": {
-      "configList": [
-        "for-check"
-      ]
+      "configName": "for-check"
     }
   }
 ]

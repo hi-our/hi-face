@@ -53,7 +53,7 @@ class App extends Component {
       list: [
         {
           pagePath: 'pages/avatar-edit/avatar-edit',
-          text: '女王节',
+          text: '头像编辑',
           iconPath: 'images/tab-bar-crown.png',
           selectedIconPath: 'images/tab-bar-crown-active.png'
         },
@@ -95,7 +95,7 @@ class App extends Component {
       })
 
       // 检查过审开关是否开启
-      globalActions.getGlobalConfig()
+      globalActions.getForCheckStatus()
     } else if (process.env.TARO_ENV === 'h5' || process.env.TARO_ENV === 'qq') {
       console.log('tcb :', tcb, process.env.TARO_ENV );
       let initConfig = {}

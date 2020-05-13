@@ -33,7 +33,7 @@ export default mirror.model({
             }
           })
           this.setState({
-            forCheck: version !== config.version
+            forCheck: version === config.version
           })
         } catch(err) {
           console.log('forCheck', err)
@@ -73,13 +73,13 @@ export default mirror.model({
       if (typeof forCheck !== 'boolean') {
         try {
           const { version } = await cloudCallFunction({
-            name: 'collocation_get_configs',
+            name: 'collection_get_configs',
             data: {
               configName: 'for-check',
             }
           })
           this.setState({
-            forCheck: version !== config.version
+            forCheck: version === config.version
           })
         } catch(err) {
           console.log('forCheck', err)
