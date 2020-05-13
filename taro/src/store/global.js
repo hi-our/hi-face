@@ -2,9 +2,9 @@ import Taro from '@tarojs/cli'
 import mirror from 'mirror'
 import EventEmitter from 'utils/event-emitter'
 import fetch, { cloudCallFunction } from 'utils/fetch'
-import { postFormIds, getSwitchForCheck } from 'constants/apis'
+// import { postFormIds, getSwitchForCheck } from 'constants/apis'
 import * as config from 'config'
-import userActions from './user'
+// import userActions from './user'
 
 export const modelName = 'global'
 
@@ -86,27 +86,27 @@ export default mirror.model({
         }
       }
     },
-    /**
-     * 上报 formIds
-     */
-    async submitFormIds() {
-      // TODO: 不要使用 eventbus 来做 channel
-      const formIds = EventEmitter.take('formIds')
-      if (!formIds || !formIds.length) return
+    // /**
+    //  * 上报 formIds
+    //  */
+    // async submitFormIds() {
+    //   // TODO: 不要使用 eventbus 来做 channel
+    //   const formIds = EventEmitter.take('formIds')
+    //   if (!formIds || !formIds.length) return
       
-      const { userInfo } = await userActions.getLoginInfo() || {}
-      const { openId } = userInfo
+    //   const { userInfo } = await userActions.getLoginInfo() || {}
+    //   const { openId } = userInfo
 
-      fetch({
-        url: postFormIds,
-        type: 'post',
-        data: {
-          appId: config.appId,
-          formIds,
-          openId,
-          type: 0
-        }
-      })
-    }
+    //   fetch({
+    //     url: postFormIds,
+    //     type: 'post',
+    //     data: {
+    //       appId: config.appId,
+    //       formIds,
+    //       openId,
+    //       type: 0
+    //     }
+    //   })
+    // }
   }
 })

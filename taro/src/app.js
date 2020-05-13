@@ -99,14 +99,14 @@ class App extends Component {
     } else if (process.env.TARO_ENV === 'h5' || process.env.TARO_ENV === 'qq') {
       console.log('tcb :', tcb, process.env.TARO_ENV );
       let initConfig = {}
-      tcb.useAdapters([adapterForQQ]);
-      initConfig = {
-        appSign: process.env.appSign,
-        appSecret: {
-          appAccessKeyId: process.env.appAccessKeyId,
-          appAccessKey: process.env.appAccessKey,
-        }
-      }
+      // tcb.useAdapters([adapterForQQ]);
+      // initConfig = {
+      //   appSign: process.env.appSign,
+      //   appSecret: {
+      //     appAccessKeyId: process.env.appAccessKeyId,
+      //     appAccessKey: process.env.appAccessKey,
+      //   }
+      // }
       // hack写法？呼呼
       Taro.cloud = tcb.init({
         env: config.cloudEnv,
@@ -114,6 +114,8 @@ class App extends Component {
       })
       // console.log('登录云开发成功！')
       Taro.cloud.auth().signInAnonymously().then(() => {
+        // 检查过审开关是否开启
+        globalActions.getForCheckStatus()
         Taro.cloud.callFunction({
           name: 'thanks-data',
           data: {

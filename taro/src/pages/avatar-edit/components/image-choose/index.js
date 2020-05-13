@@ -15,7 +15,7 @@ export default class ImageChoose extends Taro.Component {
   }
 
   static defaultProps = {
-    styles: '',
+    isH5Page: false,
     onChoose: () => {},
     cropperWidth: 600,
     cropperHeight: 600

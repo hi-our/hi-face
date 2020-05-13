@@ -19,9 +19,9 @@ const isH5Page = process.env.TARO_ENV === 'h5'
 const isQQPage = process.env.TARO_ENV === 'qq'
 
 
-@connect(state => ({
-  forCheck: state.global.forCheck
-}), null)
+// @connect(state => ({
+//   forCheck: state.global.forCheck
+// }), null)
 
 // @CorePage
 class AvatarEdit extends Component {
@@ -83,6 +83,8 @@ class AvatarEdit extends Component {
       const themeData = await cloudCallFunction({
         name: 'collection_get_theme_data'
       })
+
+      console.log('themeData :>> ', themeData);
 
       const { shapeCategoryList, themeName } = themeData
 
@@ -159,6 +161,8 @@ class AvatarEdit extends Component {
 
       const couldRes = await cloudFunc(cutImageSrc)
 
+      console.log('couldRes :>> ', couldRes);
+
       console.log('图片分析的结果 :', couldRes)
       const hatList = getHatInfo(couldRes, shapeOne)
       console.log('hatList :', hatList);
@@ -197,17 +201,10 @@ class AvatarEdit extends Component {
         return
       }
 
-      // 获取失败，走默认渲染
-      let shapeList = [
-        getDefaultShape()
-      ]
-
       this.setState({
-        shapeList,
+        shapeList: [],
         isShowShape: true,
       })
-
-      // this.uploadOriginImage(cutImageSrc)
     }
   }
 
@@ -422,9 +419,17 @@ class AvatarEdit extends Component {
     }
   }
 
+  goTestHat = () => {
+    Taro.navigateTo({
+      url: '/pages/test/test'
+    })
+  }
+
+
   render() {
     const { isShowShape, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc } = this.state
     const { themeName, shareImage } = themeData
+    console.log('cutImageSrc,  :>> ', cutImageSrc, isShowShape);
 
     return (
       <Block>
@@ -433,7 +438,7 @@ class AvatarEdit extends Component {
         <View className='avatar-edit-page' style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
           <View className='main-wrap'>
             <View className='page-title'>
-              <Image className='page-title-icon' src={shareImage} />
+              {!isH5Page && <Image className='page-title-icon' src={shareImage} />}
               {themeName || '头像编辑'}
             </View>
             {isShowShape
@@ -449,6 +454,7 @@ class AvatarEdit extends Component {
               : (
                 <ImageChoose
                   onChoose={this.onChoose}
+                  isH5Page={isH5Page}
                 />
               )
             }
@@ -471,3 +477,5 @@ class AvatarEdit extends Component {
     )
   }
 }
+
+export default AvatarEdit
