@@ -453,8 +453,14 @@ class AvatarEdit extends Component {
             </View>
             {isShowShape
               ? (
-                <View></View>
-                )
+                <ShapeEdit
+                  cutImageSrc={cutImageSrc}
+                  shapeListOut={shapeList}
+                  onGenerateImage={this.onGenerateImage}
+                  onRemoveImage={this.onRemoveImage}
+                  ref={edit => this.shapeEditRef = edit}
+                />
+              )
               : (
                 <ImageChoose
                   onChoose={this.onChoose}

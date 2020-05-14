@@ -27,7 +27,7 @@ const setTmpThis = (el, elState) => {
 
 }
 
-export default class ShapeEdit extends Taro.Component {
+class ShapeEdit extends Taro.Component {
   config = {
     component: true
   }
@@ -241,10 +241,11 @@ export default class ShapeEdit extends Taro.Component {
 
   render() {
     const { cutImageSrc } = this.props
-    const { shapeList, currentShapeIndex } = this.state
+    const { shapeList = [], currentShapeIndex } = this.state
+    console.log('cutImageSrc :>> ', cutImageSrc);
 
     return (
-      <Block>
+      <View>
         <View
           className='image-wrap'
           onTouchStart={this.touchStart}
@@ -311,8 +312,10 @@ export default class ShapeEdit extends Taro.Component {
             保存图片
           </View>
         </View>
-      </Block>
+      </View>
     )
     
   }
 }
+
+export default ShapeEdit
