@@ -52,7 +52,7 @@ const analyzeFace = reqFace.analyzeFace
 const imageSafeCheck = reqTiiaImage.imageSafeCheck
 
 exports.main = async (event) => {
-  const { fileID = '', base64Main = '' } = event
+  const { fileID = '', base64Main = '', forCheck = false } = event
 
   let Image = ''
 
@@ -63,6 +63,12 @@ exports.main = async (event) => {
     })
 
     Image = fileContent.toString('base64')
+
+    if (forCheck) {
+      let result = await imageSafeCheck(Image)
+      console.log('result :>> ', result)
+      return result
+    }
 
     return Promise.allSettled([imageSafeCheck(Image), analyzeFace(Image)]).then((results) => {
       let checkResult = results[0]
@@ -78,10 +84,16 @@ exports.main = async (event) => {
     })
   } else if (base64Main) {
     Image = base64Main
+    console.log('forCheck :>> ', forCheck);
+    if (forCheck) {
+      let result = await imageSafeCheck(Image)
+      console.log('result :>> ', result);
+      return result
+    }
     return Promise.allSettled([imageSafeCheck(Image), analyzeFace(Image)]).then((results) => {
       let checkResult = results[0]
       let faceResult = results[1]
-      console.log('checkResult :', checkResult);
+      console.log('checkResult :', checkResult)
       if (checkResult.status) {
         return checkResult
       }

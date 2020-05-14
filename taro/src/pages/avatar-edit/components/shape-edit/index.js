@@ -80,22 +80,26 @@ export default class ShapeEdit extends Taro.Component {
     }
   }
 
-  chooseShape = ({ shapeId, imageUrl }) => {
+  chooseShape = ({ shapeId, imageUrl, imageReverseUrl }) => {
     let { shapeList, currentShapeIndex } = this.state
     console.log('shapeId, imageUrl :>> ', shapeId, imageUrl, currentShapeIndex);
+
+    console.log('shapeId, imageUrl, imageReverseUrl :>> ', shapeId, imageUrl, imageReverseUrl);
 
     if (shapeList.length > 0 && currentShapeIndex >= 0) {
       shapeList[currentShapeIndex] = {
         ...shapeList[currentShapeIndex],
         shapeId,
-        imageUrl
+        imageUrl,
+        imageReverseUrl
       }
     } else {
       currentShapeIndex = shapeList.length
       shapeList.push({
         ...this.getDefaultShape(),
         shapeId: shapeId,
-        imageUrl
+        imageUrl,
+        imageReverseUrl
       })
     }
     this.setState({

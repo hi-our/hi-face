@@ -59,7 +59,7 @@ const getCheckResult =(data) => {
 async function imgSecCheck(event) {
   const { fileID } = event
   if (!fileID) {
-    console.log('请设置fileID :');
+    console.log('请设置fileID :')
     return 
   }
 

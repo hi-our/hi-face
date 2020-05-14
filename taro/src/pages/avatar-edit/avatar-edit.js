@@ -19,9 +19,9 @@ const isH5Page = process.env.TARO_ENV === 'h5'
 const isQQPage = process.env.TARO_ENV === 'qq'
 
 
-// @connect(state => ({
-//   forCheck: state.global.forCheck
-// }), null)
+@connect(state => ({
+  forCheck: state.global.forCheck
+}), null)
 
 // @CorePage
 class AvatarEdit extends Component {
@@ -45,7 +45,13 @@ class AvatarEdit extends Component {
 
   
   componentDidMount() {
-    this.loadData()
+    if (isH5Page) {
+      setTimeout(() => {
+        this.loadData() 
+      }, 1500);
+    } else {
+      this.loadData()
+    }
   }
 
   onShareAppMessage({ from, target }) {
@@ -99,6 +105,7 @@ class AvatarEdit extends Component {
       })
       
     } catch (error) {
+      debugger
       console.log('error :>> ', error);
       this.setState({
         pageStatus: 'error',
@@ -114,16 +121,11 @@ class AvatarEdit extends Component {
   }
 
   onChoose = (cutImageSrc) => {
-    const { forCheck } = this.props
     this.setState({
       cutImageSrc
     }, () => {
-      console.log('forCheck :>> ', forCheck);
-        if (!forCheck) {
-          this.onAnalyzeFace(cutImageSrc)
-        } else {
-          this.setDafaultFace()
-        }
+      console.log('cutImageSrc :>> ', cutImageSrc);
+      this.onAnalyzeFace(cutImageSrc)
     })
   }
 
@@ -161,11 +163,18 @@ class AvatarEdit extends Component {
 
       const couldRes = await cloudFunc(cutImageSrc)
 
-      console.log('couldRes :>> ', couldRes);
+      Taro.hideLoading()
 
       console.log('图片分析的结果 :', couldRes)
+      // 开启人脸识别开关后
+      if (!couldRes.FaceShapeSet) {
+        this.setState({
+          shapeList: [],
+          isShowShape: true
+        })
+        return
+      }
       const hatList = getHatInfo(couldRes, shapeOne)
-      console.log('hatList :', hatList);
 
       // let faceList = hatList.map(item => item.faceInfo)
       let shapeList = getHatShapeList(hatList, shapeOne, SAVE_IMAGE_WIDTH)
@@ -179,10 +188,7 @@ class AvatarEdit extends Component {
         // faceList
       })
 
-      Taro.hideLoading()
-
-      // this.uploadOriginImage(cutImageSrc)
-
+      // Taro.hideLoading()
 
     } catch (error) {
       console.log('onAnalyzeFace error :', error);
@@ -216,10 +222,12 @@ class AvatarEdit extends Component {
         base64Main: getBase64Main(tempFilePaths)
       }
     })
+    console.log('cloudCanvasToAnalyzeH5 couldRes :>> ', couldRes);
     return couldRes
   }
 
   cloudCanvasToAnalyze = async (tempFilePaths) => {
+    const { forCheck } = this.props
 
     const resImage = await Taro.compressImage({
       src: tempFilePaths, // 图片路径
@@ -234,7 +242,8 @@ class AvatarEdit extends Component {
     const couldRes = await cloudCallFunction({
       name: 'analyze-face',
       data: {
-        base64Main
+        base64Main,
+        forCheck
       }
     })
 
@@ -319,7 +328,7 @@ class AvatarEdit extends Component {
       pc.translate(shapeCenterX, shapeCenterY);
       pc.rotate((rotate * Math.PI) / 180)
 
-      let oneImgSrc = await getImg(reserve < 0 ? imageReverseUrl : imageUrl)
+      let oneImgSrc = await getImg(reserve < 0 ? (imageReverseUrl || imageUrl) : imageUrl)
 
       pc.drawImage(
         oneImgSrc,
@@ -415,6 +424,7 @@ class AvatarEdit extends Component {
 
   chooseShape = (shape) => {
     if (this.shapeEditRef) {
+      console.log('shape :>> ', shape);
       this.shapeEditRef.chooseShape(shape)
     }
   }
@@ -429,7 +439,7 @@ class AvatarEdit extends Component {
   render() {
     const { isShowShape, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc } = this.state
     const { themeName, shareImage } = themeData
-    console.log('cutImageSrc,  :>> ', cutImageSrc, isShowShape);
+    console.log('pageStatus,  :>> ', pageStatus, isShowShape, shapeList, isShowShape);
 
     return (
       <Block>
@@ -443,13 +453,7 @@ class AvatarEdit extends Component {
             </View>
             {isShowShape
               ? (
-                <ShapeEdit
-                  cutImageSrc={cutImageSrc}
-                  shapeListOut={shapeList}
-                  onGenerateImage={this.onGenerateImage}
-                  onRemoveImage={this.onRemoveImage}
-                  ref={edit => this.shapeEditRef = edit}
-                />
+                <View></View>
                 )
               : (
                 <ImageChoose
@@ -459,14 +463,14 @@ class AvatarEdit extends Component {
               )
             }
           </View>
-          <View style={{ display: pageStatus === 'done' && isShowShape  ? 'block' : 'none' }}>
+          {/* <View style={{ display: pageStatus === 'done' && isShowShape  ? 'block' : 'none' }}>
             <TabCategoryList
               categoryList={shapeCategoryList}
               chooseShape={this.chooseShape}
             />
-          </View>
+          </View> */}
         </View>
-        <PosterDialog isH5Page={isH5Page} ref={poster => this.posterRef = poster} posterSrc={posterSrc} />
+        {/* <PosterDialog isH5Page={isH5Page} ref={poster => this.posterRef = poster} posterSrc={posterSrc} /> */}
         {!isShowShape && (
           <Block>
             <View className='test-hat-btn' onClick={this.goTestHat} style={{ top: STATUS_BAR_HEIGHT + 54 + 'px' }}>圣诞帽测试</View>
