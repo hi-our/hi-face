@@ -463,14 +463,15 @@ class AvatarEdit extends Component {
               )
             }
           </View>
-          {/* <View style={{ display: pageStatus === 'done' && isShowShape  ? 'block' : 'none' }}>
+          <View style={{ display: pageStatus === 'done' && isShowShape  ? 'block' : 'none' }}>
             <TabCategoryList
               categoryList={shapeCategoryList}
               chooseShape={this.chooseShape}
+              isH5Page={isH5Page}
             />
-          </View> */}
+          </View>
         </View>
-        {/* <PosterDialog isH5Page={isH5Page} ref={poster => this.posterRef = poster} posterSrc={posterSrc} /> */}
+        <PosterDialog isH5Page={isH5Page} ref={poster => this.posterRef = poster} posterSrc={posterSrc} />
         {!isShowShape && (
           <Block>
             <View className='test-hat-btn' onClick={this.goTestHat} style={{ top: STATUS_BAR_HEIGHT + 54 + 'px' }}>圣诞帽测试</View>
