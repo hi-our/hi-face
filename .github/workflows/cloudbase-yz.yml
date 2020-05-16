@@ -26,4 +26,12 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: cd taro/
     - run: npm i
-    - run: npm run release:web --if-present
+    - run: npm run release:web --if-present 
+    - name: Deploy static to Tencent CloudBase
+      id: deployStatic
+      uses: TencentCloudBase/cloudbase-action@v1.1.0
+      with:
+        secretId: ${{ secrets.SECRET_ID }}
+        secretKey: ${{ secrets.SECRET_KEY }}
+        envId: ${{ secrets.ENV_ID_DEVELOPMENT }}
+        staticSrcPath: build
