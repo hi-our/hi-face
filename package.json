@@ -14,6 +14,7 @@
     "dev:server": "cd client && yarn build && cd .. && yarn start",
     "start": "NODE_ENV=production node server.js",
     "release:web": "cd taro &&  npm install && npm run release:web",
+    "release:yzweb": "cd taro &&  npm install && npm run release:yzweb",
     "start:taro": "NODE_ENV=production node server-taro.js",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
