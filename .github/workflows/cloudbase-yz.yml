@@ -24,7 +24,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: SERVER_ENV=yz && npm run release:web --if-present 
+    - run: cd taro/
+    - run: npm i
+    - run: SERVER_ENV=yz npm run release:web --if-present 
     - name: Deploy static to Tencent CloudBase
       id: deployStatic
       uses: TencentCloudBase/cloudbase-action@v1.1.0
