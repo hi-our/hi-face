@@ -88,10 +88,10 @@
 					"scene": null
 				},
 				{
-					"id": 5,
+					"id": 4,
 					"name": "avatar-poster-原图",
 					"pathName": "pages/avatar-poster/avatar-poster",
-					"query": "uuid=f1859f4b-40ea-438b-a818-578d3d66c4a9",
+					"query": "uuid=42f4bc66-86f2-44a1-ac78-5c3780c30205",
 					"scene": null
 				},
 				{
@@ -112,6 +112,13 @@
 					"id": -1,
 					"name": "pages/wear-a-mask/wear-a-mask",
 					"pathName": "pages/wear-a-mask/wear-a-mask",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/avatar-edit/avatar-edit",
+					"pathName": "pages/avatar-edit/avatar-edit",
 					"query": "",
 					"scene": null
 				}

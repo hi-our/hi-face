@@ -7,6 +7,7 @@ import Index from './pages/test/test'
 import store from '@/store'
 import userActions from '@/store/user'
 import * as config from 'config'
+import globalActions from '@/store/global'
 
 
 import './app.styl'
@@ -22,6 +23,7 @@ const updateManager = process.env.TARO_ENV !== 'h5' ? Taro.getUpdateManager() : 
 class App extends Component {
   config = {
     pages: [
+      'pages/avatar-edit/avatar-edit',
       'pages/detect-face/detect-face',
       'pages/queen-king/queen-king',
       'pages/wear-a-mask/wear-a-mask',
@@ -50,17 +52,17 @@ class App extends Component {
       selectedColor: '#2f5aff',
       list: [
         {
-          pagePath: 'pages/queen-king/queen-king',
-          text: '女王节',
+          pagePath: 'pages/avatar-edit/avatar-edit',
+          text: '头像编辑',
           iconPath: 'images/tab-bar-crown.png',
           selectedIconPath: 'images/tab-bar-crown-active.png'
         },
-        {
-          pagePath: 'pages/detect-face/detect-face',
-          text: '人像魅力',
-          iconPath: 'images/face-1.png',
-          selectedIconPath: 'images/face-1-active.png'
-        },
+        // {
+        //   pagePath: 'pages/detect-face/detect-face',
+        //   text: '人像魅力',
+        //   iconPath: 'images/face-1.png',
+        //   selectedIconPath: 'images/face-1-active.png'
+        // },
         // {
         //   pagePath: 'pages/wear-a-mask/wear-a-mask',
         //   text: '戴口罩',
@@ -91,17 +93,20 @@ class App extends Component {
         env: config.cloudEnv,
         traceUser: true
       })
+
+      // 检查过审开关是否开启
+      globalActions.getForCheckStatus()
     } else if (process.env.TARO_ENV === 'h5' || process.env.TARO_ENV === 'qq') {
       console.log('tcb :', tcb, process.env.TARO_ENV );
       let initConfig = {}
-      tcb.useAdapters([adapterForQQ]);
-      initConfig = {
-        appSign: process.env.appSign,
-        appSecret: {
-          appAccessKeyId: process.env.appAccessKeyId,
-          appAccessKey: process.env.appAccessKey,
-        }
-      }
+      // tcb.useAdapters([adapterForQQ]);
+      // initConfig = {
+      //   appSign: process.env.appSign,
+      //   appSecret: {
+      //     appAccessKeyId: process.env.appAccessKeyId,
+      //     appAccessKey: process.env.appAccessKey,
+      //   }
+      // }
       // hack写法？呼呼
       Taro.cloud = tcb.init({
         env: config.cloudEnv,
@@ -109,6 +114,8 @@ class App extends Component {
       })
       // console.log('登录云开发成功！')
       Taro.cloud.auth().signInAnonymously().then(() => {
+        // 检查过审开关是否开启
+        globalActions.getForCheckStatus()
         Taro.cloud.callFunction({
           name: 'thanks-data',
           data: {

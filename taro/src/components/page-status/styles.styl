@@ -1,22 +1,24 @@
 .page-loading
+.page-loading-fullscreen
   min-height 100%
-  background #0E1226
+  // background #0E1226
 
   .page-loading-square
     position absolute
     top 45%
     left 50%
     transform translate(-50%, -50%)
-    width 30px
-    height 30px
     padding 25px
-    background rgba(255,255,255,0.1)
+    background rgba(0,0,0,0.1)
     border-radius 12px
+    font-size: 12px
+    line-height: 1.5
   .loading-icon-wrap
     position relative
     width 30px
     height 30px
     overflow hidden
+    margin 0 auto 15px
   .loading-icon
     width 100% * 17
     height 100%
@@ -34,8 +36,17 @@
     {5.88% * i}
       transform translateX(-(i * 5.88%))
 
-// --- 骨架 ---
+.page-loading-fullscreen
+  position fixed
+  height 100vh
+  left 0
+  right 0
+  top 0
+  bottom 0
+  z-index 1000
 
+
+// --- 骨架 ---
 .page-placeholder
   .type-image
     width 100%

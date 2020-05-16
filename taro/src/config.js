@@ -3,8 +3,8 @@ const appId = 'wxd5e8989ce23206af'
 
 module.exports = {
   env,
-  wxName: 'quickly-mask',
-  version: '1.5.0',
+  wxName: 'hi-face',
+  version: '1.6.0',
   appId,
   userDomain: 'cc',
   apiHost: '',

@@ -1,10 +1,22 @@
 import Taro from '@tarojs/taro'
 import promisify from './promisify';
+import { getSystemInfo } from './common'
 
 const fsm = Taro.getFileSystemManager()
 const FILE_BASE_NAME = 'tmp_base64src'
 
 const isH5Page = process.env.TARO_ENV === 'h5'
+
+const { screenWidth } = getSystemInfo()
+
+/**
+   * 单位转换
+   * @param value
+   * @private
+   */
+export const getRealRpx = (value) => {
+  return value * 750 / screenWidth;
+}
 
 /* 
  * 根据我当前的圣诞帽元素进行一些偏移(我的图片大小是200*130)， 圣诞帽可佩戴部分的中心 (62,60)  这里需要微调
