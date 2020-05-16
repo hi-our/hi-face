@@ -13,7 +13,7 @@
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "dev:server": "cd client && yarn build && cd .. && yarn start",
     "start": "NODE_ENV=production node server.js",
-    "dev:server:taro": "cd taro && npm run release:h5 && cd .. && yarn start:taro",
+    "release:web": "cd taro &&  npm install && npm run release:web",
     "start:taro": "NODE_ENV=production node server-taro.js",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
