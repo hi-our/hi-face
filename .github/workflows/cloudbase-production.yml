@@ -33,5 +33,5 @@ jobs:
       with:
         secretId: ${{ secrets.SECRET_ID }}
         secretKey: ${{ secrets.SECRET_KEY }}
-        envId: ${{ secrets.ENV_ID_DEVELOPMENT }}
+        envId: ${{ secrets.ENV_ID_PRODUCTION }}
         staticSrcPath: taro/dist-h5/
