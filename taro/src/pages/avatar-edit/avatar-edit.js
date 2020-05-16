@@ -437,6 +437,7 @@ class AvatarEdit extends Component {
 
 
   render() {
+    const { forCheck } = this.props
     const { isShowShape, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc } = this.state
     const { themeName, shareImage } = themeData
     console.log('pageStatus,  :>> ', pageStatus, isShowShape, shapeList, isShowShape);
@@ -477,13 +478,18 @@ class AvatarEdit extends Component {
             />
           </View>
         </View>
-        <PosterDialog isH5Page={isH5Page} ref={poster => this.posterRef = poster} posterSrc={posterSrc} />
-        {!isShowShape && (
+        <PosterDialog
+          isH5Page={isH5Page}
+          ref={poster => this.posterRef = poster}
+          posterSrc={posterSrc}
+          forCheck={forCheck}
+        />
+        {/* {!isShowShape && (
           <Block>
             <View className='test-hat-btn' onClick={this.goTestHat} style={{ top: STATUS_BAR_HEIGHT + 54 + 'px' }}>圣诞帽测试</View>
             <Button className='share-btn' openType='share' onClick={this.showH5Modal} style={{ top: STATUS_BAR_HEIGHT + 54 + 'px' }}>分享给朋友<View className='share-btn-icon'></View></Button>
           </Block>
-        )}
+        )} */}
       </Block>
     )
   }

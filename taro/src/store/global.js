@@ -1,10 +1,7 @@
 import Taro from '@tarojs/cli'
 import mirror from 'mirror'
-import EventEmitter from 'utils/event-emitter'
-import fetch, { cloudCallFunction } from 'utils/fetch'
-// import { postFormIds, getSwitchForCheck } from 'constants/apis'
+import { cloudCallFunction } from 'utils/fetch'
 import * as config from 'config'
-// import userActions from './user'
 
 export const modelName = 'global'
 

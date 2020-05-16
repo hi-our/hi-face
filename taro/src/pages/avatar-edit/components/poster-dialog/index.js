@@ -105,7 +105,8 @@ export default class PosterDialog extends Taro.Component {
     
 
     const { isShowPoster } = this.state
-    const { posterSrc, isH5Page } = this.props
+    const { posterSrc, isH5Page, forCheck } = this.props
+    console.log('forCheck :>> ', forCheck);
 
     return (
       <View className={`poster-dialog ${posterSrc && isShowPoster ? 'show' : ''}`}>
@@ -121,7 +122,7 @@ export default class PosterDialog extends Taro.Component {
               />
               保存到相册
             </View>
-            {!isH5Page && (
+            {!isH5Page && !forCheck && (
               <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
                 <Image
                   className='icon-wechat'
