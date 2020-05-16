@@ -153,13 +153,22 @@ class TaroCropperComponent extends Component<TaroCropperComponentProps, TaroCrop
 
   }
 
-  onReady() {
+  
+  componentDidMount() {
+    console.log('componentDidMount :>> ');
+    Taro.eventCenter.once(Taro.Current.router.onReady, () => {
+      console.log('onReady')
+      this.onInnerReady()
+    })
+  }
+
+  onInnerReady() {
     const {
       cropperCanvasId,
       cropperCutCanvasId
     } = this.props;
-
-    console.log('2 :>> ', 2);
+    
+    console.log('onInnerReady :>> ');
 
     console.log('this :', cropperCanvasId, this);
     this.cropperCanvasContext = Taro.createCanvasContext(cropperCanvasId, this);
