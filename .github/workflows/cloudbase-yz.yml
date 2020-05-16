@@ -34,4 +34,4 @@ jobs:
         secretId: ${{ secrets.SECRET_ID }}
         secretKey: ${{ secrets.SECRET_KEY }}
         envId: ${{ secrets.ENV_ID_DEVELOPMENT }}
-        staticSrcPath: build
+        staticSrcPath: taro/build
