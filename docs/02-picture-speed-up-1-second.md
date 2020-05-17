@@ -209,7 +209,7 @@ fileID换取图片临时地址
 
 源码地址：
 
-[https://github.com/shenghanqin/quickly-mask](https://github.com/shenghanqin/quickly-mask "https://github.com/shenghanqin/quickly-mask")
+[https://github.com/hi-our/hi-face](https://github.com/hi-our/hi-face "https://github.com/hi-our/hi-face")
 
 我是 **盛瀚钦**，沪江 CCtalk 前端开发工程师，Taro 框架的 issue 维护志愿者，主要侧重于前端 UI 编写和团队文档建设。
 

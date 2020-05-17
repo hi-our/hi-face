@@ -113,13 +113,17 @@ export function getHatInfo(results) {
       angle,
       faceWidth,
       faceLength,
-      ImageWidth, ImageHeight
+      ImageWidth, ImageHeight,
+      faceInfo: {
+        X: parseInt(headPos.X),
+        Y: parseInt(headPos.Y),
+        Width: parseInt(faceWidth),
+        Height: parseInt(faceLength)
+      }
     };
   }
   return FaceShapeSet.map(face => {
     const { LeftEyeBrow, RightEyeBrow, FaceProfile } = face
-    console.log('FaceProfile :', FaceProfile);
-
     return getFaceInfo(LeftEyeBrow, RightEyeBrow, FaceProfile);
   });
 }
@@ -210,27 +214,31 @@ export function getMaskShapeList(mouthList, dprCanvasWidth, shapeSize) {
   })
 }
 
-export function getHatShapeList(mouthList, dprCanvasWidth, shapeSize) {
+export function getHatShapeList(mouthList, shapeItem, saveImageWidth = 600) {
+  const { imageUrl = '', imageReverseUrl, _id: shapeId } = shapeItem || {}
   return mouthList.map(item => {
-    console.log('item :', item);
     let { faceWidth, angle, headPos = {}, ImageWidth } = item
-    let dpr = ImageWidth / dprCanvasWidth
-    const shapeCenterX = headPos.X / dpr
-    const shapeCenterY = headPos.Y / dpr
-    const rotate = angle / Math.PI * 180
-    const scale = faceWidth / shapeSize / dpr
 
-    // // 角度计算有点难
-    let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
-    let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+    let dpr = saveImageWidth / ImageWidth // 头像宽高为132，达不到600
+    const shapeCenterX = headPos.X * dpr
+    const shapeCenterY = headPos.Y * dpr
+    const rotate = angle / Math.PI * 180
+
+  
+    // 角度计算有点难
+    let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * faceWidth * dpr
+    let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * faceWidth * dpr
 
     const resizeCenterX = shapeCenterX + widthScaleDpr - 2
     const resizeCenterY = shapeCenterY + heightScaleDpr - 2
 
-    const shapeWidth = faceWidth / 0.6 / dpr
+    const shapeWidth = faceWidth / 0.6 * dpr
 
     return {
-      categoryName: 'crown',
+      shapeId,
+      timeNow: Date.now(),
+      imageUrl,
+      imageReverseUrl,
       shapeWidth,
       currentShapeId: 1,
       timeNow: Date.now() * Math.random(),

@@ -5,44 +5,25 @@ const dayjs = require('dayjs')
 
 
 const uuidv4 = uuid.v4
-cloud.init()
+cloud.init({
+  env: cloud.DYNAMIC_CURRENT_ENV
+})
 const db = cloud.database()
 
-// 下划线转换驼峰
-const toHump = (name) => {
-  return name.replace(/\_(\w)/g, function (all, letter) {
-    return letter.toUpperCase();
-  });
-}
-// 驼峰转换下划线
-const toLine = (name) => {
-  return name.replace(/([A-Z])/g, "_$1").toLowerCase();
-}
-
-const getHumpObject = (obj) => {
-  let keys = Object.keys(obj)
-  let one = {}
-  keys.forEach(key => {
-    if (key === '_id') {
-      one[key] = obj[key]
-    } else {
-      one[toHump(key)] = obj[key]
-    }
-  })
-  return one
-}
 
 const LOGIN_TYPE_MAP = {
-  wx_mp: 'wx_open_id',
-  qq_mp: 'qq_open_id',
-  web_mp: 'qq_open_id',
+  wx_mp: 'wxOpenId',
+  qq_mp: 'qqOpenId',
+  web_mp: 'qqOpenOd',
 }
 
 const getSaveData = () => {
   let randomCode = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
   let saveData = {
-    pass_code: randomCode,
-    last_time: db.serverDate({
+    createTime: db.serverDate(),
+    updateTime: db.serverDate(),
+    passCode: randomCode,
+    lastLime: db.serverDate({
       offset: 5 * 60 * 1000
     })
   }
@@ -60,7 +41,7 @@ const getUserInfo = async (event, context) => {
   try {
     let queryParams = {}
     if (userId) {
-      queryParams.user_id = userId
+      queryParams.userId = userId
     }
     queryParams[LOGIN_TYPE_MAP[loginType]] = _open_id
 
@@ -70,10 +51,10 @@ const getUserInfo = async (event, context) => {
  
     let _id = ''
     if (result.length != 0 && result[0]._id) {
-      const { last_time } = result[0]
+      const { lastTime } = result[0]
 
       // 五分钟后更换数据
-      if (dayjs().isAfter(last_time)) {
+      if (dayjs().isAfter(lastTime)) {
         let saveData = getSaveData()
         let { stats = {} } = await db.collection('users').doc(result[0]._id).update({
           data: saveData
@@ -85,12 +66,16 @@ const getUserInfo = async (event, context) => {
       } else {
         _id = result[0]._id
       }
+
+      debugger
       
 
     } else {
 
       let saveData = getSaveData()
-      saveData.user_id = uuidv4()
+      debugger
+      console.log('saveData :>> ', saveData);
+      saveData.userId = uuidv4()
       saveData[LOGIN_TYPE_MAP[loginType]] = _open_id
 
       let res = await db.collection('users').add({
@@ -104,7 +89,7 @@ const getUserInfo = async (event, context) => {
     const { data } = await db.collection('users').doc(_id).get()
 
     return {
-      data: getHumpObject(data),
+      data: data,
       message: '',
       status: 0,
       time: Date.now()
@@ -153,7 +138,7 @@ const saveWechatInfo = async (event, context) => {
       const { data } = await db.collection('users').doc(_id).get()
   
       return {
-        data: getHumpObject(data),
+        data,
         message: '',
         status: 0,
         time: Date.now()

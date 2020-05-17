@@ -4,7 +4,7 @@
 
 采用微信小程序编写，实现了自动为头像戴上口罩的功能。
 
-源码地址：https://github.com/shenghanqin/quickly-mask
+源码地址：https://github.com/hi-our/hi-face
 
 **主要功能**
 
@@ -15,7 +15,7 @@
 
 **扫码预览**
 
-微信搜一搜：快快戴口罩
+微信搜一搜：Hi头像
 
 ![](https://n1image.hjfile.cn/res7/2020/02/02/e40fff62cb635dd9be797226f7c266ed.png)
 
@@ -28,11 +28,13 @@
   * src/
     * image/ 在此放置所有口罩的素材
     * pages/
-      * wear-a-mask 口罩功能页面
       * thanks 致谢页面
-      * spread-game 病毒模拟演化器
-* cloud/functions/analyze-face 腾讯云人脸识别效果
-* client/ react版本，基于face-api.js
+      * avatar-edit 头像编辑页
+      * avatar-poster 头像分享页
+      * wear-a-mask 戴口罩
+* cloud/functions/
+  * analyze-face 腾讯云人脸识别效果
+  * collection_get_theme_data 获取主题信息
 
 
 ### 核心算法介绍

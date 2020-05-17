@@ -30,7 +30,7 @@ class AvatarPoster extends Component {
     this.state = {
       avatarFileID: '',
       avatarFileLocal: '',
-      agetType: '',
+      ageType: '',
       pageStatus: 'loading',
       isAuthor: false,
       errorText: ''
@@ -43,9 +43,9 @@ class AvatarPoster extends Component {
   }
 
   onShareAppMessage() {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
+    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/04/26/2041af2867f22e62f8fce32b29cd1fb0.png'
 
-    const { avatarFileID, agetType } = this.state
+    const { avatarFileID, ageType } = this.state
 
     let typeMap = {
       origin: '邀请好友一起来制作头像吧',
@@ -53,7 +53,7 @@ class AvatarPoster extends Component {
     }
 
     return {
-      title: typeMap[agetType] || typeMap.origin,
+      title: typeMap[ageType] || typeMap.origin,
       imageUrl: avatarFileID || DEFAULT_SHARE_COVER,
       path: this.pageUrl
     }
@@ -85,7 +85,7 @@ class AvatarPoster extends Component {
   loadData = async () => {
     let hasError = false
     try {
-      const { avatar_fileID = '', age_type = '', is_author } = await cloudCallFunction({
+      const { avatarFileID = '', ageType = '', isAuthor } = await cloudCallFunction({
         name: 'collection_get_one_by_uuid',
         data: {
           collection_name: 'avatars',
@@ -93,23 +93,21 @@ class AvatarPoster extends Component {
         }
       })
       
-      console.log('is_author :', avatar_fileID, is_author);
+      console.log('isAuthor :', avatarFileID, isAuthor);
       this.setState({
-        avatarFileID: avatar_fileID,
-        isAuthor: is_author,
-        agetType: age_type,
+        avatarFileID,
+        isAuthor,
+        ageType,
       })
 
-      let avatarFileLocal = await this.onDownloadFile(avatar_fileID)
-
-      console.log('avatarFileLocal :', avatarFileLocal);
-      this.setState({
-        avatarFileLocal
-      })
-
-      // setTimeout(() => {
-      //   this.onCreatePoster()
-      // }, 1000);
+      if (avatarFileID) {
+        let avatarFileLocal = await this.onDownloadFile(avatarFileID)
+  
+        console.log('avatarFileLocal :', avatarFileLocal);
+        this.setState({
+          avatarFileLocal
+        })
+      }
 
     } catch (error) {
       hasError = true
@@ -295,13 +293,13 @@ class AvatarPoster extends Component {
 
 
   render() {
-    const { avatarFileID, agetType, pageStatus, isAuthor, avatarFileLocal, errorText } = this.state
+    const { avatarFileID, ageType, pageStatus, isAuthor, avatarFileLocal, errorText } = this.state
  
     return (
       <Block>
         <Canvas className='canvas-poster' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_HEIGHT + 'px' }} canvasId='canvasPoster' ref={c => this.canvasPosterRef = c} />
         <PageWrapper status={pageStatus} errorText={errorText}>
-          <View className={`page-avatar-poster age-${agetType}`}>
+          <View className={`page-avatar-poster age-${ageType}`}>
             <View className='page-poster-wrap'>
               <Image className='page-poster' src={avatarFileLocal || avatarFileID} />
             </View>

@@ -1,0 +1,18 @@
+{
+  "name": "analyze-face",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@cloudbase/extension-ci": "latest",
+    "axios": "latest",
+    "tcb-admin-node": "latest",
+    "tencentcloud-sdk-nodejs": "^3.0.150",
+    "wx-server-sdk": "latest"
+  }
+}

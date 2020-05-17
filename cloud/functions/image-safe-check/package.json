@@ -10,7 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "@cloudbase/extension-ci": "latest",
-    "tcb-admin-node": "latest",
-    "wx-server-sdk": "latest"
+    "tcb-admin-node": "latest"
   }
 }

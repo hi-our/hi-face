@@ -7,6 +7,8 @@ import {CanvasTouch, CanvasTouchEvent} from "@tarojs/components/types/common";
 import {CSSProperties} from "react";
 import { easySetFillStyle, easySetLineWidth, easySetStrokeStyle } from "./canvas-util";
 
+const nowSystemInfo = Taro.getSystemInfoSync();
+
 
 const pxTransform = function (size) {
   const designWidth = 750
@@ -18,6 +20,7 @@ interface TaroCropperComponentProps {
   cropperCutCanvasId: string,       // 用于裁剪的canvas id
   width: number,                    // 组件宽度
   height: number,                   // 组件高度   (要求背景高度大于宽度)
+  pixelRatio: number,               // 裁剪后的比率，未设置时取系统的
   cropperWidth: number,             // 裁剪框宽度
   cropperHeight: number,            // 裁剪框高度
   themeColor: string,               // 主题色（裁剪框的四个角的绘制颜色）
@@ -52,6 +55,7 @@ class TaroCropperComponent extends Component<TaroCropperComponentProps, TaroCrop
     src: '',
     themeColor: '#00ff00',
     maxScale: 3,
+    pixelRatio: nowSystemInfo.pixelRatio,
     fullScreen: false,
     fullScreenCss: false,
     hideFinishText: false,
@@ -459,7 +463,8 @@ class TaroCropperComponent extends Component<TaroCropperComponentProps, TaroCrop
     const {
       cropperCutCanvasId,
       fileType,
-      quality
+      quality,
+      pixelRatio
     } = this.props;
     return new Promise((resolve, reject) => {
       const scope = process.env.TARO_ENV === 'h5' ? this : this.$scope;
@@ -469,8 +474,8 @@ class TaroCropperComponent extends Component<TaroCropperComponentProps, TaroCrop
         y: 0,
         width: this.cropperWidth - 2,
         height: this.cropperHeight - 2,
-        destWidth: this.cropperWidth * this.systemInfo.pixelRatio,
-        destHeight: this.cropperHeight * this.systemInfo.pixelRatio,
+        destWidth: this.cropperWidth * pixelRatio,
+        destHeight: this.cropperHeight * pixelRatio,
         fileType: fileType,
         quality: quality,
         success: res => {

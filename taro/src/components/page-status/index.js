@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Image, Button, Block } from '@tarojs/components'
-import LoadingImg from '../../images/walkingduck.gif'
 import { networkInfo } from 'utils/common'
 import { NETWORK_ERROR_CODE } from 'constants/status'
 import './styles.styl'
@@ -17,6 +16,7 @@ export default class PageStatus extends Component {
     errorText: '出错了鸭',
     errorCode: 0,
     showRefreshBtn: false,
+    loadingTxt: '初始化中，请稍后',
     onRefresh: () => {},
   }
 
@@ -31,7 +31,7 @@ export default class PageStatus extends Component {
   }
 
   render() {
-    const { status, errorText, errorCode, loadingType, showRefreshBtn } = this.props
+    const { status, errorText, errorCode, loadingType, showRefreshBtn, loadingTxt } = this.props
     console.log('status :', status, errorText);
 
     if (status === 'loading') {
@@ -45,6 +45,18 @@ export default class PageStatus extends Component {
                     <Image src={require('./images/page-loading.png')}></Image>
                   </View>
                 </View>
+              </View>
+            </View>
+          )}
+          {loadingType === 'fullscreen' && (
+            <View className='page-loading-fullscreen'>
+              <View className='page-loading-square'>
+                <View className='loading-icon-wrap'>
+                  <View className='loading-icon'>
+                    <Image src={require('./images/page-loading.png')}></Image>
+                  </View>
+                </View>
+                <View className='loading-txt'>{loadingTxt}</View>
               </View>
             </View>
           )}

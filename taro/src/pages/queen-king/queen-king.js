@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Taro from '@tarojs/taro'
-import { View, Image, Text, Button, Canvas, ScrollView, Block } from '@tarojs/components'
+import { View, Image, Text, Button, Canvas, ScrollView, Block, Checkbox, Label } from '@tarojs/components'
 import { cloudCallFunction } from 'utils/fetch'
 import { getSystemInfo, h5PageModalTips } from 'utils/common'
 import { getHatInfo, getHatShapeList } from 'utils/face-utils'
@@ -52,6 +52,8 @@ class QueenKing extends Component {
       currentJiayouId: 1,
       currentTabIndex: 0,
       isShowShape: false,
+      faceList: [],
+      isLifeChecked: false
     }
     this.ageMap = getDefaultAgeMap()
     this.cutImageSrcCanvas = ''
@@ -82,7 +84,7 @@ class QueenKing extends Component {
   }
 
   onShareAppMessage({ from, target }) {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/02/02/a374bb58c4402a90eeb07b1abbb95916.png'
+    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/04/26/2041af2867f22e62f8fce32b29cd1fb0.png'
 
     let shareImage = DEFAULT_SHARE_COVER
     let shareUrl = '/pages/queen-king/queen-king'
@@ -110,16 +112,28 @@ class QueenKing extends Component {
     }
   }
 
+  async componentDidMount() {
+    setTmpThis(this, this.state.shapeList[0])
+
+    this.showH5Modal()
+
+    this.start_x = 0;
+    this.start_y = 0;
+
+  }
+
+  showH5Modal = () => {
+    if (isH5Page) {
+      h5PageModalTips()
+    }
+  }
+
+
   catTaroCropper(node) {
     this.taroCropper = node;
   }
 
   onChooseImage = (way) => {
-
-    // console.log('event :', event);
-    // TODO 兼容写法
-    // let way = event.target.dataset.way || 'album'
-
     Taro.chooseImage({
       count: 1,
       sourceType: [way],
@@ -161,13 +175,12 @@ class QueenKing extends Component {
 
   onCut = (cutImageSrc) => {
     this.ageMap.origin = cutImageSrc
-    console.log('this.ageMap :', this.ageMap);
+
     this.setState({
       cutImageSrc,
       originSrc: ''
     }, () => {
       this.onAnalyzeFace(cutImageSrc)
-      
     })
   }
 
@@ -259,7 +272,11 @@ class QueenKing extends Component {
       console.log('图片分析的结果 :', couldRes)
       const hatList = getHatInfo(couldRes)
       console.log('hatList :', hatList);
+
+      let faceList = hatList.map(item => item.faceInfo)
       let shapeList = getHatShapeList(hatList, DPR_CANVAS_SIZE, ORIGiN_SHAPE_SIZE)
+
+      console.log('faceList :>> ', faceList);
 
       setTmpThis(this, shapeList[0])
 
@@ -267,24 +284,10 @@ class QueenKing extends Component {
         currentShapeIndex: 0,
         shapeList,
         isShowShape: true,
+        faceList
       })
 
       Taro.hideLoading()
-
-      // 测试大小的代码，没有用
-      // console.log('cutImageSrc :', cutImageSrc);
-      // const { data: base64Main } = await fsmReadFile({
-      //   filePath: cutImageSrc,
-      //   // encoding: 'utf-8', //'base64',
-      // })
-      // const base64 = wx.arrayBufferToBase64(base64Main)
-      // // 以0.657M的图片为例
-      // // 转换为ArrayBuffer，大小还是0.657M
-      // // 转换为base64，大小为1.7M
-      // // 转换为utf-8，大小为1.2M
-      // console.log('base64Main :', base64Main.byteLength)
-      // console.log('base64 :', base64);
-      // console.log('变大率 :', base64.length, base64.length / (base64Main.byteLength))
 
       this.uploadOriginImage(cutImageSrc)
 
@@ -351,11 +354,13 @@ class QueenKing extends Component {
       currentAgeType: 'origin',
       cutImageSrc: '',
       originFileID: '',
+      isLifeChecked: false,
       shareUUID: ''
     })
   }
 
   generateImage = async () => {
+    const {isLifeChecked} = this.state
     
     this.setState({
       posterSrc: '',
@@ -370,7 +375,8 @@ class QueenKing extends Component {
             Taro.showLoading({
               title: '图片生成中'
             })
-            this.drawCanvas()
+            isLifeChecked ? this.drawCanvasFour() : this.drawCanvas()
+
           } else if (res.cancel) {
             console.log('用户点击取消')
           }
@@ -412,9 +418,9 @@ class QueenKing extends Component {
         currentShapeId,
         reserve,
       } = shape
-      const shapeSize = shapeWidth * pixelRatio
+      const shapeSize = shapeWidth
   
-      pc.translate(shapeCenterX * pixelRatio, shapeCenterY * pixelRatio);
+      pc.translate(shapeCenterX, shapeCenterY);
       pc.rotate((rotate * Math.PI) / 180)
 
       let oneMaskSrc = require(`../../images/${categoryName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`)
@@ -458,6 +464,88 @@ class QueenKing extends Component {
       })
     })
   }
+  drawCanvasFour = async () => {
+    const {
+      shapeList,
+    } = this.state
+
+    const pc = Taro.createCanvasContext('canvasShape')
+
+    pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH);
+
+    for (let yLength = 0; yLength < 2; yLength++) {
+      for (let xLength = 0; xLength < 2; xLength++) {
+        console.log('xLength :>> ', xLength, yLength);
+        let type = dataStyleList[(xLength + yLength * 2)].type
+        console.log('type :>> ', type);
+        let tmpCutImage = await getImg(this.ageMap[type])
+        let xLengthPos = xLength * SAVE_IMAGE_WIDTH / 2
+        let yLengthPos = yLength * SAVE_IMAGE_WIDTH / 2
+        pc.drawImage(tmpCutImage, xLengthPos, yLengthPos, SAVE_IMAGE_WIDTH / 2, SAVE_IMAGE_WIDTH / 2)
+
+        for (let index = 0; index < shapeList.length; index++) {
+          const shape = shapeList[index];
+          pc.save()
+          const {
+            categoryName,
+            shapeWidth,
+            rotate,
+            shapeCenterX,
+            shapeCenterY,
+            currentShapeId,
+            reserve,
+          } = shape
+          const shapeSize = shapeWidth / 2
+
+          pc.translate(shapeCenterX / 2 + xLengthPos, shapeCenterY / 2 + yLengthPos);
+          pc.rotate((rotate * Math.PI) / 180)
+
+          let oneMaskSrc = require(`../../images/${categoryName}-${currentShapeId}${reserve < 0 ? '-reverse' : ''}.png`)
+          let oneImgSrc = isH5Page ? await getImg(oneMaskSrc) : oneMaskSrc
+
+          pc.drawImage(
+            oneImgSrc,
+            -shapeSize / 2,
+            -shapeSize / 2,
+            shapeSize,
+            shapeSize
+          )
+          pc.restore()
+        }
+      }
+      
+    }
+
+    
+
+    pc.draw(true, () => {
+      Taro.canvasToTempFilePath({
+        canvasId: 'canvasShape',
+        x: 0,
+        y: 0,
+        height: DPR_CANVAS_SIZE * 3,
+        width: DPR_CANVAS_SIZE * 3,
+        fileType: 'jpg',
+        quality: 0.9,
+        success: async (res) => {
+          await this.onSaveImageToCloud(res.tempFilePath)
+
+          Taro.hideLoading()
+          this.setState({
+            posterSrc: res.tempFilePath,
+            isShowPoster: true
+          })
+
+        },
+        fail: () => {
+          Taro.hideLoading()
+          Taro.showToast({
+            title: '图片生成失败，请重试'
+          })
+        }
+      })
+    })
+  }
 
   onSaveImageToCloud = async (tempFilePath) => {
     const { currentAgeType } = this.state
@@ -472,8 +560,8 @@ class QueenKing extends Component {
         data: {
           collection_name: 'avatars',
           info: {
-            avatar_fileID: fileID,
-            age_type: currentAgeType
+            avatarFileID: fileID,
+            ageType: currentAgeType
           }
         }
       })
@@ -582,8 +670,8 @@ class QueenKing extends Component {
 
     var current_x = e.touches[0].clientX;
     var current_y = e.touches[0].clientY;
-    var moved_x = current_x - this.start_x;
-    var moved_y = current_y - this.start_y;
+    var moved_x = (current_x - this.start_x) * 2 / PAGE_DPR
+    var moved_y = (current_y - this.start_y) * 2 / PAGE_DPR;
     if (this.touch_target == 'shape') {
       shapeList[this.touch_shape_index] = {
         ...shapeList[this.touch_shape_index],
@@ -696,8 +784,9 @@ class QueenKing extends Component {
     }
   }
 
-  changeAge = async (type) => {
-    const { originFileID } = this.state
+  // 人像变换，腾讯云内测，暂时隐藏入口
+  changeAge = async (type, age = 10) => {
+    const { originFileID, faceList } = this.state
     const { origin: cutImageSrc } = this.ageMap
 
     if (this.ageMap[type]) {
@@ -707,6 +796,8 @@ class QueenKing extends Component {
       })
       return
     }
+
+    let AgeInfos = faceList.filter((item, index) => index < 3).map(item => ({ FaceRect: item, Age: age }))
 
     if (!cutImageSrc) return
 
@@ -724,18 +815,7 @@ class QueenKing extends Component {
         name: 'face-transformation',
         data: {
           fileID: originFileID,
-          AgeInfos: [
-            {
-              Age: 10,
-            },
-            {
-              Age: 10,
-            },
-            {
-              Age: 10,
-            },
-          ]
-          // type
+          AgeInfos
         }
       })
 
@@ -752,6 +832,7 @@ class QueenKing extends Component {
       console.log('cutImageSrcNow :', cutImageSrcNow);
 
       this.ageMap[type] = cutImageSrcNow
+
       this.setState({
         currentAgeType: type,
         cutImageSrc: cutImageSrcNow,
@@ -767,7 +848,23 @@ class QueenKing extends Component {
     }
   }
 
+  toggleLifeChecked = () => {
+    this.setState({
+      isLifeChecked: !this.state.isLifeChecked
+    })
+    
+    if (Object.keys(this.ageMap).length < 4) {
+      this.doLifeChangeAge()
+    }
 
+  }
+
+  doLifeChangeAge = () => {
+    dataStyleList.map(async (item) => {
+      const { age, type } = item
+      await this.changeAge(type, age)
+    })
+  }
 
   renderPoster = () => {
     const { posterSrc, isShowPoster } = this.state
@@ -811,8 +908,10 @@ class QueenKing extends Component {
       shapeList,
       currentShapeIndex,
       currentAgeType,
+      isLifeChecked
     } = this.state
 
+    console.log('isLifeChecked :>> ', isLifeChecked);
 
     let tabsTips = (currentShapeIndex >= 0 ? '点击更换' : '点击新增') + materialList[currentTabIndex].cn
 
@@ -853,31 +952,31 @@ class QueenKing extends Component {
                         rotate
                       } = shape
 
-                      let transX = shapeCenterX - shapeWidth / 2 - 2 + 'px'
-                      let transY = shapeCenterY - shapeWidth / 2 - 2 + 'px'
+                      let transX = shapeCenterX - shapeWidth / 2 - 2 + 'rpx'
+                      let transY = shapeCenterY - shapeWidth / 2 - 2 + 'rpx'
 
                       let shapeStyle = {
-                        width: shapeWidth + 'px',
-                        height: shapeWidth + 'px',
+                        width: shapeWidth + 'rpx',
+                        height: shapeWidth + 'rpx',
                         transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`,
                         zIndex: shapeIndex === currentShapeIndex ? 2 : 1
+                      }
+                      let shapeCenterStyle = {
+                        left: shapeCenterX + 'rpx',
+                        top: shapeCenterY + 'rpx',
+                        
                       }
 
                       let shapeImageStyle = {
                         transform: `scale(${reserve}, 1)`,
                       }
-
-                      // let handleStyle = {
-                      //   top: resizeCenterY - 10 + 'px',
-                      //   left: resizeCenterX - 10 + 'px'
-                      // }
-
                       return (
                         <View className='shape-container' key={timeNow} style={shapeStyle}>
                           <Image className="shape" data-type='shape' data-shape-index={shapeIndex} src={require(`../../images/${categoryName}-${currentShapeId}.png`)} style={shapeImageStyle} />
                           {
                             currentShapeIndex === shapeIndex && (
                               <Block>
+
                                 <View className='image-btn-remove' data-shape-index={shapeIndex} onClick={this.removeShape}></View>
                                 <View className='image-btn-resize' data-shape-index={shapeIndex} data-type='rotate-resize'></View>
                                 <View className='image-btn-reverse' data-shape-index={shapeIndex} onClick={this.reverseShape}></View>
@@ -889,14 +988,6 @@ class QueenKing extends Component {
                       )
                     })
                   }
-                  {/* {
-                    isShowShape && currentJiayouId > 0 && (
-                      <View className="image-jiayou">
-                        <Image id='shape' src={require(`../../images/jiayou-${currentJiayouId}.png`)} />
-                        <View className='image-btn-jiayou' onClick={this.chooseJiayouId}></View>
-                      </View>
-                    )
-                  } */}
                 </View>
               )
               : (
@@ -932,19 +1023,31 @@ class QueenKing extends Component {
         
 
         {!isH5Page && !!cutImageSrc && (
-          <View className='style-list-wrap'>
-            {
-              dataStyleList.map(item => {
-                const { type, text, image } = item
-                return (
-                  <View className={`style-item ${currentAgeType === type ? 'style-item-active' : ''}`} key={type} onClick={this.changeAge.bind(this, type)}>
-                    <Image className='style-item-image' src={image} />
-                    <View className='style-item-text'>{text}</View>
-                  </View>
-                )
-              })
-            }
-          </View>
+          <Block>
+            
+            <View className='style-list-wrap'>
+              <View className='style-item-text'>
+                <Label onClick={this.toggleLifeChecked}>
+                  <Checkbox checked={isLifeChecked}></Checkbox>保存图片时，生成相守一生图
+                </Label>
+              </View>
+            </View>
+            <View className='style-list-wrap' style={{ opacity: isLifeChecked ? '0.6' : 1 }}>
+              {
+                dataStyleList.map(item => {
+                  const { type, text, image, age } = item
+                  return (
+                    <View className={`style-item ${currentAgeType === type ? 'style-item-active' : ''}`} key={type} onClick={this.changeAge.bind(this, type, age)}>
+                      {/* <Image className='style-item-image' src={image} /> */}
+
+                      <View className='style-item-circle'></View>
+                      <View className='style-item-text'>{text}</View>
+                    </View>
+                  )
+                })
+              }
+            </View>       
+          </Block>
         )}
         {
           cutImageSrc
@@ -1025,8 +1128,9 @@ class QueenKing extends Component {
         <View className='cropper-wrap' style={{ display: originSrc ? 'block' : 'none' }}>
           <TaroCropper
             src={originSrc}
-            cropperWidth={ORIGIN_CANVAS_SIZE * 2}
-            cropperHeight={ORIGIN_CANVAS_SIZE * 2}
+            cropperWidth={ORIGIN_CANVAS_SIZE * 2 / PAGE_DPR}
+            cropperHeight={ORIGIN_CANVAS_SIZE * 2 / PAGE_DPR}
+            pixelRatio={2}
             ref={this.catTaroCropper}
             fullScreen
             fullScreenCss

@@ -1,0 +1,92 @@
+.image-wrap
+  margin 0 auto
+  position relative
+  width 300px
+  height 300px
+  overflow hidden
+
+.image-selected
+  width 300px
+  height 300px
+
+
+.shape-container
+  height 100px
+  width 100px
+  position absolute
+  left 0
+  top 0
+  border dashed 1px yellow
+
+.shape-image
+  width 100%
+  height 100%
+
+.shape-btn-resize,
+.shape-btn-remove 
+.shape-btn-checked
+.shape-btn-reverse
+  position absolute
+  z-index 1
+  width:20 * 1.3px
+  height:20 * 1.3px
+
+.shape-btn-resize 
+  right 0
+  bottom 0
+  margin-right -10 * 1.3px
+  margin-bottom -10 * 1.3px
+  background url(https://n1image.hjfile.cn/res7/2020/02/09/9b5c2be4361101b155a604e6735a8ad3.png) no-repeat center / contain
+  
+.shape-btn-remove 
+  left 0
+  top 0
+  margin-left -10 * 1.3px
+  margin-top -10 * 1.3px
+  background url(https://n1image.hjfile.cn/res7/2020/02/09/2c591b8d9d1c75d1e4d8804e710dc086.png) no-repeat center / contain
+
+
+.shape-btn-checked 
+  right 0
+  top 0
+  margin-right -10 * 1.3px
+  margin-top -10 * 1.3px
+  background url(https://n1image.hjfile.cn/res7/2020/02/11/0b05b7bc398a85da11ff1eb97ed03e1f.png) no-repeat center / contain
+
+.shape-btn-reverse
+  left 0
+  bottom 0
+  margin-left -10 * 1.3px
+  margin-bottom -10 * 1.3px
+  background url(https://n1image.hjfile.cn/res7/2020/02/16/0807e31c8557a250cc24f9e089fbb41d.png) no-repeat center / contain
+
+
+.button-wrap
+  margin-top 10px
+  display flex
+  justify-content center
+  font-size 12px
+  color #2f3742
+  line-height 1.5
+  text-align center
+  flex-wrap wrap
+
+.button-remove,
+.button-download
+  padding-top 40px
+  width 60px
+  font-size 10px
+  background-size auto 40px
+  background-repeat no-repeat
+  background-position center top
+
+  @media (max-width 359px)
+    padding-top 32px
+    background-size auto 30px
+
+.button-remove
+  background-image url(https://n1image.hjfile.cn/res7/2020/02/01/63e0c77558a7bc50c4f2666b8df449e0.png)
+
+.button-download
+  background-image url(https://n1image.hjfile.cn/res7/2020/02/01/8fb88a2a273c37c6098966681c402f21.png)
+

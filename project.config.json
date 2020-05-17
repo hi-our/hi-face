@@ -2,8 +2,8 @@
 	"miniprogramRoot": "taro/dist/",
 	"cloudfunctionRoot": "cloud/functions/",
 	"cloudfunctionTemplateRoot": "cloud/template/",
-	"projectname": "taro-next-react-goddess",
-	"description": "test",
+	"projectname": "hi-face",
+	"description": "Hi头像小程序，由嗨我团队出品。",
 	"appid": "wxd5e8989ce23206af",
 	"qqappid": "1110180763",
 	"setting": {
@@ -57,7 +57,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
+			"current": -1,
 			"list": [
 				{
 					"id": 0,
@@ -81,10 +81,10 @@
 					"scene": null
 				},
 				{
-					"id": 5,
+					"id": 4,
 					"name": "avatar-poster-原图",
 					"pathName": "pages/avatar-poster/avatar-poster",
-					"query": "uuid=f1859f4b-40ea-438b-a818-578d3d66c4a9",
+					"query": "uuid=42f4bc66-86f2-44a1-ac78-5c3780c30205",
 					"scene": null
 				},
 				{
@@ -98,6 +98,20 @@
 					"id": -1,
 					"name": "pages/self/self",
 					"pathName": "pages/self/self",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/wear-a-mask/wear-a-mask",
+					"pathName": "pages/wear-a-mask/wear-a-mask",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/avatar-edit/avatar-edit",
+					"pathName": "pages/avatar-edit/avatar-edit",
 					"query": "",
 					"scene": null
 				}

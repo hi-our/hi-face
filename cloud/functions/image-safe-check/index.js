@@ -1,8 +1,8 @@
-const extCi = require("@cloudbase/extension-ci");
+const extCi = require("@cloudbase/extension-ci")
 const tcb = require("tcb-admin-node");
 
 tcb.init({
-  env: process.env.TCB_ENV === 'local' ? 'development-v9y2f' : process.env.TCB_ENV
+  env: 'production-topjt'
 })
 
 tcb.registerExtension(extCi);
@@ -28,53 +28,52 @@ const getResCode = (res) => {
 }
 
 const getCheckResult =(data) => {
-
   const { PornInfo = [], TerroristInfo = [], PoliticsInfo = [] } = data
-  const pornOne = PornInfo[0] || {}
-  const terroristOne = TerroristInfo[0] || {}
-  const politicsOne = PoliticsInfo[0] || {}
+  const pornOne = PornInfo || {}
+  const terroristOne = TerroristInfo || {}
+  const politicsOne = PoliticsInfo || {}
 
   let result = {}
 
-  if (pornOne.HitFlag || terroristOne.HitFlag || politicsOne.HitFlag) {
-    if (pornOne.HitFlag[0] === '0' && terroristOne.HitFlag[0] == '0' && politicsOne.HitFlag[0] == '0') {
-      result.status = 0
-      result.data = { isSuccess: true }
-      result.messge = ''
-    } else {
-      result.status = -1000
-      result.messge = '存在围巾图片'
-    }
-  } else if (pornOne.Code[0] || terroristOne.Code[0] || politicsOne.Code[0]) {
+  if (pornOne.HitFlag === 0 && terroristOne.HitFlag === 0 && politicsOne.HitFlag === 0) {
+    result.status = 0
+    result.data = { isSuccess: true }
+    result.message = ''
+  } else if (pornOne.HitFlag ||terroristOne.HitFlag || politicsOne.HitFlag) {
+    result.status = -1000
+    result.message = '存在违禁图片'
+  } else if (pornOne.Code || terroristOne.Code || politicsOne.Code) {
     result.status = -1001
-    result.messge = `pornOne:${pornOne.Code[0]}-terroristOne:${terroristOne.Code[0]}-politicsOne:${politicsOne.Code[0]}`
+    result.message = `pornOne:${pornOne.Code}-terroristOne:${terroristOne.Code}-politicsOne:${politicsOne.Code}`
   } else {
     result.status = -1002
     result.message = '请求失败'
   }
 
-  console.log('result :', result);
+  console.log('审核结果result :', result);
   return result
 
 }
 
 
 async function imgSecCheck(event) {
-  const { Image } = event
-  if (!Image) {
-    console.log('请设置Image :');
+  const { fileID } = event
+  if (!fileID) {
+    console.log('请设置fileID :')
     return 
   }
 
   try {
-    imgID = Image.substr(59)
-    console.log('imgID :', imgID);
+    let imgID = fileID.replace('cloud://', '')
+    let index = imgID.indexOf('/')
+    let cloudPath = imgID.substr(index)
+
+
     const res = await tcb.invokeExtension('CloudInfinite', {
       action: 'DetectType',
-      cloudPath: imgID, //需要分析的图像的绝对路径
+      cloudPath: cloudPath, //需要分析的图像的绝对路径
       operations: { type: ["porn", "terrorist", "politics"] }
     })
-    console.log(res)
 
     let data = getResCode(res)
     result = getCheckResult(data)

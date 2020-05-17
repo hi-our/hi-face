@@ -6,6 +6,7 @@ import adapterForQQ from '@cloudbase/adapter-qq_mp';
 import store from '@/store'
 import userActions from '@/store/user'
 import * as config from 'config'
+import globalActions from '@/store/global'
 
 
 import './app.styl'
@@ -13,7 +14,6 @@ import './app.styl'
 const updateManager = process.env.TARO_ENV !== 'h5' ? Taro.getUpdateManager() : null
 
 class App extends Component {
-
   componentWillMount() {
 
     if (process.env.TARO_ENV === 'weapp') {
@@ -21,6 +21,9 @@ class App extends Component {
         env: config.cloudEnv,
         traceUser: true
       })
+
+      // 检查过审开关是否开启
+      globalActions.getForCheckStatus()
     } else if (process.env.TARO_ENV === 'h5' || process.env.TARO_ENV === 'qq') {
       console.log('tcb :', tcb, process.env.TARO_ENV );
       let initConfig = {}
@@ -39,6 +42,8 @@ class App extends Component {
       })
       // console.log('登录云开发成功！')
       Taro.cloud.auth().signInAnonymously().then(() => {
+        // 检查过审开关是否开启
+        globalActions.getForCheckStatus()
         Taro.cloud.callFunction({
           name: 'thanks-data',
           data: {
