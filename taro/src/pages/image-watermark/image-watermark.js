@@ -175,14 +175,16 @@ class DetectFace extends Component {
 
   onRemoveImage = () => {
     this.setState({
-      originFileID: ''
+      originFileID: '',
+      originUrl: ''
     })
   }
 
   onRemoveWaterImage = () => {
     this.setState({
       isWaterChanged: true,
-      waterFileID: ''
+      waterFileID: '',
+      waterUrl: '',
     })
   }
 
@@ -322,12 +324,12 @@ class DetectFace extends Component {
                     className='image-selected'
                   />
 
-                  {waterUrl && (
+                  {savedUrl && (
                     <Block>
                       {isShowSaved && (
                         <View className='image-saved-wrap'>
                           <Image
-                            src={waterUrl}
+                            src={savedUrl}
                             mode='aspectFit'
                             className='image-saved-selected'
                           />
@@ -362,10 +364,10 @@ class DetectFace extends Component {
               : (
                 <View>
                   {
-                    savedUrl
+                    waterUrl
                       ? (
                         <View className='image-water-selected'>
-                          <Image className='image-water' src={savedUrl} mode="aspectFit" />
+                          <Image className='image-water' src={waterUrl} mode="aspectFit" />
                           <View className='image-btn-remove' onClick={this.onRemoveWaterImage}></View>
                         </View>
                       )

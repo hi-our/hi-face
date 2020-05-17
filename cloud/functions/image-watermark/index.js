@@ -44,7 +44,7 @@ const getResultInfo = (data, cloudEnvPath) => {
   let { Key, Width, Height, Location } = ProcessResults.Object
   return {
     fileID: 'cloud://' + cloudEnvPath + '/' + Key,
-    fileUrl: Location,
+    fileUrl: 'https://' + Location,
     width: Width,
     height: Height
   }
@@ -84,21 +84,28 @@ async function imageWatetMark(event) {
   try {
     const { cloudPath, cloudEnvPath } = getImagePath(fileID)
 
+    let rule = {
+      mode: 3,
+      type: waterType,
+    }
+
+    if (waterType === 3) {
+      rule.text = waterText // 支持数字[0 - 9]及英文大小写[A - Z,a - z]
+    } else {
+      rule.image = getImagePath(waterFileID).cloudPath
+    }
     const opts = {
       rules:
         [
           {
             // 处理结果的文件路径，如以’/’开头，则存入指定文件夹中，否则，存入原图文件存储的同目录
             fileid: '/watermark' + cloudPath,
-            rule: { // 添加水印处理规则
-              mode: 3,
-              type: waterType,
-              text: waterText, // 支持数字[0 - 9]及英文大小写[A - Z,a - z]
-              image: getImagePath(waterFileID).cloudPath
-            }
+            rule
           }
         ]
     }
+
+    console.log('imageWatetMark rule :>> ', rule);
 
     const res = await tcb.invokeExtension('CloudInfinite', {
       action: 'WaterMark',
@@ -134,22 +141,29 @@ async function imageWatetMarkParse(event) {
   try {
     const { cloudPath, cloudEnvPath } = getImagePath(fileID)
 
+    let rule = {
+      mode: 4,
+      type: waterType,
+    }
+
+    if (waterType === 3) {
+      rule.text = waterText // 支持数字[0 - 9]及英文大小写[A - Z,a - z]
+    } else {
+      rule.image = getImagePath(waterFileID).cloudPath
+    }
+
     const opts = {
       rules:
         [
           {
             // 处理结果的文件路径，如以’/’开头，则存入指定文件夹中，否则，存入原图文件存储的同目录
             fileid: '/watermark/parse' + cloudPath,
-            rule: { // 添加水印处理规则
-              mode: 4,
-              type: waterType,
-              text: waterText, // 支持数字[0 - 9]及英文大小写[A - Z,a - z]
-              image: getImagePath(waterFileID).cloudPath
-            }
+            rule
           }
         ]
     }
 
+    console.log('imageWatetMarkParse rule :>> ', rule);
 
     const res = await tcb.invokeExtension('CloudInfinite', {
       action: 'WaterMark',
