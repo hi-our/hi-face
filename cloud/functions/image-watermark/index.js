@@ -41,9 +41,10 @@ const getResCode = (res) => {
 const getResultInfo = (data, cloudEnvPath) => {
   const { ProcessResults } = data
   // const { ProcessResults } = data
-  let { Key, Width, Height } = ProcessResults.Object
+  let { Key, Width, Height, Location } = ProcessResults.Object
   return {
     fileID: 'cloud://' + cloudEnvPath + '/' + Key,
+    fileUrl: Location,
     width: Width,
     height: Height
   }

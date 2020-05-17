@@ -5,9 +5,16 @@ import promisify from 'utils/promisify'
 import { STATUS_BAR_HEIGHT } from './utils'
 import PosterDialog from './components/poster-dialog';
 
+import './styles.styl';
+
 const isH5Page = process.env.TARO_ENV === 'h5'
 
-import './styles.styl';
+const getImageUrl = async (fileID) => {
+  const { fileList } = await Taro.cloud.getTempFileURL({
+    fileList: [fileID]
+  })
+  return fileList[0].tempFileURL
+}
 
 // @CorePage
 class DetectFace extends Component {
@@ -22,10 +29,14 @@ class DetectFace extends Component {
     super(props)
     this.state = {
       waterType: 2,
-      originFileID: 'cloud://development-v9y2f.6465-development-v9y2f-1251170943/1584020379882-9111105.jpg',
-      waterFileID: 'cloud://development-v9y2f.6465-development-v9y2f-1251170943/uploads/1589100529524.png',
+      originFileID: '', //'cloud://development-v9y2f.6465-development-v9y2f-1251170943/1584020379882-9111105.jpg',
+      originUrl: '', //'cloud://development-v9y2f.6465-development-v9y2f-1251170943/1584020379882-9111105.jpg',
+      waterFileID: '', //'cloud://development-v9y2f.6465-development-v9y2f-1251170943/uploads/1589100529524.png',
+      waterUrl: '', //'cloud://development-v9y2f.6465-development-v9y2f-1251170943/uploads/1589100529524.png',
       savedFileID: '', //'cloud://development-v9y2f.6465-development-v9y2f-1251170943/watermark/1584020379882-9111105.jpg',
+      savedUrl: '', //'cloud://development-v9y2f.6465-development-v9y2f-1251170943/watermark/1584020379882-9111105.jpg',
       waterSeeFileID: '',
+      waterSeeUrl: '',
       waterText: '32423432',
       isShowSaved: true,
       isWaterChanged: false
@@ -81,19 +92,34 @@ class DetectFace extends Component {
   
       if (!fileID) return
 
-      Taro.showLoading({
-        title: '图片校验中'
-      })
-      await cloudCallFunction({
-        name: 'image-safe-check',
-        data: {
-          fileID
-        }
-      })
+      if (!isH5Page) {
+        Taro.showLoading({
+          title: '图片校验中'
+        })
+        await cloudCallFunction({
+          name: 'image-safe-check',
+          data: {
+            fileID
+          }
+        })
+      }
+
+      const fileUrl = await getImageUrl(fileID)
+
+      console.log('fileUrl :>> ', fileUrl);
+
 
       Taro.hideLoading()
 
-      this.setState(type === 'water' ? { waterFileID: fileID, isWaterChanged: true } : { originFileID: fileID, isWaterChanged: true})
+      this.setState(type === 'water' ? {
+        waterFileID: fileID,
+        waterUrl: fileUrl,
+        isWaterChanged: true
+      } : {
+        originFileID: fileID,
+        originUrl: fileUrl,
+        isWaterChanged: true
+      })
       
     } catch (error) {
       Taro.hideLoading()
@@ -199,7 +225,7 @@ class DetectFace extends Component {
         tempState.waterFileID = waterFileID
       }
 
-      const { fileID } = await cloudCallFunction({
+      const { fileID, fileUrl } = await cloudCallFunction({
         name: 'image-watermark',
         data: tempState
       })
@@ -209,7 +235,8 @@ class DetectFace extends Component {
       console.log('fileID :>> ', fileID);
       this.setState({
         isWaterChanged: false,
-        savedFileID: fileID
+        savedFileID: fileID,
+        savedUrl: fileUrl
       })
 
     } catch (error) {
@@ -243,7 +270,7 @@ class DetectFace extends Component {
       } else {
         tempState.waterFileID = waterFileID
       }
-      const { fileID } = await cloudCallFunction({
+      const { fileID, fileUrl } = await cloudCallFunction({
         name: 'image-watermark',
         data: {
           type: 'parse',
@@ -256,7 +283,8 @@ class DetectFace extends Component {
       console.log('onLookCheck fileID :>> ', fileID);
       this.setState({
         isWaterChanged: false,
-        waterSeeFileID: fileID
+        waterSeeFileID: fileID,
+        waterSeeUrl: fileUrl
       }, () => {
         this.posterRef.onShowPoster()
       })
@@ -271,35 +299,35 @@ class DetectFace extends Component {
   }
 
   render() {
-    const { originFileID, savedFileID, waterType, waterText, waterFileID, isShowSaved, waterSeeFileID, isWaterChanged } = this.state
+    const { originUrl, waterUrl, waterType, waterText, savedUrl, isShowSaved, waterSeeUrl, isWaterChanged } = this.state
     let tips = '上传照片，宽高不大于4500像素'
 
-    if (savedFileID) {
+    if (waterUrl) {
       tips = '点击“查看水印位置”，可以看水印位置'
     }
 
     console.log('isWaterChanged :>> ', isWaterChanged);
 
     return (
-      <View className='detect-face-page' style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
+      <View className='detect-face-page' style={{ paddingTop: !isH5Page ? STATUS_BAR_HEIGHT + 'px' :'0' }}>
         <View className='page-title'>盲水印添加工具</View>
         <View className='image-wrap'>
           {
-            !!originFileID
+            !!originUrl
               ? (
                 <View className='shape-wrap'>
                   <Image
-                    src={originFileID}
+                    src={originUrl}
                     mode='aspectFit'
                     className='image-selected'
                   />
 
-                  {savedFileID && (
+                  {waterUrl && (
                     <Block>
                       {isShowSaved && (
                         <View className='image-saved-wrap'>
                           <Image
-                            src={savedFileID}
+                            src={waterUrl}
                             mode='aspectFit'
                             className='image-saved-selected'
                           />
@@ -334,10 +362,10 @@ class DetectFace extends Component {
               : (
                 <View>
                   {
-                    waterFileID
+                    savedUrl
                       ? (
                         <View className='image-water-selected'>
-                          <Image className='image-water' src={waterFileID} mode="aspectFit" />
+                          <Image className='image-water' src={savedUrl} mode="aspectFit" />
                           <View className='image-btn-remove' onClick={this.onRemoveWaterImage}></View>
                         </View>
                       )
@@ -347,7 +375,7 @@ class DetectFace extends Component {
               )
           }
         </View>
-        {originFileID && (
+        {originUrl && (
           <View className='button-wrap'>
             <View className='button-remove' onClick={this.onRemoveImage}>
               移除图片
@@ -360,7 +388,7 @@ class DetectFace extends Component {
         <View className='main-button'>保存水印图</View>
         <PosterDialog
           ref={poster => this.posterRef = poster}
-          posterSrc={waterSeeFileID}
+          posterSrc={waterSeeUrl}
         />
       </View>
     )
