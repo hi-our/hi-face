@@ -9,7 +9,7 @@ const isH5Page = process.env.TARO_ENV === 'h5'
 import './styles.styl';
 
 // @CorePage
-class FaceLove extends Component {
+class DetectFace extends Component {
   config = {
     navigationBarTitleText: '人像魅力',
     navigationStyle: 'custom',
@@ -38,6 +38,13 @@ class FaceLove extends Component {
     }
   }
 
+  componentDidMount() {
+    cloudCallFunction({
+      name: 'image-watermark',
+      data: {}
+    }).then(res => console.log('res :>> ', res))
+  }
+
   chooseImage = async () => {
     const { cancel } = await Taro.showModal({
       title: '提示',
@@ -60,6 +67,8 @@ class FaceLove extends Component {
 
     const fileID = await this.onUploadFile(tempFilePaths[0])
 
+    debugger
+
     if (!fileID) return
 
     const reqList = [
@@ -69,30 +78,30 @@ class FaceLove extends Component {
           fileID
         }
       }),
-      cloudCallFunction({
-        name: 'get-main-color',
-        data: {
-          fileID
-        }
-      }),
-      cloudCallFunction({
-        name: 'detect-image-label',
-        data: {
-          fileID
-        }
-      }),
+      // cloudCallFunction({
+      //   name: 'get-main-color',
+      //   data: {
+      //     fileID
+      //   }
+      // }),
+      // cloudCallFunction({
+      //   name: 'detect-image-label',
+      //   data: {
+      //     fileID
+      //   }
+      // }),
     ]
 
     Promise.all(reqList).then(results => {
       Taro.hideLoading()
 
       const { faceImageUrl, FaceInfos = [] } = results[0]
-      const { mainColor } = results[1]
-      const { list: labelList } = results[2]
+      // const { mainColor } = results[1]
+      // const { list: labelList } = results[2]
 
       this.setState({
-        pageMainColor: mainColor,
-        labelList,
+        // pageMainColor: mainColor,
+        // labelList,
         faceImageUrl,
         currentShapeIndex: 0,
         shapeList: getFaceShapes(FaceInfos),
@@ -100,6 +109,7 @@ class FaceLove extends Component {
       })
 
     }).catch(error => {
+      console.log('error :>> ', error);
       Taro.hideLoading()
       const { message, errMsg } = error || {}
 
@@ -232,3 +242,5 @@ class FaceLove extends Component {
     )
   }
 }
+
+export default DetectFace
