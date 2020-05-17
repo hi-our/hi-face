@@ -81,12 +81,15 @@ export const fsmReadFile = promisify(fsm.readFile)
 
 // 这个方法可以简化？
 export const downloadImgByBase64 = (url) => {
+  console.log('url :>> ', url)
+  debugger
   var img = new Image()
   img.onload = function () {
     var canvas = document.createElement('canvas')
     canvas.width = img.width
     canvas.height = img.height
     var ctx = canvas.getContext('2d')
+    debugger
     // 将img中的内容画到画布上
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
     // 将画布内容转换为base64
@@ -96,11 +99,14 @@ export const downloadImgByBase64 = (url) => {
     a.href = base64
     a.download = ''
     // 触发a链接点击事件，浏览器开始下载文件
+    debugger
     a.click()
   }
-  img.src = url
+
   // 必须设置，否则canvas中的内容无法转换为base64
   img.setAttribute('crossOrigin', 'Anonymous')
+  
+  img.src = url
 
 }
 

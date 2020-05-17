@@ -3,9 +3,21 @@ import { View, Image, RadioGroup, Radio, Label, Input, Block } from '@tarojs/com
 import { cloudCallFunction } from 'utils/fetch'
 import promisify from 'utils/promisify'
 import { STATUS_BAR_HEIGHT } from './utils'
-import PosterDialog from './components/poster-dialog';
+import PosterDialog from './components/poster-dialog'
+import { downloadImgByBase64 } from 'utils/canvas-drawing';
 
 import './styles.styl';
+
+function blobToDataURL(blob) {
+  var a = new FileReader();
+  a.readAsDataURL(blob);//读取文件保存在result中
+  a.onload = function (e) {
+    var getRes = e.target.result;//读取的结果在result中
+    console.log('getRes :>> ', getRes);
+  }
+
+}
+
 
 const isH5Page = process.env.TARO_ENV === 'h5'
 
@@ -28,7 +40,7 @@ class DetectFace extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      waterType: 2,
+      waterType: 3,
       originFileID: '', //'cloud://development-v9y2f.6465-development-v9y2f-1251170943/1584020379882-9111105.jpg',
       originUrl: '', //'cloud://development-v9y2f.6465-development-v9y2f-1251170943/1584020379882-9111105.jpg',
       waterFileID: '', //'cloud://development-v9y2f.6465-development-v9y2f-1251170943/uploads/1589100529524.png',
@@ -37,7 +49,7 @@ class DetectFace extends Component {
       savedUrl: '', //'cloud://development-v9y2f.6465-development-v9y2f-1251170943/watermark/1584020379882-9111105.jpg',
       waterSeeFileID: '',
       waterSeeUrl: '',
-      waterText: '32423432',
+      waterText: 'Hi-Our',
       isShowSaved: true,
       isWaterChanged: false
     }
@@ -66,16 +78,20 @@ class DetectFace extends Component {
       console.log('用户点击取消')
       return
     }
-    const { tempFilePaths } = await Taro.chooseImage({
+    const { tempFilePaths, tempFiles } = await Taro.chooseImage({
       count: 1,
       sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
       sourceType: ['album', 'camera'],
     })
+    let useFiles = isH5Page ? tempFiles[0].originalFileObj : tempFilePaths[0]
+    console.log('tempFiles[0] :>> ', tempFiles[0]);
 
+    
+    console.log(' tempFiles : tempFilePaths :>> ', useFiles);
     let { width, height } = await Taro.getImageInfo({
       src: tempFilePaths[0]
     })
-
+    
     if (width > 4500 || height > 4500) {
       Taro.showToast({
         icon: 'none',
@@ -88,7 +104,7 @@ class DetectFace extends Component {
       Taro.showLoading({
         title: '图片上传中'
       })
-      const fileID = await this.onUploadFile(tempFilePaths[0])
+      const fileID = await this.onUploadFile(useFiles)
   
       if (!fileID) return
 
@@ -132,11 +148,13 @@ class DetectFace extends Component {
   }
 
   onUploadFile = async (tempFilePath, prefix = 'temp') => {
+    console.log('tempFilePath :>> ', tempFilePath);
+
     try {
 
       let uploadParams = {
         cloudPath: `${prefix}/${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
-        filePath: tempFilePath,
+        filePath: tempFilePath
       }
       if (isH5Page) {
         const { fileID } = await Taro.cloud.uploadFile(uploadParams)
@@ -300,6 +318,36 @@ class DetectFace extends Component {
     
   }
 
+  onSaveImage = () => {
+    const { savedUrl } = this.state
+    Taro.showToast({
+      title: '尝试保存图片'
+    })
+    this.saveImageToPhotosAlbum(savedUrl)
+  }
+
+  saveImageToPhotosAlbum = (tempFilePath) => {
+    if (isH5Page) {
+      downloadImgByBase64(tempFilePath)
+    } else {
+      Taro.saveImageToPhotosAlbum({
+        filePath: tempFilePath,
+        success: res2 => {
+          Taro.showToast({
+            title: '图片保存成功'
+          })
+          console.log('保存成功 :', res2);
+        },
+        fail(e) {
+          Taro.showToast({
+            title: '图片未保存成功'
+          })
+          console.log('图片未保存成功:' + e);
+        }
+      })
+    }
+  }
+
   render() {
     const { originUrl, waterUrl, waterType, waterText, savedUrl, isShowSaved, waterSeeUrl, isWaterChanged } = this.state
     let tips = '上传照片，宽高不大于4500像素'
@@ -311,7 +359,7 @@ class DetectFace extends Component {
     console.log('isWaterChanged :>> ', isWaterChanged);
 
     return (
-      <View className='detect-face-page' style={{ paddingTop: !isH5Page ? STATUS_BAR_HEIGHT + 'px' :'0' }}>
+      <View className='image-watermark-page' style={{ paddingTop: !isH5Page ? STATUS_BAR_HEIGHT + 'px' :'0' }}>
         <View className='page-title'>盲水印添加工具</View>
         <View className='image-wrap'>
           {
@@ -387,7 +435,7 @@ class DetectFace extends Component {
             </View>
           </View>
         )}
-        <View className='main-button'>保存水印图</View>
+        {!!savedUrl && <View className='main-button' onClick={this.onSaveImage}>保存水印图</View>}
         <PosterDialog
           ref={poster => this.posterRef = poster}
           posterSrc={waterSeeUrl}
