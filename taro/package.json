@@ -14,7 +14,7 @@
     "watch": "SERVER_ENV=yz MOCK=true npm run dev:weapp",
     "build": "SERVER_ENV=prod npm run build:weapp -- --watch",
     "release": "SERVER_ENV=prod NODE_ENV=production npm run build:weapp",
-    "start:web": "npm run watchweb",
+    "start:web": "npm run watch:web",
     "watch:web": "SERVER_ENV=yz MOCK=true npm run dev:h5",
     "build:web": "SERVER_ENV=prod npm run build:h5 -- --watch",
     "release:yzweb": "SERVER_ENV=yz NODE_ENV=production npm run build:h5",

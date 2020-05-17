@@ -7,9 +7,9 @@ name: deploy-cloudbase-production
 
 on:
   push:
-    branches: [ deploy/cloudbase-production ]
+    branches: [ deploy/cloudbase-production ] # push到该分支后触发action
   pull_request:
-    branches: [ deploy/cloudbase-production ]
+    branches: [ deploy/cloudbase-production ] # pr到该分支后触发action
 
 jobs:
   build:
@@ -21,19 +21,19 @@ jobs:
         node-version: [10.x, 12.x]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2 # 拉取最新代码
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - run: cd taro/
     - run: npm i
-    - run: npm run release:web --if-present 
-    - name: Deploy static to Tencent CloudBase
+    - run: npm run release:web --if-present # 编译代码
+    - name: Deploy static to Tencent CloudBase # 部署到腾讯云云开发cloudBase的静态网站托管上
       id: deployStatic
       uses: TencentCloudBase/cloudbase-action@v1.1.0
       with:
         secretId: ${{ secrets.SECRET_ID }}
         secretKey: ${{ secrets.SECRET_KEY }}
-        envId: ${{ secrets.ENV_ID_DEVELOPMENT }}
+        envId: ${{ secrets.ENV_ID_PRODUCTION }}  # 注意环境ID为生产环境
         staticSrcPath: taro/dist-h5/

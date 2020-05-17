@@ -23,6 +23,7 @@ const updateManager = process.env.TARO_ENV !== 'h5' ? Taro.getUpdateManager() : 
 class App extends Component {
   config = {
     pages: [
+      'pages/image-watermark/image-watermark',
       'pages/avatar-edit/avatar-edit',
       'pages/detect-face/detect-face',
       'pages/queen-king/queen-king',
@@ -51,6 +52,12 @@ class App extends Component {
       color: '#95a1af',
       selectedColor: '#2f5aff',
       list: [
+        // {
+        //   pagePath: 'pages/image-watermark/image-watermark',
+        //   text: '盲水印添加',
+        //   iconPath: 'images/tab-bar-crown.png',
+        //   selectedIconPath: 'images/tab-bar-crown-active.png'
+        // },
         {
           pagePath: 'pages/avatar-edit/avatar-edit',
           text: '头像编辑',
