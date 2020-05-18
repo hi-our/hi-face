@@ -26,7 +26,7 @@ export default class PosterDialog extends Taro.Component {
   }
 
   previewPoster = () => {
-    const { posterSrc } = this.state
+    const { posterSrc } = this.props
     if (posterSrc !== '') Taro.previewImage({ urls: [posterSrc] })
   }
 
@@ -41,37 +41,10 @@ export default class PosterDialog extends Taro.Component {
     })
   }
 
-  onShareAppMessage({ from, target }) {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/04/26/2041af2867f22e62f8fce32b29cd1fb0.png'
-
-    let shareImage = DEFAULT_SHARE_COVER
-    let shareUrl = '/pages/avatar-edit/avatar-edit'
-    if (from === 'button') {
-      const { dataset = {} } = target
-      const { posterSrc = '' } = dataset
-
-      console.log('posterSrc :', posterSrc);
-
-      if (posterSrc) {
-        shareImage = posterSrc
-        const { shareUUID } = this.state
-        if (shareUUID) {
-          shareUrl = `/pages/avatar-poster/avatar-poster?uuid=${shareUUID}`
-        }
-      }
-
-    }
-
-    console.log('shareUrl :', shareUrl);
-    return {
-      title: '给女神戴上皇冠吧！',
-      imageUrl: shareImage,
-      path: shareUrl
-    }
-  }
-
   savePoster = () => {
-    const { posterSrc } = this.state
+    const { posterSrc } = this.props
+
+    console.log('posterSrc :>> ', posterSrc);
 
     if (posterSrc) {
       this.saveImageToPhotosAlbum(posterSrc)
@@ -80,6 +53,7 @@ export default class PosterDialog extends Taro.Component {
 
   saveImageToPhotosAlbum = (tempFilePath) => {
     const { isH5Page } = this.props
+    console.log('isH5Page :>> ', isH5Page, tempFilePath);
     if (isH5Page) {
       downloadImgByBase64(tempFilePath)
     } else {
@@ -109,8 +83,18 @@ export default class PosterDialog extends Taro.Component {
     return (
       <View className={`poster-dialog ${posterSrc && isShowPoster ? 'show' : ''}`}>
         <View className='poster-dialog-main'>
+          {/* <View className='poster-image-tips'>点击可预览大图，长按有保存选项</View> */}
           {!!posterSrc && <Image className='poster-image' mode="aspectFit" src={posterSrc} onClick={this.previewPoster} showMenuByLongpress></Image>}
           <View className='poster-dialog-close' onClick={this.onHidePoster} />
+          <View className='poster-footer-btn'>
+            <View className='poster-btn-save' onClick={this.savePoster}>
+              <Image
+                className='icon'
+                src='https://n1image.hjfile.cn/res7/2019/01/03/740198f541ce91859ed060882d986e09.png'
+              />
+              保存到相册
+            </View>
+          </View>
         </View>
       </View>
     )
