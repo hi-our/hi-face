@@ -121,6 +121,13 @@
 					"pathName": "pages/avatar-edit/avatar-edit",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/image-watermark/image-watermark",
+					"pathName": "pages/image-watermark/image-watermark",
+					"query": "",
+					"scene": null
 				}
 			]
 		}

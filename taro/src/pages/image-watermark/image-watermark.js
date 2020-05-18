@@ -8,17 +8,6 @@ import { downloadImgByBase64 } from 'utils/canvas-drawing';
 
 import './styles.styl';
 
-function blobToDataURL(blob) {
-  var a = new FileReader();
-  a.readAsDataURL(blob);//读取文件保存在result中
-  a.onload = function (e) {
-    var getRes = e.target.result;//读取的结果在result中
-    console.log('getRes :>> ', getRes);
-  }
-
-}
-
-
 const isH5Page = process.env.TARO_ENV === 'h5'
 
 const getImageUrl = async (fileID) => {
@@ -108,7 +97,7 @@ class DetectFace extends Component {
   
       if (!fileID) return
 
-      if (!isH5Page) {
+      if (!isH5Page && type !== 'water') {
         Taro.showLoading({
           title: '图片校验中'
         })
@@ -194,7 +183,9 @@ class DetectFace extends Component {
   onRemoveImage = () => {
     this.setState({
       originFileID: '',
-      originUrl: ''
+      originUrl: '',
+      savedFileID: '',
+      savedUrl: '',
     })
   }
 
@@ -268,7 +259,7 @@ class DetectFace extends Component {
     
   }
   onLookCheck = async () => {
-    const { savedFileID, waterType, waterText, waterFileID, isWaterChanged } = this.state
+    const { savedFileID, waterType, waterText, originFileID, isWaterChanged } = this.state
 
     if (isWaterChanged) {
       this.onShowToast('请重新生成水印图片')
@@ -287,8 +278,10 @@ class DetectFace extends Component {
 
       if (waterType === 3) {
         tempState.waterText = waterText
+      } else if (waterType == 1) {
+        tempState.waterFileID = originFileID
       } else {
-        tempState.waterFileID = waterFileID
+        tempState.waterFileID = savedFileID
       }
       const { fileID, fileUrl } = await cloudCallFunction({
         name: 'image-watermark',
@@ -349,7 +342,7 @@ class DetectFace extends Component {
   }
 
   render() {
-    const { originUrl, waterUrl, waterType, waterText, savedUrl, isShowSaved, waterSeeUrl, isWaterChanged } = this.state
+    const { originUrl, waterUrl, waterType, waterText, savedUrl, isShowSaved, waterFileID, waterSeeUrl, isWaterChanged } = this.state
     let tips = '上传照片，宽高不大于4500像素'
 
     if (waterUrl) {
@@ -438,7 +431,8 @@ class DetectFace extends Component {
         {!!savedUrl && <View className='main-button' onClick={this.onSaveImage}>保存水印图</View>}
         <PosterDialog
           ref={poster => this.posterRef = poster}
-          posterSrc={waterSeeUrl}
+          isH5Page={isH5Page}
+          posterSrc={!isH5Page ? waterFileID :  waterSeeUrl}
         />
       </View>
     )

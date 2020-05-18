@@ -26,7 +26,7 @@ export default class PosterDialog extends Taro.Component {
   }
 
   previewPoster = () => {
-    const { posterSrc } = this.state
+    const { posterSrc } = this.props
     if (posterSrc !== '') Taro.previewImage({ urls: [posterSrc] })
   }
 
@@ -41,37 +41,8 @@ export default class PosterDialog extends Taro.Component {
     })
   }
 
-  onShareAppMessage({ from, target }) {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/04/26/2041af2867f22e62f8fce32b29cd1fb0.png'
-
-    let shareImage = DEFAULT_SHARE_COVER
-    let shareUrl = '/pages/avatar-edit/avatar-edit'
-    if (from === 'button') {
-      const { dataset = {} } = target
-      const { posterSrc = '' } = dataset
-
-      console.log('posterSrc :', posterSrc);
-
-      if (posterSrc) {
-        shareImage = posterSrc
-        const { shareUUID } = this.state
-        if (shareUUID) {
-          shareUrl = `/pages/avatar-poster/avatar-poster?uuid=${shareUUID}`
-        }
-      }
-
-    }
-
-    console.log('shareUrl :', shareUrl);
-    return {
-      title: '给女神戴上皇冠吧！',
-      imageUrl: shareImage,
-      path: shareUrl
-    }
-  }
-
   savePoster = () => {
-    const { posterSrc } = this.state
+    const { posterSrc } = this.props
 
     if (posterSrc) {
       this.saveImageToPhotosAlbum(posterSrc)
