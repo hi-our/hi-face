@@ -105,7 +105,6 @@ class AvatarEdit extends Component {
       })
       
     } catch (error) {
-      debugger
       console.log('error :>> ', error);
       this.setState({
         pageStatus: 'error',

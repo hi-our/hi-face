@@ -63,6 +63,7 @@ class AvatarPoster extends Component {
     }
   }
 
+  // 这一页还得调试，重新想办法。base64用了以后还得删除
   onCreateQrcode = async () => {
     try {
       const { base64Main } = await cloudCallFunction({
