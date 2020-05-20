@@ -130,7 +130,7 @@ class AvatarPoster extends Component {
 
   goHome = () => {
     Taro.switchTab({
-      url: '/pages/queen-king/queen-king'
+      url: '/pages/avatar-edit/avatar-edit'
     })
   }
 
