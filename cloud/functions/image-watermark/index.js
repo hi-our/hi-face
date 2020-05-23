@@ -1,6 +1,19 @@
 const extCi = require("@cloudbase/extension-ci")
 const tcb = require("tcb-admin-node");
 
+const cloudPrefix = 'cloud://'
+const getImagePath = (fileID) => {
+  let imgID = fileID.replace(cloudPrefix, '')
+  let index = imgID.indexOf('/')
+  let cloudPath = imgID.substr(index)
+  let cloudEnvPath = imgID.substr(0, index)
+
+  return {
+    cloudPath,
+    cloudEnvPath
+  }
+}
+
 const translateEnv = (env) => {
   if (!env) {
     return undefined
@@ -43,7 +56,7 @@ const getResultInfo = (data, cloudEnvPath) => {
   // const { ProcessResults } = data
   let { Key, Width, Height, Location } = ProcessResults.Object
   return {
-    fileID: 'cloud://' + cloudEnvPath + '/' + Key,
+    fileID: cloudPrefix + cloudEnvPath + '/' + Key,
     fileUrl: 'https://' + Location,
     width: Width,
     height: Height
@@ -61,17 +74,7 @@ exports.main = async (event, context) => {
   return imageWatetMark(event)
 }
 
-const getImagePath = (fileID) => {
-  let imgID = fileID.replace('cloud://', '')
-  let index = imgID.indexOf('/')
-  let cloudPath = imgID.substr(index)
-  let cloudEnvPath = imgID.substr(0, index)
 
-  return {
-    cloudPath,
-    cloudEnvPath
-  }
-}
 
 async function imageWatetMark(event) {
   const { fileID, waterType = 3, waterText = '', waterFileID = ''} = event

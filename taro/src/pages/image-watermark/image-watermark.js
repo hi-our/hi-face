@@ -38,7 +38,7 @@ class DetectFace extends Component {
       savedUrl: '', //'cloud://development-v9y2f.6465-development-v9y2f-1251170943/watermark/1584020379882-9111105.jpg',
       waterSeeFileID: '',
       waterSeeUrl: '',
-      waterText: 'Hi-Our',
+      waterText: 'Tcb',
       isShowSaved: true,
       isWaterChanged: false
     }
@@ -349,6 +349,12 @@ class DetectFace extends Component {
       tips = '点击“查看水印位置”，可以看水印位置'
     }
 
+    if (waterType === 1) {
+      tips = '原图宽高不超过640x640，水印图不超过原图宽高的 1/8'
+    } else if (waterType === 2) {
+      tips = '原图宽高不超过4500，水印图不超过原图宽高的 1/8'
+    }
+
     console.log('isWaterChanged :>> ', isWaterChanged);
 
     return (
@@ -385,8 +391,8 @@ class DetectFace extends Component {
               )
               : <View className='to-choose' data-type='origin' onClick={this.chooseImage}></View>
           }
-          <View className='image-tips'>{tips}</View>
         </View>
+        <View className='image-tips'>{tips}</View>
         <RadioGroup className='type-group' onChange={this.onTypeChange}>
           <Label className='type-radio'>
             <Radio value='3' checked={waterType === 3}>文字型</Radio>
