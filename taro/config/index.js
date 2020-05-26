@@ -64,11 +64,6 @@ const config = {
 
   },
   h5: {
-    router: {
-      customRoutes: {
-        '/pages/image-watermark/image-watermark': '/watermark'
-      }
-    },
     publicPath: '/',
     staticDirectory: 'static',
     postcss: {
