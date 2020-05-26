@@ -70,14 +70,12 @@ class DetectFace extends Component {
       console.log('用户点击取消')
       return
     }
-    const res = await Taro.chooseImage({
+    const { tempFilePaths, tempFiles } = await Taro.chooseImage({
       count: 1,
       sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
       sourceType: ['album', 'camera'],
     })
-
-    console.log('res :>> ', res);
-    const { tempFilePaths, tempFiles }  = res
+    
     console.log('tempFilePaths, tempFiles :>> ', tempFilePaths, tempFiles);
     let useFiles = isH5Page ? tempFiles[0].originalFileObj : tempFilePaths[0]
     console.log('tempFiles[0] :>> ', tempFiles[0]);
