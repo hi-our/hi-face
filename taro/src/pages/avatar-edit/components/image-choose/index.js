@@ -16,9 +16,9 @@ export default class ImageChoose extends Taro.Component {
 
   static defaultProps = {
     isH5Page: false,
-    onChoose: () => {},
     cropperWidth: 600,
-    cropperHeight: 600
+    cropperHeight: 600,
+    onChoose: () => {},
   }
 
   constructor(props) {
@@ -75,10 +75,9 @@ export default class ImageChoose extends Taro.Component {
   }
 
   render() {
-    const { cropperWidth, cropperHeight } = this.props
+    const { cropperWidth, cropperHeight, isH5Page } = this.props
     const { originSrc } = this.state
-
-    const { isH5Page } = this.props
+    
     return (
       <Block>
         <View
