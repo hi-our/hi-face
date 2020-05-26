@@ -1,0 +1,16 @@
+{
+  "name": "tcb-ext-cms-init",
+  "version": "1.0.0",
+  "description": "初始化扩展",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "lodash": "4.17.15",
+    "tcb-admin-node": "1.22.0",
+    "@cloudbase/manager-node": "^3.2.3"
+  },
+  "author": "Booker Zhao",
+  "license": "ISC"
+}

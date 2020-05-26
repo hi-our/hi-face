@@ -45,6 +45,8 @@ export default class PosterDialog extends Component {
   savePoster = () => {
     const { posterSrc } = this.props
 
+    console.log('posterSrc :>> ', posterSrc);
+
     if (posterSrc) {
       this.saveImageToPhotosAlbum(posterSrc)
     }
@@ -52,6 +54,7 @@ export default class PosterDialog extends Component {
 
   saveImageToPhotosAlbum = (tempFilePath) => {
     const { isH5Page } = this.props
+    console.log('isH5Page :>> ', isH5Page, tempFilePath);
     if (isH5Page) {
       downloadImgByBase64(tempFilePath)
     } else {
@@ -74,17 +77,15 @@ export default class PosterDialog extends Component {
   }
 
   render(){
-    
 
     const { isShowPoster } = this.state
-    const { posterSrc, isH5Page, forCheck } = this.props
-    console.log('forCheck :>> ', forCheck);
+    const { posterSrc } = this.props
 
     return (
       <View className={`poster-dialog ${posterSrc && isShowPoster ? 'show' : ''}`}>
         <View className='poster-dialog-main'>
-          {!!posterSrc && <Image className='poster-image' src={posterSrc} onClick={this.previewPoster} showMenuByLongpress></Image>}
-          <View className='poster-image-tips'>点击可预览大图，长按可分享图片</View>
+          {/* <View className='poster-image-tips'>点击可预览大图，长按有保存选项</View> */}
+          {!!posterSrc && <Image className='poster-image' mode="aspectFit" src={posterSrc} onClick={this.previewPoster} showMenuByLongpress></Image>}
           <View className='poster-dialog-close' onClick={this.onHidePoster} />
           <View className='poster-footer-btn'>
             <View className='poster-btn-save' onClick={this.savePoster}>
@@ -94,18 +95,8 @@ export default class PosterDialog extends Component {
               />
               保存到相册
             </View>
-            {!isH5Page && !forCheck && (
-              <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
-                <Image
-                  className='icon-wechat'
-                  src='https://n1image.hjfile.cn/res7/2019/03/20/21af29d7755905b08d9f517223df5314.png'
-                />
-                分享给朋友
-              </Button>
-            )}
           </View>
         </View>
-
       </View>
     )
   }

@@ -1,6 +1,7 @@
 export default {
   pages: [
     'pages/avatar-edit/avatar-edit',
+    'pages/image-watermark/image-watermark',
     'pages/detect-face/detect-face',
     'pages/queen-king/queen-king',
     'pages/wear-a-mask/wear-a-mask',

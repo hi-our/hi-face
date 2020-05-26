@@ -76,7 +76,7 @@ async function imgSecCheck(event) {
     })
 
     let data = getResCode(res)
-    result = getCheckResult(data)
+    let result = getCheckResult(data)
     return result
   } catch (error) {
     console.log('error :', error)
