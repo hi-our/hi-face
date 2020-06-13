@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "tencentcloud-sdk-nodejs": "latest",
     "tcb-admin-node": "latest",
     "wx-server-sdk": "latest"
   }

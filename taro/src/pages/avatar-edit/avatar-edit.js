@@ -298,37 +298,53 @@ class AvatarEdit extends Component {
 
   // TODO 这个也可以分离？
   drawCanvas = async () => {
-    const {
-      shapeList,
-      cutImageSrc
-    } = this.state
+    // cutImageSrc 裁剪后的头像底图
+    // shapeList 图形列表
+    const { cutImageSrc, shapeList } = this.state
 
+    // 获取 canvas 的 context
     const pc = Taro.createCanvasContext('canvasShape')
 
-    pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH);
+    // 清空画布
+    pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
+
+    // getImg 获取图片，注意获取图片在小程序与Web端的不同
     let tmpCutImage = await getImg(cutImageSrc)
+    // 绘制裁剪后的头像底图
     pc.drawImage(tmpCutImage, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
 
+    // 遍历列表，绘制图形贴纸
     for (let index = 0; index < shapeList.length; index++) {
-      const shape = shapeList[index];
+      // 保存绘图上下文
       pc.save()
-      const {
-        categoryName,
-        shapeWidth,
-        rotate,
-        shapeCenterX,
-        shapeCenterY,
-        imageUrl,
-        imageReverseUrl,
-        reserve,
-      } = shape
-      const shapeSize = shapeWidth
 
-      pc.translate(shapeCenterX, shapeCenterY);
+      // 获取贴纸的细节
+      const {
+        // 图形宽
+        shapeWidth: shapeSize,
+        // 旋转角度
+        rotate,
+        // 图形中心点 X轴
+        shapeCenterX,
+        // 图形中心点 Y轴
+        shapeCenterY,
+        // 图形正向图片地址
+        imageUrl,
+        // 图形反向图片地址
+        imageReverseUrl,
+        // 是否旋转
+        reserve: isReserve,
+      } = shapeList[index]
+
+      // 移动到图形中心
+      pc.translate(shapeCenterX, shapeCenterY)
+      // 旋转画布角度
       pc.rotate((rotate * Math.PI) / 180)
 
-      let oneImgSrc = await getImg(reserve < 0 ? (imageReverseUrl || imageUrl) : imageUrl)
+      // 获取图形地址
+      let oneImgSrc = await getImg(isReserve < 0 ? (imageReverseUrl || imageUrl) : imageUrl)
 
+      // 绘制贴纸
       pc.drawImage(
         oneImgSrc,
         -shapeSize / 2,
@@ -336,28 +352,35 @@ class AvatarEdit extends Component {
         shapeSize,
         shapeSize
       )
+
+      // 恢复之前保存的绘图上下文
       pc.restore()
     }
 
-    pc.draw(true, () => {
+    pc.draw(false, () => {
       Taro.canvasToTempFilePath({
         canvasId: 'canvasShape',
         x: 0,
         y: 0,
         height: SAVE_IMAGE_WIDTH * 3,
         width: SAVE_IMAGE_WIDTH * 3,
+        // 图片类型
         fileType: 'jpg',
+        // 压缩质量
         quality: 0.9,
         success: async (res) => {
+
+          // 保存图片到云数据库
           await this.onSaveImageToCloud(res.tempFilePath)
 
-          console.log('res.tempFilePath :>> ', res.tempFilePath);
-
           Taro.hideLoading()
+          // 设置海报图片
           this.setState({
             posterSrc: res.tempFilePath
           }, () => {
-              this.posterRef.onShowPoster()
+            
+            // 展示海报弹窗
+            this.posterRef.onShowPoster()
           })
 
         },
@@ -370,6 +393,8 @@ class AvatarEdit extends Component {
       })
     })
   }
+
+
   onSaveImageToCloud = async (tempFilePath) => {
     const { currentAgeType } = this.state
 
