@@ -269,7 +269,6 @@ class ShapeEdit extends Taro.Component {
   render() {
     const { cutImageSrc } = this.props
     const { shapeList = [], currentShapeIndex } = this.state
-    console.log('cutImageSrc :>> ', cutImageSrc);
 
     return (
       <View>
