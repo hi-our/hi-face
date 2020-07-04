@@ -13,9 +13,11 @@
 		"minified": true,
 		"newFeature": true,
 		"coverView": true,
+		"nodeModules": true,
 		"autoAudits": true,
 		"showShadowRootInWxmlPanel": true,
 		"scopeDataCheck": false,
+		"uglifyFileName": true,
 		"checkInvalidKey": true,
 		"checkSiteMap": true,
 		"uploadWithSourceMap": true,
@@ -25,8 +27,7 @@
 			"outputPath": ""
 		},
 		"remoteDebugLogEnable": false,
-		"nodeModules": true,
-		"uglifyFileName": true
+		"useCompilerModule": true
 	},
 	"compileType": "miniprogram",
 	"simulatorType": "wechat",
