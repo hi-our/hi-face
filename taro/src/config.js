@@ -9,7 +9,6 @@ module.exports = {
   userDomain: 'cc',
   apiHost: '',
   apiWeb: '',
-  apiFace: 'https://face.xuexitrip.com',
   apiImageUpload: '',
   tokenKey: '',
   webViewDomain: '',

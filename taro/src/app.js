@@ -1,18 +1,14 @@
 import Taro, { Component } from '@tarojs/taro'
 import { Provider } from '@tarojs/redux'
-import tcb from 'tcb-js-sdk'
-import adapterForQQ from '@cloudbase/adapter-qq_mp';
-
 import Index from './pages/test/test'
 import store from '@/store'
 import userActions from '@/store/user'
 import * as config from 'config'
 import globalActions from '@/store/global'
 
-
 import './app.styl'
 
-const updateManager = process.env.TARO_ENV !== 'h5' ? Taro.getUpdateManager() : null
+const updateManager = Taro.getUpdateManager()
 
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
@@ -103,37 +99,6 @@ class App extends Component {
 
       // 检查过审开关是否开启
       globalActions.getForCheckStatus()
-    } else if (process.env.TARO_ENV === 'h5' || process.env.TARO_ENV === 'qq') {
-      console.log('tcb :', tcb, process.env.TARO_ENV );
-      let initConfig = {}
-      // tcb.useAdapters([adapterForQQ]);
-      // initConfig = {
-      //   appSign: process.env.appSign,
-      //   appSecret: {
-      //     appAccessKeyId: process.env.appAccessKeyId,
-      //     appAccessKey: process.env.appAccessKey,
-      //   }
-      // }
-      // hack写法？呼呼
-      Taro.cloud = tcb.init({
-        env: config.cloudEnv,
-        ...initConfig
-      })
-      // console.log('登录云开发成功！')
-      Taro.cloud.auth().signInAnonymously().then(() => {
-        // 检查过审开关是否开启
-        globalActions.getForCheckStatus()
-        Taro.cloud.callFunction({
-          name: 'thanks-data',
-          data: {
-            1: 1
-          }
-        }).then(res => console.log('res ', res))
-
-
-      }).catch(error => {
-        console.log('error :', error);
-      })
     }
     
     this.onUserLogin()
@@ -167,13 +132,6 @@ class App extends Component {
   onUserLogin = async () => {
     try {
       const res = await userActions.login()
-      // wx.bisdk && wx.bisdk.setOpenIdInfo && wx.bisdk.setOpenIdInfo(res)
-
-      // 获取注册来源示例
-      // if (wx.bisdk && wx.bisdk.getRegSource) {
-      //   console.log('wx.bisdk.getRegSource', wx.bisdk.getRegSource())
-      // }
-
     } catch (error) {
       console.log('基础登录失败，不会注册sdk', error)
     }
@@ -181,7 +139,6 @@ class App extends Component {
 
   // 小程序更新提醒
   setUpdateManager() {
-    if (!updateManager) return
 
     updateManager.onUpdateReady(() => {
       Taro.showModal({
