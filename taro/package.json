@@ -9,7 +9,7 @@
     "typescript": false,
     "css": "stylus"
   },
-  "scripts": {
+  "scripts": {    
     "start": "npm run watch",
     "watch": "SERVER_ENV=yz MOCK=true npm run dev:weapp",
     "build": "SERVER_ENV=prod npm run build:weapp -- --watch",
