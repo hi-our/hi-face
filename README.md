@@ -1,4 +1,14 @@
-# 小程序：快快戴口罩
+README.md 必备
+- [ ] 项目名称
+- [ ] 项目介绍
+- [ ] 项目效果截图（4-6张），能体现核心功能，不需要套壳；
+- [ ] 项目体验小程序二维码或者链接（如果已经上线）
+- [ ] 部署教程
+- [x] 开源许可证标注
+
+# Hi头像
+
+<!-- TODO 项目介绍 -->
 
 > 😷 珍爱生命，从我做起
 
@@ -12,17 +22,18 @@
 * 支持多人识别
 * 支持添加加油图片
 
+## 小程序截图
+<!-- TODO 效果图 -->
+![](https://uploader.shimo.im/f/iCCrtwBFo6EK5uEs.JPG!thumbnail)
 
 **扫码预览**
-
+<!-- TODO 二维码 -->
 微信搜一搜：Hi头像
 
 ![](https://n1image.hjfile.cn/res7/2020/02/02/e40fff62cb635dd9be797226f7c266ed.png)
 
-## 小程序截图
-![](https://uploader.shimo.im/f/iCCrtwBFo6EK5uEs.JPG!thumbnail)
-
 ## 程序说明
+<!-- 部署教程 -->
 ### 项目主要文件
 * taro/ 小程序版，基于tarojs
   * src/
@@ -36,7 +47,7 @@
   * analyze-face 腾讯云人脸识别效果
   * collection_get_theme_data 获取主题信息
 
-
+<!-- 说明云开发及 Taro 技术栈 -->
 ### 核心算法介绍
 * 核心算法：怎么识别人脸五官信息
   * 网页中：可以调用 face-api.js 来获取
@@ -62,3 +73,8 @@
 * 腾讯云人脸识别： [https://cloud.tencent.com/product/facerecognition](https://cloud.tencent.com/product/facerecognition)
 * Tarojs版本图片裁剪：[https://www.npmjs.com/package/taro-cropper](https://www.npmjs.com/package/taro-cropper)
 * 病毒演化模拟器 [https://qqqdu.oss-cn-beijing.aliyuncs.com/index.html](https://qqqdu.oss-cn-beijing.aliyuncs.com/index.html)
+
+
+## License
+
+MIT © [https://github.com/shenghanqin/](https://github.com/https://github.com/shenghanqin/)
