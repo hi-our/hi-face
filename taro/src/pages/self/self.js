@@ -29,7 +29,7 @@ class Self extends Component {
   }
 
   onShareAppMessage() {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/04/26/2041af2867f22e62f8fce32b29cd1fb0.png'
+    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/20200812132355.png'
 
     return {
       title: '个人中心',
@@ -110,12 +110,12 @@ class Self extends Component {
         </View>
         <View className='list-wrap'>
           <View className='item' onClick={this.goMyAvatars}>
-            <Image className='item-image' src='https://n1image.hjfile.cn/res7/2020/03/22/7b172802b0cbadee5708c8c03a9fc48c.png' />
+            <Image className='item-image' src='https://image-hosting.xiaoxili.com/img/20200812133940.png' />
             头像列表
             <View className='item-icon'></View>
           </View>
           <View className='item' onClick={this.goThanks}>
-            <Image className='item-image'  src='https://n1image.hjfile.cn/res7/2020/03/22/4573f9e2d8b60d5a02cffb6de351ee6f.png' />
+            <Image className='item-image' src='https://image-hosting.xiaoxili.com/img/20200812133954.png' />
             致谢
             <View className='item-icon'></View>
           </View>

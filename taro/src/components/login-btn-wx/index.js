@@ -13,9 +13,9 @@ import './styles.styl'
 
 let smsInter = null // 登录时间倒计时
 const showPasswordPic =
-  'https://n1image.hjfile.cn/res7/2019/05/27/f04b77db9985bbe76bef21e28cf112b6.png'
+  'https://image-hosting.xiaoxili.com/img/20200812131207.png'
 const hidePasswordPic =
-  'https://n1image.hjfile.cn/res7/2019/05/27/b12496679d73f83a3eba58ff5af9daf2.png'
+  'https://image-hosting.xiaoxili.com/img/20200812131233.png'
 
 
 @connect(state => ({
@@ -718,7 +718,7 @@ class ComLoginBtn extends Taro.Component {
                 <View className='login-form'>
                   <Image
                     className='back-icon'
-                    src='https://n1image.hjfile.cn/res7/2019/05/27/45701e39023edffeac8011372b5be961.png'
+                    src='https://image-hosting.xiaoxili.com/img/20200812131301.png'
                     data-type='account'
                     onTap={this.switchLogin}
                   />

@@ -47,7 +47,7 @@ class AvatarPoster extends Component {
   }
 
   onShareAppMessage() {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/04/26/2041af2867f22e62f8fce32b29cd1fb0.png'
+    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/20200812132355.png'
 
     const { avatarFileID, ageType } = this.state
 
@@ -276,7 +276,7 @@ class AvatarPoster extends Component {
             <View className='poster-btn-save' onClick={this.savePoster}>
               <Image
                 className='icon'
-                src='https://n1image.hjfile.cn/res7/2019/01/03/740198f541ce91859ed060882d986e09.png'
+                src='https://image-hosting.xiaoxili.com/img/20200812132636.png'
               />
               保存到相册
             </View>
@@ -284,7 +284,7 @@ class AvatarPoster extends Component {
               <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
                 <Image
                   className='icon-wechat'
-                  src='https://n1image.hjfile.cn/res7/2019/03/20/21af29d7755905b08d9f517223df5314.png'
+                  src='https://image-hosting.xiaoxili.com/img/20200812132655.png'
                 />
                 分享给朋友
               </Button>

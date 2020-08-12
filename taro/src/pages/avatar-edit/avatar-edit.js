@@ -55,7 +55,7 @@ class AvatarEdit extends Component {
   }
 
   onShareAppMessage({ from, target }) {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/04/26/2041af2867f22e62f8fce32b29cd1fb0.png'
+    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/20200812132355.png'
     const { themeData } = this.state
     let { shareImage = DEFAULT_SHARE_COVER, shareTitle = '给女神戴上皇冠吧！' } = themeData
 

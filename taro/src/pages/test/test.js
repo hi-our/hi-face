@@ -7,7 +7,7 @@ import { fillText } from 'utils/canvas'
 
 const isH5Page = process.env.TARO_ENV === 'h5'
 
-const testImg = 'https://n1image.hjfile.cn/res7/2020/01/31/85a57f8e140431329c0439a00e13c1a0.jpeg'
+const testImg = 'https://image-hosting.xiaoxili.com/img/20200812134029.png'
 const imageData = testImg
 
 import './styles.styl'
@@ -24,7 +24,7 @@ class Index extends Component {
   }
 
   onShareAppMessage() {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/04/26/2041af2867f22e62f8fce32b29cd1fb0.png'
+    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/20200812132355.png'
 
     return {
       title: 'AI圣诞帽',
