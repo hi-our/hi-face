@@ -1,23 +1,16 @@
 {
   "name": "hi-face",
   "version": "1.0.0",
-  "description": "Example on using create-react-app with a Node Express Backend",
+  "description": "Hi 头像项目地址",
   "author": {
     "name": "shenghanqin",
-    "url": "https://xiaoxili.com"
+    "url": "https://www.xiaoxili.com"
   },
   "license": "MIT",
   "scripts": {
     "commit": "git-cz",
-    "client": "cd client && yarn start",
-    "server": "nodemon server.js",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "dev:server": "cd client && yarn build && cd .. && yarn start",
-    "start": "NODE_ENV=production node server.js",
     "release:web": "cd taro &&  npm install && npm run release:web",
-    "release:yzweb": "cd taro &&  npm install && npm run release:yzweb",
-    "start:taro": "NODE_ENV=production node server-taro.js",
-    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+    "release:yzweb": "cd taro &&  npm install && npm run release:yzweb"
   },
   "husky": {
     "hooks": {
@@ -50,17 +43,5 @@
   },
   "bugs": {
     "url": "https://github.com/hi-our/hi-face/issues"
-  },
-  "keywords": [
-    "node",
-    "express",
-    "create-react-app"
-  ],
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "request": "^2.88.0",
-    "tencentcloud-sdk-nodejs": "^3.0.126"
   }
 }
