@@ -72,13 +72,6 @@
 				},
 				{
 					"id": -1,
-					"name": "pages/spread-game/spread-game",
-					"pathName": "pages/spread-game/spread-game",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
 					"name": "pages/test/test",
 					"pathName": "pages/test/test",
 					"query": "",
@@ -114,22 +107,8 @@
 				},
 				{
 					"id": -1,
-					"name": "pages/wear-a-mask/wear-a-mask",
-					"pathName": "pages/wear-a-mask/wear-a-mask",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/avatar-edit/avatar-edit",
-					"pathName": "pages/avatar-edit/avatar-edit",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/image-watermark/image-watermark",
-					"pathName": "pages/image-watermark/image-watermark",
+					"name": "menu-demo",
+					"pathName": "pages/menu-demo/menu-demo",
 					"query": "",
 					"scene": null
 				}
