@@ -1,7 +1,4 @@
 const alias = require('./alias')
-const loadEnv = require('../load-env')
-
-loadEnv()
 
 
 // 兼容web端和小程序端

@@ -61,13 +61,5 @@ module.exports = {
     }],
     "no-unused-expressions": "off",
     "spaced-comment": 0
-  },
-  "globals": {
-    "App": true,
-    "Page": true,
-    "Component": true,
-    "wx": true,
-    "getApp": true,
-    "getCurrentPages": true
   }
 }
