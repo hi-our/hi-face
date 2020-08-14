@@ -9,8 +9,8 @@ const dpr = process.env.TARO_ENV === 'h5' ? 1 : 2
 
 
 const config = {
-  projectName: 'quickly-mask',
-  date: '2019-11-2',
+  projectName: 'hi-face',
+  date: '2020-08-14',
   designWidth: 375 * dpr,
   deviceRatio: {
     640: 2.34 / 2 / dpr,
@@ -23,9 +23,7 @@ const config = {
   babel: {
     sourceMap: true,
     presets: [
-      [
-        'env',
-        {
+      ['env', {
           modules: false
         }
       ]
@@ -35,19 +33,22 @@ const config = {
       'transform-class-properties',
       'transform-object-rest-spread',
       ['transform-runtime', {
-        helpers: false,
-        polyfill: false,
-        regenerator: true,
-        moduleName: 'babel-runtime'
-      }]
+          helpers: false,
+          polyfill: false,
+          regenerator: true,
+          moduleName: 'babel-runtime'
+        }
+      ]
     ]
   },
+  plugins: [
+    '@tarojs/plugin-stylus',
+    '@tarojs/plugin-terser'
+  ],
   copy: {
     patterns: [
       { from: 'sitemap.json', to: 'dist/' }
-    ],
-    options: {
-    }
+    ]
   },
   defineConstants: {
     'process.env.SERVER_ENV': JSON.stringify(process.env.SERVER_ENV),
@@ -63,6 +64,16 @@ const config = {
       limit: 0
     },
     postcss: {
+      autoprefixer: {
+        enable: true,
+        config: {
+          browsers: [
+            'last 3 versions',
+            'Android >= 4.1',
+            'ios >= 8'
+          ]
+        }
+      },
       pxtransform: {
         enable: true,
         config: {
@@ -86,11 +97,6 @@ const config = {
 
   },
   h5: {
-    router: {
-      customRoutes: {
-        '/pages/image-watermark/image-watermark': '/watermark'
-      }
-    },
     publicPath: '/',
     staticDirectory: 'static',
     esnextModules: ['taro-cropper'],
