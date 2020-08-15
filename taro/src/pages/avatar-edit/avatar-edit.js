@@ -12,6 +12,8 @@ import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase6
 import { h5PageModalTips } from 'utils/common'
 import { cloudCallFunction } from 'utils/fetch'
 import promisify from 'utils/promisify'
+import { imgSecCheck, getResCode } from 'utils/image-safe-check';
+import { imageAnalyzeFace } from 'utils/image-analyze-face'
 
 import './styles.styl'
 
@@ -158,7 +160,7 @@ class AvatarEdit extends Component {
 
     try {
 
-      let cloudFunc = isH5Page ? this.cloudCanvasToAnalyzeH5 : this.cloudCanvasToAnalyze
+      let cloudFunc = isH5Page ? this.cloudAnalyzeFaceH5 : this.cloudAnalyzeFaceWx
 
       const couldRes = await cloudFunc(cutImageSrc)
 
@@ -213,7 +215,7 @@ class AvatarEdit extends Component {
     }
   }
 
-  cloudCanvasToAnalyzeH5 = async (tempFilePaths) => {
+  cloudAnalyzeFaceH5 = async (tempFilePaths) => {
 
     const couldRes = await cloudCallFunction({
       name: 'analyze-face',
@@ -221,11 +223,12 @@ class AvatarEdit extends Component {
         base64Main: getBase64Main(tempFilePaths)
       }
     })
-    console.log('cloudCanvasToAnalyzeH5 couldRes :>> ', couldRes);
+    console.log('cloudAnalyzeFaceH5 couldRes :>> ', couldRes);
     return couldRes
   }
 
-  cloudCanvasToAnalyze = async (tempFilePaths) => {
+
+  cloudAnalyzeFaceWx = async (tempFilePaths) => {
     const { forCheck } = this.props
 
     const resImage = await Taro.compressImage({
@@ -238,13 +241,8 @@ class AvatarEdit extends Component {
       encoding: 'base64',
     })
 
-    const couldRes = await cloudCallFunction({
-      name: 'analyze-face',
-      data: {
-        base64Main,
-        forCheck
-      }
-    })
+    await imgSecCheck(base64Main)
+    const couldRes = imageAnalyzeFace(base64Main)
 
     return couldRes
   }
