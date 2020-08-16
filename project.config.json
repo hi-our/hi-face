@@ -30,7 +30,8 @@
 		"useIsolateContext": true,
 		"useCompilerModule": true,
 		"userConfirmedUseCompilerModuleSwitch": false,
-		"remoteDebugLogEnable": false
+		"remoteDebugLogEnable": false,
+		"compileHotReLoad": false
 	},
 	"compileType": "miniprogram",
 	"simulatorType": "wechat",
