@@ -14,6 +14,7 @@ import { cloudCallFunction } from 'utils/fetch'
 import promisify from 'utils/promisify'
 import { imgSecCheck, getResCode } from 'utils/image-safe-check';
 import { imageAnalyzeFace } from 'utils/image-analyze-face'
+import CustomTabBar from 'components/custom-tab-bar';
 
 import './styles.styl'
 
@@ -24,13 +25,11 @@ const isQQPage = process.env.TARO_ENV === 'qq'
 @connect(state => ({
   forCheck: state.global.forCheck
 }), null)
-
-// @CorePage
 class AvatarEdit extends Component {
   config = {
     navigationBarTitleText: '头像编辑',
     navigationStyle: 'custom',
-    disableScroll: true
+    disableScroll: true,
   }
 
   constructor(props) {
@@ -95,11 +94,7 @@ class AvatarEdit extends Component {
       console.log('themeData :>> ', themeData);
 
       const { shapeCategoryList, themeName } = themeData
-
-      Taro.setTabBarItem({
-        index: 0,
-        text: themeName,
-      })
+      
       this.setState({
         pageStatus: 'done',
         themeData,
@@ -499,6 +494,7 @@ class AvatarEdit extends Component {
               isH5Page={isH5Page}
             />
           </View>
+          <CustomTabBar selected={1} isHide={true} />
         </View>
         <PosterDialog
           isH5Page={isH5Page}
@@ -512,6 +508,8 @@ class AvatarEdit extends Component {
             <Button className='share-btn' openType='share' onClick={this.showH5Modal} style={{ top: STATUS_BAR_HEIGHT + 54 + 'px' }}>分享给朋友<View className='share-btn-icon'></View></Button>
           </Block>
         )} */}
+        {/* <tab-bar /> */}
+        
       </Block>
     )
   }

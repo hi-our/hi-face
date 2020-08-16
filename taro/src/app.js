@@ -1,6 +1,6 @@
-import Taro, { Component } from '@tarojs/taro'
+import Taro, { Component, AppConfig } from '@tarojs/taro'
 import { Provider } from '@tarojs/redux'
-import Index from './pages/test/test'
+import Index from 'pages/test/test'
 import store from '@/store'
 import userActions from '@/store/user'
 import * as config from 'config'
@@ -15,17 +15,25 @@ const updateManager = Taro.getUpdateManager()
 // if (process.env.NODE_ENV !== 'production' && process.env.TARO_ENV === 'h5')  {
 //   require('nerv-devtools')
 // }
+console.log('AppConfig :>> ', AppConfig);
 
 class App extends Component {
   config = {
     pages: [
       'pages/avatar-edit/avatar-edit',
+      'pages/theme-list/theme-list',
       'pages/self/self',
-      'pages/thanks/thanks',
       'pages/my-avatars/my-avatars',
+      'pages/thanks/thanks',
       'pages/avatar-poster/avatar-poster',
       'pages/menu-demo/menu-demo',
     ],
+    // plugins: {
+    //   tucao: {
+    //     version: '1.1.5',
+    //     provider: 'wx8abaf00ee8c3202e'
+    //   }
+    // },
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
@@ -38,11 +46,18 @@ class App extends Component {
     },
     sitemapLocation: "sitemap.json",
     tabBar: {
-      backgroundColor: '#fff',
+      custom: true,
+      backgroundColor: '#DEE8FF',
       borderStyle: 'white',
       color: '#95a1af',
       selectedColor: '#2f5aff',
       list: [
+        {
+          pagePath: 'pages/theme-list/theme-list',
+          text: '主题列表',
+          iconPath: 'images/thank-1.png',
+          selectedIconPath: 'images/thank-2.png'
+        },
         {
           pagePath: 'pages/avatar-edit/avatar-edit',
           text: '头像编辑',
@@ -50,8 +65,8 @@ class App extends Component {
           selectedIconPath: 'images/tab-bar-crown-active.png'
         },
         {
-          pagePath: 'pages/thanks/thanks',
-          text: '致谢',
+          pagePath: 'pages/self/self',
+          text: '我的',
           iconPath: 'images/thank-1.png',
           selectedIconPath: 'images/thank-2.png'
         },

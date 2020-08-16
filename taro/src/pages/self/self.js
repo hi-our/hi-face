@@ -1,10 +1,8 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
 
-import { cloudCallFunction } from 'utils/fetch'
-import PageWrapper from 'components/page-wrapper'
-import { transformList } from './utils'
-import CorePage from 'page';
+import CorePage from 'page'
+import CustomTabBar from 'components/custom-tab-bar'
 import './styles.styl'
 
 import * as config from 'config'
@@ -16,18 +14,8 @@ const version = config.version
 class Self extends Component {
   config = {
     navigationBarTitleText: '个人中心',
-    disableScroll: true
+    disableScroll: true,
   }
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      list: [],
-      pageStatus: 'loading',
-      errorText: ''
-    }
-  }
-
   onShareAppMessage() {
     const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/20200812132355.png'
 
@@ -121,6 +109,7 @@ class Self extends Component {
           </View>
         </View>
         <View className='version'>Ver.{version}，基于 Taro 及小程序云开发</View>
+        <CustomTabBar selected={2} />
       </View>
     )
   }
