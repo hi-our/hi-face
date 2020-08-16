@@ -23,21 +23,22 @@ export default class CustomTabBar extends Taro.Component {
         {
           pagePath: '/pages/theme-list/theme-list',
           text: '主题',
-          iconPath: '../../images/thank-1.png',
-          selectedIconPath: '../../images/thank-2.png'
+          iconPath: '../../images/tab-theme-1.png',
+          selectedIconPath: '../../images/tab-theme-2.png'
         },
         {
           pagePath: '/pages/avatar-edit/avatar-edit',
           text: '编辑',
-          iconPath: '../../images/tab-bar-crown.png',
-          selectedIconPath: '../../images/tab-bar-crown-active.png'
+          iconPath: '../../images/tab-edit-1.png',
+          selectedIconPath: '../../images/tab-edit-2.png'
         },
         {
           pagePath: '/pages/self/self',
           text: '我的',
-          iconPath: '../../images/thank-1.png',
-          selectedIconPath: '../../images/thank-2.png'
-        },]
+          iconPath: '../../images/tab-self-1.png',
+          selectedIconPath: '../../images/tab-self-2.png'
+        },
+      ]
     }
   }
 
@@ -55,27 +56,18 @@ export default class CustomTabBar extends Taro.Component {
     })
   }
   render() {
-    const { selected, isHide } = this.props
+    const { selected, hideIndex } = this.props
     const { list } = this.state
     return (
       <View className={`tab-bar ${IS_IPHONEX ? 'bottom-safe-area' : ''}`}>
         {
           list.map((item, index) => {
-            console.log('selected === index :>> ', selected === index);
             const { pagePath, selectedIconPath, iconPath, text } = item
             return (
-              <View key={text} className="tab-bar-item" data-path={pagePath} data-index={index} onClick={this.switchTab}>
-                {
-                  index === 1 && isHide
-                    ? <View>Hide</View>
-                    : (
-                      <Block>
-                        <Image className="tab-bar-image" src={'' + (selected === index ? selectedIconPath : iconPath)}></Image>
-                        <View>{text}</View>
-                      </Block>
-                    )
-                }
-                
+              <View key={text} className={`tab-bar-item ${selected === index ? 'tab-item-active' : ''} ${hideIndex === index ? 'tab-item-hide' : ''}`} data-path={pagePath} data-index={index} onClick={this.switchTab}>
+                <View className="tab-bar-holder"></View>
+                <Image className="tab-bar-image" src={'' + (selected === index ? selectedIconPath : iconPath)}></Image>
+                <View className="tab-bar-text">{text}</View>
               </View>
             )
           })

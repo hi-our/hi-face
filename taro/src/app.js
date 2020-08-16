@@ -54,21 +54,21 @@ class App extends Component {
       list: [
         {
           pagePath: 'pages/theme-list/theme-list',
-          text: '主题列表',
-          iconPath: 'images/thank-1.png',
-          selectedIconPath: 'images/thank-2.png'
+          text: '主题',
+          iconPath: 'images/tab-theme-1.png',
+          selectedIconPath: 'images/tab-theme-2.png'
         },
         {
           pagePath: 'pages/avatar-edit/avatar-edit',
-          text: '头像编辑',
-          iconPath: 'images/tab-bar-crown.png',
-          selectedIconPath: 'images/tab-bar-crown-active.png'
+          text: '编辑',
+          iconPath: 'images/tab-edit-1.png',
+          selectedIconPath: 'images/tab-edit-2.png'
         },
         {
           pagePath: 'pages/self/self',
           text: '我的',
-          iconPath: 'images/thank-1.png',
-          selectedIconPath: 'images/thank-2.png'
+          iconPath: 'images/tab-self-1.png',
+          selectedIconPath: 'images/tab-self-2.png'
         },
         
       ]

@@ -6,7 +6,6 @@ html
 
 .avatar-edit-page
   height 100vh
-  background #f9f9f9
   overflow hidden
   box-sizing border-box
   display flex
@@ -83,3 +82,79 @@ html
   width 16px
   height 16px
   background url(https://image-hosting.xiaoxili.com/img/20200812132508.png) no-repeat  center / contain
+
+
+.menu-bottom
+  position absolute
+  left 50%
+  margin-left -45px
+  bottom 5px
+  width 90px
+  height 90px
+  background rgba(222,232,255,0.4) url(https://image-hosting.xiaoxili.com/img/20200816165127.png) no-repeat center
+  background-size 60px
+  border-radius 50%
+  margin-bottom 12px
+
+  // &.hide
+  //   transform translateY(-100px)
+  //   opacity 0.1
+  //   pointer-events none
+
+  .menu-item
+    position absolute
+    width 50px
+    height 50px
+    border-radius 25px
+    background #EBEEFF
+    font-size 10px
+    line-height 1.4
+    color #2F3742
+    text-align center
+    left 50%
+    top 50%
+    margin -25px 0 0 -25px
+    opacity 0
+    transition 1.2s linear transform, 1.2s linear opacity 
+
+    &:before
+      content ''
+      margin 2px auto 0
+      display block
+      width 30px
+      height 30px
+      background-position center
+      background-size contain
+      background-repeat no-repeat
+
+    &.menu-item-avatar
+      &:before
+        background-image url(https://image-hosting.xiaoxili.com/img/20200816173636.png)
+    &.menu-item-camera
+      &:before
+        background-image url(https://image-hosting.xiaoxili.com/img/20200816173739.png)
+    &.menu-item-album
+      &:before
+        background-image url(https://image-hosting.xiaoxili.com/img/20200816173759.png)
+    &.menu-item-search
+      &:before
+        background-image url(https://image-hosting.xiaoxili.com/img/20200816173816.png)
+    
+  &.open
+    .menu-item
+      opacity 1
+      &:nth-child(1)
+        transition-delay 0.1s
+        transform translate3d(-84px, -58px, 0)
+      &:nth-child(2)
+        transition-delay 0.2s
+        transform translate3d(-31px, -98px, 0)
+      &:nth-child(3)
+        transition-delay 0.3s
+        transform translate3d(31px, -98px, 0)
+      &:nth-child(4)
+        transition-delay 0.4s
+        transform translate3d(84px, -58px, 0)
+      
+
+

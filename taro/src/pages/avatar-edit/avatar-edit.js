@@ -40,6 +40,7 @@ class AvatarEdit extends Component {
       shapeCategoryList: [],
       currentAgeType: 'origin', // 原图
       cutImageSrc: '',
+      isShowShape: false,
       posterSrc: '',
     }
   }
@@ -494,7 +495,13 @@ class AvatarEdit extends Component {
               isH5Page={isH5Page}
             />
           </View>
-          <CustomTabBar selected={1} isHide={true} />
+          <View className={`menu-bottom ${'hide'} ${isShowShape ? 'open' : ''}`}>
+            <View className='menu-item menu-item-avatar'>头像</View>
+            <View className='menu-item menu-item-camera'>拍照</View>
+            <View className='menu-item menu-item-album'>相册</View>
+            <View className='menu-item menu-item-search'>搜索</View>
+          </View>
+          <CustomTabBar selected={1} hideIndex={1} />
         </View>
         <PosterDialog
           isH5Page={isH5Page}
