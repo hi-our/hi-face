@@ -1152,6 +1152,13 @@
     webpack-chain "4.9.0"
     webpack-format-messages "^2.0.5"
 
+"@tarojs/plugin-babel@2.2.12":
+  version "2.2.12"
+  resolved "https://registry.yarnpkg.com/@tarojs/plugin-babel/-/plugin-babel-2.2.12.tgz#77ce3e40ce435ada674119bb9d5625f101d94af5"
+  integrity sha512-pA7Vl8wB+779GBa+8xR0XPzRKmT3ecFReJ/w8fkkVgokEtGY9EITeLAIVG1IWwGmHPKsEZWz8aXWjxx6/XE7GA==
+  dependencies:
+    babel-core "^6.26.0"
+
 "@tarojs/plugin-stylus@2.2.12":
   version "2.2.12"
   resolved "http://registry.fe.yeshj.com/@tarojs/plugin-stylus/download/@tarojs/plugin-stylus-2.2.12.tgz#b80ed5591fded7bdf0c4a2e3337e42c28ef48844"
@@ -4888,6 +4895,11 @@ eslint-config-taro@2.2.12:
   dependencies:
     eslint-plugin-taro "2.2.12"
 
+eslint-import-resolver-alias@^1.1.1:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/eslint-import-resolver-alias/-/eslint-import-resolver-alias-1.1.2.tgz#297062890e31e4d6651eb5eba9534e1f6e68fc97"
+  integrity sha512-WdviM1Eu834zsfjHtcGHtGfcu+F30Od3V7I9Fi57uhBEwPkjDcii7/yW8jAT+gOhn4P/vOxxNAXbFAKsrrc15w==
+
 eslint-import-resolver-node@^0.3.3:
   version "0.3.4"
   resolved "http://registry.fe.yeshj.com/eslint-import-resolver-node/download/eslint-import-resolver-node-0.3.4.tgz#85ffa81942c25012d8231096ddf679c03042c717"
@@ -4966,6 +4978,13 @@ eslint-plugin-typescript@^0.12.0:
   version "0.12.0"
   resolved "http://registry.fe.yeshj.com/eslint-plugin-typescript/download/eslint-plugin-typescript-0.12.0.tgz#e23d58cb27fe28e89fc641a1f20e8d862cb99aef"
   integrity sha1-4j1Yyyf+KOifxkGh8g6Nhiy5mu8=
+  dependencies:
+    requireindex "~1.1.0"
+
+eslint-plugin-typescript@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-typescript/-/eslint-plugin-typescript-0.14.0.tgz#068549c3f4c7f3f85d88d398c29fa96bf500884c"
+  integrity sha512-2u1WnnDF2mkWWgU1lFQ2RjypUlmRoBEvQN02y9u+IL12mjWlkKFGEBnVsjs9Y8190bfPQCvWly1c2rYYUSOxWw==
   dependencies:
     requireindex "~1.1.0"
 
