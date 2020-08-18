@@ -12,9 +12,12 @@ import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase6
 import { h5PageModalTips } from 'utils/common'
 import { cloudCallFunction } from 'utils/fetch'
 import promisify from 'utils/promisify'
-import { imgSecCheck, getResCode } from 'utils/image-safe-check';
+import { imgSecCheck } from 'utils/image-safe-check';
 import { imageAnalyzeFace } from 'utils/image-analyze-face'
-import CustomTabBar from 'components/custom-tab-bar';
+import CustomTabBar from 'components/custom-tab-bar'
+import MenuMain from './components/menu-main'
+import MenuChoose from './components/menu-choose';
+
 
 import './styles.styl'
 
@@ -37,6 +40,7 @@ class AvatarEdit extends Component {
     this.state = {
       pageStatus: 'loading',
       themeData: {},
+      isShowMenuMain: false,
       shapeCategoryList: [],
       currentAgeType: 'origin', // 原图
       cutImageSrc: '',
@@ -238,7 +242,8 @@ class AvatarEdit extends Component {
     })
 
     await imgSecCheck(base64Main)
-    const couldRes = imageAnalyzeFace(base64Main)
+
+    const couldRes = forCheck ? {} : await imageAnalyzeFace(base64Main)
 
     return couldRes
   }
@@ -453,10 +458,16 @@ class AvatarEdit extends Component {
     })
   }
 
+  onMenuMainTogggle = () => {
+    this.setState({
+      isShowMenuMain: !this.state.isShowMenuMain
+    })
+  }
+
 
   render() {
     const { forCheck } = this.props
-    const { isShowShape, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc } = this.state
+    const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc } = this.state
     const { themeName, shareImage } = themeData
     console.log('pageStatus,  :>> ', pageStatus, isShowShape, shapeList, isShowShape);
 
@@ -464,7 +475,7 @@ class AvatarEdit extends Component {
       <Block>
         <PageLoading status={pageStatus} loadingType='fullscreen'></PageLoading>
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
-        <View className='avatar-edit-page' style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
+        <View className={`avatar-edit-page ${isShowMenuMain ? 'menu-open' : ''}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
           <View className='main-wrap'>
             <View className='page-title'>
               {!isH5Page && <Image className='page-title-icon' src={shareImage} />}
@@ -495,14 +506,10 @@ class AvatarEdit extends Component {
               isH5Page={isH5Page}
             />
           </View>
-          <View className={`menu-bottom ${'hide'} ${isShowShape ? 'open' : ''}`}>
-            <View className='menu-item menu-item-avatar'>头像</View>
-            <View className='menu-item menu-item-camera'>拍照</View>
-            <View className='menu-item menu-item-album'>相册</View>
-            <View className='menu-item menu-item-search'>搜索</View>
-          </View>
+          <MenuChoose />
           <CustomTabBar selected={1} hideIndex={1} />
         </View>
+        <MenuMain isShowMenuMain={isShowMenuMain} onMenuMainTogggle={this.onMenuMainTogggle} />
         <PosterDialog
           isH5Page={isH5Page}
           ref={poster => this.posterRef = poster}

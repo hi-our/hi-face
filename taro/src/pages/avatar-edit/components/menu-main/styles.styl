@@ -1,0 +1,25 @@
+$animateDuration = 0.35s
+
+.menu-main
+  position fixed
+  left -30px
+  width 260px
+  top 0
+  bottom 0
+  background #2F5AFF
+  transform translate(-230px, 0)
+  transition $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55) transform
+  &.menu-open
+    transform translate(-30px, 0)
+
+.menu-main-toggle
+  position fixed
+  left 20px
+  top 60px
+  width 50px
+  height 50px
+  background orange
+  transition $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55) background
+
+  &.menu-open
+    background #fff

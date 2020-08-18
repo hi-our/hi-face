@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { View, Image, Button } from '@tarojs/components'
-import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase64 } from 'utils/canvas-drawing'
+import { downloadImgByBase64 } from 'utils/canvas-drawing'
 
 import './styles.styl'
 
