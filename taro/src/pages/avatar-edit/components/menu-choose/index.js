@@ -41,8 +41,8 @@ export default class MenuChoose extends Taro.Component {
     const { isMenuOpen } = this.state
 
     return (
-      <View className={`menu-choose ${IS_IPHONEX ? 'bottom-safe-area' : ''} ${isMenuShow ? 'menu-show' : ''} ${isMenuOpen ? 'open' : ''}`} onClick={this.onMenuOpenToggle}>
-        <View className='menu-item menu-item-avatar'>头像</View>
+      <View className={`menu-choose ${IS_IPHONEX ? 'bottom-safe-area' : ''} ${isMenuShow ? 'menu-show' : ''} ${isMenuOpen ? 'menu-open' : ''}`} onClick={this.onMenuOpenToggle}>
+        <View className='menu-item menu-item-avatar'>头像2</View>
         <View className='menu-item menu-item-camera'>拍照</View>
         <View className='menu-item menu-item-album'>相册</View>
         <View className='menu-item menu-item-search'>搜索</View>

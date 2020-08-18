@@ -4,26 +4,32 @@
   margin-left -45px
   bottom 5px
   z-index 1
+  
+  
 
   // &.hide
   //   transform translateY(-100px)
   //   opacity 0.1
   //   pointer-events none
-  &.open
+  &.menu-open
     .menu-item
       opacity 1
       &:nth-child(1)
         transition-delay 0.1s
-        transform translate3d(-84px, -58px, 0)
+        transform rotate(-60deg) translateY(-85px) rotate(60deg)
+        // transform translate3d(-84px, -58px, 0)
       &:nth-child(2)
-        transition-delay 0.2s
-        transform translate3d(-31px, -98px, 0)
+        transition-delay 0.18s
+        transform rotate(-20deg) translateY(-85px) rotate(20deg)
+        // transform translate3d(-31px, -98px, 0)
       &:nth-child(3)
-        transition-delay 0.3s
-        transform translate3d(31px, -98px, 0)
+        transition-delay 0.25s
+        transform rotate(20deg) translateY(-85px) rotate(-20deg)
+        // transform translate3d(31px, -98px, 0)
       &:nth-child(4)
-        transition-delay 0.4s
-        transform translate3d(84px, -58px, 0)
+        transition-delay 0.3s
+        transform rotate(60deg) translateY(-85px) rotate(-60deg)
+        // transform translate3d(84px, -58px, 0)
 
 .bottom-safe-area
   margin-bottom 12px
@@ -31,10 +37,22 @@
 .menu-choose-btn
   width 90px
   height 90px
-  background rgba(222,232,255,0.4) url(https://image-hosting.xiaoxili.com/img/20200816165127.png) no-repeat center
-  background-size 60px
+  background #f0f5ff 
   border-radius 50%
   position relative
+  &:after
+    content ''
+    display block
+    width 100%
+    height 100%
+    background url(https://image-hosting.xiaoxili.com/img/20200816165127.png) no-repeat center
+    background-size 60px
+
+  &:active
+    box-shadow 3px 5px 10px rgba(0, 0, 0, 0.05)
+    transform scale(0.95)
+    &:after
+      transform translateY(3px)
 
 .menu-item
   position absolute
@@ -50,7 +68,7 @@
   top 50%
   margin -25px 0 0 -25px
   // opacity 0
-  transition 0.5s linear transform, 0.5s linear opacity 
+  transition 0.3s linear transform, 0.3s linear opacity 
 
   &:before
     content ''
