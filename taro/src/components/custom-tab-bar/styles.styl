@@ -2,7 +2,6 @@
   background rgba(222,232,255,0.2)
   display flex
   justify-content space-between
-  filter: blur(2px);
 .tab-bar-item
   width 100px
   height 50px
@@ -11,12 +10,13 @@
   color #95A1AF
   text-align center
   overflow hidden
+  margin-top 0
+  transition 0.15s linear margin-top
 .tab-bar-holder
   width 100px
   height 50px
   border-radius 0 0 50px 50px
   background #fff
-  margin-top -50px
 .tab-bar-image
   width 30px
   height 30px
@@ -24,8 +24,10 @@
   margin 5px auto -3px
 
 .tab-item-hide
-  .tab-bar-holder
-    margin-top 0
+  .tab-bar-image
+    margin-top -46px
+    transition 0.15s linear margin-top 0.15s
+    
 .tab-item-active
   color #2F3742
 

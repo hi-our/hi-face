@@ -65,9 +65,9 @@ export default class CustomTabBar extends Taro.Component {
             const { pagePath, selectedIconPath, iconPath, text } = item
             return (
               <View key={text} className={`tab-bar-item ${selected === index ? 'tab-item-active' : ''} ${hideIndex === index ? 'tab-item-hide' : ''}`} data-path={pagePath} data-index={index} onClick={this.switchTab}>
-                <View className="tab-bar-holder"></View>
                 <Image className="tab-bar-image" src={'' + (selected === index ? selectedIconPath : iconPath)}></Image>
                 <View className="tab-bar-text">{text}</View>
+                <View className="tab-bar-holder"></View>
               </View>
             )
           })

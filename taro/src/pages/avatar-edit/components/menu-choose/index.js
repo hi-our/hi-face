@@ -1,8 +1,11 @@
 import Taro from '@tarojs/taro'
 import { View, Block, Image, Button } from '@tarojs/components'
-import { isIphoneSafeArea } from 'utils/common';
+import { isIphoneSafeArea } from 'utils/common'
+import { getImg } from 'utils/canvas-drawing'
+import TaroCropper from 'components/taro-cropper'
 
 import './styles.styl'
+
 const IS_IPHONEX = isIphoneSafeArea()
 
 export default class MenuChoose extends Taro.Component {
@@ -16,13 +19,17 @@ export default class MenuChoose extends Taro.Component {
 
   static defaultProps = {
     isShowMenuMain: false,
+    cropperWidth: 600,
+    cropperHeight: 600,
+    onChoose: () => {},
     onMenuMainTogggle: () => { }
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      isMenuOpen: false
+      isMenuOpen: false,
+      originSrc: ''
     }
   }
 
@@ -36,18 +43,88 @@ export default class MenuChoose extends Taro.Component {
     })
   }
 
+  onChooseImage = (way) => {
+    Taro.chooseImage({
+      count: 1,
+      sourceType: [way],
+    }).then(res => {
+      this.setState({
+        originSrc: res.tempFilePaths[0]
+      });
+    }).catch(error => {
+      console.log('error :', error);
+    })
+  }
+
+  onCut = (cutImageSrc) => {
+    const { onChoose } = this.props
+    onChoose(cutImageSrc)
+    this.setState({
+      originSrc: ''
+    })
+  }
+
+  onGetUserInfo = async (e) => {
+    const { onChoose } = this.props
+    if (e.detail.userInfo) {
+      //用户按了允许授权按钮
+      // TODO写法，用于更换图片
+      Taro.showToast({
+        icon: 'none',
+        title: '获取头像...'
+      })
+      try {
+        let avatarUrl = await getImg(e.detail.userInfo.avatarUrl)
+        if (avatarUrl) {
+          onChoose(avatarUrl)
+        }
+
+      } catch (error) {
+        console.log('avatarUrl download error:', error);
+        Taro.showToast({
+          icon: 'none',
+          title: '获取失败，请使用相册'
+        })
+      }
+    }
+  }
+
   render() {
-    const { isMenuShow } = this.props
-    const { isMenuOpen } = this.state
+    const { isMenuShow, cropperWidth, cropperHeight  } = this.props
+    const { isMenuOpen, originSrc } = this.state
 
     return (
-      <View className={`menu-choose ${IS_IPHONEX ? 'bottom-safe-area' : ''} ${isMenuShow ? 'menu-show' : ''} ${isMenuOpen ? 'menu-open' : ''}`} onClick={this.onMenuOpenToggle}>
-        <View className='menu-item menu-item-avatar'>头像2</View>
-        <View className='menu-item menu-item-camera'>拍照</View>
-        <View className='menu-item menu-item-album'>相册</View>
-        <View className='menu-item menu-item-search'>搜索</View>
-        <View className='menu-choose-btn'></View>
-      </View>
+      <Block>
+        <View className={`menu-choose ${IS_IPHONEX ? 'bottom-safe-area' : ''} ${isMenuShow ? 'menu-show' : ''} ${isMenuOpen ? 'menu-open' : ''}`} onClick={this.onMenuOpenToggle}>
+          <Button
+            className="menu-item menu-item-avatar"
+            type="default"
+            openType="getUserInfo"
+            onGetUserInfo={this.onGetUserInfo}
+          >
+            头像
+          </Button>
+          <View className='menu-item menu-item-camera' onClick={this.onChooseImage.bind(this, 'camera')}>拍照</View>
+          <View className='menu-item menu-item-album' onClick={this.onChooseImage.bind(this, 'album')}>相册</View>
+          <View className='menu-item menu-item-search'>搜索</View>
+          <View className='menu-choose-btn'></View>
+        </View>
+        <View className='cropper-wrap' style={{ display: originSrc ? 'block' : 'none' }}>
+          <TaroCropper
+            src={originSrc}
+            cropperWidth={cropperWidth}
+            cropperHeight={cropperHeight}
+            pixelRatio={2}
+            ref={node => this.taroCropperRef = node}
+            fullScreen
+            fullScreenCss
+            onCut={this.onCut}
+            hideCancelText={false}
+            onCancel={this.onCancel}
+          />
+        </View>
+
+      </Block>
     )
   }
 }

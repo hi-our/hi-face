@@ -2,15 +2,14 @@
   position absolute
   left 50%
   margin-left -45px
-  bottom 5px
+  bottom 7px
   z-index 1
+  transform translateY(100px)
+  transition 0.3s linear transform
   
-  
+  &.menu-show
+    transform translateY(0)
 
-  // &.hide
-  //   transform translateY(-100px)
-  //   opacity 0.1
-  //   pointer-events none
   &.menu-open
     .menu-item
       opacity 1
@@ -59,7 +58,7 @@
   width 50px
   height 50px
   border-radius 25px
-  background #EBEEFF
+  background #EBEEFF!important
   font-size 10px
   line-height 1.4
   color #2F3742

@@ -469,7 +469,7 @@ class AvatarEdit extends Component {
     const { forCheck } = this.props
     const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc } = this.state
     const { themeName, shareImage } = themeData
-    console.log('pageStatus,  :>> ', pageStatus, isShowShape, shapeList, isShowShape);
+    console.log('pageStatus,  :>> ', pageStatus, isShowShape, shapeList);
 
     return (
       <Block>
@@ -492,10 +492,7 @@ class AvatarEdit extends Component {
                 />
               )
               : (
-                <ImageChoose
-                  onChoose={this.onChoose}
-                  isH5Page={isH5Page}
-                />
+                <Block></Block>
               )
             }
           </View>
@@ -506,8 +503,8 @@ class AvatarEdit extends Component {
               isH5Page={isH5Page}
             />
           </View>
-          <MenuChoose />
-          <CustomTabBar selected={1} hideIndex={1} />
+          <MenuChoose isMenuShow={!isShowShape} onChoose={this.onChoose} />
+          <CustomTabBar selected={1} hideIndex={isShowShape ? -1 : 1} />
         </View>
         <MenuMain isShowMenuMain={isShowMenuMain} onMenuMainTogggle={this.onMenuMainTogggle} />
         <PosterDialog
