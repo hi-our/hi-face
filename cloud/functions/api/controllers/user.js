@@ -1,4 +1,8 @@
 const BaseController = require('./base-controller.js')
+const timeFormat = require('../utils/times').timeFormat
+const uuid = require('uuid')
+
+const uuidv4 = uuid.v4
 
 const LOGIN_TYPE_MAP = {
   wx_mp: 'wxOpenId',
@@ -6,33 +10,77 @@ const LOGIN_TYPE_MAP = {
   web_mp: 'qqOpenOd',
 }
 
+const COLLECTION_NAME = 'users'
 
 class UserController extends BaseController {
   async get(event) {
-    const { loginType = 'wx_mp', userId = '', openId = '' } = event
-    const { OPENID, APPID } = cloud.getWXContext() // 这里获取到的 openId 和 appId 是可信的
-    console.log('OPENID :>> ', LOGIN_TYPE_MAP[loginType], OPENID);
-    let _open_id = openId || OPENID
-    // let queryParams = {}
-    // if (userId) {
-    //   queryParams.userId = userId
-    // }
-    // queryParams[LOGIN_TYPE_MAP[loginType]] = _open_id
-    let result = db.collection('users')
-      .where({
-        [LOGIN_TYPE_MAP[loginType]]: _open_id
-      })
-      .limit(1)
-      .get()
-      .then(res => {
-        return this.success(res.data.length === 1 ? res.data[0] : {})
-      })
-      .catch((error) => {
-        console.log('error :>> ', error);
-        this.fail()
-      })
-    return result
+    const { loginType = 'wx_mp', openId = '' } = event
 
+    const { OPENID } = this.cloud.getWXContext() // 这里获取到的 openId 和 appId 是可信的
+    let _open_id = openId || OPENID
+
+    try {
+      let result = (await this.cloud.db.collection('users').where({
+        [LOGIN_TYPE_MAP[loginType]]: _open_id
+      }).get()).data
+
+      let userData = null
+      if (result.length !== 0 && result[0]._id) {
+        userData = result[0]
+      } else {
+        let saveData = {
+          // 用户唯一标识符 userId
+          userId: uuidv4(),
+          createTime: timeFormat(),
+          updateTime: timeFormat(),
+        }
+        // 记录当前环境下的openId
+        saveData[LOGIN_TYPE_MAP[loginType]] = _open_id
+
+        let res = await this.cloud.db.collection('users').add({
+          data: saveData
+        })
+        userData = res.data
+      }
+
+      return this.success(userData)
+    } catch (e) {
+      console.log('《WARN》代码错误：', e)
+      return this.fail(-10086, 'user/get error', e)
+    }
+  }
+
+  async save(event) {
+    const { loginType = 'wx_mp', openId = '', wechatInfo = {} } = event
+    const { OPENID } = this.cloud.getWXContext() // 这里获取到的 openId 和 appId 是可信的
+    console.log('save :>> ', wechatInfo);
+
+    let _open_id = openId || OPENID
+    try {
+      let result = (await this.cloud.db.collection(COLLECTION_NAME).where({
+        [LOGIN_TYPE_MAP[loginType]]: _open_id
+      }).get()).data
+
+      let _id = ''
+      if (result.length !== 0 && result[0]._id) {
+        await this.cloud.db.collection(COLLECTION_NAME).doc(result[0]._id).update({
+          data: {
+            wechatInfo,
+            updateTime: timeFormat()
+          }
+        })
+
+        _id = result[0]._id
+      }
+
+      if (_id) {
+        const { data } = await this.cloud.db.collection(COLLECTION_NAME).doc(_id).get()
+        return this.success(data)
+      }
+    } catch (e) {
+      console.log('代码错误：', e)
+      return this.fail(-10086, '获取失败', e)
+    }
   }
 }
 

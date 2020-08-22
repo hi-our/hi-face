@@ -1,17 +1,7 @@
-// 云函数入口文件
-const cloud = require('wx-server-sdk')
 const TcbRouter = require('tcb-router')
 const ConfigController = require('./controllers/config')
 const UserController = require('./controllers/user')
 
-cloud.init({
-  env: cloud.DYNAMIC_CURRENT_ENV
-})
-
-global.cloud = cloud
-global.db = cloud.database()
-global._ = global.db.command
-global.$ = global._.aggregate
 
 const api = {
   config: new ConfigController(),
@@ -36,6 +26,13 @@ exports.main = (event, context) => {
   app.router('user/get', async (ctx, next) => {
     console.log('event :>> ', event);
     const result = await api.user.get(event)
+    console.log('result :>> ', result);
+    ctx.body = result
+    await next()
+  })
+  app.router('user/save', async (ctx, next) => {
+    console.log('event :>> ', event);
+    const result = await api.user.save(event)
     console.log('result :>> ', result);
     ctx.body = result
     await next()

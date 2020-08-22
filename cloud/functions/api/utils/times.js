@@ -4,9 +4,11 @@
  * @module utils/times
  */
 const dayjs = require('dayjs')
+require('dayjs/locale/zh-cn')
 const utc = require('dayjs/plugin/utc')
 const timezone = require('dayjs/plugin/timezone')
 
+dayjs.locale('zh-cn')
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
@@ -34,6 +36,19 @@ const timeFormat = (date, _format = '', _timezone) => {
   return dataObj.format(_format)
 }
 
-module.exports = {
-  timeFormat
+const dateToNumber = (date) => {
+  // 毫秒
+  const unixTime = dayjs(date).valueOf()
+
+  if (isNaN(unixTime)) {
+    throw new Error(`Invalid Date Type: ${date}`)
+  }
+
+  return unixTime
 }
+
+module.exports = {
+  timeFormat,
+  dateToNumber
+}
+

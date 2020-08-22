@@ -1,6 +1,10 @@
 const timeFormat = require('../utils/times').timeFormat
+const cloud = require('../tcb')
 
 class BaseController {
+  constructor() {
+    this.cloud = cloud
+  }
   /**
    * 调用成功
    */
@@ -12,8 +16,8 @@ class BaseController {
   /**
    * 调用失败
    */
-  fail(status = -1, message = 'api error') {
-    return { message, status }
+  fail(status = -1, message = 'api error', data = {}) {
+    return { message, status, data }
   }
 }
 

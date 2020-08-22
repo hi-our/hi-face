@@ -73,9 +73,9 @@ const userActions = mirror.model({
         this.loginSuccessEmitter(LOGIN_STATUS.SUCCESS)
         console.log('userInfo :', userInfo)
 
-        if (!wechatInfo.avatarUrl) {
+        // if (!wechatInfo.avatarUrl) {
           this.getWxInfo()
-        }
+        // }
       } catch (error) {
         console.log('login error :>> ', error);
         this.loginSuccessEmitter(LOGIN_STATUS.TIMEOUT)
@@ -92,9 +92,9 @@ const userActions = mirror.model({
         console.log('res', res, res.userInfo)
 
         cloudCallFunction({
-          name: 'login',
+          name: 'api',
           data: {
-            type: 'saveWechatInfo',
+            $url: 'user/save',
             wechatInfo: res.userInfo
           }
         }).then(() => {

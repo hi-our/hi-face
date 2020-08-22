@@ -5,7 +5,7 @@ class ConfigController extends BaseController {
   async get(event) {
     const { configName } = event
 
-    let result = await db.collection('configs')
+    let result = await this.cloud.db.collection('configs')
       .where({
         name: configName
       })
