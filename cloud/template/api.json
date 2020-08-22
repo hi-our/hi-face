@@ -1,0 +1,9 @@
+[
+  {
+    "name": "api-config-get",
+    "value": {
+      "$url": "config/get",
+      "configName": "for-check"
+    }
+  }
+]
