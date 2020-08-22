@@ -1,10 +1,12 @@
+const timeFormat = require('../utils/times').timeFormat
+
 class BaseController {
   /**
    * 调用成功
    */
   success(data) {
-    console.log('success data:>> ', data);
-    return { status: 0, data, message: '' }
+    console.log('success data:>> ', data)
+    return { status: 0, data, message: '', time: timeFormat() }
   }
 
   /**

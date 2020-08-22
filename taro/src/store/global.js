@@ -21,7 +21,10 @@ export default mirror.model({
     // 查询小程序提交审核版本时的开关是否开启
     async getForCheckStatus() {
       const { forCheck } = this.getState()
+      console.log('getForCheckStatus forCheck :>> ', forCheck);
+      console.log('2 :>> ', 2);
       if (typeof forCheck !== 'boolean') {
+        console.log('1 :>> ', 1);
         try {
           const { version } = await cloudCallFunction({
             name: 'collection_get_configs',
@@ -33,52 +36,7 @@ export default mirror.model({
             forCheck: version === config.version
           })
         } catch(err) {
-          console.log('forCheck', err)
-        }
-      }
-    },
-    // 查询小程序提交审核版本时的开关是否开启
-    async getGlobalConfig() {
-      try {
-
-        let configList = ['for-check', 'avatar-edit']
-        const list = await cloudCallFunction({
-          name: 'collection_get_configs',
-          data: {
-            configList
-          }
-        })
-
-        let tempState = {}
-        list.forEach(item => {
-          if (item.name === configList[0]) {
-            tempState.forCheck = item.version === config.version
-          } else {
-            tempState[item.name] = item
-          }
-        })
-
-        console.log('tempState :>> ', tempState)
-        this.setState(tempState)
-      } catch(err) {
-        console.log('getGlobalConfig', err)
-      }
-    },
-    // 查询小程序提交审核版本时的开关是否开启
-    async getForCheckStatus() {
-      const { forCheck } = this.getState()
-      if (typeof forCheck !== 'boolean') {
-        try {
-          const { version } = await cloudCallFunction({
-            name: 'collection_get_configs',
-            data: {
-              configName: 'for-check',
-            }
-          })
-          this.setState({
-            forCheck: version === config.version
-          })
-        } catch(err) {
+          debugger
           console.log('forCheck', err)
         }
       }

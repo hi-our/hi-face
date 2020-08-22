@@ -1,4 +1,4 @@
-import Taro, { Component, AppConfig } from '@tarojs/taro'
+import Taro, { Component } from '@tarojs/taro'
 import { Provider } from '@tarojs/redux'
 import Index from 'pages/test/test'
 import store from '@/store'
@@ -14,8 +14,6 @@ const updateManager = Taro.getUpdateManager()
 // 取消以下注释：
 // if (process.env.NODE_ENV !== 'production' && process.env.TARO_ENV === 'h5')  {
 //   require('nerv-devtools')
-// }
-console.log('AppConfig :>> ', AppConfig);
 
 class App extends Component {
   config = {
