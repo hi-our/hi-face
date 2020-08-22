@@ -2,12 +2,14 @@ const TcbRouter = require('tcb-router')
 const ConfigController = require('./controllers/config')
 const UserController = require('./controllers/user')
 const AvatarController = require('./controllers/avatar')
+const ThemeController = require('./controllers/theme')
 
 
 const api = {
   config: new ConfigController(),
   user: new UserController(),
   avatar: new AvatarController(),
+  theme: new ThemeController(),
 }
 
 exports.main = (event, context) => {
@@ -46,6 +48,16 @@ exports.main = (event, context) => {
   })
   app.router('avatar/list', async (ctx, next) => {
     const result = await api.avatar.list(event)
+    ctx.body = result
+    await next()
+  })
+  app.router('theme/get', async (ctx, next) => {
+    const result = await api.theme.get(event)
+    ctx.body = result
+    await next()
+  })
+  app.router('theme/list', async (ctx, next) => {
+    const result = await api.theme.list(event)
     ctx.body = result
     await next()
   })

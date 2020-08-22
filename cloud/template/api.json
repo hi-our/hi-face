@@ -13,13 +13,6 @@
     }
   },
   {
-    "name": "api-avatar-get",
-    "value": {
-      "$url": "avatar/get",
-      "uuid": "b135fcee-5905-47a3-a080-73ef297ba358"
-    }
-  },
-  {
     "name": "api-avatar-get-dev",
     "value": {
       "$url": "avatar/get",
@@ -40,6 +33,19 @@
     "name": "api-avatar-list",
     "value": {
       "$url": "avatar/list"
+    }
+  },
+  {
+    "name": "api-theme-list",
+    "value": {
+      "$url": "theme/list"
+    }
+  },
+  {
+    "name": "api-theme-get-dev",
+    "value": {
+      "$url": "theme/get",
+      "themeId": "6af880a55eb7ceb80074f5f827b04f35"
     }
   }
 ]

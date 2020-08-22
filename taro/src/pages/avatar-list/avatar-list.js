@@ -35,7 +35,8 @@ class MyAvatars extends Component {
       const { items } = await cloudCallFunction({
         name: 'api',
         data: {
-          $url: 'avatar/list'
+          $url: 'avatar/list',
+          pageSize: 50,
         }
       })
 
@@ -107,9 +108,7 @@ class MyAvatars extends Component {
         <View className='avatar-list'>
           {
             list.filter(item => item.avatarFileID).map((item) => {
-              console.log('item :', item);
               const { uuid, avatarFileID } = item
-              console.log('avatarFileID :', avatarFileID);
               return (
                 <View key={uuid} className="avatar-item" data-uuid={uuid} onClick={this.goOneAvatar.bind(this, uuid)}>
                   <Image className="avatar-image" src={avatarFileID}></Image>
