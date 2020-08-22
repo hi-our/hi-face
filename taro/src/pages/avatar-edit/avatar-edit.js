@@ -395,7 +395,8 @@ class AvatarEdit extends Component {
 
 
   onSaveImageToCloud = async (tempFilePath) => {
-    const { currentAgeType } = this.state
+    const { currentAgeType, themeData } = this.state
+    const { _id: themeId, themeName } = themeData
 
     try {
       // 上传头像图片
@@ -403,13 +404,13 @@ class AvatarEdit extends Component {
       console.log('上传头像图片 fileID :', fileID);
 
       const { uuid } = await cloudCallFunction({
-        name: 'collection_add_one',
+        name: 'api',
         data: {
-          collection_name: 'avatars',
-          info: {
-            avatarFileID: fileID,
-            ageType: currentAgeType
-          }
+          $url: 'avatar/save',
+          avatarFileID: fileID,
+          ageType: currentAgeType,
+          themeId,
+          themeName
         }
       })
       console.log('addRes uuid:', uuid);

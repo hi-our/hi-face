@@ -16,10 +16,12 @@ class UserController extends BaseController {
   async get(event) {
     const { loginType = 'wx_mp', openId = '' } = event
 
+    // 微信环境下获取openId
     const { OPENID } = this.cloud.getWXContext() // 这里获取到的 openId 和 appId 是可信的
     let _open_id = openId || OPENID
 
     try {
+      // 查询是否当前环境下有该用户
       let result = (await this.cloud.db.collection('users').where({
         [LOGIN_TYPE_MAP[loginType]]: _open_id
       }).get()).data
@@ -28,6 +30,7 @@ class UserController extends BaseController {
       if (result.length !== 0 && result[0]._id) {
         userData = result[0]
       } else {
+        // 若没有该用户，新增一个用户数据
         let saveData = {
           // 用户唯一标识符 userId
           userId: uuidv4(),
@@ -51,9 +54,9 @@ class UserController extends BaseController {
   }
 
   async save(event) {
+    // 保存用户信息
     const { loginType = 'wx_mp', openId = '', wechatInfo = {} } = event
     const { OPENID } = this.cloud.getWXContext() // 这里获取到的 openId 和 appId 是可信的
-    console.log('save :>> ', wechatInfo);
 
     let _open_id = openId || OPENID
     try {

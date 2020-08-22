@@ -43,7 +43,7 @@ class AvatarPoster extends Component {
 
   componentDidMount() {
     this.loadData()
-    this.onCreateQrcode()
+    // this.onCreateQrcode()
   }
 
   onShareAppMessage() {
@@ -91,9 +91,9 @@ class AvatarPoster extends Component {
     let hasError = false
     try {
       const { avatarFileID = '', ageType = '', isAuthor } = await cloudCallFunction({
-        name: 'collection_get_one_by_uuid',
+        name: 'api',
         data: {
-          collection_name: 'avatars',
+          $url: 'avatar/get',
           uuid: this.pageUUID,
         }
       })
