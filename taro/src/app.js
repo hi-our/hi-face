@@ -93,13 +93,10 @@ class App extends Component {
   componentDidShow() {
     // 判断是否登录超时处理
     // userActions.checkLoginTimeout()
-
-    console.log('this.$router :', this.$router);
     const { scene, query = {} } = this.$router.params
     if (query.source) {
       Taro.setStorageSync('source', query.source)
     }
-    console.log('scene, query', scene, query)
 
     if (scene) {
       this.addToIndexBtn(scene)

@@ -5,5 +5,11 @@
       "$url": "config/get",
       "configName": "for-check"
     }
+  },
+  {
+    "name": "api-user-get",
+    "value": {
+      "$url": "user/get"
+    }
   }
 ]

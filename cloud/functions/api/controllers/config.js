@@ -23,7 +23,7 @@ class ConfigController extends BaseController {
         console.log('data :>> ', data);
         return this.success(data.length === 1 ? data[0] : data)
       })
-      .catch(() => this.fail([]))
+      .catch(() => this.fail())
 
     return result
   }
