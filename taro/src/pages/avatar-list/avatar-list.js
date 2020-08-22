@@ -30,29 +30,18 @@ class MyAvatars extends Component {
     this.loadData()
   }
 
-  loadData = async () => {
-    // var testData = ''
-    // for (let index = 0; index < 10000; index++) {
-    //   testData += '0123456789'
-    // }
-
-    // console.log('testData :', testData)
-    // console.log('testData大小为 :', testData.length / 1024 + 'k')
-
+  loadData = async (pageNo = 1) => {
     try {
-      const data = await cloudCallFunction({
-        name: 'collection_query_page',
+      const { items } = await cloudCallFunction({
+        name: 'api',
         data: {
-          collection_name: 'avatars',
-          orderBy: {
-            field: 'update_time'
-          }
+          $url: 'avatar/list'
         }
       })
 
-      console.log('data.length :', data.length);
+      console.log('data.length :', items.length);
 
-      if (data.length === 0) {
+      if (pageNo === 1, items.length === 0) {
         this.setState({
           pageStatus: 'empty',
           errorText: '数据为空'
@@ -61,7 +50,7 @@ class MyAvatars extends Component {
       }
       
       this.setState({
-        list: transformList(data),
+        list: transformList(items),
         pageStatus: 'done'
       })
 

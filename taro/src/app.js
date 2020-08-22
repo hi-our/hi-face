@@ -19,11 +19,11 @@ class App extends Component {
   config = {
     pages: [
       'pages/avatar-edit/avatar-edit',
+      'pages/avatar-list/avatar-list',
+      'pages/avatar-poster/avatar-poster',
       'pages/theme-list/theme-list',
       'pages/self/self',
-      'pages/my-avatars/my-avatars',
       'pages/thanks/thanks',
-      'pages/avatar-poster/avatar-poster',
       'pages/menu-demo/menu-demo',
     ],
     // plugins: {

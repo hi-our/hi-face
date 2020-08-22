@@ -112,6 +112,13 @@
 					"pathName": "pages/menu-demo/menu-demo",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": 7,
+					"name": "avatar-list-头像列表",
+					"pathName": "pages/avatar-list/avatar-list",
+					"query": "",
+					"scene": null
 				}
 			]
 		}

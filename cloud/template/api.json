@@ -35,5 +35,11 @@
       "themeId": 123,
       "themeName": "520"
     }
+  },
+  {
+    "name": "api-avatar-list",
+    "value": {
+      "$url": "avatar/list"
+    }
   }
 ]

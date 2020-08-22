@@ -18,6 +18,7 @@ class UserController extends BaseController {
 
     // 微信环境下获取openId
     const { OPENID } = this.cloud.getWXContext() // 这里获取到的 openId 和 appId 是可信的
+    console.log('OPENID', OPENID)
     let _open_id = openId || OPENID
 
     try {
