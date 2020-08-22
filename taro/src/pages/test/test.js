@@ -27,7 +27,7 @@ class Index extends Component {
     const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/20200812132355.png'
 
     return {
-      title: 'AI圣诞帽',
+      title: '测试页-AI圣诞帽',
       imageUrl: DEFAULT_SHARE_COVER,
       path: '/pages/test/test'
     }

@@ -47,5 +47,12 @@
       "$url": "theme/get",
       "themeId": "6af880a55eb7ceb80074f5f827b04f35"
     }
+  },
+  {
+    "name": "api-theme-get-dev-shapes",
+    "value": {
+      "$url": "theme/get",
+      "needShapes": true
+    }
   }
 ]

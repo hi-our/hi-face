@@ -2,6 +2,9 @@ const BaseController = require('./base-controller.js')
 
 const COLLECTION_NAME = 'themes'
 
+const ConfigController = require('./config')
+const apiConfig = new ConfigController()
+
 const getImageUrl = async (cloud, fileID) => {
   const { fileList } = await cloud.getTempFileURL({
     fileList: [fileID]
@@ -16,15 +19,11 @@ class ThemeController extends BaseController {
     try {
 
       if (!themeId) {
-        let configRes = await this.cloud.callFunction({
-          name: 'collection_get_configs',
-          data: {
-            configName: 'avatar-edit'
-          }
+        let { data } = await apiConfig.get({
+          configName: 'avatar-edit'
         })
-
-        let result = configRes.result.data
-        themeId = result.themeId
+        console.log('result :>> ', data);
+        themeId = data.themeId
       }
 
       if (!themeId) {

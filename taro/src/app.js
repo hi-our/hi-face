@@ -22,9 +22,7 @@ class App extends Component {
       'pages/avatar-list/avatar-list',
       'pages/avatar-poster/avatar-poster',
       'pages/theme-list/theme-list',
-      'pages/self/self',
-      'pages/thanks/thanks',
-      'pages/menu-demo/menu-demo',
+      'pages/self/self'
     ],
     // plugins: {
     //   tucao: {

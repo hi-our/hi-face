@@ -73,9 +73,9 @@ const userActions = mirror.model({
         this.loginSuccessEmitter(LOGIN_STATUS.SUCCESS)
         console.log('userInfo :', userInfo)
 
-        // if (!wechatInfo.avatarUrl) {
+        if (!wechatInfo.avatarUrl) {
           this.getWxInfo()
-        // }
+        }
       } catch (error) {
         console.log('login error :>> ', error);
         this.loginSuccessEmitter(LOGIN_STATUS.TIMEOUT)

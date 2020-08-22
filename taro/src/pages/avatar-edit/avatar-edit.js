@@ -93,7 +93,11 @@ class AvatarEdit extends Component {
   loadData = async () => {
     try {
       const themeData = await cloudCallFunction({
-        name: 'collection_get_theme_data'
+        name: 'api',
+        data: {
+          $url: 'theme/get',
+          needShapes: true
+        }
       })
 
       console.log('themeData :>> ', themeData);
