@@ -43,7 +43,7 @@ class AvatarPoster extends Component {
 
   componentDidMount() {
     this.loadData()
-    // this.onCreateQrcode()
+    this.onCreateQrcode()
   }
 
   onShareAppMessage() {
