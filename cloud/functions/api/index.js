@@ -62,22 +62,5 @@ exports.main = (event, context) => {
     await next()
   })
 
-  // app.router(['user', 'timer'], async (ctx, next) => {
-  //   ctx.data.company = 'Tencent'
-  //   await next()
-  // })
-
-  // app.router('user', async (ctx, next) => {
-  //   ctx.data.name = 'heyli'
-  //   await next()
-  // }, async (ctx, next) => {
-  //   ctx.data.sex = 'male'
-  //   await next()
-  // }, async (ctx) => {
-  //   ctx.data.city = 'Foshan'
-  //   ctx.body = { code: 0, data: ctx.data }
-  // })
-
-
   return app.serve()
 }

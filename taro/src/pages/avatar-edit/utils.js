@@ -12,6 +12,19 @@ export const SAVE_IMAGE_WIDTH = ORIGIN_CANVAS_SIZE * 2
 export const DEFAULT_SHAPE_SIZE = 100 * PAGE_DPR
 export const STATUS_BAR_HEIGHT = statusBarHeight
 
+export const getDefaultState = () => {
+  return {
+    pageStatus: 'loading',
+    themeData: {},
+    isShowMenuMain: false,
+    shapeCategoryList: [],
+    currentAgeType: 'origin', // 原图
+    cutImageSrc: '',
+    isShowShape: false,
+    posterSrc: '',
+  }
+}
+
 
 export const getDefaultShape = (categoryName = 'crown') => {
   return {

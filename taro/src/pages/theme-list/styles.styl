@@ -1,0 +1,50 @@
+.theme-list-page
+  height 100vh
+  overflow hidden
+  box-sizing border-box
+  display flex
+  flex-direction column
+  justify-content space-between
+  border-radius 0
+  transition $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55) transform, $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55) border-radius
+
+
+.main-wrap
+  flex 1
+
+.theme-tabs
+  height 100%
+.tabs-bar
+  padding 20px 0
+  white-space nowrap
+.tabs-bar-item
+  width 80px
+  display inline-block
+  padding 0 10px
+
+  &:first-child
+    padding-left 20px
+  &:last-child
+    padding-right 20px
+
+.bar-image
+  display block
+  width 80px
+  height 80px
+  border-radius 20px
+.bar-text
+  margin 8px auto 0
+  color #2F3742
+  width 60px
+  padding 0 5px
+  text-align center
+  font-size 10px
+  line-height 20px
+  border-radius 10px
+
+.bar-active
+  .bar-text
+    background #D5DEFF
+
+.theme-swiper
+  height calc(100% - 148px)

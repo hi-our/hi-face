@@ -81,6 +81,7 @@ class App extends Component {
 
       // 检查过审开关是否开启
       globalActions.getForCheckStatus()
+      globalActions.getThemeList()
     }
     
     this.onUserLogin()

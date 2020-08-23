@@ -1,8 +1,7 @@
 const BaseController = require('./base-controller.js')
+const ConfigController = require('./config')
 
 const COLLECTION_NAME = 'themes'
-
-const ConfigController = require('./config')
 const apiConfig = new ConfigController()
 
 const getImageUrl = async (cloud, fileID) => {
@@ -46,7 +45,7 @@ class ThemeController extends BaseController {
             as: 'shapeList'
           })
           .end()
-        if (categoryErrMsg === 'collection.aggregate:ok') {
+        if (categoryErrMsg === 'collection.aggregate:ok' && shapeCategoryList.length > 0) {
           // TODO 临时写法，快速换地址
           let cloudId = shapeCategoryList[0].shapeList[0].imageFileID
           let couldPrefix = cloudId.split('/uploads/')[0]
@@ -97,6 +96,7 @@ class ThemeController extends BaseController {
 
       let operation = this.cloud.db.collection(COLLECTION_NAME)
         .where({
+          isPublic: true,
           ...condition
         })
         .skip(pageSize * (pageNo - 1))
@@ -105,7 +105,7 @@ class ThemeController extends BaseController {
       if (orderBy.field) {
         operation = operation.orderBy(orderBy.field, orderBy.orderType || 'desc')
       } else {
-        operation = operation.orderBy('updateTime', 'desc')
+        operation = operation.orderBy('order', 'asc')
       }
       let { data = [] } = await operation.get()
 

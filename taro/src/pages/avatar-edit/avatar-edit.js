@@ -1,14 +1,13 @@
 import Taro, { Component } from '@tarojs/taro'
 import { connect } from '@tarojs/redux'
-import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
-import { STATUS_BAR_HEIGHT, SAVE_IMAGE_WIDTH, getDefaultShape, dataStyleList } from './utils'
+import { View, Image, Canvas, Block } from '@tarojs/components'
+import { STATUS_BAR_HEIGHT, SAVE_IMAGE_WIDTH, getDefaultState } from './utils'
 import PageLoading from 'components/page-status'
-import ImageChoose from './components/image-choose'
 import ShapeEdit from './components/shape-edit'
 import TabCategoryList from './components/tab-category-list'
 import PosterDialog from './components/poster-dialog'
 import { getHatInfo, getHatShapeList } from 'utils/face-utils'
-import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase64 } from 'utils/canvas-drawing'
+import { getImg, fsmReadFile, getBase64Main } from 'utils/canvas-drawing'
 import { h5PageModalTips } from 'utils/common'
 import { cloudCallFunction } from 'utils/fetch'
 import promisify from 'utils/promisify'
@@ -16,7 +15,8 @@ import { imgSecCheck } from 'utils/image-safe-check';
 import { imageAnalyzeFace } from 'utils/image-analyze-face'
 import CustomTabBar from 'components/custom-tab-bar'
 import MenuMain from './components/menu-main'
-import MenuChoose from './components/menu-choose';
+import MenuChoose from './components/menu-choose'
+import EventEmitter from 'utils/event-emitter'
 
 
 import './styles.styl'
@@ -37,25 +37,27 @@ class AvatarEdit extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      pageStatus: 'loading',
-      themeData: {},
-      isShowMenuMain: false,
-      shapeCategoryList: [],
-      currentAgeType: 'origin', // 原图
-      cutImageSrc: '',
-      isShowShape: false,
-      posterSrc: '',
-    }
+    this.state = getDefaultState()
   }
 
   
-  componentDidMount() {
-    if (isH5Page) {
-      setTimeout(() => {
-        this.loadData() 
-      }, 1500);
-    } else {
+  // componentDidMount() {
+  //   if (isH5Page) {
+  //     setTimeout(() => {
+  //       this.loadData() 
+  //     }, 1500);
+  //   } else {
+  //     this.loadData()
+  //   }
+  // }
+
+  componentDidShow() {
+    const themeIdData = EventEmitter.take('themeId')
+    console.log('themeIdData :>> ', themeIdData)
+    if (themeIdData && themeIdData[0] !== this.state.themeData._id) {
+      this.setState(getDefaultState())
+      this.loadData(themeIdData[0])
+    } else if (this.state.pageStatus === 'loading') {
       this.loadData()
     }
   }
@@ -90,13 +92,15 @@ class AvatarEdit extends Component {
     }
   }
 
-  loadData = async () => {
+  loadData = async (themeId = '') => {
+    console.log('loadData themeId :>> ', themeId);
     try {
       const themeData = await cloudCallFunction({
         name: 'api',
         data: {
           $url: 'theme/get',
-          needShapes: true
+          needShapes: true,
+          themeId
         }
       })
 
