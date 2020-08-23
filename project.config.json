@@ -107,9 +107,9 @@
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "menu-demo",
-					"pathName": "pages/menu-demo/menu-demo",
+					"id": 6,
+					"name": "主题列表",
+					"pathName": "pages/theme-list/theme-list",
 					"query": "",
 					"scene": null
 				},

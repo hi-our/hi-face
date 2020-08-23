@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
+import { View, Image } from '@tarojs/components'
 
 import { cloudCallFunction } from 'utils/fetch'
 import PageWrapper from 'components/page-wrapper'
@@ -42,7 +42,7 @@ class MyAvatars extends Component {
 
       console.log('data.length :', items.length);
 
-      if (pageNo === 1, items.length === 0) {
+      if (pageNo === 1 && items.length === 0) {
         this.setState({
           pageStatus: 'empty',
           errorText: '数据为空'
