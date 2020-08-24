@@ -3,7 +3,7 @@ import { View, Block } from '@tarojs/components'
 
 import './styles.styl'
 
-export default class MenuMain extends Taro.Component {
+export default class MenuMain extends Taro.PureComponent {
   config = {
     component: true
   }
@@ -13,6 +13,7 @@ export default class MenuMain extends Taro.Component {
   }
 
   static defaultProps = {
+    themeList: [],
     isShowMenuMain: false,
     onMenuMainTogggle: () => {}
   }
@@ -23,13 +24,23 @@ export default class MenuMain extends Taro.Component {
   }
 
   render() {
-    const { isShowMenuMain } = this.props
+    const { isShowMenuMain, themeList } = this.props
+    console.log('menuMain themeList :>> ', themeList);
 
     return (
       <Block>
-        <View className={`menu-main-mask ${isShowMenuMain ? 'menu-open' : ''}`}></View>
-        <View className={`menu-main ${isShowMenuMain ? 'menu-open' : ''}`}></View>
-        <View className={`menu-main-toggle ${isShowMenuMain ? 'menu-open' : ''}`} onClick={this.onMenuMainTogggle}>菜单</View>
+        <View className={`menu-main-mask ${isShowMenuMain ? 'menu-open' : ''}`} onClick={this.onMenuMainTogggle}></View>
+        <View className={`menu-main ${isShowMenuMain ? 'menu-open' : ''}`}>
+          <View>主题列表</View>
+          <View>
+
+          </View>
+        </View>
+        <View className={`menu-main-toggle ${isShowMenuMain ? 'menu-open' : ''}`} onClick={this.onMenuMainTogggle}>
+          <View className="menu-line"></View>
+          <View className="menu-line"></View>
+          <View className="menu-line"></View>
+        </View>
       </Block>
     )
   }

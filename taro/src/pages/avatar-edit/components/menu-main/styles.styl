@@ -1,5 +1,14 @@
 $animateDuration = 0.35s
 
+.menu-main-mask
+  display none
+  position fixed
+  left 0
+  right 0
+  top 0
+  bottom 0
+  &.menu-open
+    display block
 .menu-main
   position fixed
   left -30px
@@ -18,8 +27,26 @@ $animateDuration = 0.35s
   top 60px
   width 50px
   height 50px
-  background orange
   transition $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55) background
+  display flex
+  flex-direction column
+  align-items center
+  justify-content center
 
+  .menu-line
+    width 26px
+    height 4px
+    margin 3px auto
+    background #2F3742
+    border-radius 2px
+    transition $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55)
+  
   &.menu-open
-    background #fff
+    .menu-line
+      background #fff
+      &:nth-child(1)
+        transform translate(0%, 245%) rotate(-45deg)
+      &:nth-child(2)
+        opacity 0
+      &:nth-child(3)
+        transform translate(0%, -245%) rotate(45deg)

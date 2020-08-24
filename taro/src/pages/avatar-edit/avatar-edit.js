@@ -26,7 +26,8 @@ const isQQPage = process.env.TARO_ENV === 'qq'
 
 
 @connect(state => ({
-  forCheck: state.global.forCheck
+  forCheck: state.global.forCheck,
+  themeList: state.global.themeList
 }), null)
 class AvatarEdit extends Component {
   config = {
@@ -475,7 +476,7 @@ class AvatarEdit extends Component {
 
 
   render() {
-    const { forCheck } = this.props
+    const { forCheck, themeList } = this.props
     const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc } = this.state
     const { themeName, shareImage } = themeData
     console.log('pageStatus,  :>> ', pageStatus, isShowShape, shapeList);
@@ -515,7 +516,7 @@ class AvatarEdit extends Component {
           <MenuChoose isMenuShow={!isShowShape} onChoose={this.onChoose} />
           <CustomTabBar selected={1} hideIndex={isShowShape ? -1 : 1} />
         </View>
-        <MenuMain isShowMenuMain={isShowMenuMain} onMenuMainTogggle={this.onMenuMainTogggle} />
+        <MenuMain isShowMenuMain={isShowMenuMain} themeList={themeList} onMenuMainTogggle={this.onMenuMainTogggle} />
         <PosterDialog
           isH5Page={isH5Page}
           ref={poster => this.posterRef = poster}

@@ -16,7 +16,7 @@ export const getDefaultState = () => {
   return {
     pageStatus: 'loading',
     themeData: {},
-    isShowMenuMain: false,
+    isShowMenuMain: true,
     shapeCategoryList: [],
     currentAgeType: 'origin', // 原图
     cutImageSrc: '',
