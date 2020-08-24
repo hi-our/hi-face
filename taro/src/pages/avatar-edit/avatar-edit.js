@@ -263,29 +263,34 @@ class AvatarEdit extends Component {
       posterSrc: '',
     })
 
-    try {
-      Taro.showModal({
-        title: '提示',
-        content: '图片会上传到云端，便于分享和下次查看，请确定？',
-        success: (res) => {
-          if (res.confirm) {
-            Taro.showLoading({
-              title: '图片生成中'
-            })
-            this.drawCanvas()
+    Taro.showLoading({
+      title: '图片生成中'
+    })
+    this.drawCanvas()
 
-          } else if (res.cancel) {
-            console.log('用户点击取消')
-          }
-        }
-      })
-    } catch (error) {
-      Taro.hideLoading()
-      Taro.showToast({
-        title: '图片生成失败，请重试'
-      })
-      console.log('error :', error)
-    }
+    // try {
+    //   Taro.showModal({
+    //     title: '提示',
+    //     content: '图片会上传到云端，便于分享和下次查看，请确定？',
+    //     success: (res) => {
+    //       if (res.confirm) {
+    //         Taro.showLoading({
+    //           title: '图片生成中'
+    //         })
+    //         this.drawCanvas()
+
+    //       } else if (res.cancel) {
+    //         console.log('用户点击取消')
+    //       }
+    //     }
+    //   })
+    // } catch (error) {
+    //   Taro.hideLoading()
+    //   Taro.showToast({
+    //     title: '图片生成失败，请重试'
+    //   })
+    //   console.log('error :', error)
+    // }
   }
 
 
@@ -371,10 +376,6 @@ class AvatarEdit extends Component {
           // 设置海报图片
           this.setState({
             posterSrc: res.tempFilePath
-          }, () => {
-            
-            // 展示海报弹窗
-            this.posterRef.onShowPoster()
           })
 
         },
@@ -387,6 +388,29 @@ class AvatarEdit extends Component {
       })
     })
   }
+
+  saveImageToPhotosAlbum = (tempFilePath) => {
+    Taro.navigateTo({
+      url: `/pages/avatar-poster/avatar-poster?uuid=${this.state.shareUUID}`
+    })
+    
+    Taro.saveImageToPhotosAlbum({
+      filePath: tempFilePath,
+      success: res2 => {
+        Taro.showToast({
+          title: '图片保存成功'
+        })
+        console.log('保存成功 :', res2);
+      },
+      fail(e) {
+        Taro.showToast({
+          title: '图片未保存成功'
+        })
+        console.log('图片未保存成功:' + e);
+      }
+    })
+  }
+
 
 
   onSaveImageToCloud = async (tempFilePath) => {
@@ -466,7 +490,7 @@ class AvatarEdit extends Component {
   render() {
     const { forCheck, themeList } = this.props
     const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc } = this.state
-    const { coverImage } = themeData
+    const { coverImage, _id: activeThemeId } = themeData
 
     return (
       <Block>
@@ -474,10 +498,6 @@ class AvatarEdit extends Component {
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
         <View className={`avatar-edit-page ${isShowMenuMain ? 'menu-open' : ''}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
           <View className='main-wrap'>
-            <View className='page-title'>
-              {/* {!isH5Page && <Image className='page-title-icon' src={shareImage} />}
-              {themeName || '头像编辑'} */}
-            </View>
             {isShowShape
               ? (
                 <ShapeEdit
@@ -494,7 +514,7 @@ class AvatarEdit extends Component {
                 </Block>
               )
             }
-            <View style={{ display: pageStatus === 'done' && isShowShape  ? 'block' : 'none' }}>
+            <View className={`tabs-bottom ${pageStatus === 'done' && isShowShape ? 'tabs-open' : ''}`} >
               <TabCategoryList
                 categoryList={shapeCategoryList}
                 chooseShape={this.chooseShape}
@@ -506,6 +526,7 @@ class AvatarEdit extends Component {
           <CustomTabBar selected={1} hideIndex={isShowShape ? -1 : 1} />
         </View>
         <MenuMain
+          activeThemeId={activeThemeId}
           isShowMenuMain={isShowMenuMain}
           themeList={themeList}
           onMenuMainTogggle={this.onMenuMainTogggle}

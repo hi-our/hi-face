@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { Block, View, Image } from '@tarojs/components'
+import { Block, View, Image, Button } from '@tarojs/components'
 import { getRealRpx } from 'utils/canvas-drawing'
 
 import './styles.styl'
@@ -267,7 +267,7 @@ class ShapeEdit extends Taro.Component {
   }
 
   render() {
-    const { cutImageSrc } = this.props
+    const { cutImageSrc, posterSrc } = this.props
     const { shapeList = [], currentShapeIndex } = this.state
 
     return (
@@ -334,9 +334,10 @@ class ShapeEdit extends Taro.Component {
           <View className='button-remove' onClick={this.removeImage}>
             移除图片
           </View>
-          <View className='button-download' onClick={this.generateImage}>
-            合成图片
-          </View>
+          <Button className='button-download' openType='share' data-poster-src={posterSrc}>保存并分享</Button>
+          {/* <View className='button-download' onClick={this.generateImage}>
+            保存并分享
+          </View> */}
         </View>
       </View>
     )

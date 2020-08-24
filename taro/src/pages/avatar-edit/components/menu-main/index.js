@@ -29,7 +29,6 @@ export default class MenuMain extends Taro.PureComponent {
   }
 
   onSwitchTheme = (themeId) => {
-    console.log('themeId :>> ', themeId)
     const { onSwitchTheme } = this.props
     onSwitchTheme(themeId)
     this.onMenuMainTogggle()

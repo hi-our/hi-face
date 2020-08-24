@@ -41,63 +41,22 @@ $animateDuration = 0.35s
   height 600px
 
 .main-wrap
-  padding 10px
-
-  @media (max-width 359px)
-    padding 5px
-  
+  display flex
+  flex-direction column
+  justify-content space-between
+  flex 1
+  overflow hidden
 
 .page-cover
-  position absolute
-  left 50%
-  top 50%
-  transform translate(-50%, -50%)
+  margin 133px auto 0
   width 300px
   height 300px
 
-.test-hat-btn
-  position fixed
-  right 4px
-  top 0
-  font-size 12px
-  width 14px
-  padding 5px
-  line-height 1
-  border-radius 0 0 15px 15px 
-  box-shadow inset 0 0 0 1px #4fa938
-  color #4fa938
-  text-align center
-
-  &:after
-    content ''
-    display block
-    margin-top 5px
-    width 16px
-    height 16px
-    background url(https://image-hosting.xiaoxili.com/img/20200812132452.png) no-repeat center / contain
-
-.share-btn
-  position fixed
-  left 4px
-  top 0
-  font-size 12px
-  width 14px
-  box-sizing content-box
-  padding 5px
-  line-height 1
-  border-radius 0 0 15px 15px 
-  box-shadow inset 0 0 0 1px #2f5aff
-  color #2f5aff
-  text-align center
-
-.share-btn-icon
-  margin 5px auto 0
-  width 16px
-  height 16px
-  background url(https://image-hosting.xiaoxili.com/img/20200812132508.png) no-repeat  center / contain
-
-
-
+.tabs-bottom
+  transition 0.3s linear
+  transform translateY(100%)
+  &.tabs-open
+    transform translateY(0)
 
 .avatar-edit-page.menu-open
   transform translate(230px, 0) scale(0.75)
