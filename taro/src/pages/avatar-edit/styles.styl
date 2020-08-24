@@ -7,6 +7,7 @@ html
 $animateDuration = 0.35s
 
 .avatar-edit-page
+  background linear-gradient(#1f55ff, #dae6f5, #fff, #fff)
   height 100vh
   overflow hidden
   box-sizing border-box
@@ -23,6 +24,7 @@ $animateDuration = 0.35s
   font-weight 400
   color #2f3742
   line-height 44px
+  height 44px
 
 .page-title-icon
   display inline-block
@@ -39,12 +41,19 @@ $animateDuration = 0.35s
   height 600px
 
 .main-wrap
-  background #fff
   padding 10px
 
   @media (max-width 359px)
     padding 5px
   
+
+.page-cover
+  position absolute
+  left 50%
+  top 50%
+  transform translate(-50%, -50%)
+  width 300px
+  height 300px
 
 .test-hat-btn
   position fixed
@@ -92,7 +101,7 @@ $animateDuration = 0.35s
 
 .avatar-edit-page.menu-open
   transform translate(230px, 0) scale(0.75)
-  box-shadow 0 0 0 3px red
+  box-shadow 0 0 0 3px rgba(0, 0, 0, 0.05)
   border-radius 50px
   
 

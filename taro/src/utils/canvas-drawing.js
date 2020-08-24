@@ -160,15 +160,11 @@ export const drawHat = async (ctx, config) => {
   const img = isH5Page ? await getImg(HatImgTest) : HatImgTest
 
   ctx.save();
-
-  console.log('headPos.x, headPos.y :', headPos.X, headPos.Y);
   ctx.translate(headPos.X, headPos.Y);
   // 旋转画布到特定角度
   ctx.rotate(angle);
   // 偏移图片，使帽子中心刚好在原点
-  console.log('translateHat(faceWidth, 0, 0) :', translateHat(faceWidth, 0, 0));
   const { x, y, width, height } = translateHat(faceWidth, 0, 0);
-  console.log('x, y, width, height :', x, y, width, height);
   // 我的圣诞帽子实际佩戴部分长度只有0.75倍整个图片长度
   ctx.drawImage(img, x, y, width, height);
   
@@ -184,8 +180,6 @@ export const drawHat = async (ctx, config) => {
  */
 export const drawing = async (canvas, options) => {
   const { info, width = 200, height = 200, imgSrc = 'images/default.jpg' } = options;
-  console.log('123 :', 123);
-  console.log('canvas :', canvas);
   let ctx = null
   try {
     ctx = Taro.createCanvasContext('canvasHat')

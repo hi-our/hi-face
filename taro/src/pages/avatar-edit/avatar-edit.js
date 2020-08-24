@@ -54,7 +54,6 @@ class AvatarEdit extends Component {
 
   componentDidShow() {
     const themeIdData = EventEmitter.take('themeId')
-    console.log('themeIdData :>> ', themeIdData)
     if (themeIdData && themeIdData[0] !== this.state.themeData._id) {
       this.setState(getDefaultState())
       this.loadData(themeIdData[0])
@@ -73,8 +72,6 @@ class AvatarEdit extends Component {
       const { dataset = {} } = target
       const { posterSrc = '' } = dataset
 
-      console.log('posterSrc :', posterSrc);
-
       if (posterSrc) {
         shareImage = posterSrc
         const { shareUUID } = this.state
@@ -85,7 +82,6 @@ class AvatarEdit extends Component {
 
     }
 
-    console.log('shareUrl :', shareUrl);
     return {
       title: shareTitle,
       imageUrl: shareImage,
@@ -94,7 +90,6 @@ class AvatarEdit extends Component {
   }
 
   loadData = async (themeId = '') => {
-    console.log('loadData themeId :>> ', themeId);
     try {
       const themeData = await cloudCallFunction({
         name: 'api',
@@ -105,9 +100,7 @@ class AvatarEdit extends Component {
         }
       })
 
-      console.log('themeData :>> ', themeData);
-
-      const { shapeCategoryList, themeName } = themeData
+      const { shapeCategoryList } = themeData
       
       this.setState({
         pageStatus: 'done',
@@ -134,7 +127,6 @@ class AvatarEdit extends Component {
     this.setState({
       cutImageSrc
     }, () => {
-      console.log('cutImageSrc :>> ', cutImageSrc);
       this.onAnalyzeFace(cutImageSrc)
     })
   }
@@ -156,8 +148,6 @@ class AvatarEdit extends Component {
     const { shapeCategoryList = [] } = this.state
     const { shapeList: shapeListRes } = shapeCategoryList[0]
     const shapeOne = shapeListRes[0]
-    console.log('shapeOne :>> ', shapeOne);
-    
 
     Taro.showLoading({
       title: '识别中...'
@@ -188,9 +178,6 @@ class AvatarEdit extends Component {
 
       // let faceList = hatList.map(item => item.faceInfo)
       let shapeList = getHatShapeList(hatList, shapeOne, SAVE_IMAGE_WIDTH)
-      console.log('shapeList :>> ', shapeList);
-
-      // console.log('faceList :>> ', faceList);
 
       this.setState({
         shapeList,
@@ -232,7 +219,6 @@ class AvatarEdit extends Component {
         base64Main: getBase64Main(tempFilePaths)
       }
     })
-    console.log('cloudAnalyzeFaceH5 couldRes :>> ', couldRes);
     return couldRes
   }
 
@@ -410,7 +396,6 @@ class AvatarEdit extends Component {
     try {
       // 上传头像图片
       const fileID = await this.onUploadFile(tempFilePath, 'avatar')
-      console.log('上传头像图片 fileID :', fileID);
 
       const { uuid } = await cloudCallFunction({
         name: 'api',
@@ -457,7 +442,6 @@ class AvatarEdit extends Component {
 
   chooseShape = (shape) => {
     if (this.shapeEditRef) {
-      console.log('shape :>> ', shape);
       this.shapeEditRef.chooseShape(shape)
     }
   }
@@ -474,12 +458,15 @@ class AvatarEdit extends Component {
     })
   }
 
+  onSwitchTheme = (themeId) => {
+    this.setState(getDefaultState())
+    this.loadData(themeId)
+  }
 
   render() {
     const { forCheck, themeList } = this.props
     const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc } = this.state
-    const { themeName, shareImage } = themeData
-    console.log('pageStatus,  :>> ', pageStatus, isShowShape, shapeList);
+    const { coverImage } = themeData
 
     return (
       <Block>
@@ -488,8 +475,8 @@ class AvatarEdit extends Component {
         <View className={`avatar-edit-page ${isShowMenuMain ? 'menu-open' : ''}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
           <View className='main-wrap'>
             <View className='page-title'>
-              {!isH5Page && <Image className='page-title-icon' src={shareImage} />}
-              {themeName || '头像编辑'}
+              {/* {!isH5Page && <Image className='page-title-icon' src={shareImage} />}
+              {themeName || '头像编辑'} */}
             </View>
             {isShowShape
               ? (
@@ -502,35 +489,34 @@ class AvatarEdit extends Component {
                 />
               )
               : (
-                <Block></Block>
+                <Block>
+                  <Image src={coverImage} className="page-cover" />
+                </Block>
               )
             }
-          </View>
-          <View style={{ display: pageStatus === 'done' && isShowShape  ? 'block' : 'none' }}>
-            <TabCategoryList
-              categoryList={shapeCategoryList}
-              chooseShape={this.chooseShape}
-              isH5Page={isH5Page}
-            />
+            <View style={{ display: pageStatus === 'done' && isShowShape  ? 'block' : 'none' }}>
+              <TabCategoryList
+                categoryList={shapeCategoryList}
+                chooseShape={this.chooseShape}
+                isH5Page={isH5Page}
+              />
+            </View>
           </View>
           <MenuChoose isMenuShow={!isShowShape} onChoose={this.onChoose} />
           <CustomTabBar selected={1} hideIndex={isShowShape ? -1 : 1} />
         </View>
-        <MenuMain isShowMenuMain={isShowMenuMain} themeList={themeList} onMenuMainTogggle={this.onMenuMainTogggle} />
+        <MenuMain
+          isShowMenuMain={isShowMenuMain}
+          themeList={themeList}
+          onMenuMainTogggle={this.onMenuMainTogggle}
+          onSwitchTheme={this.onSwitchTheme}
+        />
         <PosterDialog
           isH5Page={isH5Page}
           ref={poster => this.posterRef = poster}
           posterSrc={posterSrc}
           forCheck={forCheck}
         />
-        {/* {!isShowShape && (
-          <Block>
-            <View className='test-hat-btn' onClick={this.goTestHat} style={{ top: STATUS_BAR_HEIGHT + 54 + 'px' }}>圣诞帽测试</View>
-            <Button className='share-btn' openType='share' onClick={this.showH5Modal} style={{ top: STATUS_BAR_HEIGHT + 54 + 'px' }}>分享给朋友<View className='share-btn-icon'></View></Button>
-          </Block>
-        )} */}
-        {/* <tab-bar /> */}
-        
       </Block>
     )
   }

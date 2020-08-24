@@ -9,7 +9,6 @@ export const cloudCallFunction = async ({ name, data = {}, config = {} }) => {
       data,
       config
     }).then(callRes => {
-      console.log('callRes :', callRes);
       const { errMsg = '', result, code = '' } = callRes
       // code 为web端
       // errMsg 为小程序端
@@ -30,8 +29,6 @@ export const cloudCallFunction = async ({ name, data = {}, config = {} }) => {
         reject(result)
       }
     }).catch(error => {
-      // console.log('error :', error);
-      
       reject(error)
     })
 

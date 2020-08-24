@@ -77,7 +77,6 @@ export default class PosterDialog extends Taro.Component {
 
     const { isShowPoster } = this.state
     const { posterSrc, isH5Page, forCheck } = this.props
-    console.log('forCheck :>> ', forCheck);
 
     return (
       <View className={`poster-dialog ${posterSrc && isShowPoster ? 'show' : ''}`}>

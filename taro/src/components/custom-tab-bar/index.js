@@ -17,8 +17,6 @@ export default class CustomTabBar extends Taro.Component {
   constructor(props) {
     super(props)
     this.state = {
-      color: "#7A7E83",
-      selectedColor: "#3cc51f",
       list: [
         {
           pagePath: '/pages/theme-list/theme-list',
@@ -42,18 +40,10 @@ export default class CustomTabBar extends Taro.Component {
     }
   }
 
-  componentDidMount() {
-    const abc = this.$scope.getTabBar()
-    console.log('abc :>> ', abc);
-  }
-
   switchTab = (e) => {
     const data = e.currentTarget.dataset
     const url = data.path
     wx.switchTab({ url })
-    this.setState({
-      selected: data.index
-    })
   }
   render() {
     const { selected, hideIndex } = this.props

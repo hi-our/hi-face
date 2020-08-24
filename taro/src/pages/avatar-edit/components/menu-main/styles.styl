@@ -12,21 +12,45 @@ $animateDuration = 0.35s
 .menu-main
   position fixed
   left -30px
-  width 260px
+  padding-left 60px
+  width 230px
   top 0
   bottom 0
   background #2F5AFF
-  transform translate(-230px, 0)
+  transform translate(-260px, 0)
   transition $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55) transform
   &.menu-open
     transform translate(-30px, 0)
 
+.menu-main-inner
+  position relative
+  height 100%
+  box-sizing border-box
+  padding 75px 20px 40px
+
+.menu-title
+  font-size 20px
+  line-height 1.4
+  color #fff
+  margin-bottom 14px
+  &:before
+    content ''
+    display inline-block
+    margin -3px 7px 0 0
+    vertical-align middle
+    width 14px
+    height 28px
+    background rgba(0,49,193,0.92)
+    border-radius 15px
+    filter blur(0px)
+
+
 .menu-main-toggle
   position fixed
-  left 20px
-  top 60px
+  left 0
+  top 0
   width 50px
-  height 50px
+  height 44px
   transition $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55) background
   display flex
   flex-direction column
@@ -34,9 +58,9 @@ $animateDuration = 0.35s
   justify-content center
 
   .menu-line
-    width 26px
-    height 4px
-    margin 3px auto
+    width 20px
+    height 3px
+    margin 1px auto
     background #2F3742
     border-radius 2px
     transition $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55)
@@ -45,8 +69,50 @@ $animateDuration = 0.35s
     .menu-line
       background #fff
       &:nth-child(1)
-        transform translate(0%, 245%) rotate(-45deg)
+        transform translate(0%, 175%) rotate(-45deg)
       &:nth-child(2)
         opacity 0
       &:nth-child(3)
-        transform translate(0%, -245%) rotate(45deg)
+        transform translate(0%, -175%) rotate(45deg)
+
+.theme-list
+  display flex
+  flex-wrap wrap
+  padding-left 20px
+  
+.theme-item
+  &:nth-child(2n)
+    margin-left 18px
+  &:nth-child(n + 3)
+    margin-top 8px
+
+  .theme-image
+    width 70px
+    height 70px
+    border-radius 15px
+  .theme-text
+    margin-top 3px
+    font-size 12px
+    line-height 1.5
+    color #fff
+    text-align center
+
+.about-wrap
+  position absolute
+  bottom 44px
+  left 20px
+  color #fff
+  width 180px
+
+  .about-text
+    padding-left 20px
+    font-size 15px
+
+  .about-btn
+    float right
+    width 20px
+    height 30px
+    padding 5px 10px
+    box-shadow 0 0 0 1px rgba(255, 255, 255, 1)
+    border-radius 20px
+    font-size 10px

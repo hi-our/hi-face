@@ -101,8 +101,6 @@ export function fillmultiLineText({
       ? y + paddingTop
       : y + paddingTop + i * (Math.ceil(fontSize / 2) + fontSize)
 
-    // console.log('x', textX)
-
     if (originBold) {
       ctx.fillText(text, textX, textY)
     } else {

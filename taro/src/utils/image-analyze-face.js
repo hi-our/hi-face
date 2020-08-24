@@ -23,7 +23,6 @@ export const imageAnalyzeFace = async (base64Main) => {
       },
     })
 
-    console.log('res :>> ', res);
     let data = getResCode(res)
     return data
   } catch (error) {

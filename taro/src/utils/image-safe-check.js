@@ -53,10 +53,8 @@ export const imgSecCheck = async (base64Main) => {
       }
     })
 
-    console.log('res :>> ', res);
     let data = getResCode(res)
     let result = getCheckResult(data)
-    console.log('result :>> ', result);
     return result
   } catch (error) {
     console.log('error2 :', error)
