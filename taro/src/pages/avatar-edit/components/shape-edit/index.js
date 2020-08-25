@@ -334,10 +334,9 @@ class ShapeEdit extends Taro.Component {
           <View className='button-remove' onClick={this.removeImage}>
             移除图片
           </View>
-          <Button className='button-download' openType='share' data-poster-src={posterSrc}>保存并分享</Button>
-          {/* <View className='button-download' onClick={this.generateImage}>
-            保存并分享
-          </View> */}
+          <View className='button-download' onClick={this.generateImage}>
+            保存去分享
+          </View>
         </View>
       </View>
     )

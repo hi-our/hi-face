@@ -269,8 +269,8 @@ class AvatarPoster extends Component {
     return (
       <View className={`poster-dialog ${isShowPoster ? 'show' : ''}`}>
         <View className='poster-dialog-main'>
-          {!!posterSrc && <Image className='poster-image' src={posterSrc} onClick={this.previewPoster} showMenuByLongpress></Image>}
-          <View className='poster-image-tips'>点击可预览大图，长按可分享图片</View>
+          {!!posterSrc && <Image className='poster-image' src={posterSrc} showMenuByLongpress></Image>}
+          <View className='poster-image-tips'>长按可分享图片</View>
           <View className='poster-dialog-close' onClick={this.onHidePoster} />
           <View className='poster-footer-btn'>
             <View className='poster-btn-save' onClick={this.savePoster}>
@@ -312,7 +312,7 @@ class AvatarPoster extends Component {
               isAuthor
                 ? (
                   <View className='button-wrap'>
-                    <View className="button-save" onClick={this.onSaveImage}>保存图片</View>
+                    <View className="button-save" onClick={this.onSaveImage}>保存并分享</View>
                     <View className="button-main" onClick={this.onCreatePoster}>生成分享海报</View>
                     <Button className="button-share" openType='share'>邀请好友</Button>
                   </View>

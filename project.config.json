@@ -86,10 +86,10 @@
 					"scene": null
 				},
 				{
-					"id": 4,
-					"name": "avatar-poster-原图",
+					"id": 3,
+					"name": "avatar-poster-dev",
 					"pathName": "pages/avatar-poster/avatar-poster",
-					"query": "uuid=2d98e781-133f-4bfa-8daa-6d9c473b3aed",
+					"query": "uuid=31aa9c93-c91b-4e71-9c93-fbac32494f22&__key_=15982788221531",
 					"scene": null
 				},
 				{

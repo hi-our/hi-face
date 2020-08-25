@@ -390,9 +390,6 @@ class AvatarEdit extends Component {
   }
 
   saveImageToPhotosAlbum = (tempFilePath) => {
-    Taro.navigateTo({
-      url: `/pages/avatar-poster/avatar-poster?uuid=${this.state.shareUUID}`
-    })
     
     Taro.saveImageToPhotosAlbum({
       filePath: tempFilePath,
@@ -431,11 +428,16 @@ class AvatarEdit extends Component {
           themeName
         }
       })
-      console.log('addRes uuid:', uuid);
 
       this.setState({
         shareUUID: uuid
       })
+
+      Taro.navigateTo({
+        url: `/pages/avatar-poster/avatar-poster?uuid=${uuid}`
+      })
+
+      this.saveImageToPhotosAlbum(tempFilePath)
 
     } catch (error) {
       console.log('error :', error);
@@ -488,7 +490,7 @@ class AvatarEdit extends Component {
   }
 
   render() {
-    const { forCheck, themeList } = this.props
+    const { themeList } = this.props
     const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc } = this.state
     const { coverImage, _id: activeThemeId } = themeData
 
@@ -531,12 +533,6 @@ class AvatarEdit extends Component {
           themeList={themeList}
           onMenuMainTogggle={this.onMenuMainTogggle}
           onSwitchTheme={this.onSwitchTheme}
-        />
-        <PosterDialog
-          isH5Page={isH5Page}
-          ref={poster => this.posterRef = poster}
-          posterSrc={posterSrc}
-          forCheck={forCheck}
         />
       </Block>
     )

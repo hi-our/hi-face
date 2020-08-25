@@ -1,6 +1,5 @@
 const BaseController = require('./base-controller.js')
 const uuid = require('uuid')
-const timeFormat = require('../utils/times').timeFormat
 
 const uuidv4 = uuid.v4
 
@@ -9,6 +8,8 @@ const COLLECTION_NAME = 'avatars'
 class AvatarController extends BaseController {
   async get(event) {
     const { uuid } = event
+    // 微信环境下获取openId
+    const { OPENID } = this.cloud.getWXContext() // 这里获取到的 openId 和 appId 是可信的
 
     let result = await this.cloud.db.collection(COLLECTION_NAME)
       .where({
@@ -25,8 +26,12 @@ class AvatarController extends BaseController {
       .then(result => {
         let { data } = result
 
-        if (data && data.length >= 1) return this.success(data[0])
-
+        if (data && data.length >= 1) {
+          return this.success({
+            ...data[0],
+            isAuthor: OPENID === data[0].openId
+          })
+        }
         return this.fail(-10000, '数据不存在')
       })
       .catch(() => this.fail())
