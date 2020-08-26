@@ -1,32 +1,75 @@
+$smallSize = 60px
 .tab-bar
-  background rgba(222,232,255,0.2)
+  // background rgba(222,232,255,0.2)
+  background #f7f9ff
   display flex
   justify-content space-between
+  // filter: drop-shadow(0 -5px 5px red)
+  filter: drop-shadow(0 -5px 5px #EEEEEE)
+
 .tab-bar-item
-  width 100px
+  width 110px
   height 50px
   font-size 12px
   line-height 17px
   color #95A1AF
   text-align center
-  overflow hidden
+  // overflow hidden
   margin-top 0
-  transition 0.15s linear margin-top
-.tab-bar-holder
-  width 100px
-  height 50px
-  border-radius 0 0 50px 50px
-  background #fff
+  transition 0.3s linear margin-top
+  position relative
+  &:before
+    content ''
+    position absolute
+    left 50%
+    margin-left -($smallSize /2)
+    right 0
+    top 0
+    // top -($smallSize /2 - 9px)
+    width $smallSize 
+    height ($smallSize /2)
+    background #f7f9ff
+    border-radius ($smallSize /2) ($smallSize /2) 0 0
+    transition 0.3s linear top
+
+  &:after
+    content ''
+    position absolute
+    left 0
+    right 0
+    top 50px
+    width 110px
+    height 110px
+    border-radius 55px
+    background #fff
+    opacity 0
+    transition 0.3s linear transform
 .tab-bar-image
+  position relative
   width 30px
   height 30px
   display block
   margin 5px auto -3px
 
+.tab-item-active
+  &:before
+    // transition 0.3s
+    top -($smallSize /2 - 9px)
 .tab-item-hide
+  &:before
+  // transition 0.3s
+    top 0
+
+  &:after
+    opacity 1
+    transform translateY(-108px)
   .tab-bar-image
-    margin-top -46px
-    transition 0.15s linear margin-top 0.15s
+    margin-top -101px
+    opacity 0
+    // transition 0.15s linear margin-top 0.15s
+  .tab-bar-text
+    opacity 0
+
     
 .tab-item-active
   color #2F3742
