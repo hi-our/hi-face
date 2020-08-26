@@ -21,7 +21,19 @@ export default class ThemeList extends Component {
     this.state = {
       currentView: 0,
       activeTab: 0,
+      tabBarIndex: -1
     }
+  }
+
+  componentDidShow() {
+    this.setState({
+      tabBarIndex: 0
+    })
+  }
+  componentDidHide() {
+    this.setState({
+      tabBarIndex: -1
+    })
   }
 
   setCurrentView = (activeTab) => {
@@ -61,7 +73,7 @@ export default class ThemeList extends Component {
   }
   render() {
     const { themeList } = this.props
-    const { activeTab, currentView } = this.state
+    const { activeTab, currentView, tabBarIndex } = this.state
 
     return (
       <Block>
@@ -95,7 +107,7 @@ export default class ThemeList extends Component {
               </Swiper>
             </View>
           </View>
-          <CustomTabBar selected={0} />
+          <CustomTabBar selected={tabBarIndex} />
         </View>
       </Block>
     )

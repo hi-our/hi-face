@@ -16,6 +16,25 @@ class Self extends Component {
     navigationBarTitleText: '个人中心',
     disableScroll: true,
   }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      tabBarIndex: -1
+    }
+  }
+
+  componentDidShow() {
+    this.setState({
+      tabBarIndex: 2
+    })
+  }
+  componentDidHide() {
+    this.setState({
+      tabBarIndex: -1
+    })
+  }
+
   onShareAppMessage() {
     const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/20200812132355.png'
 
@@ -61,6 +80,7 @@ class Self extends Component {
   }
 
   render() {
+    const { tabBarIndex } = this.state
     const { isLogin, userInfo } = this.props
 
     const { wechatInfo = { }, avatar } = userInfo
@@ -69,47 +89,49 @@ class Self extends Component {
 
     return (
       <View className='self-page'>
-        <View className='user-wrap'>
-          {
-            isLogin
-              ? (
-                <Block>
-                  <View className='avatar'>
-                    <Image src={avatarUrl || avatar}></Image>
-                  </View>
-                  <View className='user-main'>
-                    <View className='nick-name'>{nickName}</View>
-                    <View className='address-text'>{country} {province} {city}</View>
-                  </View>
-                </Block>
-              )
-              : (
-                <Block>
-                  <View className='avatar'>
-                    
-                  </View>
-                  <View className='user-main'>
-                    <View className='nick-name'>未登录</View>
-                    {/* <View className='address-text'></View> */}
-                  </View>
-                </Block>
-              )
-          }
-        </View>
-        <View className='list-wrap'>
-          <View className='item' onClick={this.goMyAvatars}>
-            <Image className='item-image' src='https://image-hosting.xiaoxili.com/img/20200812133940.png' />
-            头像列表
-            <View className='item-icon'></View>
+        <View className='main-wrap'>
+          <View className='user-wrap'>
+            {
+              isLogin
+                ? (
+                  <Block>
+                    <View className='avatar'>
+                      <Image src={avatarUrl || avatar}></Image>
+                    </View>
+                    <View className='user-main'>
+                      <View className='nick-name'>{nickName}</View>
+                      <View className='address-text'>{country} {province} {city}</View>
+                    </View>
+                  </Block>
+                )
+                : (
+                  <Block>
+                    <View className='avatar'>
+                      
+                    </View>
+                    <View className='user-main'>
+                      <View className='nick-name'>未登录</View>
+                      {/* <View className='address-text'></View> */}
+                    </View>
+                  </Block>
+                )
+            }
           </View>
-          <View className='item' onClick={this.goThanks}>
-            <Image className='item-image' src='https://image-hosting.xiaoxili.com/img/20200812133954.png' />
-            致谢
-            <View className='item-icon'></View>
+          <View className='list-wrap'>
+            <View className='item' onClick={this.goMyAvatars}>
+              <Image className='item-image' src='https://image-hosting.xiaoxili.com/img/20200812133940.png' />
+              头像列表
+              <View className='item-icon'></View>
+            </View>
+            <View className='item' onClick={this.goThanks}>
+              <Image className='item-image' src='https://image-hosting.xiaoxili.com/img/20200812133954.png' />
+              致谢
+              <View className='item-icon'></View>
+            </View>
           </View>
+
         </View>
-        <View className='version'>Ver.{version}，基于 Taro 及小程序云开发</View>
-        <CustomTabBar selected={2} />
+        <CustomTabBar selected={tabBarIndex} />
       </View>
     )
   }

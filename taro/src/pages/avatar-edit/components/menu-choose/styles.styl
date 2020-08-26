@@ -1,3 +1,5 @@
+$cubicType = cubic-bezier(0.68, -0.55, 0.265, 1.55)
+
 .menu-choose
   position absolute
   left 50%
@@ -5,7 +7,7 @@
   bottom 7px
   z-index 1
   transform translateY(100px)
-  transition 0.3s linear transform
+  transition 0.3s $cubicType transform
   
   &.menu-show
     transform translateY(0)

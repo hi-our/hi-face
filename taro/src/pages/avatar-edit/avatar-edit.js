@@ -60,6 +60,15 @@ class AvatarEdit extends Component {
     } else if (this.state.pageStatus === 'loading') {
       this.loadData()
     }
+
+    this.setState({
+      tabBarIndex: 1
+    })
+  }
+  componentDidHide() {
+    this.setState({
+      tabBarIndex: -1
+    })
   }
 
   onShareAppMessage({ from, target }) {
@@ -491,7 +500,7 @@ class AvatarEdit extends Component {
 
   render() {
     const { themeList } = this.props
-    const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc } = this.state
+    const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, tabBarIndex } = this.state
     const { coverImage, _id: activeThemeId } = themeData
 
     return (
@@ -524,8 +533,8 @@ class AvatarEdit extends Component {
               />
             </View>
           </View>
-          <MenuChoose isMenuShow={!isShowShape} onChoose={this.onChoose} />
-          <CustomTabBar selected={1} hideIndex={isShowShape ? -1 : 1} />
+          <MenuChoose isMenuShow={tabBarIndex === 1 && !isShowShape} onChoose={this.onChoose} />
+          <CustomTabBar selected={tabBarIndex} hideIndex={tabBarIndex === 1 && !isShowShape ? 1 : -1} />
         </View>
         <MenuMain
           activeThemeId={activeThemeId}

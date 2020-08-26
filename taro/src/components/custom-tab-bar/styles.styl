@@ -1,10 +1,10 @@
 $smallSize = 60px
+$cubicType = cubic-bezier(0.68, -0.55, 0.265, 1.55)
 .tab-bar
   // background rgba(222,232,255,0.2)
   background #f7f9ff
   display flex
   justify-content space-between
-  // filter: drop-shadow(0 -5px 5px red)
   filter: drop-shadow(0 -5px 5px #EEEEEE)
 
 .tab-bar-item
@@ -14,9 +14,8 @@ $smallSize = 60px
   line-height 17px
   color #95A1AF
   text-align center
-  // overflow hidden
   margin-top 0
-  transition 0.3s linear margin-top
+  transition 0.3s $cubicType margin-top
   position relative
   &:before
     content ''
@@ -25,7 +24,6 @@ $smallSize = 60px
     margin-left -($smallSize /2)
     right 0
     top 0
-    // top -($smallSize /2 - 9px)
     width $smallSize 
     height ($smallSize /2)
     background #f7f9ff
@@ -43,7 +41,7 @@ $smallSize = 60px
     border-radius 55px
     background #fff
     opacity 0
-    transition 0.3s linear transform
+    transition 0.3s $cubicType transform
 .tab-bar-image
   position relative
   width 30px
@@ -53,11 +51,10 @@ $smallSize = 60px
 
 .tab-item-active
   &:before
-    // transition 0.3s
     top -($smallSize /2 - 9px)
+    transition-delay .15s
 .tab-item-hide
   &:before
-  // transition 0.3s
     top 0
 
   &:after
@@ -66,7 +63,6 @@ $smallSize = 60px
   .tab-bar-image
     margin-top -101px
     opacity 0
-    // transition 0.15s linear margin-top 0.15s
   .tab-bar-text
     opacity 0
 
