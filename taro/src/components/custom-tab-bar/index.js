@@ -14,6 +14,11 @@ export default class CustomTabBar extends Taro.Component {
     addGlobalClass: true
   }
 
+  static defaultProps = {
+    selected: -1,
+    hideIndex: -1
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -54,7 +59,7 @@ export default class CustomTabBar extends Taro.Component {
           list.map((item, index) => {
             const { pagePath, selectedIconPath, iconPath, text } = item
             return (
-              <View key={text} className={`tab-bar-item ${selected === index ? 'tab-item-active' : ''} ${hideIndex === index ? 'tab-item-hide' : ''}`} data-path={pagePath} data-index={index} onClick={this.switchTab}>
+              <View key={text} hoverClass='tab-bar-item-hover' className={`tab-bar-item ${selected === index ? 'tab-item-active' : ''} ${hideIndex === index ? 'tab-item-hide' : ''}`} data-path={pagePath} data-index={index} onClick={this.switchTab}>
                 <Image className="tab-bar-image" src={'' + (selected === index ? selectedIconPath : iconPath)}></Image>
                 <View className="tab-bar-text">{text}</View>
                 <View className="tab-bar-holder"></View>

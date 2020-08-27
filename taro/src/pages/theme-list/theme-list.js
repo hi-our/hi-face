@@ -26,11 +26,13 @@ export default class ThemeList extends Component {
   }
 
   componentDidShow() {
+    console.log('theme show :>> ')
     this.setState({
       tabBarIndex: 0
     })
   }
   componentDidHide() {
+    console.log('theme hide :>> ')
     this.setState({
       tabBarIndex: -1
     })

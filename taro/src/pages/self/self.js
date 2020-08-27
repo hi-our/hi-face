@@ -25,11 +25,13 @@ class Self extends Component {
   }
 
   componentDidShow() {
+    console.log('self show :>> ')
     this.setState({
       tabBarIndex: 2
     })
   }
   componentDidHide() {
+    console.log('self hide :>> ')
     this.setState({
       tabBarIndex: -1
     })
