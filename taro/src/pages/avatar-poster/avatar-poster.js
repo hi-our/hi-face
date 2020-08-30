@@ -182,11 +182,9 @@ class AvatarPoster extends Component {
         qrcodeFile
       } = this.state
       
-      console.log('avatarFileLocal :', avatarFileLocal);
   
       const pc = Taro.createCanvasContext('canvasPoster')
 
-      console.log('pc :', pc);
   
       pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT);
       if (!avatarFileLocal) {
@@ -199,10 +197,8 @@ class AvatarPoster extends Component {
       fillText(pc, '我做了一个新头像，赞我哟', 10 * SAVE_PAGE_DPR, 360 * SAVE_PAGE_DPR, true, 30, '#3d3d3d')
       fillText(pc, '长按识别小程序，来一起换头像吧', 10 * SAVE_PAGE_DPR, 380 * SAVE_PAGE_DPR, false, 20, '#3d3d3d')
 
-      console.log('2 :', 2);
   
       pc.draw(true, () => {
-        console.log('3 :', 3);
         Taro.canvasToTempFilePath({
           canvasId: 'canvasPoster',
           x: 0,
@@ -214,7 +210,6 @@ class AvatarPoster extends Component {
           success: async (res) => {
             // await this.onSaveImageToCloud(res.tempFilePath)
   
-            console.log('res.tempFilePath :', res.tempFilePath);
             Taro.hideLoading()
             this.setState({
               posterSrc: res.tempFilePath,

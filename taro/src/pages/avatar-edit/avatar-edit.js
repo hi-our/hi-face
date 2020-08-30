@@ -278,29 +278,6 @@ class AvatarEdit extends Component {
     })
     this.drawCanvas()
 
-    // try {
-    //   Taro.showModal({
-    //     title: '提示',
-    //     content: '图片会上传到云端，便于分享和下次查看，请确定？',
-    //     success: (res) => {
-    //       if (res.confirm) {
-    //         Taro.showLoading({
-    //           title: '图片生成中'
-    //         })
-    //         this.drawCanvas()
-
-    //       } else if (res.cancel) {
-    //         console.log('用户点击取消')
-    //       }
-    //     }
-    //   })
-    // } catch (error) {
-    //   Taro.hideLoading()
-    //   Taro.showToast({
-    //     title: '图片生成失败，请重试'
-    //   })
-    //   console.log('error :', error)
-    // }
   }
 
 

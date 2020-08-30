@@ -16,7 +16,6 @@ export default class PageLead extends Taro.Component {
   constructor(props) {
     super(props)
     const isHide = Taro.getStorageSync('isHideLead') === true
-    console.log('isHide :>> ', isHide);
     this.state = {
       isHide,
       showTimeText: props.showTime
@@ -52,7 +51,6 @@ export default class PageLead extends Taro.Component {
 
   render() {
     const { isHide, showTimeText } = this.state
-    console.log('isHide :>> ', isHide);
     return (
       <View className={`page-lead ${isHide ? 'hide' : ''}`}>
         {/* <View className='page-lead-btn' onClick={this.onToggle}>跳过 {showTimeText}s</View> */}

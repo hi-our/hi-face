@@ -26,13 +26,11 @@ export default class ThemeList extends Component {
   }
 
   componentDidShow() {
-    console.log('theme show :>> ')
     this.setState({
       tabBarIndex: 0
     })
   }
   componentDidHide() {
-    console.log('theme hide :>> ')
     this.setState({
       tabBarIndex: -1
     })
@@ -59,7 +57,6 @@ export default class ThemeList extends Component {
     })
   }
   onSwiperChange = (e) => {
-    console.log('activeTab :>> ', e);
     const { current } = e.detail
     this.setCurrentView(current)
     this.setState({

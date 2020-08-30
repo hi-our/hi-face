@@ -39,8 +39,6 @@ class MyAvatars extends Component {
         }
       })
 
-      console.log('data.length :', items.length);
-
       if (pageNo === 1 && items.length === 0) {
         this.setState({
           pageStatus: 'empty',
