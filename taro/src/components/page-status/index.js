@@ -39,10 +39,8 @@ export default class PageStatus extends Taro.Component {
           {!loadingType && (
             <View className='page-loading'>
               <View className='page-loading-square'>
-                <View className='loading-icon-wrap'>
-                  <View className='loading-icon'>
-                    <Image src={require('./images/page-loading.png')}></Image>
-                  </View>
+                <View className='loading-icon'>
+                  
                 </View>
               </View>
             </View>
@@ -50,10 +48,8 @@ export default class PageStatus extends Taro.Component {
           {loadingType === 'fullscreen' && (
             <View className='page-loading-fullscreen'>
               <View className='page-loading-square'>
-                <View className='loading-icon-wrap'>
-                  <View className='loading-icon'>
-                    <Image src={require('./images/page-loading.png')}></Image>
-                  </View>
+                <View className='loading-icon'>
+                  
                 </View>
                 <View className='loading-txt'>{loadingTxt}</View>
               </View>

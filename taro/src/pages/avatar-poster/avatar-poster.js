@@ -1,22 +1,16 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
+import { View, Image, Button, Canvas, Block } from '@tarojs/components'
 
 import { cloudCallFunction } from 'utils/fetch'
 import PageWrapper from 'components/page-wrapper'
-import { base64src, downloadImgByBase64, getImg } from 'utils/canvas-drawing'
+import { base64src, downloadImgByBase64 } from 'utils/canvas-drawing'
+import Version from 'components/version'
 import { fillText } from 'utils/canvas'
-import promisify from 'utils/promisify'
-import { SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT, DPR_CANVAS_SIZE, SAVE_CODE_SIZE, SAVE_PAGE_DPR } from './utils'
+import { SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT, DPR_CANVAS_SIZE, SAVE_CODE_SIZE, SAVE_PAGE_DPR, STATUS_BAR_HEIGHT } from './utils'
 
 import './styles.styl'
 
-import * as config from 'config'
-
 const isH5Page = process.env.TARO_ENV === 'h5'
-const isQQPage = process.env.TARO_ENV === 'qq'
-
-
-const version = config.version
 
 // @CorePage
 class AvatarPoster extends Component {
@@ -46,7 +40,7 @@ class AvatarPoster extends Component {
     this.onCreateQrcode()
   }
 
-  onShareAppMessage() {
+  onShareAppMessage({ from, target }) {
     const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/20200812132355.png'
 
     const { avatarFileID, ageType } = this.state
@@ -54,6 +48,10 @@ class AvatarPoster extends Component {
     let typeMap = {
       origin: '邀请好友一起来制作头像吧',
       childhood: '换个头像，一起回归童真'
+    }
+
+    if (from === 'button') {
+      this.onSaveImage()
     }
 
     return {
@@ -136,15 +134,7 @@ class AvatarPoster extends Component {
 
   onDownloadFile = async (fileID) => {
 
-    if (isH5Page) {
-      let { tempFilePath } = await Taro.cloud.downloadFile({
-        fileID,
-      })
-      return tempFilePath
-    }
-
-    let downloadFile = promisify(Taro.cloud.downloadFile)
-    let { tempFilePath } = await downloadFile({
+    let { tempFilePath } = await Taro.cloud.downloadFile({
       fileID,
     })
 
@@ -273,20 +263,20 @@ class AvatarPoster extends Component {
           <View className='poster-image-tips'>长按可分享图片</View>
           <View className='poster-dialog-close' onClick={this.onHidePoster} />
           <View className='poster-footer-btn'>
-            <View className='poster-btn-save' onClick={this.savePoster}>
+            {/* <View className='poster-btn-save' onClick={this.savePoster}>
               <Image
                 className='icon'
                 src='https://image-hosting.xiaoxili.com/img/20200812132636.png'
               />
               保存到相册
-            </View>
+            </View> */}
             {!isH5Page && (
               <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
                 <Image
                   className='icon-wechat'
                   src='https://image-hosting.xiaoxili.com/img/20200812132655.png'
                 />
-                分享给朋友
+                保存并分享
               </Button>
             )}
           </View>
@@ -304,7 +294,8 @@ class AvatarPoster extends Component {
       <Block>
         <Canvas className='canvas-poster' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_HEIGHT + 'px' }} canvasId='canvasPoster' ref={c => this.canvasPosterRef = c} />
         <PageWrapper status={pageStatus} errorText={errorText}>
-          <View className={`page-avatar-poster age-${ageType}`}>
+          <View className={`page-avatar-poster age-${ageType}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
+            <View className='page-title'>头像分享</View>
             <View className='page-poster-wrap'>
               <Image className='page-poster' src={avatarFileLocal || avatarFileID} />
             </View>
@@ -312,18 +303,18 @@ class AvatarPoster extends Component {
               isAuthor
                 ? (
                   <View className='button-wrap'>
-                    <View className="button-save" onClick={this.onSaveImage}>保存并分享</View>
-                    <View className="button-main" onClick={this.onCreatePoster}>生成分享海报</View>
-                    <Button className="button-share" openType='share'>邀请好友</Button>
+                    <View className="button button-home" onClick={this.goHome}>再来一张</View>
+                    <Button className="button button-share" openType='share'>保存并分享</Button>
+                    <View className="button-poster button-fixed" onClick={this.onCreatePoster}>生成分享海报</View>
                   </View>
                 )
                 : (
                   <View className='button-wrap'>
-                    <View className="button-main" onClick={this.goHome}>我也要玩</View>
+                    <View className="button-try" onClick={this.goHome}>我也要玩</View>
                   </View>
                 )
             }
-            <View className='version'>Ver.{version}，基于 Taro 及小程序云开发</View>
+            {/* <Version /> */}
           </View>
           {this.renderPoster()}
         </PageWrapper>

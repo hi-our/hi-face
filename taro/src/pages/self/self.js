@@ -1,16 +1,12 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
+import Version from 'components/version'
 
 import CorePage from 'page'
 import CustomTabBar from 'components/custom-tab-bar'
 import AvatarList from './components/avatar-list';
 import userActions from '@/store/user'
 import './styles.styl'
-
-import * as config from 'config'
-
-
-const version = config.version
 
 @CorePage
 class Self extends Component {
@@ -145,6 +141,7 @@ class Self extends Component {
       <View className='self-page'>
         <ScrollView className='main-wrap' scrollY enableFlex>
           {isShowLogin ? this.renderHasLogin() : this.renderNotLogin()}
+          <Version />
         </ScrollView>
         <CustomTabBar selected={tabBarIndex} />
       </View>

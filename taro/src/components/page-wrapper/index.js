@@ -29,7 +29,7 @@ class PageWrapper extends Taro.Component {
           {this.props.children}
           <ToTop scrollTop={scrollTop} styles={isIpx ? 'bottom: 260rpx' : 'bottom: 220rpx'} />
         </PageStatus>
-        <BackHome styles={isIpx ? 'bottom: 160rpx' : 'bottom: 120rpx'} />
+        {/* <BackHome styles={isIpx ? 'bottom: 160rpx' : 'bottom: 120rpx'} /> */}
       </Block>
     )
   }

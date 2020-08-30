@@ -65,27 +65,6 @@
 			"current": -1,
 			"list": [
 				{
-					"id": 0,
-					"name": "pages/thanks/thanks",
-					"pathName": "pages/thanks/thanks",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/test/test",
-					"pathName": "pages/test/test",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/queen-king/queen-king",
-					"pathName": "pages/queen-king/queen-king",
-					"query": "",
-					"scene": null
-				},
-				{
 					"id": 3,
 					"name": "avatar-poster-dev",
 					"pathName": "pages/avatar-poster/avatar-poster",
@@ -110,13 +89,6 @@
 					"id": 6,
 					"name": "主题列表",
 					"pathName": "pages/theme-list/theme-list",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": 7,
-					"name": "avatar-list-头像列表",
-					"pathName": "pages/avatar-list/avatar-list",
 					"query": "",
 					"scene": null
 				}
