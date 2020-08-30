@@ -7,8 +7,31 @@ html
 $animateDuration = 0.35s
 
 .avatar-edit-page
-  background linear-gradient(#1f55ff, #dae6f5, #fff, #fff)
+  background #2F5AFF
   height 100vh
+  &.menu-open
+    .page-container
+      transform translate(200px, 0) scale(0.75)
+      box-shadow 0 0 0 3px rgba(0, 0, 0, 0.05)
+      border-radius 50px
+
+.page-lead
+  position relative
+  z-index 100
+  height 100%
+  // position fixed
+  // left 0
+  // right 0
+  // top 0
+  // bottom 0
+  background #fff url('../../images/bg-lead.svg') center
+  background-size 100% auto
+  z-index 100
+  
+.page-container
+  position relative
+  background linear-gradient(#1f55ff, #dae6f5, #fff, #fff)
+  height 100%
   overflow hidden
   box-sizing border-box
   display flex
@@ -57,10 +80,4 @@ $animateDuration = 0.35s
   transform translateY(100%)
   &.tabs-open
     transform translateY(0)
-
-.avatar-edit-page.menu-open
-  transform translate(230px, 0) scale(0.75)
-  box-shadow 0 0 0 3px rgba(0, 0, 0, 0.05)
-  border-radius 50px
-  
 

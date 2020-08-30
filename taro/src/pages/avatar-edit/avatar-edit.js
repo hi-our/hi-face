@@ -17,6 +17,7 @@ import CustomTabBar from 'components/custom-tab-bar'
 import MenuMain from './components/menu-main'
 import MenuChoose from './components/menu-choose'
 import EventEmitter from 'utils/event-emitter'
+import PageLead from './components/page-lead'
 
 
 import './styles.styl'
@@ -504,10 +505,11 @@ class AvatarEdit extends Component {
     const { coverImage, _id: activeThemeId } = themeData
 
     return (
-      <Block>
+      <View className={`avatar-edit-page ${isShowMenuMain ? 'menu-open' : ''}`}>
+        {/* <PageLead /> */}
         <PageLoading status={pageStatus} loadingType='fullscreen'></PageLoading>
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
-        <View className={`avatar-edit-page ${isShowMenuMain ? 'menu-open' : ''}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
+        <View className='page-container' style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
           <View className='main-wrap'>
             {isShowShape
               ? (
@@ -543,7 +545,8 @@ class AvatarEdit extends Component {
           onMenuMainTogggle={this.onMenuMainTogggle}
           onSwitchTheme={this.onSwitchTheme}
         />
-      </Block>
+        
+      </View>
     )
   }
 }

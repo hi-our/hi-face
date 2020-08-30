@@ -72,6 +72,8 @@ class App extends Component {
   }
 
   componentWillMount() {
+    // 重新启动小程序，会出现引导界面
+    Taro.setStorageSync('isHideLead', false)
 
     if (process.env.TARO_ENV === 'weapp') {
       Taro.cloud.init({
