@@ -3,6 +3,7 @@ import { View, Block, Image, Button } from '@tarojs/components'
 import { isIphoneSafeArea } from 'utils/common'
 import { getImg } from 'utils/canvas-drawing'
 import TaroCropper from 'components/taro-cropper'
+import userActions from '@/store/user'
 
 import './styles.styl'
 
@@ -69,6 +70,7 @@ export default class MenuChoose extends Taro.Component {
     if (e.detail.userInfo) {
       //用户按了允许授权按钮
       // TODO写法，用于更换图片
+      userActions.login()
       Taro.showToast({
         icon: 'none',
         title: '获取头像...'
@@ -106,7 +108,7 @@ export default class MenuChoose extends Taro.Component {
           </Button>
           <View className='menu-item menu-item-camera' onClick={this.onChooseImage.bind(this, 'camera')}>拍照</View>
           <View className='menu-item menu-item-album' onClick={this.onChooseImage.bind(this, 'album')}>相册</View>
-          <View className='menu-item menu-item-search'>搜索</View>
+          {/* <View className='menu-item menu-item-search'>搜索</View> */}
           <View className='menu-choose-btn'></View>
         </View>
         <View className='cropper-wrap' style={{ display: originSrc ? 'block' : 'none' }}>

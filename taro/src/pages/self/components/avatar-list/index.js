@@ -1,21 +1,18 @@
-import Taro, { Component } from '@tarojs/taro'
-import { View, Image } from '@tarojs/components'
+import Taro from '@tarojs/taro'
+import { View, Block, Image } from '@tarojs/components'
+import { cloudCallFunction } from 'utils/fetch';
 
-import { cloudCallFunction } from 'utils/fetch'
-import PageWrapper from 'components/page-wrapper'
+
 import './styles.styl'
 
-import * as config from 'config'
-
-
-const version = config.version
-
-// @CorePage
-class MyAvatars extends Component {
+export default class AvatarList extends Taro.Component {
   config = {
-    navigationBarTitleText: '头像列表',
+    component: true
   }
 
+  static options = {
+    addGlobalClass: true
+  }
   constructor(props) {
     super(props)
     this.state = {
@@ -48,7 +45,7 @@ class MyAvatars extends Component {
         })
         return
       }
-      
+
       this.setState({
         list: items,
         pageStatus: 'done'
@@ -64,47 +61,11 @@ class MyAvatars extends Component {
     }
   }
 
-
-  onShareAppMessage() {
-    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/20200812132355.png'
-
-    return {
-      title: '头像列表',
-      imageUrl: DEFAULT_SHARE_COVER,
-      path: '/pages/self/self'
-    }
-  }
-
-  copyToClipboard = (str) => {
-    Taro.setClipboardData({
-      data: str,
-      success() {
-        Taro.showToast({
-          icon: 'none',
-          title: '复制成功'
-        })
-      },
-      fail() {
-        console.log('setClipboardData调用失败')
-      }
-    })
-
-  }
-
-  goOneAvatar = (uuid) => {
-    console.log('uuid :', uuid);
-    Taro.navigateTo({
-      url: `/pages/avatar-poster/avatar-poster?uuid=${uuid}`
-    })
-  }
-
   render() {
     const { list, pageStatus, errorText } = this.state
-
-
     return (
-      <PageWrapper status={pageStatus} errorText={errorText}>
-        <View className='avatar-list'>
+      <Block>
+        <View className="list" scrollY>
           {
             list.filter(item => item.avatarFileID).map((item) => {
               const { uuid, avatarFileID } = item
@@ -115,11 +76,9 @@ class MyAvatars extends Component {
               )
             })
           }
-
         </View>
-      </PageWrapper>
+      </Block>
     )
   }
-}
 
-export default MyAvatars
+}

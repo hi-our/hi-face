@@ -3,6 +3,8 @@ import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/co
 
 import CorePage from 'page'
 import CustomTabBar from 'components/custom-tab-bar'
+import AvatarList from './components/avatar-list';
+import userActions from '@/store/user'
 import './styles.styl'
 
 import * as config from 'config'
@@ -13,7 +15,7 @@ const version = config.version
 @CorePage
 class Self extends Component {
   config = {
-    navigationBarTitleText: '个人中心',
+    navigationBarTitleText: '我的',
     disableScroll: true,
   }
 
@@ -41,7 +43,7 @@ class Self extends Component {
     const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/20200812132355.png'
 
     return {
-      title: '个人中心',
+      title: '我的',
       imageUrl: DEFAULT_SHARE_COVER,
       path: '/pages/self/self'
     }
@@ -81,58 +83,69 @@ class Self extends Component {
     })
   }
 
+  onGetUserInfo = (e) => {
+    if (e.detail.userInfo) {
+      userActions.login()
+    }
+  }
+
+  renderNotLogin = () => {
+    return (
+      <Block>
+        <View className='user-wrap'>
+          <View className='avatar'>
+          </View>
+          <View className='user-main'>
+            <View className='nick-name'>Hi</View>
+            <View className='address-text'>欢迎登录 Hi 头像</View>
+          </View>
+        </View>
+        <View className='login-wrap'>
+          <Image className="logo-image" src="https://image-hosting.xiaoxili.com/img/img/20200830/41eb7adb16c09f5b25137fe708269e12-11e1fa.png"></Image>
+          <Button className="login-button" type="default" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>微信一键授权</Button>
+          <View className="login-tips">登录后查看历史作品</View>
+        </View>
+      </Block>
+    )
+  }
+
+  renderHasLogin = () => {
+    const {  userInfo } = this.props
+    const { wechatInfo = {}, avatar } = userInfo
+    const { avatarUrl, nickName, country = '', province = '', city = '' } = wechatInfo
+    
+    return (
+      <Block>
+        <View className='user-wrap'>
+          <View className='avatar'>
+            <Image src={avatarUrl || avatar}></Image>
+          </View>
+          <View className='user-main'>
+            <View className='nick-name'>{nickName}</View>
+            <View className='address-text'>{country} {province} {city}</View>
+          </View>
+        </View>
+        <View className="avatar-wrap">
+          <AvatarList />
+        </View>
+      </Block>
+    )
+  }
+
   render() {
     const { tabBarIndex } = this.state
     const { isLogin, userInfo } = this.props
 
     const { wechatInfo = { }, avatar } = userInfo
-    const { avatarUrl, nickName, country = '', province = '', city = '' } = wechatInfo
+    const { avatarUrl } = wechatInfo
 
+    let isShowLogin = !!(avatarUrl || avatar)
 
     return (
       <View className='self-page'>
-        <View className='main-wrap'>
-          <View className='user-wrap'>
-            {
-              isLogin
-                ? (
-                  <Block>
-                    <View className='avatar'>
-                      <Image src={avatarUrl || avatar}></Image>
-                    </View>
-                    <View className='user-main'>
-                      <View className='nick-name'>{nickName}</View>
-                      <View className='address-text'>{country} {province} {city}</View>
-                    </View>
-                  </Block>
-                )
-                : (
-                  <Block>
-                    <View className='avatar'>
-                      
-                    </View>
-                    <View className='user-main'>
-                      <View className='nick-name'>未登录</View>
-                      {/* <View className='address-text'></View> */}
-                    </View>
-                  </Block>
-                )
-            }
-          </View>
-          <View className='list-wrap'>
-            <View className='item' onClick={this.goMyAvatars}>
-              <Image className='item-image' src='https://image-hosting.xiaoxili.com/img/20200812133940.png' />
-              头像列表
-              <View className='item-icon'></View>
-            </View>
-            <View className='item' onClick={this.goThanks}>
-              <Image className='item-image' src='https://image-hosting.xiaoxili.com/img/20200812133954.png' />
-              致谢
-              <View className='item-icon'></View>
-            </View>
-          </View>
-
-        </View>
+        <ScrollView className='main-wrap' scrollY enableFlex>
+          {isShowLogin ? this.renderHasLogin() : this.renderNotLogin()}
+        </ScrollView>
         <CustomTabBar selected={tabBarIndex} />
       </View>
     )
