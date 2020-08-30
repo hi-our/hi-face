@@ -12,7 +12,10 @@ import './styles.styl'
 class Self extends Component {
   config = {
     navigationBarTitleText: '我的',
-    disableScroll: true,
+    // disableScroll: true,
+    enablePullDownRefresh: true,
+    backgroundColorTop: '#ffffff',
+    backgroundColorBottom: '#ffffff',
   }
 
   constructor(props) {
@@ -45,21 +48,16 @@ class Self extends Component {
     }
   }
 
-  copyToClipboard = (str) => {
-    Taro.setClipboardData({
-      data: str,
-      success() {
-        Taro.showToast({
-          icon: 'none',
-          title: '复制成功'
-        })
-      },
-      fail() {
-        console.log('setClipboardData调用失败')
-      }
+  onPullDownRefresh = () => {
+    console.log('onPullDownRefresh :>> ');
+    this.listRef && this.listRef.loadData()
+    Taro.showToast({
+      title: '已刷新列表',
+      icon: 'none'
     })
-
+    Taro.stopPullDownRefresh()
   }
+
 
   goOneAvatar = (uuid) => {
     console.log('uuid :', uuid);
@@ -118,11 +116,11 @@ class Self extends Component {
           </View>
           <View className='user-main'>
             <View className='nick-name'>{nickName}</View>
-            <View className='address-text'>{country} {province} {city}</View>
+            <View className='address-text'>让头像更有趣</View>
           </View>
         </View>
         <View className="avatar-wrap">
-          <AvatarList />
+          <AvatarList ref={c => this.listRef = c} />
         </View>
       </Block>
     )

@@ -61,6 +61,13 @@ export default class AvatarList extends Taro.Component {
     }
   }
 
+  goOneAvatar = (uuid) => {
+    console.log('uuid :', uuid);
+    Taro.navigateTo({
+      url: `/pages/avatar-poster/avatar-poster?uuid=${uuid}`
+    })
+  }
+
   render() {
     const { list, pageStatus, errorText } = this.state
     return (

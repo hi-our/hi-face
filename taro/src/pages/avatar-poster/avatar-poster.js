@@ -40,6 +40,15 @@ class AvatarPoster extends Component {
     this.onCreateQrcode()
   }
 
+  componentDidShow() {
+    if (this.hasSaved) {
+      this.hasSaved = false
+      Taro.showToast({
+        title: '已保存并分享'
+      })
+    }
+  }
+
   onShareAppMessage({ from, target }) {
     const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/20200812132355.png'
 
@@ -126,6 +135,10 @@ class AvatarPoster extends Component {
     }
   }
 
+  onBack = () => {
+    Taro.navigateBack()
+  }
+
   goHome = () => {
     Taro.switchTab({
       url: '/pages/avatar-edit/avatar-edit'
@@ -156,8 +169,9 @@ class AvatarPoster extends Component {
       Taro.saveImageToPhotosAlbum({
         filePath: tempFilePath,
         success: res2 => {
+          this.hasSaved = true
           Taro.showToast({
-            title: '图片保存成功'
+            title: '已保存并分享'
           })
           console.log('保存成功 :', res2);
         },
@@ -290,7 +304,11 @@ class AvatarPoster extends Component {
         <Canvas className='canvas-poster' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_HEIGHT + 'px' }} canvasId='canvasPoster' ref={c => this.canvasPosterRef = c} />
         <PageWrapper status={pageStatus} errorText={errorText}>
           <View className={`page-avatar-poster age-${ageType}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
-            <View className='page-title'>头像分享</View>
+            <View className='page-title'>
+              <View className='page-back' onClick={this.onBack}></View>
+              
+              头像分享
+            </View>
             <View className='page-poster-wrap'>
               <Image className='page-poster' src={avatarFileLocal || avatarFileID} />
             </View>
