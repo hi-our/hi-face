@@ -7,13 +7,13 @@ html
 $animateDuration = 0.35s
 
 .avatar-edit-page
-  background #2F5AFF
+  background #FFC000
   height 100vh
   &.menu-open
     .page-container
-      transform translate(200px, 0) scale(0.75)
-      box-shadow 0 0 0 3px rgba(0, 0, 0, 0.05)
-      border-radius 50px
+      transform translate(300px, 0) scale(0.75)
+      // box-shadow 0 0 0 3px rgba(0, 0, 0, 0.05)
+      border-radius 40px
 
 .page-lead
   position relative
@@ -30,7 +30,8 @@ $animateDuration = 0.35s
   
 .page-container
   position relative
-  background linear-gradient(#1f55ff, #dae6f5, #fff, #fff)
+  background #fff url('../../images/bg-elephant.svg') center top no-repeat
+  // background linear-gradient(#1f55ff, #dae6f5, #fff, #fff)
   height 100%
   overflow hidden
   box-sizing border-box
@@ -38,8 +39,15 @@ $animateDuration = 0.35s
   flex-direction column
   justify-content space-between
   border-radius 0
-  transition $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55) transform, $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55) border-radius
+  transition $animateDuration cubic-bezier(.75,.26,.02,1.01) transform, $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55) border-radius
 
+.menu-toggle
+  position absolute
+  left 5px
+  top 0
+  width 50px
+  height 44px
+  background url(https://image-hosting.xiaoxili.com/img/img/20200831/52a688d849e4ac26556ab68a9b896f8f-3cb906.svg) center no-repeat
 
 .page-title
   padding-left 3px

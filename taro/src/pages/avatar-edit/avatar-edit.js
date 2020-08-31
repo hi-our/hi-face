@@ -32,6 +32,7 @@ const isQQPage = process.env.TARO_ENV === 'qq'
 }), null)
 class AvatarEdit extends Component {
   config = {
+    navigationBarTextStyle: 'white',
     navigationBarTitleText: '头像编辑',
     navigationStyle: 'custom',
     disableScroll: true,
@@ -514,6 +515,7 @@ class AvatarEdit extends Component {
           </View>
           <MenuChoose isMenuShow={tabBarIndex === 1 && !isShowShape} onChoose={this.onChoose} />
           <CustomTabBar selected={tabBarIndex} hideIndex={tabBarIndex === 1 && !isShowShape ? 1 : -1} />
+          <View className={`menu-toggle ${isShowMenuMain ? 'menu-open' : ''}`} onClick={this.onMenuMainTogggle} style={{ marginTop: STATUS_BAR_HEIGHT + 'px' }}></View>
         </View>
         <MenuMain
           activeThemeId={activeThemeId}
@@ -522,7 +524,6 @@ class AvatarEdit extends Component {
           onMenuMainTogggle={this.onMenuMainTogggle}
           onSwitchTheme={this.onSwitchTheme}
         />
-        
       </View>
     )
   }

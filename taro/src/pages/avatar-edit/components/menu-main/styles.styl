@@ -12,22 +12,16 @@ $animateDuration = 0.35s
 .menu-main
   position fixed
   left 0px
-  padding-left 0
-  width 230px
   top 0
   bottom 0
-  background #2F5AFF
+  width 230px
+  // background #2F5AFF
   transform translate(-230px, 0)
-  transition $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55) transform
+  box-sizing border-box
+  padding 0 20px 40px
+  transition $animateDuration cubic-bezier(.75,.26,.02,1.01) transform
   &.menu-open
     transform translate(0, 0)
-
-.menu-main-inner
-  position relative
-  height 100%
-  box-sizing border-box
-  padding 75px 20px 40px
-
 .menu-title
   font-size 20px
   line-height 1.4
@@ -40,40 +34,47 @@ $animateDuration = 0.35s
     vertical-align middle
     width 14px
     height 28px
-    background rgba(0,49,193,0.92)
+    background #FE9B0E
     border-radius 15px
     filter blur(0px)
 
 
 .menu-main-toggle
-  position fixed
-  left 0
-  top 0
+  position relative
+  left 137px
+  margin-bottom 45px
   width 50px
-  height 44px
-  transition $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55) background
-  display flex
-  flex-direction column
-  align-items center
-  justify-content center
+  height 50px
+  // top 0
+  background url(https://image-hosting.xiaoxili.com/img/img/20200831/cd57b4fd2b33b2095b9d1c93f955df80-0d2729.svg) no-repeat center
+  // position fixed
+  // left 0
+  // top 0
+  // width 50px
+  // height 44px
+  // transition $animateDuration cubic-bezier(.75,.26,.02,1.01) background
+  // display flex
+  // flex-direction column
+  // align-items center
+  // justify-content center
 
-  .menu-line
-    width 20px
-    height 3px
-    margin 1px auto
-    background #2F3742
-    border-radius 2px
-    transition $animateDuration cubic-bezier(0.68, -0.55, 0.265, 1.55)
+  // .menu-line
+  //   width 20px
+  //   height 3px
+  //   margin 1px auto
+  //   background #2F3742
+  //   border-radius 2px
+  //   transition $animateDuration cubic-bezier(.75,.26,.02,1.01)
   
-  &.menu-open
-    .menu-line
-      background #fff
-      &:nth-child(1)
-        transform translate(0%, 175%) rotate(-45deg)
-      &:nth-child(2)
-        opacity 0
-      &:nth-child(3)
-        transform translate(0%, -175%) rotate(45deg)
+  // &.menu-open
+  //   .menu-line
+  //     background #fff
+  //     &:nth-child(1)
+  //       transform translate(0%, 175%) rotate(-45deg)
+  //     &:nth-child(2)
+  //       opacity 0
+  //     &:nth-child(3)
+  //       transform translate(0%, -175%) rotate(45deg)
 
 .theme-list
   display flex
@@ -81,20 +82,23 @@ $animateDuration = 0.35s
   padding-left 20px
   
 .theme-item
+  border-radius 30px 0 30px 0
+  overflow hidden
+  background #fff
   &:nth-child(2n)
-    margin-left 18px
+    margin-left 20px
   &:nth-child(n + 3)
-    margin-top 8px
+    margin-top 20px
 
   .theme-image
     width 70px
     height 70px
-    border-radius 15px
+    // border-radius 15px
   .theme-text
     margin-top 3px
     font-size 12px
     line-height 1.5
-    color #fff
+    color #333333
     text-align center
     border-radius 10px
   &.theme-active
