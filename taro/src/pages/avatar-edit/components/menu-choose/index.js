@@ -104,11 +104,11 @@ export default class MenuChoose extends Taro.Component {
             openType="getUserInfo"
             onGetUserInfo={this.onGetUserInfo}
           >
-            头像
+            
           </Button>
-          <View className='menu-item menu-item-camera' onClick={this.onChooseImage.bind(this, 'camera')}>拍照</View>
-          <View className='menu-item menu-item-album' onClick={this.onChooseImage.bind(this, 'album')}>相册</View>
-          {/* <View className='menu-item menu-item-search'>搜索</View> */}
+          <View className='menu-item menu-item-camera' onClick={this.onChooseImage.bind(this, 'camera')}></View>
+          <View className='menu-item menu-item-album' onClick={this.onChooseImage.bind(this, 'album')}></View>
+          <View className='menu-item menu-item-search'></View>
           <View className='menu-choose-btn'></View>
         </View>
         <View className='cropper-wrap' style={{ display: originSrc ? 'block' : 'none' }}>
