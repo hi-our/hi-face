@@ -7,12 +7,17 @@ import CustomTabBar from 'components/custom-tab-bar'
 import AvatarList from './components/avatar-list';
 import userActions from '@/store/user'
 import './styles.styl'
+import { getSystemInfo } from 'utils/common'
+
+const { statusBarHeight } = getSystemInfo()
 
 @CorePage
 class Self extends Component {
   config = {
+    navigationBarTextStyle: 'white',
+    navigationStyle: 'custom',
+    disableScroll: true,
     navigationBarTitleText: '我的',
-    // disableScroll: true,
     enablePullDownRefresh: true,
     backgroundColorTop: '#ffffff',
     backgroundColorBottom: '#ffffff',
@@ -88,11 +93,10 @@ class Self extends Component {
       <Block>
         <View className='user-wrap'>
           <View className='avatar'>
+            <Image src='https://image-hosting.xiaoxili.com/img/img/20200902/e1ea53494a96e99854aa40e87b3c9ca4-d897c7.png' />
           </View>
-          <View className='user-main'>
-            <View className='nick-name'>Hi</View>
-            <View className='address-text'>欢迎登录 Hi 头像</View>
-          </View>
+          <View className='nick-name'>Hi~</View>
+          <View className='address-text'>欢迎登录 Hi 头像</View>
         </View>
         <View className='login-wrap'>
           <Image className="logo-image" src="https://image-hosting.xiaoxili.com/img/img/20200830/41eb7adb16c09f5b25137fe708269e12-11e1fa.png"></Image>
@@ -114,10 +118,8 @@ class Self extends Component {
           <View className='avatar'>
             <Image src={avatarUrl || avatar}></Image>
           </View>
-          <View className='user-main'>
-            <View className='nick-name'>{nickName}</View>
-            <View className='address-text'>让头像更有趣</View>
-          </View>
+          <View className='nick-name'>{nickName}</View>
+          <View className='address-text'>让头像更有趣</View>
         </View>
         <View className="avatar-wrap">
           <AvatarList ref={c => this.listRef = c} />
@@ -136,7 +138,8 @@ class Self extends Component {
     let isShowLogin = !!(avatarUrl || avatar)
 
     return (
-      <View className='self-page'>
+      <View className='self-page' style={{ paddingTop: `${statusBarHeight}px` }}>
+        <View className='page-title'>我的</View>
         <ScrollView className='main-wrap' scrollY enableFlex>
           {isShowLogin ? this.renderHasLogin() : this.renderNotLogin()}
           <Version />

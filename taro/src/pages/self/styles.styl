@@ -12,6 +12,16 @@ html
   box-sizing border-box
   display flex
   flex-direction column
+  background url(https://image-hosting.xiaoxili.com/img/img/20200902/6bca238ae5861b90d8bce39bdba4690b-9324c0.png)  center top no-repeat
+  background-size 100% auto
+
+.page-title
+  text-align center
+  font-size 16px
+  font-weight 400
+  color #2f3742
+  line-height 44px
+  height 44px
 
 .main-wrap
   flex 1
@@ -23,30 +33,27 @@ html
 
 .user-wrap
   display flex
-  background #FFF7D5
+  flex-direction column
+  align-items center
   margin 15px 20px 0
   padding 20px
-  box-shadow 0 2px 7px rgba(142, 115, 0, 0.26)
   .avatar
-    margin-right 20px
-    width 70px
-    height 70px
+    width 96px
+    height 96px
+    padding 4px
     border-radius 50%
     overflow hidden
-    background #eee
+    background rgba(254, 155, 14, 0.68)
     // https://image-hosting.xiaoxili.com/img/img/20200830/0fe1c28d48746cbe10c92148433b8cd9-4ecb53.png
 
     & > image
       display block
-      width 100%
-      height 100%
+      width 96px
+      height 96px
+      border-radius 50%
   
-  .user-main
-    display flex
-    flex-direction column
-    justify-content center
-
   .nick-name
+    margin-top 6px
     font-size 20px
     line-height 1.4
     color #464D5C
@@ -67,14 +74,15 @@ html
     display block
     width 232px
     height 210px
-    margin 0 auto 50px
+    margin 0 auto -10px
+    opacity 0.1
   .login-button
     display block
     margin 0 auto 6px
-    background  linear-gradient(270deg, #FF9900, #FFCD36)
+    background  linear-gradient(#FFCD36, #FF6800)
     width 138px
     line-height 44px
-    border-radius 13px
+    border-radius 18px
     font-size 14px
     color #fff
 

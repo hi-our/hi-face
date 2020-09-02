@@ -58,7 +58,6 @@ export default class ThemeDetail extends Taro.Component {
     const { themeData } = this.props
     const { shapeCategoryList } = this.state
     const { coverImage, shareTitle, shareDesc } = themeData
-    console.log('shapeCategoryList :>> ', shapeCategoryList);
 
     return (
       <ScrollView className="theme-scroll" scrollY>
@@ -70,13 +69,17 @@ export default class ThemeDetail extends Taro.Component {
               <View className="share-desc">{shareDesc}</View>
             </View>
           </View>
-          <View>
+          <View className="theme-wrap">
             {
               shapeCategoryList.map((category) => {
-                const { _id: categoryId, categoryImage, shapeList } = category
+                const { _id: categoryId, categoryName,  categoryImage, shapeList } = category
                 return (
                   <View key={categoryId} className='category-item'>
-                    <Image className='category-image' src={categoryImage}></Image>
+                    <View className='category-hd'>
+                      <Image className='category-image' src={categoryImage}></Image>
+                      <View>{categoryName}</View>
+
+                    </View>
                     <View className='shape-list'>
                       {
                         shapeList.map((shape) => {

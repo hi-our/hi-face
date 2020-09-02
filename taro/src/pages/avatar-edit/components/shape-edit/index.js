@@ -274,67 +274,71 @@ class ShapeEdit extends Taro.Component {
       <View>
         <View
           className='image-wrap'
-          onTouchStart={this.touchStart}
-          onTouchMove={this.touchMove}
-          onTouchEnd={this.touchEnd}
         >
-          <Image
-            src={cutImageSrc}
-            mode='widthFix'
-            className='image-selected'
-          />
-          {
-            shapeList.map((shape, shapeIndex) => {
+          <View
+            className='image-inner'
+            onTouchStart={this.touchStart}
+            onTouchMove={this.touchMove}
+            onTouchEnd={this.touchEnd}
+          >
+            <Image
+              src={cutImageSrc}
+              mode='widthFix'
+              className='image-selected'
+            />
+            {
+              shapeList.map((shape, shapeIndex) => {
 
-              const {
-                timeNow,
-                imageUrl,
-                shapeWidth,
-                shapeCenterX,
-                shapeCenterY,
-                resizeCenterX,
-                resizeCenterY,
-                reserve,
-                rotate
-              } = shape
+                const {
+                  timeNow,
+                  imageUrl,
+                  shapeWidth,
+                  shapeCenterX,
+                  shapeCenterY,
+                  resizeCenterX,
+                  resizeCenterY,
+                  reserve,
+                  rotate
+                } = shape
 
-              let transX = shapeCenterX - shapeWidth / 2 - 2 + 'rpx'
-              let transY = shapeCenterY - shapeWidth / 2 - 2 + 'rpx'
+                let transX = shapeCenterX - shapeWidth / 2 - 2 + 'rpx'
+                let transY = shapeCenterY - shapeWidth / 2 - 2 + 'rpx'
 
-              let shapeStyle = {
-                width: shapeWidth + 'rpx',
-                height: shapeWidth + 'rpx',
-                transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`,
-                zIndex: shapeIndex === currentShapeIndex ? 2 : 1
-              }
+                let shapeStyle = {
+                  width: shapeWidth + 'rpx',
+                  height: shapeWidth + 'rpx',
+                  transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`,
+                  zIndex: shapeIndex === currentShapeIndex ? 2 : 1
+                }
 
-              let shapeImageStyle = {
-                transform: `scale(${reserve}, 1)`,
-              }
+                let shapeImageStyle = {
+                  transform: `scale(${reserve}, 1)`,
+                }
 
-              return (
-                <View className='shape-container' key={timeNow} style={shapeStyle}>
-                  <Image className="shape-image" data-type='shape' data-shape-index={shapeIndex} src={imageUrl} style={shapeImageStyle} />
-                  {
-                    currentShapeIndex === shapeIndex && (
-                      <Block>
-                        <View className='shape-btn-remove' data-shape-index={shapeIndex} onClick={this.removeShape}></View>
-                        <View className='shape-btn-resize' data-shape-index={shapeIndex} data-type='rotate-resize'></View>
-                        <View className='shape-btn-reverse' data-shape-index={shapeIndex} onClick={this.reverseShape}></View>
-                        <View className='shape-btn-checked' data-shape-index={shapeIndex} onClick={this.checkedShape}></View>
-                      </Block>
-                    )
-                  }
-                </View>
-              )
-            })
-          }
+                return (
+                  <View className='shape-container' key={timeNow} style={shapeStyle}>
+                    <Image className="shape-image" data-type='shape' data-shape-index={shapeIndex} src={imageUrl} style={shapeImageStyle} />
+                    {
+                      currentShapeIndex === shapeIndex && (
+                        <Block>
+                          <View className='shape-btn-remove' data-shape-index={shapeIndex} onClick={this.removeShape}></View>
+                          <View className='shape-btn-resize' data-shape-index={shapeIndex} data-type='rotate-resize'></View>
+                          <View className='shape-btn-reverse' data-shape-index={shapeIndex} onClick={this.reverseShape}></View>
+                          <View className='shape-btn-checked' data-shape-index={shapeIndex} onClick={this.checkedShape}></View>
+                        </Block>
+                      )
+                    }
+                  </View>
+                )
+              })
+            }
+          </View>
         </View>
         <View className='button-wrap'>
-          <View className='button-remove' onClick={this.removeImage}>
+          <View className='button button-remove' onClick={this.removeImage}>
             移除图片
           </View>
-          <View className='button-download' onClick={this.generateImage}>
+          <View className='button button-save' onClick={this.generateImage}>
             保存去分享
           </View>
         </View>

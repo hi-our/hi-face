@@ -35,8 +35,6 @@ export default class ImageChoose extends Taro.Component {
   render() {
     const { categoryList, chooseShape, isH5Page } = this.props
     const { currentTabIndex } = this.state
-    console.log('categoryList :>> ', categoryList);
-    let tabsTips = ''
 
     return (
       <View className='tab-wrap'>
@@ -56,9 +54,6 @@ export default class ImageChoose extends Taro.Component {
               )
             })
           }
-          {/* <View className='tab-hd-tips'>
-            提示：{tabsTips}
-          </View> */}
         </View>
         <View className='tab-bd'>
           {

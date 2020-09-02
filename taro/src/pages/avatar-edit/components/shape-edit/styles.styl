@@ -1,9 +1,14 @@
 .image-wrap
   margin 44px auto 0
-  position relative
   width 300px
   height 300px
+  border-radius 20px
+  box-shadow 0 6px 8px rgba(161, 161, 161, 0.5)
+
+.image-inner
+  position relative
   overflow hidden
+  border-radius 20px
 
 .image-selected
   width 300px
@@ -62,31 +67,38 @@
 
 
 .button-wrap
-  margin-top 10px
+  margin 20px auto 0
+  width 330px
+  height 54px
   display flex
-  justify-content center
+  justify-content space-evenly
   font-size 12px
   color #2f3742
   line-height 1.5
   text-align center
-  flex-wrap wrap
 
-.button-remove,
-.button-download
-  padding-top 40px
-  width 60px
-  font-size 10px
-  background-size auto 40px
-  background-repeat no-repeat
-  background-position center top
+.button
+  display block
+  overflow visible
+  font-size 12px
+  line-height 1.5
+  text-align center
+  &:before
+    content ''
+    display block
+    width 60px
+    height 60px
+    background #ffffff
+    box-shadow 0 0 12px #EFEFEF
+    background-position center
+    background-repeat no-repeat
+    border-radius 50%
+    margin-bottom 3px
 
-  @media (max-width 359px)
-    padding-top 32px
-    background-size auto 30px
-
-.button-remove
-  background-image url(https://image-hosting.xiaoxili.com/img/20200812133333.png)
-
-.button-download
-  background-image url(https://image-hosting.xiaoxili.com/img/20200812133408.png)
+.button-remove:before
+  background-image url(https://image-hosting.xiaoxili.com/img/img/20200902/608c4bd03c0200805a6b414c552dcbd1-23c6d5.svg)
+  background-size 30px auto
+.button-save:before
+  background-image url(https://image-hosting.xiaoxili.com/img/img/20200902/1f3d138e3272982e85643efa746273c0-d21fb8.svg)
+  background-size 30px auto
 

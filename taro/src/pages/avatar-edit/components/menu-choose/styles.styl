@@ -11,6 +11,8 @@ $cubicType = cubic-bezier(0.68, -0.55, 0.265, 1.55)
   
   &.menu-show
     transform translateY(0)
+    &.bottom-safe-area
+      transform translateY(-12px)
 
   &.menu-open
     .menu-choose-btn
@@ -42,9 +44,6 @@ $cubicType = cubic-bezier(0.68, -0.55, 0.265, 1.55)
       &:nth-child(3)
         transition-delay 0.25s
         transform rotate(60deg) translateY(-85px) rotate(-60deg)
-
-.bottom-safe-area
-  margin-bottom 12px
 
 .menu-choose-btn
   width 90px

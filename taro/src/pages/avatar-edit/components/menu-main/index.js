@@ -36,7 +36,6 @@ export default class MenuMain extends Taro.PureComponent {
 
   render() {
     const { isShowMenuMain, activeThemeId, themeList } = this.props
-    console.log('menuMain themeList :>> ', themeList);
 
     return (
       <Block>

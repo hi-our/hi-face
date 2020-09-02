@@ -5,6 +5,10 @@ import CustomTabBar from 'components/custom-tab-bar'
 import ThemeDetail from './components/theme-detail'
 import EventEmitter from 'utils/event-emitter'
 
+import { getSystemInfo } from 'utils/common'
+
+const { statusBarHeight } = getSystemInfo()
+
 import './styles.styl';
 
 @connect(state => ({
@@ -12,8 +16,10 @@ import './styles.styl';
 }), null)
 export default class ThemeList extends Component {
   config = {
-    navigationBarTitleText: '主题列表',
+    navigationBarTextStyle: 'white',
+    navigationStyle: 'custom',
     disableScroll: true,
+    navigationBarTitleText: '主题列表',
   }
 
   constructor(props) {
@@ -76,7 +82,8 @@ export default class ThemeList extends Component {
 
     return (
       <Block>
-        <View className='theme-list-page'>
+        <View className='theme-list-page' style={{ paddingTop: `${statusBarHeight}px` }}>
+          <View className='page-title'>主题列表</View>
           <View className='main-wrap'>
             <View className="theme-tabs">
               <ScrollView className="tabs-bar" scrollX scrollIntoView={`item-${currentView}`} scrollWithAnimation>
