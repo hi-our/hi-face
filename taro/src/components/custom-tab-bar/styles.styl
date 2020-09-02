@@ -2,13 +2,13 @@ $smallSize = 60px
 $cubicType = cubic-bezier(0.68, -0.55, 0.265, 1.55)
 .tab-bar
   // background rgba(222,232,255,0.2)
-  background #f7f9ff
+  background #fff
   // background-image linear-gradient(0deg, #f7b0b0, rgba(183, 255, 154, 0)), linear-gradient(0deg, rgba(158, 255, 151, 0.75), rgba(183, 255, 154, 0)), linear-gradient(0deg, #b4fffb, rgba(183, 255, 154, 0))
   display flex
   justify-content space-between
   // filter url(https://n1other.hjfile.cn/res7/2020/08/26/368fb179da9fc4f58b4f520f314bec6f.svg#goo)
   // filter url(https://n1other.hjfile.cn/res7/2020/08/26/368fb179da9fc4f58b4f520f314bec6f.svg#goo)
-  // filter: drop-shadow(0 -5px 5px #EEEEEE)
+  filter: drop-shadow(0 -5px 5px #EEEEEE)
 
 .tab-bar-item
   width 110px
@@ -30,9 +30,10 @@ $cubicType = cubic-bezier(0.68, -0.55, 0.265, 1.55)
     top 0
     width $smallSize 
     height ($smallSize /4)
-    background url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjAwcHgiIGhlaWdodD0iNTBweCIgdmlld0JveD0iMCAwIDIwMCA1MCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDx0aXRsZT7ms6Lmtarnur8t5byn5b2iPC90aXRsZT4KICAgIDxnIGlkPSLnvZHnq5kiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJpUGhvbmUtMTEtUHJvIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTAwOS4wMDAwMDAsIC0xNTYxLjAwMDAwMCkiIGZpbGw9IiNGN0Y5RkYiIGZpbGwtcnVsZT0ibm9uemVybyI+CiAgICAgICAgICAgIDxnIGlkPSLms6Lmtarnur8t5byn5b2iIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDA5LjAwMDAwMCwgMTU2MS4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0tMi4yNzM3MzY3NWUtMTMsMzggQzQyLjc0NjA5MzcsMzggNTguMDg2MzQsMCAxMDAsMCBDMTQxLjkxMzY2LDAgMTU0LjU0OTM5LDM4IDIwMCwzOCBMMjAwLDQ5LjMxNTQyOTcgQzE2NC43ODQwMjgsNDkuMzE1NDI5NyA2Ny4xNjQyMTg5LDQ5LjMxNTQyOTcgLTIuMjczNzM2NzVlLTEzLDQ5LjMxNTQyOTcgTC0yLjI3MzczNjc1ZS0xMywzOCBaIiBpZD0i6Lev5b6E5aSH5Lu9Ij48L3BhdGg+CiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg==')
+    background url('https://image-hosting.xiaoxili.com/img/img/20200902/f8aefaf1c333ba1c5f529af95d61fb2c-aa5d47.svg')
     background-size contain
     transition 0.3s $cubicType transform
+    will-change transform
 
   &:after
     content ''
@@ -49,18 +50,28 @@ $cubicType = cubic-bezier(0.68, -0.55, 0.265, 1.55)
 
 .tab-bar-image
   position relative
-  width 30px
-  height 30px
+  width 24px
+  height 24px
   display block
   margin 5px auto -3px
-  transition 0.08s linear transform
+  transition 0.08s $cubicType
 
+.tab-bar-text
+  margin-top 3px
 .tab-bar-item-hover
   .tab-bar-image
     transform scale(0.8)
 .tab-item-active
+  color #2F3742
+  .tab-bar-image
+    padding 6px
+    border-radius 18px
+    background #FE9B0E
+    margin-top -6px
+    transition 0.15s $cubicType
+
   &:before
-    transform translateY(-14px)
+    transform translateY(-12px)
 
 .tab-item-hide
   &:before
@@ -73,10 +84,6 @@ $cubicType = cubic-bezier(0.68, -0.55, 0.265, 1.55)
   .tab-bar-image
   .tab-bar-text
     opacity 0
-
-    
-.tab-item-active
-  color #2F3742
 
 .bottom-safe-area
   padding-bottom 12px
