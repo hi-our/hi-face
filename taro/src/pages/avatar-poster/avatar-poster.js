@@ -25,12 +25,15 @@ class AvatarPoster extends Component {
     const { uuid = '' } = this.$router.params
     this.pageUUID = uuid
     this.pageUrl = this.pageUUID ? `/pages/avatar-poster/avatar-poster?uuid=${this.pageUUID}` : '/pages/queen-king/queen-king'
+    const showBackToIndexBtn = Taro.getStorageSync('showBackToIndexBtn')
+    console.log('showBackToIndexBtn :>> ', showBackToIndexBtn);
     this.state = {
       avatarFileID: '',
       avatarFileLocal: '',
       ageType: '',
       pageStatus: 'loading',
       isAuthor: false,
+      showBackToIndexBtn,
       errorText: ''
     }
   }
@@ -297,7 +300,7 @@ class AvatarPoster extends Component {
 
 
   render() {
-    const { avatarFileID, ageType, pageStatus, isAuthor, avatarFileLocal, errorText } = this.state
+    const { avatarFileID, ageType, pageStatus, isAuthor, avatarFileLocal, errorText, showBackToIndexBtn } = this.state
  
     return (
       <Block>
@@ -305,7 +308,12 @@ class AvatarPoster extends Component {
         <PageWrapper status={pageStatus} errorText={errorText}>
           <View className={`page-avatar-poster age-${ageType}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
             <View className='page-title'>
-              <View className='page-back' onClick={this.onBack}></View>
+              {
+                showBackToIndexBtn
+                ? <View className='page-home' onClick={this.goHome}></View>
+                : <View className='page-back' onClick={this.onBack}></View>
+              }
+              
               
               头像分享
             </View>

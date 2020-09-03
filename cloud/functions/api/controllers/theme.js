@@ -109,6 +109,7 @@ class ThemeController extends BaseController {
       }
       let { data = [] } = await operation.get()
 
+      console.log('theme list data :>> ', data);
       if (data && data.length >= 1) {
         return this.success({
           items: data,

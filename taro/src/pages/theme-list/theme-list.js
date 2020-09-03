@@ -31,6 +31,10 @@ export default class ThemeList extends Component {
     }
   }
 
+  componentWillMount() {
+    Taro.setStorageSync('showBackToIndexBtn', false)
+  }
+
   componentDidShow() {
     this.setState({
       tabBarIndex: 0
@@ -40,6 +44,16 @@ export default class ThemeList extends Component {
     this.setState({
       tabBarIndex: -1
     })
+  }
+
+  onShareAppMessage() {
+    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/20200812132355.png'
+
+    return {
+      title: '邀请好友一起来制作头像吧',
+      imageUrl: DEFAULT_SHARE_COVER,
+      path: '/pages/avatar-edit/avatar-edit'
+    }
   }
 
   setCurrentView = (activeTab) => {

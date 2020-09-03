@@ -24,7 +24,7 @@ html
   height 44px
 
 .main-wrap
-  flex 1
+  height calc(100% - 94px)
   display flex
   flex-direction column
   padding-top 1px
@@ -32,12 +32,9 @@ html
 
 
 .user-wrap
-  display flex
-  flex-direction column
-  align-items center
-  margin 15px 20px 0
   padding 20px
   .avatar
+    margin 0 auto
     width 96px
     height 96px
     padding 4px
@@ -57,11 +54,13 @@ html
     font-size 20px
     line-height 1.4
     color #464D5C
+    text-align center
   
   .address-text
     font-size 16px
     line-height 1.4
     color #464D5C
+    text-align center
 
 .login-wrap
   flex 1
@@ -91,8 +90,7 @@ html
     text-align center
     color rgba(70, 77, 92, 0.49)
 .avatar-wrap
-  flex 1
-  margin-top 40px
+  height calc(100% - 200px)
   padding-bottom 10px
 .list-wrap
   margin-top 10px
@@ -125,9 +123,3 @@ html
     background url(https://image-hosting.xiaoxili.com/img/20200812134012.png) no-repeat
     background-size contain
 
-
-.version
-  padding 15px 0 20px
-  color #95A1AF
-  font-size 12px
-  text-align center

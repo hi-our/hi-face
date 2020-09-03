@@ -138,6 +138,7 @@ class App extends Component {
 
   /** TODO: 猜测这段代码的逻辑是，是否显示「返回首页」按钮，, query = {}暂时没用到 */
   addToIndexBtn(code) {
+    console.log('code :>> ', code);
     const RefreshCode = {
       '011004': true
     }

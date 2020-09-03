@@ -43,6 +43,9 @@ class AvatarEdit extends Component {
     this.state = getDefaultState()
   }
 
+  componentWillMount() {
+    Taro.setStorageSync('showBackToIndexBtn', false)
+  }
   
   // componentDidMount() {
   //   if (isH5Page) {
@@ -484,7 +487,7 @@ class AvatarEdit extends Component {
 
     return (
       <View className={`avatar-edit-page ${isShowMenuMain ? 'menu-open' : ''}`}>
-        <PageLead />
+        {/* <PageLead /> */}
         <PageLoading status={pageStatus} loadingType='fullscreen'></PageLoading>
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
         <View className='page-container' style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>

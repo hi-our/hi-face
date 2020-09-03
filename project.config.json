@@ -72,10 +72,10 @@
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "avatar-poster-童年",
+					"id": 1,
+					"name": "avatar-poster-prod",
 					"pathName": "pages/avatar-poster/avatar-poster",
-					"query": "uuid=21aba77f-b1e5-4377-adbd-7ff502ddea2a",
+					"query": "uuid=76bb601b-2324-418a-9286-d7dcf1d5fdf9&__key_=15991396054112",
 					"scene": null
 				},
 				{
