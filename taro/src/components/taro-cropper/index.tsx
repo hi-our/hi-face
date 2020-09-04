@@ -293,6 +293,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
    * @param nextContext
    */
   componentWillReceiveProps(nextProps: Readonly<TaroCropperComponentProps>, nextContext: any): void {
+    console.log('nextProps, this.props :>> ', nextProps, this.props);
     if (JSON.stringify(nextProps) != JSON.stringify(this.props)) {
       this.updateInfo(nextProps)
         .then(() => {
@@ -597,10 +598,11 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
         <Canvas
           canvasId={cropperCutCanvasId}
           style={cutCanvasStyle}
+          type='2d'
           className={`cut-canvas-item ${isFullScreenCss ? 'cut-canvas-fullscreen' : ''}`}
-
         />
         <Canvas
+          type='2d'
           onTouchStart={this.handleOnTouchStart}
           onTouchMove={this.handleOnTouchMove}
           onTouchEnd={this.handleOnTouchEnd}

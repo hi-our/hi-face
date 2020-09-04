@@ -3,9 +3,7 @@ import { View, Image, Button, Canvas, Block } from '@tarojs/components'
 
 import { cloudCallFunction } from 'utils/fetch'
 import PageWrapper from 'components/page-wrapper'
-import { base64src, downloadImgByBase64 } from 'utils/canvas-drawing'
-import Version from 'components/version'
-import { fillText } from 'utils/canvas'
+import { base64src, downloadImgByBase64, getImg } from 'utils/canvas-drawing'
 import { SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT, DPR_CANVAS_SIZE, SAVE_CODE_SIZE, SAVE_PAGE_DPR, STATUS_BAR_HEIGHT } from './utils'
 
 import './styles.styl'
@@ -207,12 +205,15 @@ class AvatarPoster extends Component {
       if (!avatarFileLocal) {
         return Error('需要重新进入页面')
       }
+      console.log('avatarFileLocal :>> ', avatarFileLocal, qrcodeFile)
+      // pc.drawImage(require('../../images/poster-bg.jpg'), 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH * 1.4)
       pc.drawImage(avatarFileLocal, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
+      pc.drawImage(require('../../images/logo-text.png'), 13, 654, 300, 132)
       if (qrcodeFile) {
         pc.drawImage(qrcodeFile, 210 * SAVE_PAGE_DPR, 320 * SAVE_PAGE_DPR, SAVE_CODE_SIZE, SAVE_CODE_SIZE)
       }
-      fillText(pc, '我做了一个新头像，赞我哟', 10 * SAVE_PAGE_DPR, 360 * SAVE_PAGE_DPR, true, 30, '#3d3d3d')
-      fillText(pc, '长按识别小程序，来一起换头像吧', 10 * SAVE_PAGE_DPR, 380 * SAVE_PAGE_DPR, false, 20, '#3d3d3d')
+      // fillText(pc, '我做了一个新头像，赞我哟', 10 * SAVE_PAGE_DPR, 360 * SAVE_PAGE_DPR, true, 30, '#3d3d3d')
+      // fillText(pc, '长按识别小程序，来一起换头像吧', 10 * SAVE_PAGE_DPR, 380 * SAVE_PAGE_DPR, false, 20, '#3d3d3d')
 
   
       pc.draw(true, () => {
@@ -272,7 +273,7 @@ class AvatarPoster extends Component {
       <View className={`poster-dialog ${isShowPoster ? 'show' : ''}`}>
         <View className='poster-dialog-main'>
           {!!posterSrc && <Image className='poster-image' src={posterSrc} showMenuByLongpress></Image>}
-          <View className='poster-image-tips'>长按可分享图片</View>
+          {/* <View className='poster-image-tips'>长按可分享图片</View> */}
           <View className='poster-dialog-close' onClick={this.onHidePoster} />
           <View className='poster-footer-btn'>
             {/* <View className='poster-btn-save' onClick={this.savePoster}>
