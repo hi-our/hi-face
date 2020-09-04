@@ -70,16 +70,13 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
 
   constructor(props) {
     super(props);
-    console.log('2 :>> ', 1);
     this.update = this.update.bind(this);
     this.handleOnTouchMove = this.handleOnTouchMove.bind(this);
     this.handleOnTouchStart = this.handleOnTouchStart.bind(this);
     this.handleOnTouchEnd = this.handleOnTouchEnd.bind(this);
     this._drawCropperCorner = this._drawCropperCorner.bind(this);
     this._drawCropperContent = this._drawCropperContent.bind(this);
-    console.log('2 :>> ', 2);
     this.systemInfo = Taro.getSystemInfoSync();
-    console.log('2 :>> ', 3);
     this.state = {
       scale: 1,
     }
@@ -293,7 +290,6 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
    * @param nextContext
    */
   componentWillReceiveProps(nextProps: Readonly<TaroCropperComponentProps>, nextContext: any): void {
-    console.log('nextProps, this.props :>> ', nextProps, this.props);
     if (JSON.stringify(nextProps) != JSON.stringify(this.props)) {
       this.updateInfo(nextProps)
         .then(() => {

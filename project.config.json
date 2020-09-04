@@ -84,15 +84,15 @@
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "pages/self/self",
+					"id": 2,
+					"name": "pages/self/self-我的",
 					"pathName": "pages/self/self",
 					"query": "",
 					"scene": null
 				},
 				{
-					"id": 6,
-					"name": "主题列表",
+					"id": 3,
+					"name": "theme-list-主题列表",
 					"pathName": "pages/theme-list/theme-list",
 					"query": "",
 					"scene": null
