@@ -5,6 +5,8 @@ const COLLECTION_NAME = 'themes'
 const apiConfig = new ConfigController()
 
 const getImageUrl = async (cloud, fileID) => {
+  if (!fileID) return ''
+  
   const { fileList } = await cloud.getTempFileURL({
     fileList: [fileID]
   })
@@ -30,8 +32,17 @@ class ThemeController extends BaseController {
       }
 
       const { errMsg, data } = await this.cloud.db.collection('themes').doc(themeId).get()
-      console.log('result :>> ', data);
-      let themeData = data
+      
+      const { coverImage, shareImage } = data
+      
+      let coverImageUrl = await getImageUrl(this.cloud, coverImage)
+      let shareImageUrl = await getImageUrl(this.cloud, shareImage)
+      
+      let themeData = {
+        ...data,
+        coverImageUrl,
+        shareImageUrl,
+      }
 
       if (needShapes && errMsg === 'document.get:ok') {
         let { errMsg: categoryErrMsg, list: shapeCategoryList } = await this.cloud.db.collection('shape_categories').aggregate()
@@ -54,8 +65,9 @@ class ThemeController extends BaseController {
           console.log('urlPrefix :>> ', couldPrefix, urlPrefix);
 
           shapeCategoryList.forEach(catItem => {
+            catItem.categoryImageUrl = (catItem.categoryImage || '').replace(couldPrefix, urlPrefix)
             catItem.shapeList.forEach(shapeItem => {
-              const { imageFileID, imageReverseFileID } = shapeItem
+              const { imageFileID = '', imageReverseFileID = '' } = shapeItem
               if (imageFileID) shapeItem.imageUrl = imageFileID.replace(couldPrefix, urlPrefix)
               if (imageReverseFileID) shapeItem.imageReverseUrl = imageReverseFileID.replace(couldPrefix, urlPrefix)
             })
@@ -111,6 +123,28 @@ class ThemeController extends BaseController {
 
       console.log('theme list data :>> ', data);
       if (data && data.length >= 1) {
+        // TODO 临时写法，快速换地址
+        let cloudId = data[0].coverImage || ''
+        let couldPrefix = cloudId.split('/uploads/')[0]
+        let urlPath = await getImageUrl(this.cloud, cloudId)
+        let urlPrefix = urlPath.split('/uploads/')[0]
+        console.log('urlPrefix :>> ', couldPrefix, urlPrefix)
+
+        data.forEach(async (themeItem, themeIndex) => {
+          const { coverImage = '', shareImage = '' } = themeItem
+
+          let coverImageUrl = coverImage.replace(couldPrefix, urlPrefix)
+          let shareImageUrl = shareImage.replace(couldPrefix, urlPrefix)
+          console.log('coverImageUrl :>> ', coverImageUrl, shareImageUrl);
+
+          data[themeIndex] = {
+            ...themeItem,
+            coverImageUrl,
+            shareImageUrl,
+          }
+        })
+
+        console.log('data :>> ', data);
         return this.success({
           items: data,
           nextPage: pageTotal > pageNo,

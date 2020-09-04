@@ -477,7 +477,7 @@ class AvatarEdit extends Component {
   render() {
     const { themeList } = this.props
     const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, tabBarIndex } = this.state
-    const { coverImage, _id: activeThemeId } = themeData
+    const { coverImageUrl, _id: activeThemeId } = themeData
 
     return (
       <View className={`avatar-edit-page ${isShowMenuMain ? 'menu-open' : ''}`}>
@@ -498,7 +498,7 @@ class AvatarEdit extends Component {
               )
               : (
                 <Block>
-                  <Image src={coverImage} className="page-cover" />
+                  <Image src={coverImageUrl} className="page-cover" />
                 </Block>
               )
             }

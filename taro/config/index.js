@@ -1,12 +1,8 @@
 const alias = require('./alias')
-const loadEnv = require('./load-env')
-
-loadEnv()
 
 // 兼容web端和小程序端
 const dpr = process.env.TARO_ENV === 'h5' ? 1 : 2
 
-console.log('process.env', process.env.envId)
 
 const config = {
   projectName: 'hi-face',

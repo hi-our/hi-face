@@ -12,5 +12,5 @@ module.exports = {
   apiImageUpload: '',
   tokenKey: '',
   webViewDomain: '',
-  envId: process.env.envId,
+  envId: process.env.SERVER_ENV === 'yz' ? 'development-v9y2f' : 'production-topjt' ,
 }

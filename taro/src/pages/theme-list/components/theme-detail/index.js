@@ -57,13 +57,13 @@ export default class ThemeDetail extends Taro.Component {
   render() {
     const { themeData } = this.props
     const { shapeCategoryList } = this.state
-    const { coverImage, shareTitle, shareDesc } = themeData
+    const { coverImageUrl, shareTitle, shareDesc } = themeData
 
     return (
       <ScrollView className="theme-scroll" scrollY>
         <View className="theme-item" onClick={this.onSwitch}>
           <View className="theme-header">
-            <Image className="theme-cover" src={coverImage} />
+            <Image className="theme-cover" src={coverImageUrl} />
             <View className="theme-main">
               <View className="share-title">{shareTitle}</View>
               <View className="share-desc">{shareDesc}</View>
@@ -72,11 +72,11 @@ export default class ThemeDetail extends Taro.Component {
           <View className="theme-wrap">
             {
               shapeCategoryList.map((category) => {
-                const { _id: categoryId, categoryName,  categoryImage, shapeList } = category
+                const { _id: categoryId, categoryName,  categoryImageUrl, shapeList } = category
                 return (
                   <View key={categoryId} className='category-item'>
                     <View className='category-hd'>
-                      <Image className='category-image' src={categoryImage}></Image>
+                      <Image className='category-image' src={categoryImageUrl}></Image>
                       <View>{categoryName}</View>
 
                     </View>

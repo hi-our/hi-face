@@ -2,9 +2,10 @@ const dotenv = require('dotenv')
 const fs = require('fs')
 
 // load .env file and merge
+console.log('process.env.SERVER_ENV :>> ', process.env.SERVER_ENV === 'yz');
 function loadEnv () {
   try {
-    fs.accessSync('../.env', fs.constants.F_OK)
+    fs.accessSync(process.env.SERVER_ENV === 'yz' ? '../.env.dev' : '../.env', fs.constants.F_OK)
 
     const envConfig = dotenv.parse(fs.readFileSync('.env'))
     for (let k in envConfig) {
@@ -12,7 +13,9 @@ function loadEnv () {
         process.env[k] = envConfig[k]
       }
     }
-  } catch (e) {}
+  } catch (e) {
+    console.log('e :>> ', e);
+  }
 }
 
 module.exports = loadEnv

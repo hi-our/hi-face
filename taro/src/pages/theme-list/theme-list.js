@@ -57,7 +57,7 @@ export default class ThemeList extends Component {
   }
 
   setCurrentView = (activeTab) => {
-    const { themeList } = this.state
+    const { themeList } = this.props
     const len = themeList.length
     if (len === 0) return
 
@@ -94,6 +94,8 @@ export default class ThemeList extends Component {
     const { themeList } = this.props
     const { activeTab, currentView, tabBarIndex } = this.state
 
+    console.log('themeList :>> ', themeList);
+
     return (
       <Block>
         <View className='theme-list-page' style={{ paddingTop: `${statusBarHeight}px` }}>
@@ -103,10 +105,10 @@ export default class ThemeList extends Component {
               <ScrollView className="tabs-bar" scrollX scrollIntoView={`item-${currentView}`} scrollWithAnimation>
                 {
                   themeList.map((theme, index) => {
-                    const { _id: themeId, themeName, shareImage } = theme
+                    const { _id: themeId, themeName, shareImageUrl } = theme
                     return (
                       <View className={`tabs-bar-item ${activeTab === index ? 'bar-active' : ''}`} key={themeId} id={`item-${index}`} onClick={this.onSwitchTab.bind(this, index)}>
-                        <Image className="bar-image" src={shareImage}></Image>
+                        <Image className="bar-image" src={shareImageUrl}></Image>
                         <View className="bar-text">{themeName}</View>
                       </View>
                     )
