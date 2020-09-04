@@ -44,6 +44,7 @@
   "author": "shenghanqin",
   "license": "MIT",
   "dependencies": {
+    "@cloudbase/js-sdk": "^1.2.4",
     "@tarojs/cli": "2.2.12",
     "@tarojs/components": "2.2.12",
     "@tarojs/components-qa": "2.2.12",
@@ -59,6 +60,7 @@
     "@tarojs/taro-tt": "2.2.12",
     "@tarojs/taro-weapp": "2.2.12",
     "babel-runtime": "^6.26.0",
+    "dotenv": "^8.2.0",
     "gh-pages": "^2.2.0",
     "nerv-devtools": "^1.5.5",
     "nervjs": "^1.5.5",

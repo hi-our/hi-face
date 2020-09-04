@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { Block, View, Image, CoverView, CoverImage } from '@tarojs/components'
+import { View, Image } from '@tarojs/components'
 import { isIphoneSafeArea } from 'utils/common';
 import './styles.styl'
 
@@ -26,20 +26,20 @@ export default class CustomTabBar extends Taro.Component {
         {
           pagePath: '/pages/theme-list/theme-list',
           text: '主题',
-          iconPath: '../../images/tab-theme-1.png',
-          selectedIconPath: '../../images/tab-theme-2.png'
+          iconPath:  Taro.getEnv() === 'WEB' ? require('../../images/tab-theme-1.png') : '../../images/tab-theme-1.png',
+          selectedIconPath:  Taro.getEnv() === 'WEB' ? require('../../images/tab-theme-2.png') : '../../images/tab-theme-2.png',
         },
         {
           pagePath: '/pages/avatar-edit/avatar-edit',
           text: '编辑',
-          iconPath: '../../images/tab-edit-1.png',
-          selectedIconPath: '../../images/tab-edit-2.png'
+          iconPath:  Taro.getEnv() === 'WEB' ? require('../../images/tab-edit-1.png') : '../../images/tab-edit-1.png',
+          selectedIconPath:  Taro.getEnv() === 'WEB' ? require('../../images/tab-edit-2.png') : '../../images/tab-edit-2.png',
         },
         {
           pagePath: '/pages/self/self',
           text: '我的',
-          iconPath: '../../images/tab-self-1.png',
-          selectedIconPath: '../../images/tab-self-2.png'
+          iconPath:  Taro.getEnv() === 'WEB' ? require('../../images/tab-self-1.png') : '../../images/tab-self-1.png',
+          selectedIconPath:  Taro.getEnv() === 'WEB' ? require('../../images/tab-self-2.png') : '../../images/tab-self-2.png',
         },
       ]
     }
@@ -48,7 +48,7 @@ export default class CustomTabBar extends Taro.Component {
   switchTab = (e) => {
     const data = e.currentTarget.dataset
     const url = data.path
-    wx.switchTab({ url })
+    Taro.switchTab({ url })
   }
   render() {
     const { selected, hideIndex } = this.props

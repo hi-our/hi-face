@@ -463,12 +463,6 @@ class AvatarEdit extends Component {
     }
   }
 
-  goTestHat = () => {
-    Taro.navigateTo({
-      url: '/pages/test/test'
-    })
-  }
-
   onMenuMainTogggle = () => {
     this.setState({
       isShowMenuMain: !this.state.isShowMenuMain

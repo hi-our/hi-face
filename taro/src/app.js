@@ -1,14 +1,16 @@
 import Taro, { Component } from '@tarojs/taro'
 import { Provider } from '@tarojs/redux'
-import Index from 'pages/test/test'
+import Index from './pages/avatar-edit/'
 import store from '@/store'
 import userActions from '@/store/user'
 import * as config from 'config'
 import globalActions from '@/store/global'
 
+import './tcb';
+
 import './app.styl'
 
-const updateManager = Taro.getUpdateManager()
+
 
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
@@ -76,19 +78,34 @@ class App extends Component {
     Taro.setStorageSync('isHideLead', false)
 
     if (process.env.TARO_ENV === 'weapp') {
-      Taro.cloud.init({
-        env: config.cloudEnv,
-        traceUser: true
-      })
+      // Taro.cloud.init({
+      //   env: config.cloudEnv,
+      //   traceUser: true
+      // })
 
       // 检查过审开关是否开启
-      globalActions.getForCheckStatus()
-      globalActions.getThemeList()
-    }
+      this.setUpdateManager()
+    } 
+    globalActions.getForCheckStatus()
+    globalActions.getThemeList()
+    // else if (Taro.getEnv() === 'WEB') {
+
+    //   Taro.cloud.anonymousAuthProvider()
+    //     .signIn()
+    //     .then((res) => {
+    //       // 登录成功
+    //       console.log('res :>> ', res);
+    //     })
+    //     .catch((err) => {
+    //       // 登录失败
+    //       console.log('err :>> ', err);
+    //     });
+    // }
     
     this.onUserLogin()
 
-    this.setUpdateManager()
+    if (Taro.getEnv() === 'WEAPP') {
+    }
   }
 
   componentDidShow() {
@@ -121,7 +138,7 @@ class App extends Component {
 
   // 小程序更新提醒
   setUpdateManager() {
-
+    const updateManager = Taro.getUpdateManager()
     updateManager.onUpdateReady(() => {
       Taro.showModal({
         title: '更新提示',
