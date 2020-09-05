@@ -7,8 +7,9 @@ import CustomTabBar from 'components/custom-tab-bar'
 import AvatarList from './components/avatar-list';
 import userActions from '@/store/user'
 import './styles.styl'
-import { getSystemInfo } from 'utils/common'
+import { h5PageModalTips, getSystemInfo } from 'utils/common'
 
+const isH5Page = process.env.TARO_ENV === 'h5'
 const { statusBarHeight } = getSystemInfo()
 
 @CorePage
@@ -34,13 +35,12 @@ class Self extends Component {
   }
 
   componentDidShow() {
-    console.log('self show :>> ')
+    this.showH5Modal()
     this.setState({
       tabBarIndex: 2
     })
   }
   componentDidHide() {
-    console.log('self hide :>> ')
     this.setState({
       tabBarIndex: -1
     })
@@ -66,6 +66,11 @@ class Self extends Component {
     Taro.stopPullDownRefresh()
   }
 
+  showH5Modal = () => {
+    if (isH5Page) {
+      h5PageModalTips()
+    }
+  }
 
   goOneAvatar = (uuid) => {
     console.log('uuid :', uuid);

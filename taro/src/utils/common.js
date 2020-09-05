@@ -114,6 +114,6 @@ export function h5PageModalTips() {
   Taro.showModal({
     showCancel: false,
     title: '提示',
-    content: '本网站为“快快戴口罩”的Web版本，其功能只适用于智能触屏手机使用。微信搜一搜“快快戴口罩”，可以体验完整功能。',
+    content: '本网站为“Hi头像”的Web版本，其功能只适用于智能触屏手机使用。微信搜一搜“Hi头像”，可以体验完整功能。',
   })
 }

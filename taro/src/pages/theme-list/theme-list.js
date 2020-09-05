@@ -4,10 +4,10 @@ import { View, Image, Block, ScrollView, Swiper, SwiperItem } from '@tarojs/comp
 import CustomTabBar from 'components/custom-tab-bar'
 import ThemeDetail from './components/theme-detail'
 import EventEmitter from 'utils/event-emitter'
-
-import { getSystemInfo } from 'utils/common'
+import { h5PageModalTips, getSystemInfo } from 'utils/common'
 
 const { statusBarHeight } = getSystemInfo()
+const isH5Page = process.env.TARO_ENV === 'h5'
 
 import './styles.styl';
 
@@ -36,6 +36,7 @@ export default class ThemeList extends Component {
   }
 
   componentDidShow() {
+    this.showH5Modal()
     this.setState({
       tabBarIndex: 0
     })
@@ -53,6 +54,12 @@ export default class ThemeList extends Component {
       title: '邀请好友一起来制作头像吧',
       imageUrl: DEFAULT_SHARE_COVER,
       path: '/pages/avatar-edit/avatar-edit'
+    }
+  }
+
+  showH5Modal = () => {
+    if (isH5Page) {
+      h5PageModalTips()
     }
   }
 

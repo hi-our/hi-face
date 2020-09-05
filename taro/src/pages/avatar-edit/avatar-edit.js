@@ -58,6 +58,7 @@ class AvatarEdit extends Component {
   // }
 
   componentDidShow() {
+    this.showH5Modal()
     const themeIdData = EventEmitter.take('themeId')
     if (themeIdData && themeIdData[0] !== this.state.themeData._id) {
       this.setState(getDefaultState())
