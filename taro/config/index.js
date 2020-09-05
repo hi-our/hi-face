@@ -47,10 +47,7 @@ const config = {
     ]
   },
   defineConstants: {
-    'process.env.envId': JSON.stringify(process.env.envId),
     'process.env.SERVER_ENV': JSON.stringify(process.env.SERVER_ENV),
-    'process.env.APPID_ENV': JSON.stringify(process.env.APPID_ENV),
-    'process.env.MOCK': JSON.stringify(process.env.MOCK),
   },
   alias,
   mini: {

@@ -19,7 +19,7 @@ export default class ThemeList extends Component {
     navigationBarTextStyle: 'white',
     navigationStyle: 'custom',
     disableScroll: true,
-    navigationBarTitleText: '主题列表',
+    navigationBarTitleText: '主题列表 - Hi头像',
   }
 
   constructor(props) {

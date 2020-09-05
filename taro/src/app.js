@@ -21,7 +21,6 @@ class App extends Component {
   config = {
     pages: [
       'pages/avatar-edit/avatar-edit',
-      'pages/avatar-list/avatar-list',
       'pages/avatar-poster/avatar-poster',
       'pages/theme-list/theme-list',
       'pages/self/self'

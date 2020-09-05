@@ -16,7 +16,7 @@ class Self extends Component {
   config = {
     navigationBarTextStyle: 'white',
     navigationStyle: 'custom',
-    navigationBarTitleText: '我的',
+    navigationBarTitleText: '我的 - Hi头像',
     enablePullDownRefresh: true,
     backgroundColorTop: '#ffffff',
     backgroundColorBottom: '#ffffff',
@@ -95,9 +95,7 @@ class Self extends Component {
     return (
       <Block>
         <View className='user-wrap'>
-          <View className='avatar'>
-            <Image src='https://image-hosting.xiaoxili.com/img/img/20200902/e1ea53494a96e99854aa40e87b3c9ca4-d897c7.png' />
-          </View>
+          <Image className='avatar' src='https://image-hosting.xiaoxili.com/img/img/20200902/e1ea53494a96e99854aa40e87b3c9ca4-d897c7.png' />
           <View className='nick-name'>Hi~</View>
           <View className='address-text'>欢迎登录 Hi 头像</View>
         </View>

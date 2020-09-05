@@ -13,7 +13,7 @@ const isH5Page = process.env.TARO_ENV === 'h5'
 // @CorePage
 class AvatarPoster extends Component {
   config = {
-    navigationBarTitleText: '头像分享',
+    navigationBarTitleText: '头像分享 - Hi头像',
     navigationStyle: 'custom',
     disableScroll: true
   }
