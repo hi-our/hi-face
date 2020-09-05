@@ -11,7 +11,10 @@
         "inputs": {
           "buildCommand": "npm run build:h5",
           "outputPath": "dist-h5/",
-          "cloudPath": "/"
+          "cloudPath": "/",
+          "envVariables": {
+            "SERVER_ENV": "{{env.SERVER_ENV}}"
+          }
         }
       }
     }

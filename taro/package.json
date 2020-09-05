@@ -11,11 +11,10 @@
   },
   "scripts": {
     "start": "npm run watch",
-    "watch": "SERVER_ENV=yz npm run dev:weapp",
+    "watch": "SERVER_ENV=dev npm run dev:weapp",
     "build": "SERVER_ENV=prod npm run build:weapp -- --watch",
     "release": "SERVER_ENV=prod NODE_ENV=production npm run build:weapp",
-    "start:web": "npm run watch:web",
-    "watch:web": "SERVER_ENV=yz npm run dev:h5",
+    "watch:web": "SERVER_ENV=dev npm run dev:h5",
     "build:web": "SERVER_ENV=prod npm run build:h5 -- --watch",
     "release:devweb": "tcb framework deploy client --mode dev",
     "release:web": "tcb framework deploy client",
@@ -37,9 +36,7 @@
     "dev:h5": "npm run build:h5 -- --watch",
     "dev:qq": "npm run build:qq -- --watch",
     "dev:rn": "npm run build:rn -- --watch",
-    "dev:quickapp": "npm run build:quickapp -- --watch",
-    "predeploy": "npm run release:h5",
-    "deploy": "node ./gh-pages-build.js"
+    "dev:quickapp": "npm run build:quickapp -- --watch"
   },
   "author": "shenghanqin",
   "license": "MIT",
