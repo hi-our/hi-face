@@ -48,7 +48,6 @@ export default class MenuMain extends Taro.PureComponent {
             {
               themeList.map((theme) => {
                 const { _id: themeId, themeName, shareImageUrl } = theme
-                console.log('theme :>> ', theme);
                 return (
                   <View className={`theme-item ${activeThemeId === themeId ? 'theme-active' : ''}`} key={themeId} onClick={this.onSwitchTheme.bind(this, themeId)}>
                     <Image className="theme-image" src={shareImageUrl}></Image>

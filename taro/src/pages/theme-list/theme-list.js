@@ -94,8 +94,6 @@ export default class ThemeList extends Component {
     const { themeList } = this.props
     const { activeTab, currentView, tabBarIndex } = this.state
 
-    console.log('themeList :>> ', themeList);
-
     return (
       <Block>
         <View className='theme-list-page' style={{ paddingTop: `${statusBarHeight}px` }}>

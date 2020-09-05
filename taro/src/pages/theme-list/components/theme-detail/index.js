@@ -24,7 +24,6 @@ export default class ThemeDetail extends Taro.Component {
     this.state = {
       shapeCategoryList: []
     }
-    console.log('props.themeId :>> ', props.themeId);
   }
 
   componentDidMount() {

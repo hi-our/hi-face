@@ -18,6 +18,12 @@ export const getRealRpx = (value) => {
   return value * 750 / screenWidth;
 }
 
+export const getShowRpx = (value) => {
+  if (isH5Page) return Taro.pxTransform(value / 2)
+
+  return value + 'rpx'
+}
+
 /* 
  * 根据我当前的圣诞帽元素进行一些偏移(我的图片大小是200*130)， 圣诞帽可佩戴部分的中心 (62,60)  这里需要微调
  * 图片可佩戴部分是 0.6 倍图片宽度

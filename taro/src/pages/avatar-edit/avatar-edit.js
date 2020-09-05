@@ -347,7 +347,7 @@ class AvatarEdit extends Component {
       pc.restore()
     }
 
-    pc.draw(false, () => {
+    pc.draw(true, () => {
       Taro.canvasToTempFilePath({
         canvasId: 'canvasShape',
         x: 0,
@@ -361,7 +361,9 @@ class AvatarEdit extends Component {
         success: async (res) => {
 
           // 保存图片到云数据库
-          await this.onSaveImageToCloud(res.tempFilePath)
+          if (!isH5Page) {
+            await this.onSaveImageToCloud(res.tempFilePath)
+          }
 
           Taro.hideLoading()
           // 设置海报图片
@@ -370,7 +372,8 @@ class AvatarEdit extends Component {
           })
 
         },
-        fail: () => {
+        fail: (e) => {
+          console.log('e :>> ', e);
           Taro.hideLoading()
           Taro.showToast({
             title: '图片生成失败，请重试'
@@ -476,7 +479,7 @@ class AvatarEdit extends Component {
 
   render() {
     const { themeList } = this.props
-    const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, tabBarIndex } = this.state
+    const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, tabBarIndex, posterSrc } = this.state
     const { coverImageUrl, _id: activeThemeId } = themeData
 
     return (
@@ -514,6 +517,14 @@ class AvatarEdit extends Component {
           <CustomTabBar selected={tabBarIndex} hideIndex={tabBarIndex === 1 && !isShowShape ? 1 : -1} />
           <View className={`menu-toggle ${isShowMenuMain ? 'menu-open' : ''}`} onClick={this.onMenuMainTogggle} style={{ marginTop: STATUS_BAR_HEIGHT + 'px' }}></View>
         </View>
+        {isH5Page && (
+          <PosterDialog
+            isH5Page={isH5Page}
+            ref={poster => this.posterRef = poster}
+            posterSrc={posterSrc}
+            forCheck={false}
+          />
+        )}
         <MenuMain
           activeThemeId={activeThemeId}
           isShowMenuMain={isShowMenuMain}

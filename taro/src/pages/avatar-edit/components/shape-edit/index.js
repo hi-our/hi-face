@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { Block, View, Image, Button } from '@tarojs/components'
-import { getRealRpx } from 'utils/canvas-drawing'
+import { getRealRpx, getShowRpx } from 'utils/canvas-drawing'
 
 import './styles.styl'
 
@@ -165,7 +165,7 @@ class ShapeEdit extends Taro.Component {
     // 切换为当前的图形
     if (this.touch_target == 'shape' && shapeIndex !== this.state.currentShapeIndex) {
       this.setState({
-        currentShapeIndex: shapeIndex
+        currentShapeIndex: parseInt(shapeIndex, 10)
       })
     }
 
@@ -301,23 +301,24 @@ class ShapeEdit extends Taro.Component {
                   rotate
                 } = shape
 
-                let transX = shapeCenterX - shapeWidth / 2 - 2 + 'rpx'
-                let transY = shapeCenterY - shapeWidth / 2 - 2 + 'rpx'
+                let transX = getShowRpx(shapeCenterX - shapeWidth / 2 - 2) // + 'rpx'
+                let transY = getShowRpx(shapeCenterY - shapeWidth / 2 - 2) // + 'rpx'
 
                 let shapeStyle = {
-                  width: shapeWidth + 'rpx',
-                  height: shapeWidth + 'rpx',
+                  width: getShowRpx(shapeWidth), // + 'rpx',
+                  height: getShowRpx(shapeWidth), // + 'rpx',
                   transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`,
                   zIndex: shapeIndex === currentShapeIndex ? 2 : 1
                 }
 
                 let shapeImageStyle = {
+                  backgroundImage: `url(${imageUrl})`,
                   transform: `scale(${reserve}, 1)`,
                 }
 
                 return (
                   <View className='shape-container' key={timeNow} style={shapeStyle}>
-                    <Image className="shape-image" data-type='shape' data-shape-index={shapeIndex} src={imageUrl} style={shapeImageStyle} />
+                    <View className="shape-image" data-type='shape' data-shape-index={shapeIndex} src={imageUrl} style={shapeImageStyle}></View>
                     {
                       currentShapeIndex === shapeIndex && (
                         <Block>
