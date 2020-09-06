@@ -11,6 +11,13 @@
       "isRequired": true
     },
     {
+      "fieldLabel": "排序",
+      "fieldName": "order",
+      "fieldType": "Number",
+      "helpText": "值越小，在主题列表中越靠前",
+      "isRequired": false
+    },
+    {
       "fieldLabel": "分享图片",
       "fieldName": "shareImage",
       "fieldType": "Image",
