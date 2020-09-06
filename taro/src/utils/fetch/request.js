@@ -1,25 +1,16 @@
 import Taro from '@tarojs/taro'
-import * as config from 'config'
-import { getSystemInfo } from '../common'
 import { NETWORK_ERROR_CODE } from 'constants/status'
 import { apiAdapter } from './utils'
 
 
 const request = (method = 'GET') => ({ url, data, cb }) => {
   return apiAdapter(url, data).then(({ api, params }) => {
-    // let clubAuth = Taro.getStorageSync('ClubAuth') || ''
-
-    // const { tokenKey, wxName, version: wxversion } = config
-    // const appInfo = getSystemInfo()
-
-
     return Taro.request({
       method,
       url: api,
       data: params,
       header: {
         'Content-Type': 'application/json',
-        // Cookie: `${tokenKey}=${clubAuth}`,
       },
     })
   }).then(res => {
