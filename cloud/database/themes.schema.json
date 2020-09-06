@@ -1,0 +1,51 @@
+{
+  "_id": "05f2c36f5eb7aae3007a5fb01603b07a",
+  "collectionName": "hiface-themes",
+  "description": "主题，如节日、特色活动",
+  "fields": [
+    {
+      "fieldLabel": "名称",
+      "fieldName": "themeName",
+      "fieldType": "String",
+      "helpText": "请输入主题特色名称",
+      "isRequired": true
+    },
+    {
+      "fieldLabel": "分享图片",
+      "fieldName": "shareImage",
+      "fieldType": "Image",
+      "helpText": "页面分享图片",
+      "isRequired": true
+    },
+    {
+      "fieldName": "shareTitle",
+      "fieldType": "String",
+      "helpText": "分享标题",
+      "isRequired": true,
+      "fieldLabel": "分享标题"
+    },
+    {
+      "fieldLabel": "分享描述",
+      "fieldName": "shareDesc",
+      "fieldType": "String",
+      "helpText": "分享描述",
+      "isRequired": true
+    },
+    {
+      "isRequired": true,
+      "fieldLabel": "封面图",
+      "fieldName": "coverImage",
+      "fieldType": "Image",
+      "helpText": "300x300",
+      "hidden": false
+    },
+    {
+      "hidden": false,
+      "fieldLabel": "上架",
+      "fieldName": "isPublic",
+      "fieldType": "Boolean",
+      "helpText": "是否对外展示"
+    }
+  ],
+  "label": "主题"
+}
