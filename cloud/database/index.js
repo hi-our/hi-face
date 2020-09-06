@@ -7,7 +7,7 @@ const tcb = require('@cloudbase/node-sdk')
 
 const cmsContentsCollection = 'tcb-ext-cms-contents'
 const envFile = path.resolve(__dirname, '..', '.env')
-const schemasFolder = path.resolve(__dirname, '..', 'database')
+const schemasFolder = path.resolve(__dirname, 'models')
 
 const config = dotenv.config({ path: envFile }).parsed
 
