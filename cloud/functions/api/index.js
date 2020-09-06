@@ -20,46 +20,30 @@ exports.main = (event, context) => {
     await next()
   })
 
-  app.router('config/get', async (ctx, next) => {
-    const result = await api.config.get(event)
-    ctx.body = result
-    await next()
+  app.router('config/get', async (ctx) => {
+    ctx.body = await api.config.get(event)
   })
-  app.router('user/get', async (ctx, next) => {
-    const result = await api.user.get(event)
-    ctx.body = result
-    await next()
+  app.router('user/get', async (ctx) => {
+    ctx.body = await api.user.get(event)
   })
-  app.router('user/save', async (ctx, next) => {
-    const result = await api.user.save(event)
-    ctx.body = result
-    await next()
+  app.router('user/save', async (ctx) => {
+    ctx.body = await api.user.save(event)
   })
   
-  app.router('avatar/get', async (ctx, next) => {
-    const result = await api.avatar.get(event)
-    ctx.body = result
-    await next()
+  app.router('avatar/get', async (ctx) => {
+    ctx.body = await api.avatar.get(event)
   })
-  app.router('avatar/save', async (ctx, next) => {
-    const result = await api.avatar.save(event)
-    ctx.body = result
-    await next()
+  app.router('avatar/save', async (ctx) => {
+    ctx.body = await api.avatar.save(event)
   })
-  app.router('avatar/list', async (ctx, next) => {
-    const result = await api.avatar.list(event)
-    ctx.body = result
-    await next()
+  app.router('avatar/list', async (ctx) => {
+    ctx.body = api.avatar.list(event)
   })
-  app.router('theme/get', async (ctx, next) => {
-    const result = await api.theme.get(event)
-    ctx.body = result
-    await next()
+  app.router('theme/get', async (ctx) => {
+    ctx.body = await api.theme.get(event)
   })
-  app.router('theme/list', async (ctx, next) => {
-    const result = await api.theme.list(event)
-    ctx.body = result
-    await next()
+  app.router('theme/list', async (ctx) => {
+    ctx.body = await api.theme.list(event)
   })
 
   return app.serve()
