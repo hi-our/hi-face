@@ -4,8 +4,7 @@
   box-sizing border-box
   display flex
   flex-direction column
-  background url('https://image-hosting.xiaoxili.com/img/img/20200902/e143f64c2a338429b2b5923864eb9b10-f03654.png') center top no-repeat
-  background-size 100% auto
+  background #FBFAFF
 
 .page-title
   text-align center
@@ -20,37 +19,43 @@
 
 .theme-tabs
   height 100%
-.tabs-bar
+
+.tabs-bar-inner
   padding 20px 0
   white-space nowrap
+
 .tabs-bar-item
-  width 80px
+  width 70px
   display inline-block
-  padding 0 10px
+  padding 13px 15px
+  background #fff
+  
+  margin-right 10px
+  border-radius 30px
 
   &:first-child
-    padding-left 20px
+    margin-left 20px
   &:last-child
-    padding-right 20px
+    margin-right 20px
 
 .bar-image
   display block
-  width 80px
-  height 80px
+  width 70px
+  height 70px
   border-radius 20px
 .bar-text
   margin 8px auto 0
-  color #2F3742
+  color #333
   width 60px
   padding 0 5px
   text-align center
-  font-size 10px
-  line-height 20px
-  border-radius 10px
+  font-size 16px
+  line-height 28px
 
 .bar-active
+  box-shadow 2px 8px 20px rgba(255, 85, 137, .2)
   .bar-text
-    background #fff
+    color #FF3271
 
 .theme-swiper
-  height calc(100% - 148px)
+  height calc(100% - 168px)

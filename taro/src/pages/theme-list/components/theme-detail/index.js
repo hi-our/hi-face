@@ -57,32 +57,31 @@ export default class ThemeDetail extends Taro.Component {
   render() {
     const { themeData } = this.props
     const { shapeCategoryList } = this.state
-    const { coverImage, shareTitle, shareDesc } = themeData
+    const { coverImage, shareTitle, shareDesc, themeName } = themeData
 
     return (
       <ScrollView className="theme-scroll" scrollY>
         <View className="theme-item" onClick={this.onSwitch}>
           <View className="theme-header">
-            <Image className="theme-cover" src={coverImage} />
             <View className="theme-main">
               <View className="share-title">{shareTitle}</View>
               <View className="share-desc">{shareDesc}</View>
             </View>
+            <Image className="theme-cover" src={coverImage} />
+          </View>
+          <View className="theme-title">
+            {themeName}贴纸
           </View>
           <View className="theme-wrap">
             {
               shapeCategoryList.map((category) => {
-                const { _id: categoryId, categoryName,  categoryImage, shapeList } = category
+                const { _id: categoryId, categoryName,  categoryImage, shapeList = [] } = category
+                let showList = shapeList.filter((item, index) => index < 4)
                 return (
                   <View key={categoryId} className='category-item'>
-                    <View className='category-hd'>
-                      <Image className='category-image' src={categoryImage}></Image>
-                      <View>{categoryName}</View>
-
-                    </View>
                     <View className='shape-list'>
                       {
-                        shapeList.map((shape) => {
+                        showList.map((shape) => {
                           const { _id: shapeId, imageUrl } = shape
                           return (
                             <Image className='shape-item' key={shapeId} src={imageUrl} />
@@ -90,6 +89,7 @@ export default class ThemeDetail extends Taro.Component {
                         })
                       }
                     </View>
+                    <View className='category-hd'>{categoryName}</View>
                   </View>
                 )
               })
