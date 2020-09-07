@@ -594,11 +594,9 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
         <Canvas
           canvasId={cropperCutCanvasId}
           style={cutCanvasStyle}
-          type='2d'
           className={`cut-canvas-item ${isFullScreenCss ? 'cut-canvas-fullscreen' : ''}`}
         />
         <Canvas
-          type='2d'
           onTouchStart={this.handleOnTouchStart}
           onTouchMove={this.handleOnTouchMove}
           onTouchEnd={this.handleOnTouchEnd}
