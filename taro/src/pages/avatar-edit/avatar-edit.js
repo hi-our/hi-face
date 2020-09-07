@@ -107,7 +107,7 @@ class AvatarEdit extends Component {
   loadData = async (themeId = '') => {
     try {
       const themeData = await cloudCallFunction({
-        name: 'api',
+        name: 'hiface-api',
         data: {
           $url: 'theme/get',
           needShapes: true,
@@ -414,7 +414,7 @@ class AvatarEdit extends Component {
       const fileID = await this.onUploadFile(tempFilePath, 'avatar')
 
       const { uuid } = await cloudCallFunction({
-        name: 'api',
+        name: 'hiface-api',
         data: {
           $url: 'avatar/save',
           avatarFileID: fileID,

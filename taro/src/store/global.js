@@ -21,7 +21,7 @@ export default mirror.model({
       if (typeof forCheck !== 'boolean') {
         try {
           const { version } = await cloudCallFunction({
-            name: 'api',
+            name: 'hiface-api',
             data: {
               $url: 'config/get',
               configName: 'for-check',
@@ -39,7 +39,7 @@ export default mirror.model({
     async getThemeList() {
       try {
         const { items } = await cloudCallFunction({
-          name: 'api',
+          name: 'hiface-api',
           data: {
             $url: 'theme/list',
             pageSize: 50,

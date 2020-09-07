@@ -59,7 +59,7 @@ const userActions = mirror.model({
     async login() {
       try {
         const userInfo = await cloudCallFunction({
-          name: 'api',
+          name: 'hiface-api',
           data: {
             $url: 'user/get',
           }
@@ -92,7 +92,7 @@ const userActions = mirror.model({
         console.log('res', res, res.userInfo)
 
         cloudCallFunction({
-          name: 'api',
+          name: 'hiface-api',
           data: {
             $url: 'user/save',
             wechatInfo: res.userInfo

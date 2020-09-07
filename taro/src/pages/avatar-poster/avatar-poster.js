@@ -99,7 +99,7 @@ class AvatarPoster extends Component {
     let hasError = false
     try {
       const { avatarFileID = '', ageType = '', isAuthor } = await cloudCallFunction({
-        name: 'api',
+        name: 'hiface-api',
         data: {
           $url: 'avatar/get',
           uuid: this.pageUUID,

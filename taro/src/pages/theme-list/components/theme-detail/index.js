@@ -30,7 +30,7 @@ export default class ThemeDetail extends Taro.Component {
     const { themeId } = this.props
     if (themeId) {
       cloudCallFunction({
-        name: 'api',
+        name: 'hiface-api',
         data: {
           $url: 'theme/get',
           themeId,

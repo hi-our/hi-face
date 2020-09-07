@@ -29,7 +29,7 @@ export default class AvatarList extends Taro.Component {
   loadData = async (pageNo = 1) => {
     try {
       const { items } = await cloudCallFunction({
-        name: 'api',
+        name: 'hiface-api',
         data: {
           $url: 'avatar/list',
           pageSize: 50,
