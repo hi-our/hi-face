@@ -36,7 +36,6 @@ export default class ThemeList extends Component {
   }
 
   componentDidShow() {
-    this.showH5Modal()
     this.setState({
       tabBarIndex: 0
     })

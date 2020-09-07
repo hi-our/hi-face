@@ -58,7 +58,9 @@ class AvatarEdit extends Component {
   // }
 
   componentDidShow() {
-    this.showH5Modal()
+    this.showTimer = setTimeout(() => {
+      this.showH5Modal()
+    }, 2500);
     const themeIdData = EventEmitter.take('themeId')
     if (themeIdData && themeIdData[0] !== this.state.themeData._id) {
       this.setState(getDefaultState())
@@ -72,6 +74,7 @@ class AvatarEdit extends Component {
     })
   }
   componentDidHide() {
+    clearTimeout(this.showTimer)
     this.setState({
       tabBarIndex: -1
     })
@@ -333,7 +336,11 @@ class AvatarEdit extends Component {
       pc.rotate((rotate * Math.PI) / 180)
 
       // 获取图形地址
-      let oneImgSrc = await getImg(isReserve < 0 ? (imageReverseUrl || imageUrl) : imageUrl)
+      // ?skip_domain_check=true
+      let imageUrlTemp = isReserve < 0 ? (imageReverseUrl || imageUrl) : imageUrl
+      imageUrlTemp = imageUrlTemp + (imageUrlTemp.includes('tcb.qcloud.la') ? '?skip_domain_check=true' : '')
+      console.log('imageUrlTemp :>> ', imageUrlTemp);
+      let oneImgSrc = await getImg(imageUrlTemp + (imageUrlTemp.includes('tcb.qcloud.la') ? '?skip_domain_check=true' : ''))
 
       // 绘制贴纸
       pc.drawImage(

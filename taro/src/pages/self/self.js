@@ -35,7 +35,7 @@ class Self extends Component {
   }
 
   componentDidShow() {
-    this.showH5Modal()
+    // this.showH5Modal()
     this.setState({
       tabBarIndex: 2
     })
@@ -108,7 +108,7 @@ class Self extends Component {
         </View>
         <View className='login-wrap'>
           <Image className="logo-image" src="https://image-hosting.xiaoxili.com/img/img/20200830/41eb7adb16c09f5b25137fe708269e12-11e1fa.png"></Image>
-          <Button className="login-button" type="default" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo}>微信一键授权</Button>
+          <Button className="login-button" type="default" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo} onClick={this.showH5Modal}>微信一键授权</Button>
           <View className="login-tips">登录后查看历史作品</View>
           <Version />
         </View>

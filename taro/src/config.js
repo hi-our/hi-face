@@ -11,6 +11,5 @@ module.exports = {
   envMode,
   appId,
   envId: process.env.ENV_ID,
-  wxName: 'hi-face',
   version: '2.1.0',
 }
