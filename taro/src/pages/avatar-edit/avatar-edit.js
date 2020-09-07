@@ -488,7 +488,7 @@ class AvatarEdit extends Component {
         {/* <PageLead /> */}
         <PageLoading status={pageStatus} loadingType='fullscreen'></PageLoading>
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
-        <View className='page-container' style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
+        <View className={`page-container ${isShowShape ? 'page-container-shape' : ''}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
           <View className='main-wrap'>
             {isShowShape
               ? (
@@ -510,7 +510,6 @@ class AvatarEdit extends Component {
               <TabCategoryList
                 categoryList={shapeCategoryList}
                 chooseShape={this.chooseShape}
-                isH5Page={isH5Page}
               />
             </View>
           </View>

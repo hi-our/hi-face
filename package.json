@@ -1,6 +1,6 @@
 {
   "name": "hi-face",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "Hi 头像项目地址",
   "author": {
     "name": "shenghanqin",
@@ -8,9 +8,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "commit": "git-cz",
-    "release:web": "cd taro &&  npm install && npm run release:web",
-    "release:yzweb": "cd taro &&  npm install && npm run release:yzweb"
+    "commit": "git-cz"
   },
   "husky": {
     "hooks": {

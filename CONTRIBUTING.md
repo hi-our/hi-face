@@ -1,9 +1,18 @@
-贡献榜
+# 贡献者名单
 
-产品统筹和主开发：小溪里
-UI 设计：不二雪
-产品助理：王宝国
-原生小程序开发：李欢
+项目主要人员：
+
+* 产品统筹和主开发：小溪里
+* UI 设计：不二雪
+
+协助人员：
+
+* [王宝国](https://github.com/wangbaoguo88)：产品助理，撰写了 v1.0 的产品文档
+* [李欢](https://github.com/huan-x)：开发助理，编写了 v1.x 中原生小程序的人像魅力、图片标签等页面
+* [任乐乐](https://github.com/wolf-lang)、[康鸿](https://github.com/daxiakang)：协助 v2.0 版的功能测试
+
+
+<!-- TODO 有待更新 -->
 
 ----
 参考 https://gist.github.com/PurpleBooth/b24679402957c63ec426

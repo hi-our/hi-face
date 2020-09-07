@@ -108,17 +108,19 @@ export default class ThemeList extends Component {
           <View className='main-wrap'>
             <View className="theme-tabs">
               <ScrollView className="tabs-bar" scrollX scrollIntoView={`item-${currentView}`} scrollWithAnimation>
-                {
-                  themeList.map((theme, index) => {
-                    const { _id: themeId, themeName, shareImageUrl } = theme
-                    return (
-                      <View className={`tabs-bar-item ${activeTab === index ? 'bar-active' : ''}`} key={themeId} id={`item-${index}`} onClick={this.onSwitchTab.bind(this, index)}>
-                        <Image className="bar-image" src={shareImageUrl}></Image>
-                        <View className="bar-text">{themeName}</View>
-                      </View>
-                    )
-                  })
-                }
+                <View className="tabs-bar-inner">
+                  {
+                    themeList.map((theme, index) => {
+                      const { _id: themeId, themeName, shareImageUrl } = theme
+                      return (
+                        <View className={`tabs-bar-item ${activeTab === index ? 'bar-active' : ''}`} key={themeId} id={`item-${index}`} onClick={this.onSwitchTab.bind(this, index)}>
+                          <Image className="bar-image" src={shareImageUrl}></Image>
+                          <View className="bar-text">{themeName}</View>
+                        </View>
+                      )
+                    })
+                  }
+                </View>
               </ScrollView>
               <Swiper className="theme-swiper" current={activeTab} onChange={this.onSwiperChange}>
                 {
