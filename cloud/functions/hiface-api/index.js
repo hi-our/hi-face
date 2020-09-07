@@ -3,6 +3,7 @@ const ConfigController = require('./controllers/config')
 const UserController = require('./controllers/user')
 const AvatarController = require('./controllers/avatar')
 const ThemeController = require('./controllers/theme')
+const OpenController = require('./controllers/open')
 
 
 const api = {
@@ -10,6 +11,7 @@ const api = {
   user: new UserController(),
   avatar: new AvatarController(),
   theme: new ThemeController(),
+  open: new OpenController(),
 }
 
 exports.main = (event, context) => {
@@ -44,6 +46,12 @@ exports.main = (event, context) => {
   })
   app.router('theme/list', async (ctx) => {
     ctx.body = await api.theme.list(event)
+  })
+  app.router('open/createMiniCode', async (ctx) => {
+    ctx.body = await api.open.createMiniCode(event)
+  })
+  app.router('open/createQRCode', async (ctx) => {
+    ctx.body = await api.open.createQRCode(event)
   })
 
   return app.serve()

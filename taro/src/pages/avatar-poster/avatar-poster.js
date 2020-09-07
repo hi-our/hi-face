@@ -75,9 +75,9 @@ class AvatarPoster extends Component {
   onCreateQrcode = async () => {
     try {
       const { base64Main } = await cloudCallFunction({
-        name: 'open-api',
+        name: 'hiface-api',
         data: {
-          action: 'createMiniCode',
+          action: 'open/createMiniCode',
           path: this.pageUrl
         }
       })

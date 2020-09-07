@@ -54,5 +54,12 @@
       "$url": "theme/get",
       "needShapes": true
     }
+  },
+  {
+    "name": "open-createMiniCode",
+    "value": {
+      "$url": "open/createMiniCode",
+      "path": "/pages/avatar-poster/avatar-poster?uuid=31aa9c93-c91b-4e71-9c93-fbac32494f22"
+    }
   }
 ]
