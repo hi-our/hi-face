@@ -3,7 +3,6 @@ import { Provider } from '@tarojs/redux'
 import Index from './pages/avatar-edit/'
 import store from '@/store'
 import userActions from '@/store/user'
-import * as config from 'config'
 import globalActions from '@/store/global'
 
 import './tcb';
@@ -77,34 +76,13 @@ class App extends Component {
     Taro.setStorageSync('isHideLead', false)
 
     if (process.env.TARO_ENV === 'weapp') {
-      // Taro.cloud.init({
-      //   env: config.cloudEnv,
-      //   traceUser: true
-      // })
-
       // 检查过审开关是否开启
       this.setUpdateManager()
     } 
     globalActions.getForCheckStatus()
     globalActions.getThemeList()
-    // else if (Taro.getEnv() === 'WEB') {
-
-    //   Taro.cloud.anonymousAuthProvider()
-    //     .signIn()
-    //     .then((res) => {
-    //       // 登录成功
-    //       console.log('res :>> ', res);
-    //     })
-    //     .catch((err) => {
-    //       // 登录失败
-    //       console.log('err :>> ', err);
-    //     });
-    // }
     
     this.onUserLogin()
-
-    if (Taro.getEnv() === 'WEAPP') {
-    }
   }
 
   componentDidShow() {

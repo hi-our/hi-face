@@ -1,10 +1,9 @@
 const alias = require('./alias')
 const loadEnv = require('./load-env')
 
-loadEnv()
+loadEnv(process.env.SERVER_ENV === 'dev' ? '.env.dev' : '.env')
 // 兼容web端和小程序端
 const dpr = process.env.TARO_ENV === 'h5' ? 1 : 2
-
 
 const config = {
   projectName: 'hi-face',
@@ -50,6 +49,7 @@ const config = {
   },
   defineConstants: {
     'process.env.SERVER_ENV': JSON.stringify(process.env.SERVER_ENV),
+    'process.env.ENV_ID': JSON.stringify(process.env.ENV_ID),
   },
   alias,
   mini: {

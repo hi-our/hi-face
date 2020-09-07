@@ -8,7 +8,11 @@
   },
   "license": "MIT",
   "scripts": {
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "deploy:devweb": "tcb framework deploy client --mode dev",
+    "deploy:web": "tcb framework deploy client",
+    "deploy:devfn": "tcb framework deploy server --mode dev",
+    "deploy:fn": "tcb framework deploy server"
   },
   "husky": {
     "hooks": {
