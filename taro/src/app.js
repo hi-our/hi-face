@@ -81,6 +81,8 @@ class App extends Component {
     } 
     globalActions.getForCheckStatus()
     globalActions.getThemeList()
+    // 监听网络变化
+    this.onNetworkListen()
     
     this.onUserLogin()
   }
@@ -102,6 +104,31 @@ class App extends Component {
       })
 
     }
+  }
+
+  onNetworkListen = () => {
+
+    Taro.getNetworkType({
+      success: (res) => {
+        let networkInfo = {
+          isConnected: res.networkType !== 'none',
+          networkType: res.networkType
+        }
+        console.log('网络情况', networkInfo)
+        globalActions.setNetworkInfo({
+          networkInfo
+        })
+      }
+    })
+
+    Taro.onNetworkStatusChange(function (res) {
+      console.log('网络状态变化', res)
+      let networkInfo = res
+      globalActions.setNetworkInfo({
+        networkInfo
+      })
+    })
+
   }
 
   // 用户登录

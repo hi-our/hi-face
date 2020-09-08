@@ -72,26 +72,5 @@ const globalActions = mirror.model({
   }
 })
 
-Taro.getNetworkType({
-  success: (res) => {
-    networkInfo = {
-      isConnected: res.networkType !== 'none',
-      networkType: res.networkType
-    }
-    console.log('网络情况', networkInfo)
-    globalActions.setNetworkInfo({
-      networkInfo
-    })
-  }
-})
-
-Taro.onNetworkStatusChange(function (res) {
-  console.log('网络状态变化', res)
-  networkInfo = res
-  globalActions.setNetworkInfo({
-    networkInfo
-  })
-})
-
 
 export default globalActions
