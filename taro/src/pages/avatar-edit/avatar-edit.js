@@ -44,20 +44,19 @@ class AvatarEdit extends Component {
     Taro.setStorageSync('showBackToIndexBtn', false)
   }
   
-  // componentDidMount() {
-  //   if (isH5Page) {
-  //     setTimeout(() => {
-  //       this.loadData() 
-  //     }, 1500);
-  //   } else {
-  //     this.loadData()
-  //   }
-  // }
-
+  // 页面显示
   componentDidShow() {
+    // 显示 Web 端提示
     this.showTimer = setTimeout(() => {
       this.showH5Modal()
-    }, 2500);
+    }, 2500)
+
+    // 显示当前高亮 Tab
+    this.setState({
+      tabBarIndex: 1
+    })
+
+    // 加载主题数据
     const themeIdData = EventEmitter.take('themeId')
     if (themeIdData && themeIdData[0] !== this.state.themeData._id) {
       this.setState(getDefaultState())
@@ -65,11 +64,9 @@ class AvatarEdit extends Component {
     } else if (this.state.pageStatus === 'loading') {
       this.loadData()
     }
-
-    this.setState({
-      tabBarIndex: 1
-    })
   }
+
+  // 页面隐藏
   componentDidHide() {
     clearTimeout(this.showTimer)
     this.setState({
@@ -77,6 +74,7 @@ class AvatarEdit extends Component {
     })
   }
 
+  // 分享信息
   onShareAppMessage({ from, target }) {
     const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/img/20200908/20f5ceab078c93d0901ea0ab0aac8b27-1231fe.jpg'
     const { themeData } = this.state
@@ -104,6 +102,7 @@ class AvatarEdit extends Component {
     }
   }
 
+  // 获取数据
   loadData = async (themeId = '') => {
     try {
       const themeData = await cloudCallFunction({

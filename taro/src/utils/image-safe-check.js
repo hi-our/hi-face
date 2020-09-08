@@ -38,6 +38,10 @@ const getCheckResult =(data) => {
 
 }
 
+/**
+ * 图像安全审核
+ * @param {string} base64Main
+ */
 export const imgSecCheck = async (base64Main) => {
   try {
     const res = await wx.serviceMarket.invokeService({

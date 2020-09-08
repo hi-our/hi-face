@@ -12,6 +12,10 @@ export const getResCode = (res) => {
   }
 }
 
+/**
+ * 五官分析
+ * @param {string} base64Main
+ */
 export const imageAnalyzeFace = async (base64Main) => {
   try {
     const res = await wx.serviceMarket.invokeService({
@@ -26,7 +30,7 @@ export const imageAnalyzeFace = async (base64Main) => {
     let data = getResCode(res)
     return data
   } catch (error) {
-    console.log('error2 :', error)
+    console.log('error :', error)
     throw error
   }
 }

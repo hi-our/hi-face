@@ -65,11 +65,10 @@ export default class MenuChoose extends Taro.Component {
     })
   }
 
+  //用户按了允许授权按钮
   onGetUserInfo = async (e) => {
     const { onChoose } = this.props
     if (e.detail.userInfo) {
-      //用户按了允许授权按钮
-      // TODO写法，用于更换图片
       userActions.login()
       Taro.showToast({
         icon: 'none',
@@ -103,9 +102,7 @@ export default class MenuChoose extends Taro.Component {
             type="default"
             openType="getUserInfo"
             onGetUserInfo={this.onGetUserInfo}
-          >
-            
-          </Button>
+          ></Button>
           <View className='menu-item menu-item-camera' onClick={this.onChooseImage.bind(this, 'camera')}></View>
           <View className='menu-item menu-item-album' onClick={this.onChooseImage.bind(this, 'album')}></View>
           <View className='menu-item menu-item-search'></View>

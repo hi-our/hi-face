@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { View, Image, Button } from '@tarojs/components'
-import { downloadImgByBase64 } from 'utils/image-utils'
+import { saveImageToPhotosAlbum } from 'utils/image-utils'
 
 import './styles.styl'
 
@@ -27,7 +27,9 @@ export default class PosterDialog extends Taro.Component {
 
   previewPoster = () => {
     const { posterSrc } = this.props
-    if (posterSrc !== '') Taro.previewImage({ urls: [posterSrc] })
+    if (posterSrc !== '') Taro.previewImage({
+      urls: [ posterSrc ]
+    })
   }
 
   onShowPoster = () => {
@@ -45,36 +47,11 @@ export default class PosterDialog extends Taro.Component {
     const { posterSrc } = this.props
 
     if (posterSrc) {
-      this.saveImageToPhotosAlbum(posterSrc)
-    }
-  }
-
-  saveImageToPhotosAlbum = (tempFilePath) => {
-    const { isH5Page } = this.props
-    if (isH5Page) {
-      downloadImgByBase64(tempFilePath)
-    } else {
-      Taro.saveImageToPhotosAlbum({
-        filePath: tempFilePath,
-        success: res2 => {
-          Taro.showToast({
-            title: '图片保存成功'
-          })
-          console.log('保存成功 :', res2);
-        },
-        fail(e) {
-          Taro.showToast({
-            title: '图片未保存成功'
-          })
-          console.log('图片未保存成功:' + e);
-        }
-      })
+      saveImageToPhotosAlbum(posterSrc)
     }
   }
 
   render(){
-    
-
     const { isShowPoster } = this.state
     const { posterSrc, isH5Page, forCheck } = this.props
 
