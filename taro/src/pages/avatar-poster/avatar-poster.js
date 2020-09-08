@@ -3,7 +3,7 @@ import { View, Image, Button, Canvas, Block } from '@tarojs/components'
 
 import { cloudCallFunction } from 'utils/fetch'
 import PageWrapper from 'components/page-wrapper'
-import { base64src, downloadImgByBase64, getImg } from 'utils/image-utils'
+import { base64src, onDownloadFile, getImg, saveImageToPhotosAlbum } from 'utils/image-utils'
 import { STATUS_BAR_HEIGHT, SAVE_AVATAR_SIZE, POSTER_WIDTH, POSTER_HEIGHT } from './utils'
 import { drawRoundImage, fillText } from 'utils/canvas'
 import CorePage from 'page';
@@ -26,7 +26,7 @@ class AvatarPoster extends Component {
     this.pageUUID = uuid
     this.pageUrl = this.pageUUID ? `/pages/avatar-poster/avatar-poster?uuid=${this.pageUUID}` : '/pages/queen-king/queen-king'
     const showBackToIndexBtn = Taro.getStorageSync('showBackToIndexBtn')
-    console.log('showBackToIndexBtn :>> ', showBackToIndexBtn);
+
     this.state = {
       avatarFileID: '',
       avatarFileLocal: '',
@@ -67,7 +67,7 @@ class AvatarPoster extends Component {
     if (from === 'button') {
       const { dataset: { posterSrc } } = target
       imageUrl = posterSrc
-      this.onSaveImage(imageUrl)
+      saveImageToPhotosAlbum(imageUrl)
     }
 
     return {
@@ -129,7 +129,7 @@ class AvatarPoster extends Component {
       })
 
       if (avatarFileID) {
-        let avatarFileLocal = await this.onDownloadFile(avatarFileID)
+        let avatarFileLocal = await onDownloadFile(avatarFileID)
   
         console.log('avatarFileLocal :', avatarFileLocal);
         this.setState({
@@ -148,46 +148,6 @@ class AvatarPoster extends Component {
     }
   }
 
-  
-
-  onDownloadFile = async (fileID) => {
-
-    let { tempFilePath } = await Taro.cloud.downloadFile({
-      fileID,
-    })
-
-    return tempFilePath
-  }
-
-  onSaveImage = async (imgSrc) => {
-    const { avatarFileLocal } = this.state
-    this.saveImageToPhotosAlbum(imgSrc || avatarFileLocal)
-  }
-
-  saveImageToPhotosAlbum = (tempFilePath) => {
-    console.log('tempFilePath :', tempFilePath);
-    if (isH5Page) {
-      downloadImgByBase64(tempFilePath)
-    } else {
-      Taro.saveImageToPhotosAlbum({
-        filePath: tempFilePath,
-        success: res2 => {
-          this.hasSaved = true
-          Taro.showToast({
-            title: '已保存并分享'
-          })
-          console.log('保存成功 :', res2);
-        },
-        fail(e) {
-          Taro.showToast({
-            title: '图片未保存成功'
-          })
-          console.log('图片未保存成功:' + e);
-        }
-      })
-    }
-  }
-
   /**
  * 获取图片
  * @param {*} src 图片地址
@@ -200,13 +160,11 @@ class AvatarPoster extends Component {
       return img
     } catch (error) {
       return require('../../images/avatar-logo.png')
-
     }
   }
 
   onCreatePoster = async () => {
     const { userInfo } = this.props
-    console.log('userInfo :>> ', userInfo);
     const { wechatInfo } = userInfo
     const { nickName, avatarUrl } = wechatInfo
     
@@ -220,10 +178,8 @@ class AvatarPoster extends Component {
         qrcodeFile
       } = this.state
       
-  
       const posterCtx = Taro.createCanvasContext('canvasPoster')
 
-  
       posterCtx.clearRect(0, 0, POSTER_WIDTH, POSTER_HEIGHT);
       if (!avatarFileLocal) {
         return Error('需要重新进入页面')
@@ -232,7 +188,6 @@ class AvatarPoster extends Component {
       if (avatarUrl) {
         let avatarNow = await this.getImgAvatar(avatarUrl)
         posterCtx.drawImage(avatarNow, 40, 40, 120, 120)
-        // drawRoundImage(posterCtx, avatarNow, 40, 40, 60) // 有黑圈问题
       }
       posterCtx.drawImage(avatarFileLocal, 40, 184, SAVE_AVATAR_SIZE, SAVE_AVATAR_SIZE)
       posterCtx.drawImage(require('../../images/logo-text.png'), 40, 880, 250, 108)
@@ -252,8 +207,6 @@ class AvatarPoster extends Component {
           fileType: 'jpg',
           quality: 0.9,
           success: async (res) => {
-
-  
             Taro.hideLoading()
             this.setState({
               posterSrc: res.tempFilePath,
@@ -274,23 +227,10 @@ class AvatarPoster extends Component {
     }
   }
 
-  previewPoster = () => {
-    const { posterSrc } = this.state
-    if (posterSrc !== '') Taro.previewImage({ urls: [posterSrc] })
-  }
-
   onHidePoster = () => {
     this.setState({
       isShowPoster: false
     })
-  }
-
-  savePoster = () => {
-    const { posterSrc } = this.state
-
-    if (posterSrc) {
-      this.saveImageToPhotosAlbum(posterSrc)
-    }
   }
 
   renderPoster = () => {
@@ -346,7 +286,7 @@ class AvatarPoster extends Component {
                 ? (
                   <View className='button-wrap'>
                     <View className="button button-home" onClick={this.goHome}>再来一张</View>
-                    <Button className="button button-share" openType='share'>保存并分享</Button>
+                    <Button className="button button-share" openType='share' data-poster-src={avatarFileLocal}>保存并分享</Button>
                     <View className="button-poster button-fixed" onClick={this.onCreatePoster}>生成分享海报</View>
                   </View>
                 )

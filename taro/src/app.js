@@ -9,8 +9,6 @@ import './tcb';
 
 import './app.styl'
 
-
-
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
 // if (process.env.NODE_ENV !== 'production' && process.env.TARO_ENV === 'h5')  {
@@ -24,12 +22,6 @@ class App extends Component {
       'pages/theme-list/theme-list',
       'pages/self/self'
     ],
-    // plugins: {
-    //   tucao: {
-    //     version: '1.1.5',
-    //     provider: 'wx8abaf00ee8c3202e'
-    //   }
-    // },
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
@@ -76,20 +68,22 @@ class App extends Component {
     Taro.setStorageSync('isHideLead', false)
 
     if (process.env.TARO_ENV === 'weapp') {
-      // 检查过审开关是否开启
+      // 更新提醒
       this.setUpdateManager()
-    } 
-    globalActions.getForCheckStatus()
+      // 检查过审开关是否开启
+      globalActions.getForCheckStatus()
+      // 监听网络变化
+      this.onNetworkListen()
+    }
+
+    // 获取主题列表
     globalActions.getThemeList()
-    // 监听网络变化
-    this.onNetworkListen()
     
+    // 用户登录
     this.onUserLogin()
   }
 
   componentDidShow() {
-    // 判断是否登录超时处理
-    // userActions.checkLoginTimeout()
     const { scene, query = {} } = this.$router.params
     if (query.source) {
       Taro.setStorageSync('source', query.source)
@@ -134,7 +128,7 @@ class App extends Component {
   // 用户登录
   onUserLogin = async () => {
     try {
-      const res = await userActions.login()
+      await userActions.login()
     } catch (error) {
       console.log('基础登录失败，不会注册sdk', error)
     }
@@ -157,9 +151,8 @@ class App extends Component {
     })
   }
 
-  /** TODO: 猜测这段代码的逻辑是，是否显示「返回首页」按钮，, query = {}暂时没用到 */
+  /** 是否显示「返回首页」按钮，, query = {}暂时没用到 */
   addToIndexBtn(code) {
-    console.log('code :>> ', code);
     const RefreshCode = {
       '011004': true
     }

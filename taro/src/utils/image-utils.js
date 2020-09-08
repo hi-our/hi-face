@@ -136,3 +136,55 @@ export const getImg = async (src) => {
     
   }
 }
+
+export const saveImageToPhotosAlbum = (tempFilePath) => {
+
+  if (isH5Page) {
+    downloadImgByBase64(tempFilePath)
+    return
+  }
+
+  Taro.saveImageToPhotosAlbum({
+    filePath: tempFilePath,
+    success: res2 => {
+      Taro.showToast({
+        title: '图片保存成功'
+      })
+      console.log('保存成功 :', res2);
+    },
+    fail(e) {
+      Taro.showToast({
+        title: '图片未保存成功'
+      })
+      console.log('图片未保存成功:' + e);
+    }
+  })
+}
+
+export const onDownloadFile = async (fileID) => {
+
+  let { tempFilePath } = await Taro.cloud.downloadFile({
+    fileID,
+  })
+
+  return tempFilePath
+}
+
+export const onUploadFile = async (tempFilePath, prefix = 'temp') => {
+  try {
+
+    let uploadParams = {
+      cloudPath: `${prefix}/${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
+      filePath: tempFilePath,
+    }
+
+    const { fileID } = await Taro.cloud.uploadFile(uploadParams)
+
+    return fileID
+
+  } catch (error) {
+    console.log('error :', error)
+    return ''
+  }
+
+}

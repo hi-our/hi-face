@@ -1,13 +1,13 @@
 import Taro, { Component } from '@tarojs/taro'
 import { connect } from '@tarojs/redux'
-import { View, Image, Canvas, Block } from '@tarojs/components'
+import { View, Image, Canvas } from '@tarojs/components'
 import { STATUS_BAR_HEIGHT, SAVE_IMAGE_WIDTH, getDefaultState } from './utils'
 import PageLoading from 'components/page-status'
 import ShapeEdit from './components/shape-edit'
 import TabCategoryList from './components/tab-category-list'
 import PosterDialog from './components/poster-dialog'
 import { getHatList, getHatShapeList } from 'utils/face-utils'
-import { getImg, fsmReadFile, getBase64Main } from 'utils/image-utils'
+import { getImg, fsmReadFile, getBase64Main, saveImageToPhotosAlbum, onUploadFile } from 'utils/image-utils'
 import { h5PageModalTips } from 'utils/common'
 import { cloudCallFunction } from 'utils/fetch'
 import { imgSecCheck } from 'utils/image-safe-check';
@@ -127,7 +127,6 @@ class AvatarEdit extends Component {
       console.log('error :>> ', error);
       this.setState({
         pageStatus: 'error',
-        errorText: '加载失败'
       })
     }
   }
@@ -143,17 +142,6 @@ class AvatarEdit extends Component {
       cutImageSrc
     }, () => {
       this.onAnalyzeFace(cutImageSrc)
-    })
-  }
-
-  setDafaultFace = () => {
-    Taro.showToast({
-      icon: 'none',
-      title: '请手动添加贴纸'
-    })
-    this.setState({
-      shapeList: [],
-      isShowShape: true,
     })
   }
 
@@ -254,21 +242,15 @@ class AvatarEdit extends Component {
   }
 
   onRemoveImage = () => {
-    this.cutImageSrcCanvas = ''
-    // this.ageMap = getDefaultAgeMap()
 
     this.setState({
-      // currentAgeType: 'origin',
       cutImageSrc: '',
       isShowShape: false,
-      // originFileID: '',
-      // isLifeChecked: false,
       shareUUID: ''
     })
   }
 
   onGenerateImage  = async () => {
-
     this.setState({
       posterSrc: '',
     })
@@ -277,7 +259,6 @@ class AvatarEdit extends Component {
       title: '图片生成中'
     })
     this.drawCanvas()
-
   }
 
 
@@ -381,34 +362,13 @@ class AvatarEdit extends Component {
     })
   }
 
-  saveImageToPhotosAlbum = (tempFilePath) => {
-    
-    Taro.saveImageToPhotosAlbum({
-      filePath: tempFilePath,
-      success: res2 => {
-        Taro.showToast({
-          title: '图片保存成功'
-        })
-        console.log('保存成功 :', res2);
-      },
-      fail(e) {
-        Taro.showToast({
-          title: '图片未保存成功'
-        })
-        console.log('图片未保存成功:' + e);
-      }
-    })
-  }
-
-
-
   onSaveImageToCloud = async (tempFilePath) => {
     const { currentAgeType, themeData } = this.state
     const { _id: themeId, themeName } = themeData
 
     try {
       // 上传头像图片
-      const fileID = await this.onUploadFile(tempFilePath, 'avatar')
+      const fileID = await onUploadFile(tempFilePath, 'avatar')
 
       const { uuid } = await cloudCallFunction({
         name: 'hiface-api',
@@ -429,30 +389,11 @@ class AvatarEdit extends Component {
         url: `/pages/avatar-poster/avatar-poster?uuid=${uuid}`
       })
 
-      this.saveImageToPhotosAlbum(tempFilePath)
+      saveImageToPhotosAlbum(tempFilePath)
 
     } catch (error) {
       console.log('error :', error);
     }
-  }
-
-  onUploadFile = async (tempFilePath, prefix = 'temp') => {
-    try {
-
-      let uploadParams = {
-        cloudPath: `${prefix}/${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
-        filePath: tempFilePath,
-      }
-
-      const { fileID } = await Taro.cloud.uploadFile(uploadParams)
-
-      return fileID
-
-    } catch (error) {
-      console.log('error :', error)
-      return ''
-    }
-
   }
 
   chooseShape = (shape) => {
@@ -495,9 +436,7 @@ class AvatarEdit extends Component {
                 />
               )
               : (
-                <Block>
-                  <Image src={coverImageUrl} className="page-cover" />
-                </Block>
+                <Image src={coverImageUrl} className="page-cover" />
               )
             }
             <View className={`tabs-bottom ${pageStatus === 'done' && isShowShape ? 'tabs-open' : ''}`} >
@@ -509,7 +448,7 @@ class AvatarEdit extends Component {
           </View>
           <MenuChoose isMenuShow={tabBarIndex === 1 && !isShowShape} onChoose={this.onChoose} />
           <CustomTabBar selected={tabBarIndex} hideIndex={tabBarIndex === 1 && !isShowShape ? 1 : -1} />
-          <View className={`menu-toggle ${isShowMenuMain ? 'menu-open' : ''}`} onClick={this.onMenuMainTogggle} style={{ marginTop: STATUS_BAR_HEIGHT + 'px' }}></View>
+          <View className='menu-toggle' onClick={this.onMenuMainTogggle} style={{ marginTop: STATUS_BAR_HEIGHT + 'px' }}></View>
         </View>
         {isH5Page && (
           <PosterDialog
