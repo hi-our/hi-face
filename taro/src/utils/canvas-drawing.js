@@ -1,6 +1,5 @@
 import Taro from '@tarojs/taro'
-import promisify from './promisify';
-import { getSystemInfo } from './common'
+import { getSystemInfo, promisify } from './common'
 
 const fsm = Taro.getFileSystemManager()
 const FILE_BASE_NAME = 'tmp_base64src'

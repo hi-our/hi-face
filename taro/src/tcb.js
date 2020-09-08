@@ -10,7 +10,6 @@ import '@cloudbase/js-sdk/functions';
 // 云存储模块
 import '@cloudbase/js-sdk/storage';
 
-console.log('Taro.getEnv() :>> ', Taro.getEnv());
 
 if (Taro.getEnv() === 'WEAPP') {
   Taro.cloud.init({
