@@ -1,0 +1,45 @@
+{
+  "docs": {
+    "标题": [
+      "README"
+    ],
+    "1-前言": [
+      "1-foreword/1-product-planning",
+      "1-foreword/2-technology-selection"
+    ],
+    "2-项目配置": [
+      "2-project-config/1-taro-cloud-function",
+      "2-project-config/2-tencent-cloud-ai-face"
+    ],
+    "3-知识储备": [
+      "3-knowledge-preparation/1-image-cropper-share",
+      "3-knowledge-preparation/2-canvas-draw-minapp-web",
+      "3-knowledge-preparation/3-image-extension-introduction"
+    ],
+    "4-实战开发": [
+      "4-development/1-1-ui-image-upload-scrop",
+      "4-development/1-2-image-cropper-base64",
+      "4-development/2-image-safe-check",
+      "4-development/3-analyze-face-shape",
+      "4-development/4-face-shape-touch-move",
+      "4-development/5-canvas-draw-image-save",
+      "4-development/6-avatar-poster-share",
+      "4-development/7-cms-theme-cloud",
+      "4-development/8-self-page-list",
+      "4-development/9-login-sms-minapp-web"
+    ],
+    "云开发-公众号外发": [
+      "tencent-cloud/picture-speed-up-1-second",
+      "tencent-cloud/tencent-minapp-to-web",
+      "tencent-cloud/picture-recognition-storage",
+      "tencent-cloud/cms-extension-from-cloudbase",
+      "tencent-cloud/web-devops-github-action",
+      "tencent-cloud/image-watermark-web",
+      "tencent-cloud/image-watermark-web-full-steps"
+    ],
+    "更多探索": [
+      "other/minapp-to-dark-mode",
+      "other/taro-next-vs-core"
+    ]
+  }
+}

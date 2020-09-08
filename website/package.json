@@ -1,0 +1,22 @@
+{
+  "scripts": {
+    "examples": "docusaurus-examples",
+    "start": "docusaurus-start",
+    "local": "npm run start -- --port=8080",
+    "build": "docusaurus-build",
+    "publish-gh-pages": "docusaurus-publish",
+    "deploy": "cloudbase framework:deploy",
+    "write-translations": "docusaurus-write-translations",
+    "version": "docusaurus-version",
+    "rename-version": "docusaurus-rename-version",
+    "server": "NODE_ENV=production pm2 start --watch ecosystem.config.js"
+  },
+  "devDependencies": {
+    "docusaurus": "^1.14.4"
+  },
+  "dependencies": {
+    "@docusaurus/plugin-sitemap": "^2.0.0-alpha.37",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  }
+}
