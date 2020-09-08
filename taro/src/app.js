@@ -82,7 +82,7 @@ class App extends Component {
     globalActions.getForCheckStatus()
     globalActions.getThemeList()
     
-    // this.onUserLogin()
+    this.onUserLogin()
   }
 
   componentDidShow() {

@@ -77,7 +77,7 @@ class AvatarPoster extends Component {
       const { base64Main } = await cloudCallFunction({
         name: 'hiface-api',
         data: {
-          action: 'open/createMiniCode',
+          $url: 'open/createMiniCode',
           path: this.pageUrl
         }
       })
