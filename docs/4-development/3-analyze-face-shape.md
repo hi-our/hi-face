@@ -23,29 +23,28 @@ Hi头像小程序制作的头像宽高为600px。在小程序中头像贴纸元�
 在 [项目搭建-腾讯云环境配置及特色人工功能介绍](3-knowledge-preparation/2-tencent-cloud-ai-face.md)一文中，已经了解了五官分析接口如何调用。
 
 ```js
-// cloud/functions/analyze-face/index.js
-const analyzeFace = (Image) => {
-  let faceReq = new models.DetectFaceRequest()
-
-  let query_string = JSON.stringify({
-    Image
-  })
-  // 传入json参数
-  faceReq.from_json_string(query_string);
-
-  return new Promise((resolve, reject) => {
-    // 通过client对象调用想要访问的接口，需要传入请求对象以及响应回调函数
-    client.AnalyzeFace(faceReq, function (error, response) {
-      // error 错误信息
-      // 请求正常返回，返回response对象
-      resolve({
-        data: response,
-        time: new Date(),
-        status: 0,
-        message: ''
-      })
+// taro/src/utils/image-analyze-face.js
+c/**
+ * 五官分析
+ * @param {string} base64Main
+ */
+export const imageAnalyzeFace = async (base64Main) => {
+  try {
+    const res = await wx.serviceMarket.invokeService({
+      service: 'wx2d1fd8562c42cebb',
+      api: 'analyzeFace',
+      data: {
+        Action: 'AnalyzeFace',
+        Image: base64Main
+      },
     })
-  });
+
+    let data = getResCode(res)
+    return data
+  } catch (error) {
+    console.log('error :', error)
+    throw error
+  }
 }
 ```
 
@@ -132,14 +131,22 @@ export function getHatShapeList(mouthList, shapeItem) {
     const shapeWidth = faceWidth / 0.6
 
     return {
+      // 图形id
       shapeId,
+      // 图形宽度
       shapeWidth,
-      currentShapeId: 1,
+      // 图形中间位置 X 轴
       shapeCenterX,
+      // 图形中间位置 Y 轴
       shapeCenterY,
-      rotate,
+      // 旋转操作时的 X 轴的相对位置
       resizeCenterX,
+      // 旋转操作时的 Y 轴的相对位置
       resizeCenterY,
+      // 旋转角度
+      rotate,
+      // 水平翻转，正向为1，反向为-1
+      reserve: 1
     }
   })
 }

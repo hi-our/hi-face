@@ -9,7 +9,8 @@
     "write-translations": "docusaurus-write-translations",
     "version": "docusaurus-version",
     "rename-version": "docusaurus-rename-version",
-    "server": "NODE_ENV=production pm2 start --watch ecosystem.config.js"
+    "server": "NODE_ENV=production pm2 start --watch ecosystem.config.js",
+    "deploy": "cloudbase framework:deploy"
   },
   "devDependencies": {
     "docusaurus": "^1.14.4"

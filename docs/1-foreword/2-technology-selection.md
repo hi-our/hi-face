@@ -14,7 +14,7 @@ title: 1.2 技术选型的依据
 
 ![](https://n1image.hjfile.cn/res7/2020/03/30/31bfe7a9d5019902cf28ae98bea5085c.png)
 
-具体配置可以参考《[项目搭建-腾讯云环境配置及特色人工功能介绍](3-knowledge-preparation/2-tencent-cloud-ai-face.md)》
+具体配置可以参考《[人脸五官分析的环境配置](2-project-config/2-tencent-cloud-ai-face.md)》
 
 ## 服务侧
 

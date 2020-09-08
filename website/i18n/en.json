@@ -6,7 +6,7 @@
     "tagline": "HiOur出品，记录生活美好",
     "docs": {
       "1-foreword/1-product-planning": {
-        "title": "1.1 【草稿】产品需求设计、项目规划、UI设计的技巧"
+        "title": "1.1 产品需求设计、页面流程图及项目规划"
       },
       "1-foreword/2-technology-selection": {
         "title": "1.2 技术选型的依据"
@@ -15,7 +15,7 @@
         "title": "2.1 小程序开启云开发模式"
       },
       "2-project-config/2-tencent-cloud-ai-face": {
-        "title": "2.2 腾讯云人脸五官分析的环境配置"
+        "title": "2.2 人脸五官分析的环境配置"
       },
       "3-knowledge-preparation/1-image-cropper-share": {
         "title": "3.1 图片裁剪、模糊、保存、分享的技巧"
@@ -39,7 +39,7 @@
         "title": "4.3 通过五官分析实现为人脸佩戴贴纸"
       },
       "4-development/4-face-shape-touch-move": {
-        "title": "4.4【未写】人脸贴纸移动技巧"
+        "title": "4.4 人脸贴纸移动技巧"
       },
       "4-development/5-canvas-draw-image-save": {
         "title": "4.5 头像绘制和图片保存弹窗"
@@ -92,6 +92,7 @@
     },
     "links": {
       "网站首页": "网站首页",
+      "技术博客": "技术博客",
       "教程小册": "教程小册"
     },
     "categories": {

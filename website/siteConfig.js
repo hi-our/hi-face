@@ -38,6 +38,7 @@ const siteConfig = {
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
     {href: '/', label: '网站首页'},
+    { href: '/blog', label: '技术博客' },
     {doc: 'README', label: '教程小册'},
     { search: true },
     // {doc: 'doc4', label: 'API'},

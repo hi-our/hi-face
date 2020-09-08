@@ -60,7 +60,7 @@ class HomeSplash extends React.Component {
 
     return (
       <SplashContainer>
-        <Logo img_src={`${baseUrl}img/hiface-logo.png`} />
+        <Logo img_src="https://image-hosting.xiaoxili.com/img/20200712182458.png" />
         <div className="inner">
           <ProjectTitle tagline={siteConfig.tagline} title={siteConfig.title} />
           <PromoSection>
@@ -106,7 +106,7 @@ class Index extends React.Component {
           {
             content:
               '用手机微信扫码Hi头像小程序码，体验完整功能。',
-            image: `${baseUrl}img/hiface-qrcode.jpg`,
+            image: "https://image-hosting.xiaoxili.com/img/20200712182459.jpg",
             imageAlign: 'top',
             title: 'Hi头像',
           },

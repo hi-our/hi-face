@@ -1,8 +1,15 @@
 ---
-title: 2.2 腾讯云人脸五官分析的环境配置
+title: 2.2 人脸五官分析的环境配置
 ---
 
-## 更多人工智能的介绍，以及sdk的使用
+<!-- TODO 还可以采用微信平台市场上的，调用更简单 -->
+
+> v2 版中使用微信平台市场上优图的方案，具体代码在 `taro/src/utils/image-analyze-face.js` 内。
+
+本文知识点
+
+* 腾讯云人脸五官分析的调用方法
+* 腾讯云人工智能服务介绍
 
 ![](https://n1image.hjfile.cn/res7/2020/03/30/31bfe7a9d5019902cf28ae98bea5085c.png)
 
@@ -11,10 +18,11 @@ title: 2.2 腾讯云人脸五官分析的环境配置
 在 [tencentcloud-sdk-nodejs
 ](https://github.com/TencentCloud/tencentcloud-sdk-nodejs) 中给出了详细的使用方法，而我这里把我的配置思路来讲解一下，把其中的一些细节优化点给写出来。
 
-## 功能开发
+## 人脸五官分析的配置及调用
+
 环境配置步骤大致为
 
-* 申请安全凭证，即SecretID 和 SecretKey，[链接](https://console.cloud.tencent.com/cam/capi)
+* 申请安全凭证，即 `SecretID` 和 `SecretKey`，[链接](https://console.cloud.tencent.com/cam/capi)
 * 将安全凭证放在`config.js`文件中
 * 在主要功能里面调用安全凭证，并按照 `tencentcloud-sdk-nodejs
 ` 给出的示例代码来编写功能
@@ -22,8 +30,10 @@ title: 2.2 腾讯云人脸五官分析的环境配置
 ![](https://n1image.hjfile.cn/res7/2020/03/30/17dd43c2d088bd79fafd159191f8266e.png)
 
 
-### 配置安全证书
-将关键性配置抽离出来，在`.gitignore`将该文件忽略
+### 配置安全密钥
+
+> 将关键性配置抽离出来，在 `.gitignore` 将该文件忽略
+
 
 ```js
 // cloud/functions/analyze-face/config.js
@@ -33,13 +43,14 @@ module.exports = {
 }
 ```
 
-### 人脸五官分析
+### 封装云函数：人脸五官分析
 
 将人脸五官分析的主要源码给简单分析一下
 > 对请求图片进行五官定位（也称人脸关键点定位），计算构成人脸轮廓的 90 个点，包括眉毛（左右各 8 点）、眼睛（左右各 8 点）、鼻子（13 点）、嘴巴（22 点）、脸型轮廓（21 点）、眼珠[或瞳孔]（2点）。
 
 ```js
 // cloud/functions/analyze-face/index.js
+
 const tencentcloud = require('tencentcloud-sdk-nodejs')
 const config = require('./config')
 const status = require('./status')
@@ -117,7 +128,8 @@ module.exports = {
 }
 ```
 
-### 调用功能
+### 在云函数主入口调用
+
 云函数主入口，调用`analyzeFace`功能
 
 ```js
@@ -137,7 +149,7 @@ exports.main = async (event) => {
 
 ## 腾讯云人工智能的特色功能
 
-### 腾讯云五官识别
+### 五官识别
 
 体验网址：https://ai.qq.com/product/face.shtml#shape
 
@@ -170,7 +182,6 @@ exports.main = async (event) => {
 
 ### 更多特色功能及对应链接
 
-
 * `人像变换`，包含年龄、性别 https://cloud.tencent.com/product/ft
 * `人脸美妆`，比`智能美颜`更容易一些 https://ai.qq.com/product/facemakeup.shtml
 * `滤镜`效果很不错 https://ai.qq.com/product/imgfilter.shtml
@@ -178,3 +189,6 @@ exports.main = async (event) => {
 * QQ AI的SDK
   * https://www.npmjs.com/package/tencent-ai-nodejs-sdk
   * https://github.com/w89612b/qqai-api-sdk
+
+
+

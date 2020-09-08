@@ -24,82 +24,65 @@ title: 4.2 云开发必备——图像安全审核
 
 接口文档：https://docs.cloudbase.net/extension/abilities/image-examination.html
 
-**使用步骤：**
-1. 上传图片到云存储
-2. 云函数调用`图片安全审核，来自云开发扩展能力`进行校验
-3. 如果是违规图片，可能还需要从云存储上删除，以免占用不必要的空间
-
-
 ### 使用方法
+> v2 版中已使用微信服务市场的优图服务来实现，具体可以看 `taro/src/utils/image-safe-check.js`
+
 ```js
-exports.main = async (event, context) => {
-  return imgSecCheck(event)
+export const getResCode = (res) => {
+ ...
 }
 
-// 将后端接口先解析一下，得到核心数据
-const getResCode = (res) => {
-  // ......
-}
-
-// 分析图片审核结果
 const getCheckResult =(data) => {
-  const { PornInfo = [], TerroristInfo = [], PoliticsInfo = [] } = data
-  const pornOne = PornInfo || {}
-  const terroristOne = TerroristInfo || {}
-  const politicsOne = PoliticsInfo || {}
+  const { Suggestion, PoliticsResult = {}, PornResult = {}, TerrorismResult = {} } = data
 
   let result = {}
 
-  //  “鉴黄、鉴政、鉴恐”都通过的话，才算做通过
-  if (pornOne.HitFlag === 0 && terroristOne.HitFlag === 0 && politicsOne.HitFlag === 0) {
+  if (Suggestion === 'PASS') {
     result.status = 0
     result.data = { isSuccess: true }
     result.message = ''
-  } else if (pornOne.HitFlag ||terroristOne.HitFlag || politicsOne.HitFlag) {
-    //  “鉴黄、鉴政、鉴恐” 中有一个存在问题，就算做有问题
-    result.status = -1000
+  } else if (PoliticsResult.Suggestion !== 'PASS' || PornResult.Suggestion !== 'PASS' || TerrorismResult.Suggestion !== 'PASS') {
+    result.status = -87014
     result.message = '存在违禁图片'
-  } else if (pornOne.Code || terroristOne.Code || politicsOne.Code) {
-    // 这里是兼容三个图像请求中有异常的情况
-    result.status = -1001
-    result.message = `pornOne:${pornOne.Code}-terroristOne:${terroristOne.Code}-politicsOne:${politicsOne.Code}`
   } else {
-    // 这里是整个请求出现问题的情况
     result.status = -1002
     result.message = '请求失败'
   }
 
-  console.log('审核结果result :', result);
+  if (result.status) {
+    throw result
+  }
   return result
-
 }
 
-
-async function imgSecCheck(event) {
-  const { fileID } = event
-  if (!fileID) {
-    console.log('请设置fileID :');
-    return 
-  }
-
+/**
+ * 图像安全审核
+ * @param {string} base64Main
+ */
+export const imgSecCheck = async (base64Main) => {
   try {
-    let imgID = fileID.replace('cloud://', '')
-    let index = imgID.indexOf('/')
-    let cloudPath = imgID.substr(index)
-
-    // 调用图像安全审核扩展
-    const res = await tcb.invokeExtension('CloudInfinite', {
-      action: 'DetectType',
-      cloudPath: cloudPath, //需要分析的图像的绝对路径
-      operations: { type: ["porn", "terrorist", "politics"] }
+    const res = await wx.serviceMarket.invokeService({
+      service: 'wxee446d7507c68b11',
+      api: 'imgSecCheck',
+      clientMsgId: 'id' + parseInt(Math.random() * 10000),
+      data: {
+        Action: 'ImageModeration',
+        Scenes: ['PORN', 'POLITICS', 'TERRORISM'],
+        ImageBase64: base64Main,
+        Config: '',
+        Extra: ''
+      }
     })
 
     let data = getResCode(res)
-    result = getCheckResult(data)
+    let result = getCheckResult(data)
     return result
   } catch (error) {
-    console.log('error :', error)
-    return error
+    console.log('error2 :', error)
+    throw {
+      status: 87014,
+      message: '图中包含违规内容，请更换'
+    }
   }
 }
 ```
