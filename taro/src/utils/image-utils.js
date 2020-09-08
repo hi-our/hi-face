@@ -24,22 +24,6 @@ export const getShowRpx = (value) => {
   return value + 'rpx'
 }
 
-/* 
- * 根据我当前的圣诞帽元素进行一些偏移(我的图片大小是200*130)， 圣诞帽可佩戴部分的中心 (62,60)  这里需要微调
- * 图片可佩戴部分是 0.6 倍图片宽度
- * @param {*} x
- * @param {*} y
- */
-const translateHat = (faceWidth, x, y) => {
-  const picSize = { width: faceWidth / 0.6, height: (faceWidth * 0.65) / 0.6 };
-  return {
-    ...picSize,
-    x: x - (62 * picSize.width) / 200,
-    y: y - (60 * picSize.height) / 130,
-  };
-};
-
-
 export const base64src = async (base64data) => {
   const [, format, bodyData] = /data:image\/(\w+);base64,(.*)/.exec(base64data) || [];
   if (!format) {
@@ -153,73 +137,3 @@ export const getImg = async (src) => {
     
   }
 }
-
-// /**
-//  * 绘制帽子
-//  * @param {*} ctx 画布实例
-//  * @param {{}} config 配置
-//  */
-// export const drawHat = async (ctx, config) => {
-//   const { headPos, angle, faceWidth } = config;
-//   let HatImgTest = require('../images/hat.png')
-
-//   const img = isH5Page ? await getImg(HatImgTest) : HatImgTest
-
-//   ctx.save();
-//   ctx.translate(headPos.X, headPos.Y);
-//   // 旋转画布到特定角度
-//   ctx.rotate(angle);
-//   // 偏移图片，使帽子中心刚好在原点
-//   const { x, y, width, height } = translateHat(faceWidth, 0, 0);
-//   // 我的圣诞帽子实际佩戴部分长度只有0.75倍整个图片长度
-//   ctx.drawImage(img, x, y, width, height);
-  
-//   // 还原画布绘制状态，如偏移
-//   ctx.restore()
-  
-// }
-
-// /**
-//  * 绘制主流程
-//  * @param {*} canvas
-//  * @param {*} options
-//  */
-// export const drawing = async (canvas, options) => {
-//   const { info, width = 200, height = 200, imgSrc = 'images/default.jpg' } = options;
-//   let ctx = null
-//   try {
-//     ctx = Taro.createCanvasContext('canvasHat')
-//     ctx = canvas.getContext('2d') //Taro.createCanvasContext('canvasHat')
-//     console.log('ctx :', ctx);
-    
-//   } catch (error) {
-//     console.log('error :', error);
-//   }
-
-//   if (!ctx) return 
-
-//   // 重置
-//   ctx.clearRect(0, 0, width, height)
-
-//   try {
-//     // // 先把图片绘制上去
-//     const imgSrcTransform = await getImg(imgSrc);
-//     console.log('imgSrcTransform :', imgSrcTransform);
-//     ctx.drawImage(imgSrcTransform, 0, 0, width, height)
-    
-//   } catch (error) {
-//     console.log('imgSrcTransform error :', error);
-//   }
-
-//   // 把帽子画到对应的点上
-//   if (info) {
-//     drawHat(ctx, info[0]);
-//   }
-
-//   // TODO 加了以后显示效果才对
-//   // fillText(ctx, ' ', 55, 233, false, 12, '#687583')
-//   // TODO 加了以后显示效果才对
-//   setTimeout(() => {
-//     ctx.draw()
-//   }, 500)
-// }

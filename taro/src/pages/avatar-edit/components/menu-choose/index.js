@@ -1,7 +1,7 @@
 import Taro from '@tarojs/taro'
 import { View, Block, Image, Button } from '@tarojs/components'
 import { isIphoneSafeArea } from 'utils/common'
-import { getImg } from 'utils/canvas-drawing'
+import { getImg } from 'utils/image-utils'
 import TaroCropper from 'components/taro-cropper'
 import userActions from '@/store/user'
 

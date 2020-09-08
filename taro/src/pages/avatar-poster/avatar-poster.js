@@ -3,7 +3,7 @@ import { View, Image, Button, Canvas, Block } from '@tarojs/components'
 
 import { cloudCallFunction } from 'utils/fetch'
 import PageWrapper from 'components/page-wrapper'
-import { base64src, downloadImgByBase64, getImg } from 'utils/canvas-drawing'
+import { base64src, downloadImgByBase64, getImg } from 'utils/image-utils'
 import { SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT, DPR_CANVAS_SIZE, SAVE_CODE_SIZE, SAVE_PAGE_DPR, STATUS_BAR_HEIGHT } from './utils'
 
 import './styles.styl'

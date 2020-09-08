@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { Block, View, Image, Button } from '@tarojs/components'
-import { getRealRpx, getShowRpx } from 'utils/canvas-drawing'
+import { getRealRpx, getShowRpx } from 'utils/image-utils'
 
 import './styles.styl'
 

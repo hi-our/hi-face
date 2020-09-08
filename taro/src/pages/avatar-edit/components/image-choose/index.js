@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { Block, View, Button } from '@tarojs/components'
-import { getImg } from 'utils/canvas-drawing'
+import { getImg } from 'utils/image-utils'
 import TaroCropper from 'components/taro-cropper'
 
 import './styles.styl'

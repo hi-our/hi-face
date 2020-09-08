@@ -7,10 +7,9 @@ import ShapeEdit from './components/shape-edit'
 import TabCategoryList from './components/tab-category-list'
 import PosterDialog from './components/poster-dialog'
 import { getHatInfo, getHatShapeList } from 'utils/face-utils'
-import { getImg, fsmReadFile, getBase64Main } from 'utils/canvas-drawing'
+import { getImg, fsmReadFile, getBase64Main } from 'utils/image-utils'
 import { h5PageModalTips } from 'utils/common'
 import { cloudCallFunction } from 'utils/fetch'
-import promisify from 'utils/promisify'
 import { imgSecCheck } from 'utils/image-safe-check';
 import { imageAnalyzeFace } from 'utils/image-analyze-face'
 import CustomTabBar from 'components/custom-tab-bar'
@@ -453,12 +452,9 @@ class AvatarEdit extends Component {
         cloudPath: `${prefix}/${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
         filePath: tempFilePath,
       }
-      if (isH5Page) {
-        const { fileID } = await Taro.cloud.uploadFile(uploadParams)
-        return fileID
-      }
-      const uploadFile = promisify(Taro.cloud.uploadFile)
-      const { fileID } = await uploadFile(uploadParams)
+
+      const { fileID } = await Taro.cloud.uploadFile(uploadParams)
+
       return fileID
 
     } catch (error) {
