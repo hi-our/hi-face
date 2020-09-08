@@ -334,11 +334,9 @@ class AvatarEdit extends Component {
       // 旋转画布角度
       pc.rotate((rotate * Math.PI) / 180)
 
-      // 获取图形地址
-      // ?skip_domain_check=true
+      // 获取图形地址 解决web版跨域 ?skip_domain_check=true
       let imageUrlTemp = isReserve < 0 ? (imageReverseUrl || imageUrl) : imageUrl
       imageUrlTemp = imageUrlTemp + (imageUrlTemp.includes('tcb.qcloud.la') ? '?skip_domain_check=true' : '')
-      console.log('imageUrlTemp :>> ', imageUrlTemp);
       let oneImgSrc = await getImg(imageUrlTemp + (imageUrlTemp.includes('tcb.qcloud.la') ? '?skip_domain_check=true' : ''))
 
       // 绘制贴纸

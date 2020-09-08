@@ -4,13 +4,15 @@ import { View, Image, Button, Canvas, Block } from '@tarojs/components'
 import { cloudCallFunction } from 'utils/fetch'
 import PageWrapper from 'components/page-wrapper'
 import { base64src, downloadImgByBase64, getImg } from 'utils/image-utils'
-import { SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT, DPR_CANVAS_SIZE, SAVE_CODE_SIZE, SAVE_PAGE_DPR, STATUS_BAR_HEIGHT } from './utils'
+import { SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT, DPR_CANVAS_SIZE, SAVE_CODE_SIZE, SAVE_PAGE_DPR, STATUS_BAR_HEIGHT, SAVE_AVATAR_SIZE, POSTER_WIDTH, POSTER_HEIGHT } from './utils'
+import { drawRoundImage, fillText, toDrawRadiusRect } from 'utils/canvas'
+import CorePage from 'page';
 
 import './styles.styl'
 
 const isH5Page = process.env.TARO_ENV === 'h5'
 
-// @CorePage
+@CorePage
 class AvatarPoster extends Component {
   config = {
     navigationBarTitleText: '头像分享 - Hi头像',
@@ -55,23 +57,26 @@ class AvatarPoster extends Component {
 
     const { avatarFileID, ageType } = this.state
 
+    let imageUrl = avatarFileID || DEFAULT_SHARE_COVER
+
     let typeMap = {
       origin: '邀请好友一起来制作头像吧',
       childhood: '换个头像，一起回归童真'
     }
 
     if (from === 'button') {
-      this.onSaveImage()
+      const { dataset: { posterSrc } } = target
+      imageUrl = posterSrc
+      this.onSaveImage(imageUrl)
     }
 
     return {
       title: typeMap[ageType] || typeMap.origin,
-      imageUrl: avatarFileID || DEFAULT_SHARE_COVER,
+      imageUrl,
       path: this.pageUrl
     }
   }
 
-  // 这一页还得调试，重新想办法。base64用了以后还得删除
   onCreateQrcode = async () => {
     try {
       const { base64Main } = await cloudCallFunction({
@@ -153,13 +158,11 @@ class AvatarPoster extends Component {
     })
 
     return tempFilePath
-    
-
   }
 
-  onSaveImage = async () => {
+  onSaveImage = async (imgSrc) => {
     const { avatarFileLocal } = this.state
-    this.saveImageToPhotosAlbum(avatarFileLocal)
+    this.saveImageToPhotosAlbum(imgSrc || avatarFileLocal)
   }
 
   saveImageToPhotosAlbum = (tempFilePath) => {
@@ -186,7 +189,28 @@ class AvatarPoster extends Component {
     }
   }
 
+  /**
+ * 获取图片
+ * @param {*} src 图片地址
+ * @param {*} callback
+ */
+  getImgAvatar = async (src) => {
+
+    try {
+      const img = await getImg(src)
+      return img
+    } catch (error) {
+      return require('../../images/avatar-logo.png')
+
+    }
+  }
+
   onCreatePoster = async () => {
+    const { userInfo } = this.props
+    console.log('userInfo :>> ', userInfo);
+    const { wechatInfo } = userInfo
+    const { nickName, avatarUrl } = wechatInfo
+    
     try {
       
       Taro.showLoading({
@@ -198,35 +222,38 @@ class AvatarPoster extends Component {
       } = this.state
       
   
-      const pc = Taro.createCanvasContext('canvasPoster')
+      const posterCtx = Taro.createCanvasContext('canvasPoster')
 
   
-      pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT);
+      posterCtx.clearRect(0, 0, POSTER_WIDTH, POSTER_HEIGHT);
       if (!avatarFileLocal) {
         return Error('需要重新进入页面')
       }
-      console.log('avatarFileLocal :>> ', avatarFileLocal, qrcodeFile)
-      // pc.drawImage(require('../../images/poster-bg.jpg'), 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH * 1.4)
-      pc.drawImage(avatarFileLocal, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
-      pc.drawImage(require('../../images/logo-text.png'), 13, 654, 300, 132)
-      if (qrcodeFile) {
-        pc.drawImage(qrcodeFile, 210 * SAVE_PAGE_DPR, 320 * SAVE_PAGE_DPR, SAVE_CODE_SIZE, SAVE_CODE_SIZE)
+      posterCtx.drawImage(require('../../images/poster-bg.jpg'), 0, 0, POSTER_WIDTH, POSTER_HEIGHT)
+      if (avatarUrl) {
+        let avatarNow = await this.getImgAvatar(avatarUrl)
+        posterCtx.drawImage(avatarNow, 40, 40, 120, 120)
+        // drawRoundImage(posterCtx, avatarNow, 40, 40, 60) // 有黑圈问题
       }
-      // fillText(pc, '我做了一个新头像，赞我哟', 10 * SAVE_PAGE_DPR, 360 * SAVE_PAGE_DPR, true, 30, '#3d3d3d')
-      // fillText(pc, '长按识别小程序，来一起换头像吧', 10 * SAVE_PAGE_DPR, 380 * SAVE_PAGE_DPR, false, 20, '#3d3d3d')
-
+      posterCtx.drawImage(avatarFileLocal, 40, 184, SAVE_AVATAR_SIZE, SAVE_AVATAR_SIZE)
+      posterCtx.drawImage(require('../../images/logo-text.png'), 40, 880, 250, 108)
+      if (qrcodeFile) {
+        drawRoundImage(posterCtx, qrcodeFile, 440, 820, 100)
+      }
+      fillText(posterCtx, nickName, 184, 110, false, 32, '#333')
+      
   
-      pc.draw(true, () => {
+      posterCtx.draw(true, () => {
         Taro.canvasToTempFilePath({
           canvasId: 'canvasPoster',
           x: 0,
           y: 0,
-          height: DPR_CANVAS_SIZE * 3,
-          width: DPR_CANVAS_SIZE * 3,
+          height: POSTER_HEIGHT,
+          width: POSTER_WIDTH,
           fileType: 'jpg',
           quality: 0.9,
           success: async (res) => {
-            // await this.onSaveImageToCloud(res.tempFilePath)
+
   
             Taro.hideLoading()
             this.setState({
@@ -272,17 +299,12 @@ class AvatarPoster extends Component {
     return (
       <View className={`poster-dialog ${isShowPoster ? 'show' : ''}`}>
         <View className='poster-dialog-main'>
-          {!!posterSrc && <Image className='poster-image' src={posterSrc} showMenuByLongpress></Image>}
-          {/* <View className='poster-image-tips'>长按可分享图片</View> */}
-          <View className='poster-dialog-close' onClick={this.onHidePoster} />
+          <View className='poster-image-wrap'>
+            {!!posterSrc && <Image className='poster-image' src={posterSrc} showMenuByLongpress></Image>}
+            {/* <View className='poster-image-tips'>长按可分享图片</View> */}
+            <View className='poster-dialog-close' onClick={this.onHidePoster} />
+          </View>
           <View className='poster-footer-btn'>
-            {/* <View className='poster-btn-save' onClick={this.savePoster}>
-              <Image
-                className='icon'
-                src='https://image-hosting.xiaoxili.com/img/20200812132636.png'
-              />
-              保存到相册
-            </View> */}
             {!isH5Page && (
               <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
                 <Image
@@ -305,7 +327,7 @@ class AvatarPoster extends Component {
  
     return (
       <Block>
-        <Canvas className='canvas-poster' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_HEIGHT + 'px' }} canvasId='canvasPoster' ref={c => this.canvasPosterRef = c} />
+        <Canvas className='canvas-poster' style={{ width: POSTER_WIDTH + 'px', height: POSTER_HEIGHT + 'px' }} canvasId='canvasPoster' ref={c => this.canvasPosterRef = c} />
         <PageWrapper status={pageStatus} errorText={errorText}>
           <View className={`page-avatar-poster age-${ageType}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
             <View className='page-title'>

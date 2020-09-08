@@ -3,7 +3,7 @@
 
 /**
  * 画圆图形
- * @export drawRoundImg
+ * @export drawRoundImage
  * @param {*} ctx
  * @param {*} img
  * @param {*} x
@@ -159,10 +159,9 @@ export function drawRoundRect(
  * 画普通文字
  * @export fillText
  * @param {*} ctx
+ * @param {*} txt
  * @param {*} x
  * @param {*} y
- * @param {*} width
- * @param {*} height
  * @param {*} bold
  * @param {*} fontSize
  * @param {*} color
@@ -230,4 +229,54 @@ export function drawCoverImage({
     canvasWidth,
     canvasHeight
   )
+}
+
+
+/**
+ * 画圆角矩形、圆角边框和圆角图片所用到的方法
+ * @param ctx
+ * @param params
+ */
+export const toDrawRadiusRect = (ctx, params) => {
+  const {
+    left, top, width, height, borderRadius,
+    borderTopLeftRadius, borderTopRightRadius, borderBottomRightRadius, borderBottomLeftRadius
+  } = params
+  ctx.beginPath()
+  if (borderRadius) {
+    // 全部有弧度
+    const br = borderRadius / 2
+    ctx.moveTo(left + br, top) // 移动到左上角的点
+    ctx.lineTo(left + width - br, top) // 画上边的线
+    ctx.arcTo(left + width, top, left + width, top + br, br) // 画右上角的弧
+    ctx.lineTo(left + width, top + height - br) // 画右边的线
+    ctx.arcTo(left + width, top + height, left + width - br, top + height, br) // 画右下角的弧
+    ctx.lineTo(left + br, top + height) // 画下边的线
+    ctx.arcTo(left, top + height, left, top + height - br, br) // 画左下角的弧
+    ctx.lineTo(left, top + br) // 画左边的线
+    ctx.arcTo(left, top, left + br, top, br) // 画左上角的弧
+  } else {
+    const topLeftBr = borderTopLeftRadius ? borderTopLeftRadius / 2 : 0
+    const topRightBr = borderTopRightRadius ? borderTopRightRadius / 2 : 0
+    const bottomRightBr = borderBottomRightRadius ? borderBottomRightRadius / 2 : 0
+    const bottomLeftBr = borderBottomLeftRadius ? borderBottomLeftRadius / 2 : 0
+    ctx.moveTo(left + topLeftBr, top)
+    ctx.lineTo(left + width - topRightBr, top)
+    if (topRightBr) { // 画右上角的弧度
+      ctx.arcTo(left + width, top, left + width, top + topRightBr, topRightBr)
+    }
+    ctx.lineTo(left + width, top + height - bottomRightBr) // 画右边的线
+    if (bottomRightBr) { // 画右下角的弧度
+      ctx.arcTo(left + width, top + height,
+        left + width - bottomRightBr, top + height, bottomRightBr)
+    }
+    ctx.lineTo(left + bottomLeftBr, top + height)
+    if (bottomLeftBr) {
+      ctx.arcTo(left, top + height, left, top + height - bottomLeftBr, bottomLeftBr)
+    }
+    ctx.lineTo(left, top + topLeftBr)
+    if (topLeftBr) {
+      ctx.arcTo(left, top, left + topLeftBr, top, topLeftBr)
+    }
+  }
 }
