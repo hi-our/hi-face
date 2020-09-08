@@ -6,7 +6,7 @@ import PageLoading from 'components/page-status'
 import ShapeEdit from './components/shape-edit'
 import TabCategoryList from './components/tab-category-list'
 import PosterDialog from './components/poster-dialog'
-import { getHatInfo, getHatShapeList } from 'utils/face-utils'
+import { getHatList, getHatShapeList } from 'utils/face-utils'
 import { getImg, fsmReadFile, getBase64Main } from 'utils/image-utils'
 import { h5PageModalTips } from 'utils/common'
 import { cloudCallFunction } from 'utils/fetch'
@@ -22,8 +22,6 @@ import PageLead from './components/page-lead'
 import './styles.styl'
 
 const isH5Page = process.env.TARO_ENV === 'h5'
-const isQQPage = process.env.TARO_ENV === 'qq'
-
 
 @connect(state => ({
   forCheck: state.global.forCheck,
@@ -80,7 +78,7 @@ class AvatarEdit extends Component {
   }
 
   onShareAppMessage({ from, target }) {
-    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/20200812132355.png'
+    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/img/20200908/20f5ceab078c93d0901ea0ab0aac8b27-1231fe.jpg'
     const { themeData } = this.state
     let { shareImage = DEFAULT_SHARE_COVER, shareTitle = '给女神戴上皇冠吧！' } = themeData
 
@@ -191,18 +189,13 @@ class AvatarEdit extends Component {
         })
         return
       }
-      const hatList = getHatInfo(couldRes, shapeOne)
-
-      // let faceList = hatList.map(item => item.faceInfo)
+      const hatList = getHatList(couldRes, shapeOne)
       let shapeList = getHatShapeList(hatList, shapeOne, SAVE_IMAGE_WIDTH)
 
       this.setState({
         shapeList,
         isShowShape: true,
-        // faceList
       })
-
-      // Taro.hideLoading()
 
     } catch (error) {
       console.log('onAnalyzeFace error :', error);

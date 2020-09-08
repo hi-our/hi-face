@@ -91,7 +91,12 @@ const getHeadPos = (midPos, jawPos) => {
  */
 const getK = (a, b) => (a.X - b.X) / (a.Y - b.Y);
 
-export function getHatInfo(results) {
+
+/**
+ * 获取帽子列表
+ * @param {array} results 五官分析数据
+ */
+export function getHatList(results) {
   const { FaceShapeSet, ImageWidth, ImageHeight } = results 
   function getFaceInfo(leftEyeBrowPoints, rightEyeBrowPoints, outlinePoints) {
     // 获取眉心的点
@@ -128,6 +133,54 @@ export function getHatInfo(results) {
   });
 }
 
+/**
+ * 获取帽子贴纸列表
+ * @param {array} hatList 帽子列表
+ * @param {array} shapeItem 贴纸信息
+ * @param {number} saveImageWidth 预期保存的图片宽
+ */
+export function getHatShapeList(hatList, shapeItem, saveImageWidth = 600) {
+  const { imageUrl = '', imageReverseUrl, _id: shapeId } = shapeItem || {}
+  return hatList.map(item => {
+    let { faceWidth, angle, headPos = {}, ImageWidth } = item
+
+    let dpr = saveImageWidth / ImageWidth // 头像宽高为132，达不到600
+    const shapeCenterX = headPos.X * dpr
+    const shapeCenterY = headPos.Y * dpr
+    const rotate = angle / Math.PI * 180
+
+
+    // 角度计算有点难
+    let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * faceWidth * dpr
+    let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * faceWidth * dpr
+
+    const resizeCenterX = shapeCenterX + widthScaleDpr - 2
+    const resizeCenterY = shapeCenterY + heightScaleDpr - 2
+
+    const shapeWidth = faceWidth / 0.6 * dpr
+
+    return {
+      shapeId,
+      timeNow: Date.now(),
+      imageUrl,
+      imageReverseUrl,
+      shapeWidth,
+      currentShapeId: 1,
+      timeNow: Date.now() * Math.random(),
+      shapeCenterX,
+      shapeCenterY,
+      reserve: 1,
+      rotate,
+      resizeCenterX,
+      resizeCenterY,
+    }
+  })
+}
+
+/**
+ * 获取嘴巴中间的点
+ * @param {array} Mouth 嘴部数据
+ */
 const getMouthLeftRigthPoint = (Mouth = []) => {
   let xPoints = Mouth.map(item => item.X)
   var minX = xPoints.sort(function (a, b) {
@@ -148,7 +201,11 @@ const getMouthLeftRigthPoint = (Mouth = []) => {
   }
 }
 
-export function getMouthInfo(results) {
+/**
+ * 获取嘴部列表
+ * @param {array} results 五官分析数据
+ */
+export function getMouthList(results) {
   const { FaceShapeSet, ImageWidth, ImageHeight } = results 
   function getFaceInfo(leftEyeBrowPoints, rightEyeBrowPoints, outlinePoints, mouthPoint) {
     // 获取眉心的点
@@ -180,6 +237,13 @@ export function getMouthInfo(results) {
   })
 }
 
+// 待修改或废弃：口罩功能已经更换为贴纸功能
+/**
+ * 获取口罩贴纸列表
+ * @param {array} mouthList 嘴巴列表
+ * @param {array} shapeItem 贴纸信息
+ * @param {number} saveImageWidth 预期保存的图片宽
+ */
 export function getMaskShapeList(mouthList, dprCanvasWidth, shapeSize) {
   return mouthList.map(item => {
     let { faceWidth, angle, mouthMidPoint, ImageWidth } = item
@@ -210,45 +274,6 @@ export function getMaskShapeList(mouthList, dprCanvasWidth, shapeSize) {
       resizeCenterX,
       resizeCenterY,
     }
-
   })
 }
 
-export function getHatShapeList(mouthList, shapeItem, saveImageWidth = 600) {
-  const { imageUrl = '', imageReverseUrl, _id: shapeId } = shapeItem || {}
-  return mouthList.map(item => {
-    let { faceWidth, angle, headPos = {}, ImageWidth } = item
-
-    let dpr = saveImageWidth / ImageWidth // 头像宽高为132，达不到600
-    const shapeCenterX = headPos.X * dpr
-    const shapeCenterY = headPos.Y * dpr
-    const rotate = angle / Math.PI * 180
-
-  
-    // 角度计算有点难
-    let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * faceWidth * dpr
-    let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * faceWidth * dpr
-
-    const resizeCenterX = shapeCenterX + widthScaleDpr - 2
-    const resizeCenterY = shapeCenterY + heightScaleDpr - 2
-
-    const shapeWidth = faceWidth / 0.6 * dpr
-
-    return {
-      shapeId,
-      timeNow: Date.now(),
-      imageUrl,
-      imageReverseUrl,
-      shapeWidth,
-      currentShapeId: 1,
-      timeNow: Date.now() * Math.random(),
-      shapeCenterX,
-      shapeCenterY,
-      reserve: 1,
-      rotate,
-      resizeCenterX,
-      resizeCenterY,
-    }
-
-  })
-}

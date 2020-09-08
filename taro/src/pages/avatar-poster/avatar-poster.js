@@ -4,8 +4,8 @@ import { View, Image, Button, Canvas, Block } from '@tarojs/components'
 import { cloudCallFunction } from 'utils/fetch'
 import PageWrapper from 'components/page-wrapper'
 import { base64src, downloadImgByBase64, getImg } from 'utils/image-utils'
-import { SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT, DPR_CANVAS_SIZE, SAVE_CODE_SIZE, SAVE_PAGE_DPR, STATUS_BAR_HEIGHT, SAVE_AVATAR_SIZE, POSTER_WIDTH, POSTER_HEIGHT } from './utils'
-import { drawRoundImage, fillText, toDrawRadiusRect } from 'utils/canvas'
+import { STATUS_BAR_HEIGHT, SAVE_AVATAR_SIZE, POSTER_WIDTH, POSTER_HEIGHT } from './utils'
+import { drawRoundImage, fillText } from 'utils/canvas'
 import CorePage from 'page';
 
 import './styles.styl'
@@ -53,7 +53,7 @@ class AvatarPoster extends Component {
   }
 
   onShareAppMessage({ from, target }) {
-    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/20200812132355.png'
+    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/img/20200908/20f5ceab078c93d0901ea0ab0aac8b27-1231fe.jpg'
 
     const { avatarFileID, ageType } = this.state
 
@@ -75,6 +75,16 @@ class AvatarPoster extends Component {
       imageUrl,
       path: this.pageUrl
     }
+  }
+
+  goBack = () => {
+    Taro.navigateBack()
+  }
+
+  goHome = () => {
+    Taro.switchTab({
+      url: '/pages/avatar-edit/avatar-edit'
+    })
   }
 
   onCreateQrcode = async () => {
@@ -129,10 +139,7 @@ class AvatarPoster extends Component {
 
     } catch (error) {
       hasError = true
-        // this.setState({
-        //   pageStatus: 'error'
-        // })
-        console.log('error :', error);
+      console.log('error :', error);
     } finally {
       this.setState({
         pageStatus: hasError ? 'error' : 'done',
@@ -141,15 +148,7 @@ class AvatarPoster extends Component {
     }
   }
 
-  onBack = () => {
-    Taro.navigateBack()
-  }
-
-  goHome = () => {
-    Taro.switchTab({
-      url: '/pages/avatar-edit/avatar-edit'
-    })
-  }
+  
 
   onDownloadFile = async (fileID) => {
 
@@ -301,7 +300,6 @@ class AvatarPoster extends Component {
         <View className='poster-dialog-main'>
           <View className='poster-image-wrap'>
             {!!posterSrc && <Image className='poster-image' src={posterSrc} showMenuByLongpress></Image>}
-            {/* <View className='poster-image-tips'>长按可分享图片</View> */}
             <View className='poster-dialog-close' onClick={this.onHidePoster} />
           </View>
           <View className='poster-footer-btn'>
@@ -334,7 +332,7 @@ class AvatarPoster extends Component {
               {
                 showBackToIndexBtn
                 ? <View className='page-home' onClick={this.goHome}></View>
-                : <View className='page-back' onClick={this.onBack}></View>
+                : <View className='page-back' onClick={this.goBack}></View>
               }
               
               
