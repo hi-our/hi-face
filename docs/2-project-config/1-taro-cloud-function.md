@@ -97,8 +97,8 @@ Taro.cloud.callFunction({
 ### 头像编辑页主流程
 
 头像编辑页的主流程：
-> 下图为v1 版，v2版中有变化
-![](https://n1image.hjfile.cn/res7/2020/06/14/34b594912949a57dcfcf1330759a30ff.jpg)
+> v2 版
+![](https://image-hosting.xiaoxili.com/img/img/20200909/1d891b86e78cda7a58496ac48fc94f4f-e9ac05.jpg)
 
 
 ## 常见问题
