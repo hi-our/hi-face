@@ -47,10 +47,13 @@ export const getBase64Main = (fullSrc) => {
   return fullSrc.split(',')[1]
 }
 
+// 文件管理
+export const fsmReadFile = promisify(fsm.readFile)
+
+
 export const srcToBase64Main = async (src) => {
   try {
-    const readFile = promisify(fsm.readFile)
-    const { data } = await readFile({
+    const { data } = await fsmReadFile({
       filePath: src,
       encoding: 'base64',
     })
@@ -62,11 +65,6 @@ export const srcToBase64Main = async (src) => {
     console.log('error :', error);
   }
 }
-
-
-// 文件管理
-export const fsmReadFile = promisify(fsm.readFile)
-
 
 // 这个方法可以简化？
 export const downloadImgByBase64 = (url) => {

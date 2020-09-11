@@ -101,7 +101,7 @@ class Self extends Component {
       <Block>
         <View className='user-wrap'>
           <View className='avatar'>
-            <Image className='avatar-image' src='https://image-hosting.xiaoxili.com/img/img/20200906/47643da28d1f859db65bd025ee7156bb-c4f79a.png' />
+            <Image className='avatar-image' src='https://image-hosting.xiaoxili.com/img/img/20200910/935aa27212c635e1351bc127970ed01a-9b9ab0.png' />
           </View>
           <View className='nick-name'>Hi~</View>
           <View className='address-text'>欢迎登录 Hi 头像</View>

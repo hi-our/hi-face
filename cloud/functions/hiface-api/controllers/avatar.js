@@ -3,7 +3,8 @@ const uuid = require('uuid')
 
 const uuidv4 = uuid.v4
 
-const COLLECTION_NAME = 'avatars'
+const COLLECTION_NAME = 'hiface-avatars'
+const COLLECTION_USER_NAME = 'hiface-users'
 
 class AvatarController extends BaseController {
   async get(event) {
@@ -52,7 +53,7 @@ class AvatarController extends BaseController {
     const { OPENID, APPID } = this.cloud.getWXContext() // 这里获取到的 openId 和 appId 是可信的
 
     try {
-      const result = await this.cloud.db.collection('users').where({
+      const result = await this.cloud.db.collection(COLLECTION_USER_NAME).where({
         wxOpenId: OPENID
       }).get()
 

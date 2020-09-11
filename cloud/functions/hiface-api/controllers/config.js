@@ -1,11 +1,13 @@
 const BaseController = require('./base-controller.js')
 const safeJsonParse = require('../utils/common').safeJsonParse
 
+const COLLECTION_NAME = 'hiface-configs'
+
 class ConfigController extends BaseController {
   async get(event) {
     const { configName } = event
 
-    let result = await this.cloud.db.collection('configs')
+    let result = await this.cloud.db.collection(COLLECTION_NAME)
       .where({
         name: configName
       })

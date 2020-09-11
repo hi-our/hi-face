@@ -340,6 +340,7 @@ class AvatarEdit extends Component {
 
           // 保存图片到云数据库
           if (!isH5Page) {
+            saveImageToPhotosAlbum(res.tempFilePath)
             await this.onSaveImageToCloud(res.tempFilePath)
           }
 
@@ -388,8 +389,6 @@ class AvatarEdit extends Component {
         url: `/pages/avatar-poster/avatar-poster?uuid=${uuid}`
       })
 
-      saveImageToPhotosAlbum(tempFilePath)
-
     } catch (error) {
       console.log('error :', error);
     }
@@ -413,7 +412,7 @@ class AvatarEdit extends Component {
   }
 
   render() {
-    const { themeList } = this.props
+    const { themeList, forCheck } = this.props
     const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, tabBarIndex, posterSrc } = this.state
     const { coverImageUrl, _id: activeThemeId } = themeData
 
@@ -435,7 +434,7 @@ class AvatarEdit extends Component {
                 />
               )
               : (
-                <Image src={coverImageUrl} className="page-cover" />
+                <Image src={coverImageUrl} className="page-cover" mode="aspectFit" />
               )
             }
             <View className={`tabs-bottom ${pageStatus === 'done' && isShowShape ? 'tabs-open' : ''}`} >
@@ -454,7 +453,7 @@ class AvatarEdit extends Component {
             isH5Page={isH5Page}
             ref={poster => this.posterRef = poster}
             posterSrc={posterSrc}
-            forCheck={false}
+            forCheck={forCheck}
           />
         )}
         <MenuMain

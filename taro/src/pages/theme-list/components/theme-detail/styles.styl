@@ -50,15 +50,20 @@ html
     margin -3px 10px 0 0
     width 29px
     height 21px
-    background url(https://image-hosting.xiaoxili.com/img/img/20200906/59a9111b848740933c2e7dd421660454-c052d9.png) no-repeat
+    background url(https://image-hosting.xiaoxili.com/img/img/20200910/4f8d31eea9086dab780e395cd8776d93-e97f45.png) no-repeat
     background-size contain
 .theme-wrap
   padding 1px 16px
-  display flex
-  justify-content space-between
+  overflow hidden
 .category-item
+  float left
   width 100px
   margin-top 10px
+
+  margin-right 18px
+
+  &:nth-child(3n)
+    margin-right: 0
 
   &:nth-child(1)
     .shape-list
@@ -93,12 +98,11 @@ html
 
 .shape-list
   height 100px
-  display flex
-  flex-wrap wrap
-  box-shadow 0px 0px 4px 0px rgba(157, 157, 157, 0.5);
+  box-shadow 0px 0px 4px rgba(157, 157, 157, 0.5);
   border-radius: 7px
 
 .shape-item
+  float left
   display block
   width 40px
   height 40px
