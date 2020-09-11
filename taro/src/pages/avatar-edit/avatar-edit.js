@@ -434,7 +434,7 @@ class AvatarEdit extends Component {
                 />
               )
               : (
-                <Image src={coverImageUrl} className="page-cover" />
+                <Image src={coverImageUrl} className="page-cover" mode="aspectFit" />
               )
             }
             <View className={`tabs-bottom ${pageStatus === 'done' && isShowShape ? 'tabs-open' : ''}`} >
