@@ -1,3 +1,6 @@
+
+$font-size = 1;
+
 .page-loading
 .page-loading-fullscreen
   min-height 100%
@@ -9,33 +12,55 @@
     left 50%
     transform translate(-50%, -50%)
     padding 25px
-    background rgba(0,0,0,0.1)
+    
     border-radius 12px
     font-size: 12px
     line-height: 1.5
-  .loading-icon-wrap
-    position relative
-    width 30px
-    height 30px
-    overflow hidden
-    margin 0 auto 15px
-  .loading-icon
-    width 100% * 17
-    height 100%
-    background url(https://n1image.hjfile.cn/res7/2019/06/18/49760044a6c1498490890bdf2cfc3aeb.png) 0 0 no-repeat
-    background-size auto 100%
-    animation page-loading-animate 1s steps(1) infinite
 
-    image
-      display block
-      width 100%
-      height 100%
 
-@keyframes page-loading-animate
-  for i in 0..17
-    {5.88% * i}
-      transform translateX(-(i * 5.88%))
 
+.loading-icon {
+  position relative
+  height:($font-size)em;
+  width:($font-size)em;
+  border-radius:100%;
+  background: #FF008C;
+  display:block;
+
+  margin:1em auto 2em;
+  animation:spin 2s ease infinite;
+  &:before, &:after{
+    content:'';
+    display:block;
+    position:absolute;
+    height:inherit;
+    width:inherit;
+    background:inherit;
+    border-radius:inherit;
+    animation:spin 2s ease infinite;
+  }
+  &:before{
+    left:-($font-size*1.15)em;
+  }
+  &:after{
+    left:($font-size*1.15)em;  
+  }
+}
+
+  @keyframes spin{
+    0%{
+      top:0;
+      transform:rotate(0deg);
+    }
+    50%{
+      top:-($font-size*2)em;
+      transform:rotate(-180deg);
+    }
+    100%{
+      top:0;
+      transform:rotate(-360deg);
+    }
+  }
 .page-loading-fullscreen
   position fixed
   height 100vh
@@ -43,178 +68,10 @@
   right 0
   top 0
   bottom 0
-  z-index 1000
+  z-index 90
+
+  .page-loading-square
+    background rgba(255, 255, 255, 0.8)
+    box-shadow 5px 8px 10px rgba(0, 0, 0, 0.1)
 
 
-// --- 骨架 ---
-.page-placeholder
-  .type-image
-    width 100%
-    height 150px
-    background-color #F4F4F4
-    border-radius 5px
-
-  .type-line-max
-    width 100%
-    height 25px
-    background-color #F4F4F4
-    border-radius 17px
-
-  .type-line-half
-    width 50%
-    height 25px
-    background-color #F4F4F4
-    border-radius 17px
-
-  .type-line-more-half
-    width 70%
-    height 25px
-    background-color #F4F4F4
-    border-radius 17px
-
-  .type-avatar
-    width 44px
-    height 44px
-    background-color #F4F4F4
-    border-radius 50%
-
-  .type-btn
-    margin auto
-    width 184px
-    height 40px
-    background-color #F4F4F4
-    border-radius 20px
-
-.page-placeholder.task
-  width 100%
-  height 100%
-  background-image url('https://n1image.hjfile.cn/res7/2019/03/06/94026e2f1ba9384c54e9f86ebc62e117.png')
-  background-size 100%
-  background-repeat no-repeat
-
-  .header
-    padding 9px 20px
-
-    .blue
-      background-color #F4F4F4
-      opacity .1
-
-    .type-line-more-half
-      margin-bottom 11px
-
-    .type-line-half
-      margin-bottom 15px
-
-    .type-avatar
-      width 27px
-      height 27px
-
-  .body
-    margin auto
-    margin-top 10px
-    padding 18px 20px
-    width 355px
-    background rgba(255, 255, 255, 1)
-    box-shadow 0 4px 10px 0 rgba(0, 0, 0, .05)
-    border-radius 6px
-
-    .type-line-more-half
-      margin-bottom 25px
-
-    .type-line-max
-      margin-bottom 10px
-
-    .type-image
-      margin-bottom 35px
-
-
-.page-placeholder.enter
-  padding 15px 16px
-
-  .type-image
-    margin-bottom 10px
-
-  .type-line-half, .type-line-max, .type-line-more-half
-    margin-bottom 10px
-
-  .type-avatar
-    position absolute
-    top 180px
-    right 16px
-
-  .margin1
-    margin-top 45px
-
-  .margin2
-    margin-bottom 20px
-
-.page-empty
-  display flex
-  flex-direction column
-  padding-top 100px
-  text-align center
-
-  image
-    display block
-    margin auto
-    width 118px
-    height 118px
-
-  .txt
-    margin 0
-    margin-top 20px
-    color #95a1af
-    font-size 12px
-
-.page-del, .page-error
-  position absolute
-  display flex
-  width 100%
-  height 100%
-  background #fff
-
-  .body
-    margin auto
-    text-align center
-    transform translateY(-35%)
-
-  image
-    display block
-    margin auto
-    padding-bottom 20px
-    width 118px
-    height 118px
-
-  .tip
-    padding-bottom 20px
-    color #95a1af
-    font-size 16px
-
-  .action-btn
-    display inline-block
-    width 186px
-    height 40px
-    color #ffffff
-    font-size 16px
-    line-height 40px
-    text-align center
-    background linear-gradient(60deg, rgba(47, 90, 255, 1) 0, rgba(0, 147, 255, 1) 100%)
-    box-shadow 0 2px 6px 0 rgba(47, 90, 255, .2)
-    border-radius 100px
-
-.page-no-people
-  display flex
-  flex-direction column
-  text-align center
-  padding-top 50px
-  image
-    margin auto
-    display block
-    width 118px
-    height 118px
-  .tip
-    font-size 16px
-    color #95A1AF
-    margin 0
-    margin-top 20px
-    font-weight 400

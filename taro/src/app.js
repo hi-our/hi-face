@@ -1,39 +1,26 @@
 import Taro, { Component } from '@tarojs/taro'
 import { Provider } from '@tarojs/redux'
-import tcb from 'tcb-js-sdk'
-import adapterForQQ from '@cloudbase/adapter-qq_mp';
-
-import Index from './pages/test/test'
+import Index from './pages/avatar-edit/'
 import store from '@/store'
 import userActions from '@/store/user'
-import * as config from 'config'
 import globalActions from '@/store/global'
 
+import './tcb';
 
 import './app.styl'
-
-const updateManager = process.env.TARO_ENV !== 'h5' ? Taro.getUpdateManager() : null
 
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
 // if (process.env.NODE_ENV !== 'production' && process.env.TARO_ENV === 'h5')  {
 //   require('nerv-devtools')
-// }
 
 class App extends Component {
   config = {
     pages: [
-      'pages/image-watermark/image-watermark',
       'pages/avatar-edit/avatar-edit',
-      'pages/detect-face/detect-face',
-      'pages/queen-king/queen-king',
-      'pages/wear-a-mask/wear-a-mask',
-      'pages/self/self',
-      'pages/test/test',
-      'pages/thanks/thanks',
-      'pages/my-avatars/my-avatars',
       'pages/avatar-poster/avatar-poster',
-      // 'pages/spread-game/spread-game',
+      'pages/theme-list/theme-list',
+      'pages/self/self'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -47,46 +34,29 @@ class App extends Component {
     },
     sitemapLocation: "sitemap.json",
     tabBar: {
-      backgroundColor: '#fff',
+      custom: true,
+      backgroundColor: '#DEE8FF',
       borderStyle: 'white',
       color: '#95a1af',
       selectedColor: '#2f5aff',
       list: [
-        // {
-        //   pagePath: 'pages/image-watermark/image-watermark',
-        //   text: '盲水印添加',
-        //   iconPath: 'images/tab-bar-crown.png',
-        //   selectedIconPath: 'images/tab-bar-crown-active.png'
-        // },
+        {
+          pagePath: 'pages/theme-list/theme-list',
+          text: '主题',
+          iconPath: 'images/tab-theme-1.png',
+          selectedIconPath: 'images/tab-theme-2.png'
+        },
         {
           pagePath: 'pages/avatar-edit/avatar-edit',
-          text: '头像编辑',
-          iconPath: 'images/tab-bar-crown.png',
-          selectedIconPath: 'images/tab-bar-crown-active.png'
+          text: '编辑',
+          iconPath: 'images/tab-edit-1.png',
+          selectedIconPath: 'images/tab-edit-2.png'
         },
-        // {
-        //   pagePath: 'pages/detect-face/detect-face',
-        //   text: '人像魅力',
-        //   iconPath: 'images/face-1.png',
-        //   selectedIconPath: 'images/face-1-active.png'
-        // },
-        // {
-        //   pagePath: 'pages/wear-a-mask/wear-a-mask',
-        //   text: '戴口罩',
-        //   iconPath: 'images/mask-1.png',
-        //   selectedIconPath: 'images/mask-2.png'
-        // },
-        // {
-        //   pagePath: 'pages/self/self',
-        //   text: '个人中心',
-        //   iconPath: 'images/thank-1.png',
-        //   selectedIconPath: 'images/thank-2.png'
-        // },
         {
-          pagePath: 'pages/thanks/thanks',
-          text: '致谢',
-          iconPath: 'images/thank-1.png',
-          selectedIconPath: 'images/thank-2.png'
+          pagePath: 'pages/self/self',
+          text: '我的',
+          iconPath: 'images/tab-self-1.png',
+          selectedIconPath: 'images/tab-self-2.png'
         },
         
       ]
@@ -94,63 +64,30 @@ class App extends Component {
   }
 
   componentWillMount() {
+    // 重新启动小程序，会出现引导界面
+    Taro.setStorageSync('isHideLead', false)
 
     if (process.env.TARO_ENV === 'weapp') {
-      Taro.cloud.init({
-        env: config.cloudEnv,
-        traceUser: true
-      })
-
+      // 更新提醒
+      this.setUpdateManager()
       // 检查过审开关是否开启
       globalActions.getForCheckStatus()
-    } else if (process.env.TARO_ENV === 'h5' || process.env.TARO_ENV === 'qq') {
-      console.log('tcb :', tcb, process.env.TARO_ENV );
-      let initConfig = {}
-      // tcb.useAdapters([adapterForQQ]);
-      // initConfig = {
-      //   appSign: process.env.appSign,
-      //   appSecret: {
-      //     appAccessKeyId: process.env.appAccessKeyId,
-      //     appAccessKey: process.env.appAccessKey,
-      //   }
-      // }
-      // hack写法？呼呼
-      Taro.cloud = tcb.init({
-        env: config.cloudEnv,
-        ...initConfig
-      })
-      // console.log('登录云开发成功！')
-      Taro.cloud.auth().signInAnonymously().then(() => {
-        // 检查过审开关是否开启
-        globalActions.getForCheckStatus()
-        Taro.cloud.callFunction({
-          name: 'thanks-data',
-          data: {
-            1: 1
-          }
-        }).then(res => console.log('res ', res))
-
-
-      }).catch(error => {
-        console.log('error :', error);
-      })
+      // 监听网络变化
+      this.onNetworkListen()
     }
-    
-    this.onUserLogin()
 
-    this.setUpdateManager()
+    // 获取主题列表
+    globalActions.getThemeList()
+    
+    // 用户登录
+    this.onUserLogin()
   }
 
   componentDidShow() {
-    // 判断是否登录超时处理
-    // userActions.checkLoginTimeout()
-
-    console.log('this.$router :', this.$router);
     const { scene, query = {} } = this.$router.params
     if (query.source) {
       Taro.setStorageSync('source', query.source)
     }
-    console.log('scene, query', scene, query)
 
     if (scene) {
       this.addToIndexBtn(scene)
@@ -163,17 +100,35 @@ class App extends Component {
     }
   }
 
+  onNetworkListen = () => {
+
+    Taro.getNetworkType({
+      success: (res) => {
+        let networkInfo = {
+          isConnected: res.networkType !== 'none',
+          networkType: res.networkType
+        }
+        console.log('网络情况', networkInfo)
+        globalActions.setNetworkInfo({
+          networkInfo
+        })
+      }
+    })
+
+    Taro.onNetworkStatusChange(function (res) {
+      console.log('网络状态变化', res)
+      let networkInfo = res
+      globalActions.setNetworkInfo({
+        networkInfo
+      })
+    })
+
+  }
+
   // 用户登录
   onUserLogin = async () => {
     try {
-      const res = await userActions.login()
-      // wx.bisdk && wx.bisdk.setOpenIdInfo && wx.bisdk.setOpenIdInfo(res)
-
-      // 获取注册来源示例
-      // if (wx.bisdk && wx.bisdk.getRegSource) {
-      //   console.log('wx.bisdk.getRegSource', wx.bisdk.getRegSource())
-      // }
-
+      await userActions.login()
     } catch (error) {
       console.log('基础登录失败，不会注册sdk', error)
     }
@@ -181,8 +136,7 @@ class App extends Component {
 
   // 小程序更新提醒
   setUpdateManager() {
-    if (!updateManager) return
-
+    const updateManager = Taro.getUpdateManager()
     updateManager.onUpdateReady(() => {
       Taro.showModal({
         title: '更新提示',
@@ -197,7 +151,7 @@ class App extends Component {
     })
   }
 
-  /** TODO: 猜测这段代码的逻辑是，是否显示「返回首页」按钮，, query = {}暂时没用到 */
+  /** 是否显示「返回首页」按钮，, query = {}暂时没用到 */
   addToIndexBtn(code) {
     const RefreshCode = {
       '011004': true

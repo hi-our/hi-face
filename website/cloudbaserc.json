@@ -1,0 +1,15 @@
+{
+  "envId": "env-jsdqwaon",
+  "framework": {
+    "plugins": {
+      "static": {
+        "use": "@cloudbase/framework-plugin-website",
+        "inputs": {
+          "buildCommand": "npm run build",
+          "outputPath": "build",
+          "cloudPath": "/hi-face"
+        }
+      }
+    }
+  }
+}

@@ -1,33 +1,43 @@
 {
   "name": "hi-face",
-  "version": "1.0.0",
-  "description": "Example on using create-react-app with a Node Express Backend",
+  "version": "2.1.0",
+  "description": "Hi 头像项目地址",
   "author": {
     "name": "shenghanqin",
-    "url": "https://xiaoxili.com"
+    "url": "https://www.xiaoxili.com"
   },
   "license": "MIT",
   "scripts": {
-    "client": "cd client && yarn start",
-    "server": "nodemon server.js",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "dev:server": "cd client && yarn build && cd .. && yarn start",
-    "start": "NODE_ENV=production node server.js",
-    "release:web": "cd taro &&  npm install && npm run release:web",
-    "release:yzweb": "cd taro &&  npm install && npm run release:yzweb",
-    "start:taro": "NODE_ENV=production node server-taro.js",
-    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+    "commit": "git-cz",
+    "deploy:devweb": "tcb framework deploy client --mode dev",
+    "deploy:web": "tcb framework deploy client",
+    "deploy:devfn": "tcb framework deploy server --mode dev",
+    "deploy:fn": "tcb framework deploy server"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   },
   "devDependencies": {
     "concurrently": "^4.1.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^4.19.1",
+    "eslint": "^5.16.0",
     "eslint-config-prettier": "2.9.0",
     "eslint-config-standard": "11.0.0",
     "eslint-plugin-import": "2.9.0",
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "3.7.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "@commitlint/cli": "^9.0.1",
+    "@commitlint/config-conventional": "^9.0.1",
+    "commitizen": "^4.1.2",
+    "cz-conventional-changelog": "^3.2.0"
   },
   "repository": {
     "type": "git",
@@ -35,17 +45,5 @@
   },
   "bugs": {
     "url": "https://github.com/hi-our/hi-face/issues"
-  },
-  "keywords": [
-    "node",
-    "express",
-    "create-react-app"
-  ],
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "request": "^2.88.0",
-    "tencentcloud-sdk-nodejs": "^3.0.126"
   }
 }

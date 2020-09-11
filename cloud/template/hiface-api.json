@@ -1,0 +1,65 @@
+[
+  {
+    "name": "api-config-get",
+    "value": {
+      "$url": "config/get",
+      "configName": "for-check"
+    }
+  },
+  {
+    "name": "api-user-get",
+    "value": {
+      "$url": "user/get"
+    }
+  },
+  {
+    "name": "api-avatar-get-dev",
+    "value": {
+      "$url": "avatar/get",
+      "uuid": "31aa9c93-c91b-4e71-9c93-fbac32494f22"
+    }
+  },
+  {
+    "name": "api-avatar-save-dev",
+    "value": {
+      "$url": "avatar/save",
+      "avatarFileID": "cloud://development-v9y2f.6465-development-v9y2f-1251170943/avatar-1598085743098-7436388.jpg",
+      "ageType": "origin",
+      "themeId": 123,
+      "themeName": "520"
+    }
+  },
+  {
+    "name": "api-avatar-list",
+    "value": {
+      "$url": "avatar/list"
+    }
+  },
+  {
+    "name": "api-theme-list",
+    "value": {
+      "$url": "theme/list"
+    }
+  },
+  {
+    "name": "api-theme-get-dev",
+    "value": {
+      "$url": "theme/get",
+      "themeId": "6af880a55eb7ceb80074f5f827b04f35"
+    }
+  },
+  {
+    "name": "api-theme-get-dev-shapes",
+    "value": {
+      "$url": "theme/get",
+      "needShapes": true
+    }
+  },
+  {
+    "name": "open-createMiniCode",
+    "value": {
+      "$url": "open/createMiniCode",
+      "path": "/pages/avatar-poster/avatar-poster?uuid=31aa9c93-c91b-4e71-9c93-fbac32494f22"
+    }
+  }
+]

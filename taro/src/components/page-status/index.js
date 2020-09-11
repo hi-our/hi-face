@@ -30,8 +30,7 @@ export default class PageStatus extends Taro.Component {
   }
 
   render() {
-    const { status, errorText, errorCode, loadingType, showRefreshBtn, loadingTxt } = this.props
-    console.log('status :', status, errorText);
+    const { status, loadingType, loadingTxt } = this.props
 
     if (status === 'loading') {
       return (
@@ -39,10 +38,8 @@ export default class PageStatus extends Taro.Component {
           {!loadingType && (
             <View className='page-loading'>
               <View className='page-loading-square'>
-                <View className='loading-icon-wrap'>
-                  <View className='loading-icon'>
-                    <Image src={require('./images/page-loading.png')}></Image>
-                  </View>
+                <View className='loading-icon'>
+                  
                 </View>
               </View>
             </View>
@@ -50,71 +47,14 @@ export default class PageStatus extends Taro.Component {
           {loadingType === 'fullscreen' && (
             <View className='page-loading-fullscreen'>
               <View className='page-loading-square'>
-                <View className='loading-icon-wrap'>
-                  <View className='loading-icon'>
-                    <Image src={require('./images/page-loading.png')}></Image>
-                  </View>
+                <View className='loading-icon'>
+                  
                 </View>
                 <View className='loading-txt'>{loadingTxt}</View>
               </View>
             </View>
           )}
         </Block>
-      )
-    }
-
-    if (status === 'empty') {
-      return (
-        <View className='page-empty'>
-          <Image
-            className='pic'
-            src='https://n1image.hjfile.cn/res7/2018/12/19/9f8252a1a7d4b90d317ff619629bba3b.png'
-          />
-          <View className='txt'>{errorText}</View>
-        </View>
-      )
-    }
-
-    if (status === 'del') {
-      return (
-        <View className='page-del'>
-          <View className='body'>
-            <Image src='https://n1image.hjfile.cn/res7/2018/12/29/c8d96df2f6037d601a2d46a9c22d8a5f.png' />
-            <View className='tip'>{errorText}</View>
-            <Button className='action-btn' onTap={this.goHome}>
-              返回首页
-            </Button>
-          </View>
-        </View>
-      )
-    }
-
-    if (status === 'error') {
-      return (
-        <View className='page-error'>
-          <View className='body'>
-            {networkInfo.isConnected && <Image src='https://n1image.hjfile.cn/res7/2018/12/20/a92f391b9657f472508f69f8a191e74c.png' />}
-            <View className='tip'>{errorText}</View>
-            {
-              showRefreshBtn || errorCode === NETWORK_ERROR_CODE && (
-                <Button className='action-btn' onTap={this.onRefresh}>
-                  刷新
-                </Button>
-              )
-            }
-          </View>
-        </View>
-      )
-    }
-
-    if (status === 'no-people') {
-      return (
-        <View className='page-no-people'>
-          <View className='body'>
-            <Image src='https://n1image.hjfile.cn/res7/2019/04/12/4554bd70b6cf255382d2da98d0539a59.png' />
-            <View className='tip'>{errorText}</View>
-          </View>
-        </View>
       )
     }
 

@@ -5,17 +5,31 @@ import * as config from 'config'
 
 export const modelName = 'global'
 
+let networkInfo = {
+  isConnected: true,
+  networkType: 'wifi'
+}
+
+export const getNetworkInfo = () => networkInfo
+
+
 /**
  * 全局状态
  */
-export default mirror.model({
+const globalActions = mirror.model({
   name: modelName,
   initialState: {
+    networkInfo,
     forCheck: undefined, // 过审开关，开启时 app 展示用于给微信官方审核员的数据
-    'avatar-edit': {}
+    themeList: []
   },
   reducers: {
-
+    setNetworkInfo(state, payload) {
+      return {
+        ...state,
+        ...payload
+      }
+    }
   },
   effects: {
     // 查询小程序提交审核版本时的开关是否开启
@@ -24,86 +38,39 @@ export default mirror.model({
       if (typeof forCheck !== 'boolean') {
         try {
           const { version } = await cloudCallFunction({
-            name: 'collection_get_configs',
+            name: 'hiface-api',
             data: {
+              $url: 'config/get',
               configName: 'for-check',
             }
           })
           this.setState({
             forCheck: version === config.version
           })
-        } catch(err) {
-          console.log('forCheck', err)
+        } catch(error) {
+          console.log('forCheck', error)
         }
       }
     },
-    // 查询小程序提交审核版本时的开关是否开启
-    async getGlobalConfig() {
+    // 获取主题列表
+    async getThemeList() {
       try {
-
-        let configList = ['for-check', 'avatar-edit']
-        const list = await cloudCallFunction({
-          name: 'collection_get_configs',
+        const { items } = await cloudCallFunction({
+          name: 'hiface-api',
           data: {
-            configList
+            $url: 'theme/list',
+            pageSize: 50,
           }
         })
-
-        let tempState = {}
-        list.forEach(item => {
-          if (item.name === configList[0]) {
-            tempState.forCheck = item.version === config.version
-          } else {
-            tempState[item.name] = item
-          }
+        this.setState({
+          themeList: items
         })
-
-        console.log('tempState :>> ', tempState)
-        this.setState(tempState)
-      } catch(err) {
-        console.log('getGlobalConfig', err)
+      } catch (error) {
+        console.log('getThemeList error', error)
       }
     },
-    // 查询小程序提交审核版本时的开关是否开启
-    async getForCheckStatus() {
-      const { forCheck } = this.getState()
-      if (typeof forCheck !== 'boolean') {
-        try {
-          const { version } = await cloudCallFunction({
-            name: 'collection_get_configs',
-            data: {
-              configName: 'for-check',
-            }
-          })
-          this.setState({
-            forCheck: version === config.version
-          })
-        } catch(err) {
-          console.log('forCheck', err)
-        }
-      }
-    },
-    // /**
-    //  * 上报 formIds
-    //  */
-    // async submitFormIds() {
-    //   // TODO: 不要使用 eventbus 来做 channel
-    //   const formIds = EventEmitter.take('formIds')
-    //   if (!formIds || !formIds.length) return
-      
-    //   const { userInfo } = await userActions.getLoginInfo() || {}
-    //   const { openId } = userInfo
-
-    //   fetch({
-    //     url: postFormIds,
-    //     type: 'post',
-    //     data: {
-    //       appId: config.appId,
-    //       formIds,
-    //       openId,
-    //       type: 0
-    //     }
-    //   })
-    // }
   }
 })
+
+
+export default globalActions

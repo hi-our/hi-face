@@ -3,30 +3,39 @@
 	"cloudfunctionRoot": "cloud/functions/",
 	"cloudfunctionTemplateRoot": "cloud/template/",
 	"projectname": "hi-face",
-	"description": "Hi头像小程序，由嗨我团队出品。",
+	"description": "Hi头像，让头像有趣一点",
 	"appid": "wxd5e8989ce23206af",
 	"qqappid": "1110180763",
 	"setting": {
 		"urlCheck": false,
-		"es6": true,
+		"es6": false,
 		"postcss": false,
-		"minified": true,
+		"preloadBackgroundData": false,
+		"minified": false,
 		"newFeature": true,
 		"coverView": true,
+		"nodeModules": false,
 		"autoAudits": true,
 		"showShadowRootInWxmlPanel": true,
 		"scopeDataCheck": false,
+		"uglifyFileName": true,
 		"checkInvalidKey": true,
 		"checkSiteMap": true,
 		"uploadWithSourceMap": true,
+		"compileHotReLoad": false,
 		"babelSetting": {
 			"ignore": [],
 			"disablePlugins": [],
 			"outputPath": ""
 		},
-		"remoteDebugLogEnable": false,
-		"nodeModules": true,
-		"uglifyFileName": true
+		"useIsolateContext": true,
+		"useCompilerModule": false,
+		"userConfirmedUseCompilerModuleSwitch": false,
+		"useMultiFrameRuntime": true,
+		"useApiHook": true,
+		"packNpmManually": false,
+		"packNpmRelationList": [],
+		"remoteDebugLogEnable": false
 	},
 	"compileType": "miniprogram",
 	"simulatorType": "wechat",
@@ -36,6 +45,7 @@
 		"beforePreview": "",
 		"beforeUpload": ""
 	},
+	"libVersion": "2.12.2",
 	"condition": {
 		"search": {
 			"current": -1,
@@ -60,65 +70,30 @@
 			"current": -1,
 			"list": [
 				{
-					"id": 0,
-					"name": "pages/thanks/thanks",
-					"pathName": "pages/thanks/thanks",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/spread-game/spread-game",
-					"pathName": "pages/spread-game/spread-game",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/test/test",
-					"pathName": "pages/test/test",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/queen-king/queen-king",
-					"pathName": "pages/queen-king/queen-king",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": 4,
-					"name": "avatar-poster-原图",
+					"id": 3,
+					"name": "avatar-poster-dev",
 					"pathName": "pages/avatar-poster/avatar-poster",
-					"query": "uuid=42f4bc66-86f2-44a1-ac78-5c3780c30205",
+					"query": "uuid=31aa9c93-c91b-4e71-9c93-fbac32494f22&__key_=15982788221531",
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "avatar-poster-童年",
+					"id": 1,
+					"name": "avatar-poster-prod",
 					"pathName": "pages/avatar-poster/avatar-poster",
-					"query": "uuid=21aba77f-b1e5-4377-adbd-7ff502ddea2a",
+					"query": "uuid=76bb601b-2324-418a-9286-d7dcf1d5fdf9&__key_=15991396054112",
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "pages/self/self",
+					"id": 2,
+					"name": "pages/self/self-我的",
 					"pathName": "pages/self/self",
 					"query": "",
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "pages/wear-a-mask/wear-a-mask",
-					"pathName": "pages/wear-a-mask/wear-a-mask",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/avatar-edit/avatar-edit",
-					"pathName": "pages/avatar-edit/avatar-edit",
+					"id": 3,
+					"name": "theme-list-主题列表",
+					"pathName": "pages/theme-list/theme-list",
 					"query": "",
 					"scene": null
 				}

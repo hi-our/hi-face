@@ -1,27 +1,21 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
+import { View, Image, Button, Canvas, Block } from '@tarojs/components'
 
 import { cloudCallFunction } from 'utils/fetch'
 import PageWrapper from 'components/page-wrapper'
-import { base64src, downloadImgByBase64, getImg } from 'utils/canvas-drawing'
-import { fillText } from 'utils/canvas'
-import promisify from 'utils/promisify'
-import { SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT, DPR_CANVAS_SIZE, SAVE_CODE_SIZE, SAVE_PAGE_DPR } from './utils'
+import { base64src, onDownloadFile, getImg, saveImageToPhotosAlbum } from 'utils/image-utils'
+import { STATUS_BAR_HEIGHT, SAVE_AVATAR_SIZE, POSTER_WIDTH, POSTER_HEIGHT } from './utils'
+import { drawRoundImage, fillText } from 'utils/canvas'
+import CorePage from 'page';
 
 import './styles.styl'
 
-import * as config from 'config'
-
 const isH5Page = process.env.TARO_ENV === 'h5'
-const isQQPage = process.env.TARO_ENV === 'qq'
 
-
-const version = config.version
-
-// @CorePage
+@CorePage
 class AvatarPoster extends Component {
   config = {
-    navigationBarTitleText: '头像分享',
+    navigationBarTitleText: '头像分享 - Hi头像',
     navigationStyle: 'custom',
     disableScroll: true
   }
@@ -31,12 +25,15 @@ class AvatarPoster extends Component {
     const { uuid = '' } = this.$router.params
     this.pageUUID = uuid
     this.pageUrl = this.pageUUID ? `/pages/avatar-poster/avatar-poster?uuid=${this.pageUUID}` : '/pages/queen-king/queen-king'
+    const showBackToIndexBtn = Taro.getStorageSync('showBackToIndexBtn')
+
     this.state = {
       avatarFileID: '',
       avatarFileLocal: '',
       ageType: '',
       pageStatus: 'loading',
       isAuthor: false,
+      showBackToIndexBtn,
       errorText: ''
     }
   }
@@ -46,29 +43,56 @@ class AvatarPoster extends Component {
     this.onCreateQrcode()
   }
 
-  onShareAppMessage() {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/04/26/2041af2867f22e62f8fce32b29cd1fb0.png'
+  componentDidShow() {
+    if (this.hasSaved) {
+      this.hasSaved = false
+      Taro.showToast({
+        title: '已保存并分享'
+      })
+    }
+  }
+
+  onShareAppMessage({ from, target }) {
+    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/img/20200908/20f5ceab078c93d0901ea0ab0aac8b27-1231fe.jpg'
 
     const { avatarFileID, ageType } = this.state
+
+    let imageUrl = avatarFileID || DEFAULT_SHARE_COVER
 
     let typeMap = {
       origin: '邀请好友一起来制作头像吧',
       childhood: '换个头像，一起回归童真'
     }
 
+    if (from === 'button') {
+      const { dataset: { posterSrc } } = target
+      imageUrl = posterSrc
+      saveImageToPhotosAlbum(imageUrl)
+    }
+
     return {
       title: typeMap[ageType] || typeMap.origin,
-      imageUrl: avatarFileID || DEFAULT_SHARE_COVER,
+      imageUrl,
       path: this.pageUrl
     }
+  }
+
+  goBack = () => {
+    Taro.navigateBack()
+  }
+
+  goHome = () => {
+    Taro.switchTab({
+      url: '/pages/avatar-edit/avatar-edit'
+    })
   }
 
   onCreateQrcode = async () => {
     try {
       const { base64Main } = await cloudCallFunction({
-        name: 'open-api',
+        name: 'hiface-api',
         data: {
-          action: 'createMiniCode',
+          $url: 'open/createMiniCode',
           path: this.pageUrl
         }
       })
@@ -90,9 +114,9 @@ class AvatarPoster extends Component {
     let hasError = false
     try {
       const { avatarFileID = '', ageType = '', isAuthor } = await cloudCallFunction({
-        name: 'collection_get_one_by_uuid',
+        name: 'hiface-api',
         data: {
-          collection_name: 'avatars',
+          $url: 'avatar/get',
           uuid: this.pageUUID,
         }
       })
@@ -105,7 +129,7 @@ class AvatarPoster extends Component {
       })
 
       if (avatarFileID) {
-        let avatarFileLocal = await this.onDownloadFile(avatarFileID)
+        let avatarFileLocal = await onDownloadFile(avatarFileID)
   
         console.log('avatarFileLocal :', avatarFileLocal);
         this.setState({
@@ -115,10 +139,7 @@ class AvatarPoster extends Component {
 
     } catch (error) {
       hasError = true
-        // this.setState({
-        //   pageStatus: 'error'
-        // })
-        console.log('error :', error);
+      console.log('error :', error);
     } finally {
       this.setState({
         pageStatus: hasError ? 'error' : 'done',
@@ -127,60 +148,26 @@ class AvatarPoster extends Component {
     }
   }
 
-  goHome = () => {
-    Taro.switchTab({
-      url: '/pages/queen-king/queen-king'
-    })
-  }
+  /**
+ * 获取图片
+ * @param {*} src 图片地址
+ * @param {*} callback
+ */
+  getImgAvatar = async (src) => {
 
-  onDownloadFile = async (fileID) => {
-
-    if (isH5Page) {
-      let { tempFilePath } = await Taro.cloud.downloadFile({
-        fileID,
-      })
-      return tempFilePath
-    }
-
-    let downloadFile = promisify(Taro.cloud.downloadFile)
-    let { tempFilePath } = await downloadFile({
-      fileID,
-    })
-
-    return tempFilePath
-    
-
-  }
-
-  onSaveImage = async () => {
-    const { avatarFileLocal } = this.state
-    this.saveImageToPhotosAlbum(avatarFileLocal)
-  }
-
-  saveImageToPhotosAlbum = (tempFilePath) => {
-    console.log('tempFilePath :', tempFilePath);
-    if (isH5Page) {
-      downloadImgByBase64(tempFilePath)
-    } else {
-      Taro.saveImageToPhotosAlbum({
-        filePath: tempFilePath,
-        success: res2 => {
-          Taro.showToast({
-            title: '图片保存成功'
-          })
-          console.log('保存成功 :', res2);
-        },
-        fail(e) {
-          Taro.showToast({
-            title: '图片未保存成功'
-          })
-          console.log('图片未保存成功:' + e);
-        }
-      })
+    try {
+      const img = await getImg(src)
+      return img
+    } catch (error) {
+      return require('../../images/avatar-logo.png')
     }
   }
 
   onCreatePoster = async () => {
+    const { userInfo } = this.props
+    const { wechatInfo } = userInfo
+    const { nickName, avatarUrl } = wechatInfo
+    
     try {
       
       Taro.showLoading({
@@ -191,39 +178,35 @@ class AvatarPoster extends Component {
         qrcodeFile
       } = this.state
       
-      console.log('avatarFileLocal :', avatarFileLocal);
-  
-      const pc = Taro.createCanvasContext('canvasPoster')
+      const posterCtx = Taro.createCanvasContext('canvasPoster')
 
-      console.log('pc :', pc);
-  
-      pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_HEIGHT);
+      posterCtx.clearRect(0, 0, POSTER_WIDTH, POSTER_HEIGHT);
       if (!avatarFileLocal) {
         return Error('需要重新进入页面')
       }
-      pc.drawImage(avatarFileLocal, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
-      if (qrcodeFile) {
-        pc.drawImage(qrcodeFile, 210 * SAVE_PAGE_DPR, 320 * SAVE_PAGE_DPR, SAVE_CODE_SIZE, SAVE_CODE_SIZE)
+      posterCtx.drawImage(require('../../images/poster-bg.jpg'), 0, 0, POSTER_WIDTH, POSTER_HEIGHT)
+      if (avatarUrl) {
+        let avatarNow = await this.getImgAvatar(avatarUrl)
+        posterCtx.drawImage(avatarNow, 40, 40, 120, 120)
       }
-      fillText(pc, '我做了一个新头像，赞我哟', 10 * SAVE_PAGE_DPR, 360 * SAVE_PAGE_DPR, true, 30, '#3d3d3d')
-      fillText(pc, '长按识别小程序，来一起换头像吧', 10 * SAVE_PAGE_DPR, 380 * SAVE_PAGE_DPR, false, 20, '#3d3d3d')
-
-      console.log('2 :', 2);
+      posterCtx.drawImage(avatarFileLocal, 40, 184, SAVE_AVATAR_SIZE, SAVE_AVATAR_SIZE)
+      posterCtx.drawImage(require('../../images/logo-text.png'), 40, 880, 250, 108)
+      if (qrcodeFile) {
+        drawRoundImage(posterCtx, qrcodeFile, 440, 820, 100)
+      }
+      fillText(posterCtx, nickName, 184, 110, false, 32, '#333')
+      
   
-      pc.draw(true, () => {
-        console.log('3 :', 3);
+      posterCtx.draw(true, () => {
         Taro.canvasToTempFilePath({
           canvasId: 'canvasPoster',
           x: 0,
           y: 0,
-          height: DPR_CANVAS_SIZE * 3,
-          width: DPR_CANVAS_SIZE * 3,
+          height: POSTER_HEIGHT,
+          width: POSTER_WIDTH,
           fileType: 'jpg',
           quality: 0.9,
           success: async (res) => {
-            // await this.onSaveImageToCloud(res.tempFilePath)
-  
-            console.log('res.tempFilePath :', res.tempFilePath);
             Taro.hideLoading()
             this.setState({
               posterSrc: res.tempFilePath,
@@ -244,23 +227,10 @@ class AvatarPoster extends Component {
     }
   }
 
-  previewPoster = () => {
-    const { posterSrc } = this.state
-    if (posterSrc !== '') Taro.previewImage({ urls: [posterSrc] })
-  }
-
   onHidePoster = () => {
     this.setState({
       isShowPoster: false
     })
-  }
-
-  savePoster = () => {
-    const { posterSrc } = this.state
-
-    if (posterSrc) {
-      this.saveImageToPhotosAlbum(posterSrc)
-    }
   }
 
   renderPoster = () => {
@@ -268,24 +238,18 @@ class AvatarPoster extends Component {
     return (
       <View className={`poster-dialog ${isShowPoster ? 'show' : ''}`}>
         <View className='poster-dialog-main'>
-          {!!posterSrc && <Image className='poster-image' src={posterSrc} onClick={this.previewPoster} showMenuByLongpress></Image>}
-          <View className='poster-image-tips'>点击可预览大图，长按可分享图片</View>
-          <View className='poster-dialog-close' onClick={this.onHidePoster} />
+          <View className='poster-image-wrap'>
+            {!!posterSrc && <Image className='poster-image' src={posterSrc} showMenuByLongpress></Image>}
+            <View className='poster-dialog-close' onClick={this.onHidePoster} />
+          </View>
           <View className='poster-footer-btn'>
-            <View className='poster-btn-save' onClick={this.savePoster}>
-              <Image
-                className='icon'
-                src='https://n1image.hjfile.cn/res7/2019/01/03/740198f541ce91859ed060882d986e09.png'
-              />
-              保存到相册
-            </View>
             {!isH5Page && (
               <Button className='poster-btn-share' openType='share' data-poster-src={posterSrc}>
                 <Image
                   className='icon-wechat'
-                  src='https://n1image.hjfile.cn/res7/2019/03/20/21af29d7755905b08d9f517223df5314.png'
+                  src='https://image-hosting.xiaoxili.com/img/20200812132655.png'
                 />
-                分享给朋友
+                保存并分享
               </Button>
             )}
           </View>
@@ -297,13 +261,23 @@ class AvatarPoster extends Component {
 
 
   render() {
-    const { avatarFileID, ageType, pageStatus, isAuthor, avatarFileLocal, errorText } = this.state
+    const { avatarFileID, ageType, pageStatus, isAuthor, avatarFileLocal, errorText, showBackToIndexBtn } = this.state
  
     return (
       <Block>
-        <Canvas className='canvas-poster' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_HEIGHT + 'px' }} canvasId='canvasPoster' ref={c => this.canvasPosterRef = c} />
+        <Canvas className='canvas-poster' style={{ width: POSTER_WIDTH + 'px', height: POSTER_HEIGHT + 'px' }} canvasId='canvasPoster' ref={c => this.canvasPosterRef = c} />
         <PageWrapper status={pageStatus} errorText={errorText}>
-          <View className={`page-avatar-poster age-${ageType}`}>
+          <View className={`page-avatar-poster age-${ageType}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
+            <View className='page-title'>
+              {
+                showBackToIndexBtn
+                ? <View className='page-home' onClick={this.goHome}></View>
+                : <View className='page-back' onClick={this.goBack}></View>
+              }
+              
+              
+              头像分享
+            </View>
             <View className='page-poster-wrap'>
               <Image className='page-poster' src={avatarFileLocal || avatarFileID} />
             </View>
@@ -311,18 +285,18 @@ class AvatarPoster extends Component {
               isAuthor
                 ? (
                   <View className='button-wrap'>
-                    <View className="button-save" onClick={this.onSaveImage}>保存图片</View>
-                    <View className="button-main" onClick={this.onCreatePoster}>生成分享海报</View>
-                    <Button className="button-share" openType='share'>邀请好友</Button>
+                    <View className="button button-home" onClick={this.goHome}>再来一张</View>
+                    <Button className="button button-share" openType='share' data-poster-src={avatarFileLocal}>保存并分享</Button>
+                    <View className="button-poster button-fixed" onClick={this.onCreatePoster}>生成分享海报</View>
                   </View>
                 )
                 : (
                   <View className='button-wrap'>
-                    <View className="button-main" onClick={this.goHome}>我也要玩</View>
+                    <View className="button-try" onClick={this.goHome}>我也要玩</View>
                   </View>
                 )
             }
-            <View className='version'>Ver.{version}，基于 Taro 及小程序云开发</View>
+            {/* <Version /> */}
           </View>
           {this.renderPoster()}
         </PageWrapper>

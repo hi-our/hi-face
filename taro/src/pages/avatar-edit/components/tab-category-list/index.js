@@ -33,32 +33,28 @@ export default class ImageChoose extends Taro.Component {
   }
 
   render() {
-    const { categoryList, chooseShape, isH5Page } = this.props
+    const { categoryList, chooseShape } = this.props
     const { currentTabIndex } = this.state
-    console.log('categoryList :>> ', categoryList);
-    let tabsTips = ''
 
     return (
       <View className='tab-wrap'>
         <View className='tab-hd'>
           {
             categoryList.map((item, itemIndex) => {
-              const { _id, categoryImage, categoryName } = item
+              const { _id, categoryName } = item
               return (
                 <View
                   key={_id}
                   className={`tab-hd-item ${currentTabIndex === itemIndex ? 'tab-hd-active' : ''}`}
                   onClick={this.chooseTab.bind(this, itemIndex)}
                 >
-                  {isH5Page ? categoryName : <Image className='tab-hd-image' src={categoryImage} />}
-                  
+                  {
+                    categoryName
+                  }
                 </View>
               )
             })
           }
-          {/* <View className='tab-hd-tips'>
-            提示：{tabsTips}
-          </View> */}
         </View>
         <View className='tab-bd'>
           {

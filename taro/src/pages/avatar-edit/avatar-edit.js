@@ -1,61 +1,82 @@
 import Taro, { Component } from '@tarojs/taro'
 import { connect } from '@tarojs/redux'
-import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
-import { STATUS_BAR_HEIGHT, SAVE_IMAGE_WIDTH, getDefaultShape, dataStyleList } from './utils'
+import { View, Image, Canvas } from '@tarojs/components'
+import { STATUS_BAR_HEIGHT, SAVE_IMAGE_WIDTH, getDefaultState } from './utils'
 import PageLoading from 'components/page-status'
-import ImageChoose from './components/image-choose'
 import ShapeEdit from './components/shape-edit'
 import TabCategoryList from './components/tab-category-list'
 import PosterDialog from './components/poster-dialog'
-import { getHatInfo, getHatShapeList } from 'utils/face-utils'
-import { getImg, fsmReadFile, srcToBase64Main, getBase64Main, downloadImgByBase64 } from 'utils/canvas-drawing'
+import { getHatList, getHatShapeList } from 'utils/face-utils'
+import { getImg, fsmReadFile, getBase64Main, saveImageToPhotosAlbum, onUploadFile } from 'utils/image-utils'
 import { h5PageModalTips } from 'utils/common'
 import { cloudCallFunction } from 'utils/fetch'
-import promisify from 'utils/promisify'
+import { imgSecCheck } from 'utils/image-safe-check';
+import { imageAnalyzeFace } from 'utils/image-analyze-face'
+import CustomTabBar from 'components/custom-tab-bar'
+import MenuMain from './components/menu-main'
+import MenuChoose from './components/menu-choose'
+import EventEmitter from 'utils/event-emitter'
+import PageLead from './components/page-lead'
+
 
 import './styles.styl'
 
 const isH5Page = process.env.TARO_ENV === 'h5'
-const isQQPage = process.env.TARO_ENV === 'qq'
-
 
 @connect(state => ({
-  forCheck: state.global.forCheck
+  forCheck: state.global.forCheck,
+  themeList: state.global.themeList
 }), null)
-
-// @CorePage
 class AvatarEdit extends Component {
   config = {
-    navigationBarTitleText: '头像编辑',
+    navigationBarTextStyle: 'white',
+    navigationBarTitleText: '头像编辑 - Hi头像',
     navigationStyle: 'custom',
-    disableScroll: true
+    disableScroll: true,
   }
 
   constructor(props) {
     super(props)
-    this.state = {
-      pageStatus: 'loading',
-      themeData: {},
-      shapeCategoryList: [],
-      currentAgeType: 'origin', // 原图
-      cutImageSrc: '',
-      posterSrc: '',
-    }
+    this.state = getDefaultState()
   }
 
+  componentWillMount() {
+    Taro.setStorageSync('showBackToIndexBtn', false)
+  }
   
-  componentDidMount() {
-    if (isH5Page) {
-      setTimeout(() => {
-        this.loadData() 
-      }, 1500);
-    } else {
+  // 页面显示
+  componentDidShow() {
+    // 显示 Web 端提示
+    this.showTimer = setTimeout(() => {
+      this.showH5Modal()
+    }, 2500)
+
+    // 显示当前高亮 Tab
+    this.setState({
+      tabBarIndex: 1
+    })
+
+    // 加载主题数据
+    const themeIdData = EventEmitter.take('themeId')
+    if (themeIdData && themeIdData[0] !== this.state.themeData._id) {
+      this.setState(getDefaultState())
+      this.loadData(themeIdData[0])
+    } else if (this.state.pageStatus === 'loading') {
       this.loadData()
     }
   }
 
+  // 页面隐藏
+  componentDidHide() {
+    clearTimeout(this.showTimer)
+    this.setState({
+      tabBarIndex: -1
+    })
+  }
+
+  // 分享信息
   onShareAppMessage({ from, target }) {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/04/26/2041af2867f22e62f8fce32b29cd1fb0.png'
+    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/img/20200908/20f5ceab078c93d0901ea0ab0aac8b27-1231fe.jpg'
     const { themeData } = this.state
     let { shareImage = DEFAULT_SHARE_COVER, shareTitle = '给女神戴上皇冠吧！' } = themeData
 
@@ -63,8 +84,6 @@ class AvatarEdit extends Component {
     if (from === 'button') {
       const { dataset = {} } = target
       const { posterSrc = '' } = dataset
-
-      console.log('posterSrc :', posterSrc);
 
       if (posterSrc) {
         shareImage = posterSrc
@@ -76,7 +95,6 @@ class AvatarEdit extends Component {
 
     }
 
-    console.log('shareUrl :', shareUrl);
     return {
       title: shareTitle,
       imageUrl: shareImage,
@@ -84,20 +102,20 @@ class AvatarEdit extends Component {
     }
   }
 
-  loadData = async () => {
+  // 获取数据
+  loadData = async (themeId = '') => {
     try {
       const themeData = await cloudCallFunction({
-        name: 'collection_get_theme_data'
+        name: 'hiface-api',
+        data: {
+          $url: 'theme/get',
+          needShapes: true,
+          themeId
+        }
       })
 
-      console.log('themeData :>> ', themeData);
-
-      const { shapeCategoryList, themeName } = themeData
-
-      Taro.setTabBarItem({
-        index: 0,
-        text: themeName,
-      })
+      const { shapeCategoryList } = themeData
+      
       this.setState({
         pageStatus: 'done',
         themeData,
@@ -105,11 +123,9 @@ class AvatarEdit extends Component {
       })
       
     } catch (error) {
-      debugger
       console.log('error :>> ', error);
       this.setState({
         pageStatus: 'error',
-        errorText: '加载失败'
       })
     }
   }
@@ -124,19 +140,7 @@ class AvatarEdit extends Component {
     this.setState({
       cutImageSrc
     }, () => {
-      console.log('cutImageSrc :>> ', cutImageSrc);
       this.onAnalyzeFace(cutImageSrc)
-    })
-  }
-
-  setDafaultFace = () => {
-    Taro.showToast({
-      icon: 'none',
-      title: '请手动添加贴纸'
-    })
-    this.setState({
-      shapeList: [],
-      isShowShape: true,
     })
   }
 
@@ -146,8 +150,6 @@ class AvatarEdit extends Component {
     const { shapeCategoryList = [] } = this.state
     const { shapeList: shapeListRes } = shapeCategoryList[0]
     const shapeOne = shapeListRes[0]
-    console.log('shapeOne :>> ', shapeOne);
-    
 
     Taro.showLoading({
       title: '识别中...'
@@ -159,7 +161,7 @@ class AvatarEdit extends Component {
 
     try {
 
-      let cloudFunc = isH5Page ? this.cloudCanvasToAnalyzeH5 : this.cloudCanvasToAnalyze
+      let cloudFunc = isH5Page ? this.cloudAnalyzeFaceH5 : this.cloudAnalyzeFaceWx
 
       const couldRes = await cloudFunc(cutImageSrc)
 
@@ -174,21 +176,13 @@ class AvatarEdit extends Component {
         })
         return
       }
-      const hatList = getHatInfo(couldRes, shapeOne)
-
-      // let faceList = hatList.map(item => item.faceInfo)
+      const hatList = getHatList(couldRes, shapeOne)
       let shapeList = getHatShapeList(hatList, shapeOne, SAVE_IMAGE_WIDTH)
-      console.log('shapeList :>> ', shapeList);
-
-      // console.log('faceList :>> ', faceList);
 
       this.setState({
         shapeList,
         isShowShape: true,
-        // faceList
       })
-
-      // Taro.hideLoading()
 
     } catch (error) {
       console.log('onAnalyzeFace error :', error);
@@ -214,7 +208,7 @@ class AvatarEdit extends Component {
     }
   }
 
-  cloudCanvasToAnalyzeH5 = async (tempFilePaths) => {
+  cloudAnalyzeFaceH5 = async (tempFilePaths) => {
 
     const couldRes = await cloudCallFunction({
       name: 'analyze-face',
@@ -222,11 +216,11 @@ class AvatarEdit extends Component {
         base64Main: getBase64Main(tempFilePaths)
       }
     })
-    console.log('cloudCanvasToAnalyzeH5 couldRes :>> ', couldRes);
     return couldRes
   }
 
-  cloudCanvasToAnalyze = async (tempFilePaths) => {
+
+  cloudAnalyzeFaceWx = async (tempFilePaths) => {
     const { forCheck } = this.props
 
     const resImage = await Taro.compressImage({
@@ -239,97 +233,86 @@ class AvatarEdit extends Component {
       encoding: 'base64',
     })
 
-    const couldRes = await cloudCallFunction({
-      name: 'analyze-face',
-      data: {
-        base64Main,
-        forCheck
-      }
-    })
+    await imgSecCheck(base64Main)
+
+    const couldRes = forCheck ? {} : await imageAnalyzeFace(base64Main)
 
     return couldRes
   }
 
   onRemoveImage = () => {
-    this.cutImageSrcCanvas = ''
-    // this.ageMap = getDefaultAgeMap()
 
     this.setState({
-      // currentAgeType: 'origin',
       cutImageSrc: '',
       isShowShape: false,
-      // originFileID: '',
-      // isLifeChecked: false,
       shareUUID: ''
     })
   }
 
   onGenerateImage  = async () => {
-
     this.setState({
       posterSrc: '',
     })
 
-    try {
-      Taro.showModal({
-        title: '提示',
-        content: '图片会上传到云端，便于分享和下次查看，请确定？',
-        success: (res) => {
-          if (res.confirm) {
-            Taro.showLoading({
-              title: '图片生成中'
-            })
-            this.drawCanvas()
-
-          } else if (res.cancel) {
-            console.log('用户点击取消')
-          }
-        }
-      })
-    } catch (error) {
-      Taro.hideLoading()
-      Taro.showToast({
-        title: '图片生成失败，请重试'
-      })
-      console.log('error :', error)
-    }
+    Taro.showLoading({
+      title: '图片生成中'
+    })
+    this.drawCanvas()
   }
 
 
 
   // TODO 这个也可以分离？
   drawCanvas = async () => {
-    const {
-      shapeList,
-      cutImageSrc
-    } = this.state
+    // cutImageSrc 裁剪后的头像底图
+    // shapeList 图形列表
+    const { cutImageSrc, shapeList } = this.state
 
+    // 获取 canvas 的 context
     const pc = Taro.createCanvasContext('canvasShape')
 
-    pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH);
+    // 清空画布
+    pc.clearRect(0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
+
+    // getImg 获取图片，注意获取图片在小程序与Web端的不同
     let tmpCutImage = await getImg(cutImageSrc)
+    // 绘制裁剪后的头像底图
     pc.drawImage(tmpCutImage, 0, 0, SAVE_IMAGE_WIDTH, SAVE_IMAGE_WIDTH)
 
+    // 遍历列表，绘制图形贴纸
     for (let index = 0; index < shapeList.length; index++) {
-      const shape = shapeList[index];
+      // 保存绘图上下文
       pc.save()
-      const {
-        categoryName,
-        shapeWidth,
-        rotate,
-        shapeCenterX,
-        shapeCenterY,
-        imageUrl,
-        imageReverseUrl,
-        reserve,
-      } = shape
-      const shapeSize = shapeWidth
 
-      pc.translate(shapeCenterX, shapeCenterY);
+      // 获取贴纸的细节
+      const {
+        // 图形宽
+        shapeWidth: shapeSize,
+        // 旋转角度
+        rotate,
+        // 图形中心点 X轴
+        shapeCenterX,
+        // 图形中心点 Y轴
+        shapeCenterY,
+        // 图形正向图片地址
+        imageUrl,
+        // 图形反向图片地址
+        imageReverseUrl,
+        // 是否旋转
+        reserve: isReserve,
+      } = shapeList[index]
+
+      // 移动到图形中心
+      pc.translate(shapeCenterX, shapeCenterY)
+      // 旋转画布角度
       pc.rotate((rotate * Math.PI) / 180)
 
-      let oneImgSrc = await getImg(reserve < 0 ? (imageReverseUrl || imageUrl) : imageUrl)
+      // 获取图形地址 解决web版跨域 ?skip_domain_check=true
+      let imageUrlTemp = isReserve < 0 ? (imageReverseUrl || imageUrl) : imageUrl
+      imageUrlTemp = imageUrlTemp + (imageUrlTemp.includes('tcb.qcloud.la') ? '?skip_domain_check=true' : '')
+      let oneImgSrc = await getImg(imageUrlTemp + (imageUrlTemp.includes('tcb.qcloud.la') ? '?skip_domain_check=true' : ''))
 
+      // 绘制贴纸
       pc.drawImage(
         oneImgSrc,
         -shapeSize / 2,
@@ -337,6 +320,8 @@ class AvatarEdit extends Component {
         shapeSize,
         shapeSize
       )
+
+      // 恢复之前保存的绘图上下文
       pc.restore()
     }
 
@@ -347,22 +332,26 @@ class AvatarEdit extends Component {
         y: 0,
         height: SAVE_IMAGE_WIDTH * 3,
         width: SAVE_IMAGE_WIDTH * 3,
+        // 图片类型
         fileType: 'jpg',
+        // 压缩质量
         quality: 0.9,
         success: async (res) => {
-          await this.onSaveImageToCloud(res.tempFilePath)
 
-          console.log('res.tempFilePath :>> ', res.tempFilePath);
+          // 保存图片到云数据库
+          if (!isH5Page) {
+            await this.onSaveImageToCloud(res.tempFilePath)
+          }
 
           Taro.hideLoading()
+          // 设置海报图片
           this.setState({
             posterSrc: res.tempFilePath
-          }, () => {
-              this.posterRef.onShowPoster()
           })
 
         },
-        fail: () => {
+        fail: (e) => {
+          console.log('e :>> ', e);
           Taro.hideLoading()
           Taro.showToast({
             title: '图片生成失败，请重试'
@@ -371,87 +360,70 @@ class AvatarEdit extends Component {
       })
     })
   }
+
   onSaveImageToCloud = async (tempFilePath) => {
-    const { currentAgeType } = this.state
+    const { currentAgeType, themeData } = this.state
+    const { _id: themeId, themeName } = themeData
 
     try {
       // 上传头像图片
-      const fileID = await this.onUploadFile(tempFilePath, 'avatar')
-      console.log('上传头像图片 fileID :', fileID);
+      const fileID = await onUploadFile(tempFilePath, 'avatar')
 
       const { uuid } = await cloudCallFunction({
-        name: 'collection_add_one',
+        name: 'hiface-api',
         data: {
-          collection_name: 'avatars',
-          info: {
-            avatarFileID: fileID,
-            ageType: currentAgeType
-          }
+          $url: 'avatar/save',
+          avatarFileID: fileID,
+          ageType: currentAgeType,
+          themeId,
+          themeName
         }
       })
-      console.log('addRes uuid:', uuid);
 
       this.setState({
         shareUUID: uuid
       })
+
+      Taro.navigateTo({
+        url: `/pages/avatar-poster/avatar-poster?uuid=${uuid}`
+      })
+
+      saveImageToPhotosAlbum(tempFilePath)
 
     } catch (error) {
       console.log('error :', error);
     }
   }
 
-  onUploadFile = async (tempFilePath, prefix = 'temp') => {
-    try {
-
-      let uploadParams = {
-        cloudPath: `${prefix}-${Date.now()}-${Math.floor(Math.random(0, 1) * 10000000)}.jpg`, // 随机图片名
-        filePath: tempFilePath,
-      }
-      if (isH5Page) {
-        const { fileID } = await Taro.cloud.uploadFile(uploadParams)
-        return fileID
-      }
-      const uploadFile = promisify(Taro.cloud.uploadFile)
-      const { fileID } = await uploadFile(uploadParams)
-      return fileID
-
-    } catch (error) {
-      console.log('error :', error)
-      return ''
-    }
-
-  }
-
   chooseShape = (shape) => {
     if (this.shapeEditRef) {
-      console.log('shape :>> ', shape);
       this.shapeEditRef.chooseShape(shape)
     }
   }
 
-  goTestHat = () => {
-    Taro.navigateTo({
-      url: '/pages/test/test'
+  onMenuMainTogggle = () => {
+    this.setState({
+      isShowMenuMain: !this.state.isShowMenuMain
     })
   }
 
+  onSwitchTheme = (themeId) => {
+    this.setState(getDefaultState())
+    this.loadData(themeId)
+  }
 
   render() {
-    const { forCheck } = this.props
-    const { isShowShape, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, posterSrc } = this.state
-    const { themeName, shareImage } = themeData
-    console.log('pageStatus,  :>> ', pageStatus, isShowShape, shapeList, isShowShape);
+    const { themeList } = this.props
+    const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, tabBarIndex, posterSrc } = this.state
+    const { coverImageUrl, _id: activeThemeId } = themeData
 
     return (
-      <Block>
+      <View className={`avatar-edit-page ${isShowMenuMain ? 'menu-open' : ''}`}>
+        {/* <PageLead /> */}
         <PageLoading status={pageStatus} loadingType='fullscreen'></PageLoading>
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
-        <View className='avatar-edit-page' style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
+        <View className={`page-container ${isShowShape ? 'page-container-shape' : ''}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
           <View className='main-wrap'>
-            <View className='page-title'>
-              {!isH5Page && <Image className='page-title-icon' src={shareImage} />}
-              {themeName || '头像编辑'}
-            </View>
             {isShowShape
               ? (
                 <ShapeEdit
@@ -463,34 +435,36 @@ class AvatarEdit extends Component {
                 />
               )
               : (
-                <ImageChoose
-                  onChoose={this.onChoose}
-                  isH5Page={isH5Page}
-                />
+                <Image src={coverImageUrl} className="page-cover" />
               )
             }
+            <View className={`tabs-bottom ${pageStatus === 'done' && isShowShape ? 'tabs-open' : ''}`} >
+              <TabCategoryList
+                categoryList={shapeCategoryList}
+                chooseShape={this.chooseShape}
+              />
+            </View>
           </View>
-          <View style={{ display: pageStatus === 'done' && isShowShape  ? 'block' : 'none' }}>
-            <TabCategoryList
-              categoryList={shapeCategoryList}
-              chooseShape={this.chooseShape}
-              isH5Page={isH5Page}
-            />
-          </View>
+          <MenuChoose isMenuShow={tabBarIndex === 1 && !isShowShape} onChoose={this.onChoose} />
+          <CustomTabBar selected={tabBarIndex} hideIndex={tabBarIndex === 1 && !isShowShape ? 1 : -1} />
+          <View className='menu-toggle' onClick={this.onMenuMainTogggle} style={{ marginTop: STATUS_BAR_HEIGHT + 'px' }}></View>
         </View>
-        <PosterDialog
-          isH5Page={isH5Page}
-          ref={poster => this.posterRef = poster}
-          posterSrc={posterSrc}
-          forCheck={forCheck}
+        {isH5Page && (
+          <PosterDialog
+            isH5Page={isH5Page}
+            ref={poster => this.posterRef = poster}
+            posterSrc={posterSrc}
+            forCheck={false}
+          />
+        )}
+        <MenuMain
+          activeThemeId={activeThemeId}
+          isShowMenuMain={isShowMenuMain}
+          themeList={themeList}
+          onMenuMainTogggle={this.onMenuMainTogggle}
+          onSwitchTheme={this.onSwitchTheme}
         />
-        {/* {!isShowShape && (
-          <Block>
-            <View className='test-hat-btn' onClick={this.goTestHat} style={{ top: STATUS_BAR_HEIGHT + 54 + 'px' }}>圣诞帽测试</View>
-            <Button className='share-btn' openType='share' onClick={this.showH5Modal} style={{ top: STATUS_BAR_HEIGHT + 54 + 'px' }}>分享给朋友<View className='share-btn-icon'></View></Button>
-          </Block>
-        )} */}
-      </Block>
+      </View>
     )
   }
 }

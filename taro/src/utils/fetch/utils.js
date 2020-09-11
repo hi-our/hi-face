@@ -56,15 +56,15 @@ export const apiAdapter = (api, params) => {
     })
 
 
-    if (process.env.MOCK === 'true' && process.env.NODE_ENV === 'development') {
-      const { apiMatcher, mocker } = require('./mock')
+    // if (process.env.MOCK === 'true' && process.env.NODE_ENV === 'development') {
+    //   const { apiMatcher, mocker } = require('./mock')
 
-      if (apiMatcher(api)) {
-        let mockResult = mocker(api, params)
-        api = mockResult.api
-        params = mockResult.params
-      }
-    }
+    //   if (apiMatcher(api)) {
+    //     let mockResult = mocker(api, params)
+    //     api = mockResult.api
+    //     params = mockResult.params
+    //   }
+    // }
 
     // check 是否还有参数未转化
     if (restReg.test(api)) {

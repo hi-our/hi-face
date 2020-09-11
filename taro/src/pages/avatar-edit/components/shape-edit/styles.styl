@@ -1,9 +1,14 @@
 .image-wrap
-  margin 0 auto
-  position relative
+  margin 76px auto 0
   width 300px
   height 300px
+  border-radius 20px
+  box-shadow 0 6px 8px rgba(161, 161, 161, 0.5)
+
+.image-inner
+  position relative
   overflow hidden
+  border-radius 20px
 
 .image-selected
   width 300px
@@ -21,6 +26,7 @@
 .shape-image
   width 100%
   height 100%
+  background-size contain
 
 .shape-btn-resize,
 .shape-btn-remove 
@@ -36,14 +42,14 @@
   bottom 0
   margin-right -10 * 1.3px
   margin-bottom -10 * 1.3px
-  background url(https://n1image.hjfile.cn/res7/2020/02/09/9b5c2be4361101b155a604e6735a8ad3.png) no-repeat center / contain
+  background url(https://image-hosting.xiaoxili.com/img/20200812132758.png) no-repeat center / contain
   
 .shape-btn-remove 
   left 0
   top 0
   margin-left -10 * 1.3px
   margin-top -10 * 1.3px
-  background url(https://n1image.hjfile.cn/res7/2020/02/09/2c591b8d9d1c75d1e4d8804e710dc086.png) no-repeat center / contain
+  background url(https://image-hosting.xiaoxili.com/img/20200812133019.png) no-repeat center / contain
 
 
 .shape-btn-checked 
@@ -51,42 +57,49 @@
   top 0
   margin-right -10 * 1.3px
   margin-top -10 * 1.3px
-  background url(https://n1image.hjfile.cn/res7/2020/02/11/0b05b7bc398a85da11ff1eb97ed03e1f.png) no-repeat center / contain
+  background url(https://image-hosting.xiaoxili.com/img/20200812133039.png) no-repeat center / contain
 
 .shape-btn-reverse
   left 0
   bottom 0
   margin-left -10 * 1.3px
   margin-bottom -10 * 1.3px
-  background url(https://n1image.hjfile.cn/res7/2020/02/16/0807e31c8557a250cc24f9e089fbb41d.png) no-repeat center / contain
+  background url(https://image-hosting.xiaoxili.com/img/20200812133255.png) no-repeat center / contain
 
 
 .button-wrap
-  margin-top 10px
+  margin 20px auto 0
+  width 330px
+  height 54px
   display flex
-  justify-content center
+  justify-content space-evenly
   font-size 12px
   color #2f3742
   line-height 1.5
   text-align center
-  flex-wrap wrap
 
-.button-remove,
-.button-download
-  padding-top 40px
-  width 60px
-  font-size 10px
-  background-size auto 40px
-  background-repeat no-repeat
-  background-position center top
+.button
+  display block
+  overflow visible
+  font-size 12px
+  line-height 1.5
+  text-align center
+  &:before
+    content ''
+    display block
+    width 60px
+    height 60px
+    background #ffffff
+    box-shadow 0 0 12px #EFEFEF
+    background-position center
+    background-repeat no-repeat
+    border-radius 50%
+    margin-bottom 3px
 
-  @media (max-width 359px)
-    padding-top 32px
-    background-size auto 30px
-
-.button-remove
-  background-image url(https://n1image.hjfile.cn/res7/2020/02/01/63e0c77558a7bc50c4f2666b8df449e0.png)
-
-.button-download
-  background-image url(https://n1image.hjfile.cn/res7/2020/02/01/8fb88a2a273c37c6098966681c402f21.png)
+.button-remove:before
+  background-image url(https://image-hosting.xiaoxili.com/img/img/20200906/506de505b89046e617e86c5b017bb02b-0c6fab.svg)
+  background-size 30px auto
+.button-save:before
+  background-image url(https://image-hosting.xiaoxili.com/img/img/20200906/8357654e39f6361ea0edc54da8874b1c-e4efde.svg)
+  background-size 30px auto
 

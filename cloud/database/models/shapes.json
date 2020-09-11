@@ -1,0 +1,53 @@
+{
+  "_id": "5e847ab25eb7c684008c1d186169a002",
+  "collectionName": "hiface-shapes",
+  "description": "图形贴纸，添加到头像上",
+  "fields": [
+    {
+      "fieldLabel": "名称",
+      "fieldName": "shapeName",
+      "fieldType": "String",
+      "helpText": "给贴纸起个名字，随意一些",
+      "isRequired": true
+    },
+    {
+      "fieldType": "Number",
+      "helpText": "1为贴纸，2为相框",
+      "isRequired": true,
+      "defaultValue": "1",
+      "fieldLabel": "类型",
+      "fieldName": "type"
+    },
+    {
+      "defaultValue": "1",
+      "fieldLabel": "位置",
+      "fieldName": "position",
+      "fieldType": "Number",
+      "helpText": "1为头像正中间，2为额头，3为嘴巴",
+      "isRequired": true
+    },
+    {
+      "isRequired": true,
+      "fieldLabel": "正向图片",
+      "fieldName": "imageFileID",
+      "fieldType": "Image"
+    },
+    {
+      "fieldLabel": "反向图片",
+      "fieldName": "imageReverseFileID",
+      "fieldType": "Image",
+      "isRequired": true
+    },
+    {
+      "fieldLabel": "所属贴纸图形分类",
+      "fieldName": "belongShapeCategory",
+      "fieldType": "Connect",
+      "helpText": "所属贴纸分类",
+      "connectField": "categoryName",
+      "connectMany": true,
+      "connectResource": "a9bfcffc5eb7b2f4005a2cb66d55ea60"
+    }
+  ],
+  "label": "图形贴纸",
+  "id": "5e847ab25eb7c684008c1d186169a002"
+}

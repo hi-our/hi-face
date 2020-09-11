@@ -1,0 +1,127 @@
+$cubicType = cubic-bezier(0.68, -0.55, 0.265, 1.55)
+
+html
+  .menu-choose
+    z-index 12
+.menu-choose
+  position absolute
+  left 50%
+  margin-left -40px
+  bottom 7px
+  z-index 1
+  transform translateY(100px)
+  transition 0.3s $cubicType transform
+  
+  &.menu-show
+    transform translateY(0)
+    &.bottom-safe-area
+      transform translateY(-12px)
+
+  &.menu-open
+    .menu-choose-btn
+      background #8039FF
+      &:before
+        opacity 0
+      &:after
+        transform  translate(-20px, -13px) rotate(405deg) scale(1.8) // translateX(-8px)
+    .menu-item
+      opacity 1
+      // &:nth-child(1)
+      //   transition-delay 0.1s
+      //   transform rotate(-60deg) translateY(-95px) rotate(60deg)
+      // &:nth-child(2)
+      //   transition-delay 0.18s
+      //   transform rotate(-20deg) translateY(-95px) rotate(20deg)
+      // &:nth-child(3)
+      //   transition-delay 0.25s
+      //   transform rotate(20deg) translateY(-95px) rotate(-20deg)
+      // &:nth-child(4)
+      //   transition-delay 0.3s
+      //   transform rotate(60deg) translateY(-95px) rotate(-60deg)
+      &:nth-child(1)
+        transition-delay 0.1s
+        transform rotate(-60deg) translateY(-95px) rotate(60deg)
+      &:nth-child(2)
+        transition-delay 0.18s
+        transform translateY(-95px) 
+      &:nth-child(3)
+        transition-delay 0.25s
+        transform rotate(60deg) translateY(-95px) rotate(-60deg)
+
+.menu-choose-btn
+  width 80px
+  height 80px
+  background: linear-gradient(360deg, #8039FF 0%, #B76BFF 100%);
+  box-shadow: 0px 4px 8px 0px rgba(128, 57, 255, 0.42);
+  border-radius 50%
+  position relative
+  &:before, &:after
+    content ''
+    display block
+    transition 0.3s linear transform, 0.3s linear opacity 
+  &:before
+    width 100%
+    height 100%
+    background url(https://image-hosting.xiaoxili.com/img/img/20200901/48d1aa7e09b8167545b01afc35dbe9eb-85e325.svg) no-repeat center
+    background-size 60px
+  
+  &:after
+    position absolute
+    left 50px
+    top 45px
+    width 20px
+    height 20px
+    background url(https://image-hosting.xiaoxili.com/img/img/20200901/1f5ef087d6f34a5d1b4dae14664af92c-0f4420.svg) no-repeat
+    background-size contain
+    
+
+
+  &:active
+    transform scale(0.95)
+
+.menu-item
+  position absolute
+  padding 7px 6px 13px
+  width 40px
+  height 40px
+  border-radius 20px
+  box-sizing border-box
+  left 50%
+  top 50%
+  margin -20px 0 0 -20px
+  // opacity 0
+  transition 0.3s linear transform, 0.3s linear opacity 
+
+  &:before
+    content ''
+    margin 2px auto 0
+    display block
+    width 28px
+    height 20px
+    background-position center
+    background-size contain
+    background-repeat no-repeat
+
+  &.menu-item-avatar
+    background #FFA114!important
+    box-shadow 0 4px 10px #FFA114
+    &:before
+      background-image url(https://image-hosting.xiaoxili.com/img/img/20200901/acf80e3bf3277db657699b30a8c84054-6aa975.svg)
+  &.menu-item-camera
+    background #FF6997!important
+    box-shadow 0 4px 10px #FF6997
+    &:before
+      background-image url(https://image-hosting.xiaoxili.com/img/img/20200901/728a0d8680a9ddb90bc531dc3b691026-3571a6.svg)
+  &.menu-item-album
+    background #8039FF!important
+    box-shadow 0 4px 10px #8039FF
+    &:before
+      background-image url(https://image-hosting.xiaoxili.com/img/img/20200901/8631a604499232d1316b72ef6d636643-9847de.svg)
+  &.menu-item-search
+    background #6AADFF!important
+    box-shadow 0 4px 10px #6AADFF
+    &:before
+      background-image url(https://image-hosting.xiaoxili.com/img/img/20200901/905e58e330826fa22c623aa1c5651918-a011ea.svg)
+  
+  
+      

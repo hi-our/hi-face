@@ -1,57 +1,75 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Image, Button, Canvas, ScrollView, Block } from '@tarojs/components'
+import Version from 'components/version'
 
-import { cloudCallFunction } from 'utils/fetch'
-import PageWrapper from 'components/page-wrapper'
-import { transformList } from './utils'
-import CorePage from 'page';
+import CorePage from 'page'
+import CustomTabBar from 'components/custom-tab-bar'
+import AvatarList from './components/avatar-list';
+import userActions from '@/store/user'
 import './styles.styl'
+import { h5PageModalTips, getSystemInfo } from 'utils/common'
 
-import * as config from 'config'
-
-
-const version = config.version
+const isH5Page = process.env.TARO_ENV === 'h5'
+const { statusBarHeight } = getSystemInfo()
 
 @CorePage
 class Self extends Component {
   config = {
-    navigationBarTitleText: '个人中心',
-    disableScroll: true
+    navigationBarTextStyle: 'white',
+    navigationStyle: 'custom',
+    navigationBarTitleText: '我的 - Hi头像',
+    enablePullDownRefresh: true,
+    backgroundColorTop: '#ffffff',
+    backgroundColorBottom: '#ffffff',
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      list: [],
-      pageStatus: 'loading',
-      errorText: ''
+      tabBarIndex: -1
     }
+  }
+
+  componentWillMount() {
+    Taro.setStorageSync('showBackToIndexBtn', false)
+  }
+
+  componentDidShow() {
+    // this.showH5Modal()
+    this.setState({
+      tabBarIndex: 2
+    })
+  }
+  componentDidHide() {
+    this.setState({
+      tabBarIndex: -1
+    })
   }
 
   onShareAppMessage() {
-    const DEFAULT_SHARE_COVER = 'https://n1image.hjfile.cn/res7/2020/04/26/2041af2867f22e62f8fce32b29cd1fb0.png'
+    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/img/20200908/20f5ceab078c93d0901ea0ab0aac8b27-1231fe.jpg'
 
     return {
-      title: '个人中心',
+      title: '邀请好友一起来制作头像吧',
       imageUrl: DEFAULT_SHARE_COVER,
-      path: '/pages/self/self'
+      path: '/pages/avatar-edit/avatar-edit'
     }
   }
 
-  copyToClipboard = (str) => {
-    Taro.setClipboardData({
-      data: str,
-      success() {
-        Taro.showToast({
-          icon: 'none',
-          title: '复制成功'
-        })
-      },
-      fail() {
-        console.log('setClipboardData调用失败')
-      }
+  onPullDownRefresh = () => {
+    console.log('onPullDownRefresh :>> ');
+    this.listRef && this.listRef.loadData()
+    Taro.showToast({
+      title: '已刷新列表',
+      icon: 'none'
     })
+    Taro.stopPullDownRefresh()
+  }
 
+  showH5Modal = () => {
+    if (isH5Page) {
+      h5PageModalTips()
+    }
   }
 
   goOneAvatar = (uuid) => {
@@ -72,55 +90,70 @@ class Self extends Component {
     })
   }
 
+  onGetUserInfo = (e) => {
+    if (e.detail.userInfo) {
+      userActions.login()
+    }
+  }
+
+  renderNotLogin = () => {
+    return (
+      <Block>
+        <View className='user-wrap'>
+          <View className='avatar'>
+            <Image className='avatar-image' src='https://image-hosting.xiaoxili.com/img/img/20200906/47643da28d1f859db65bd025ee7156bb-c4f79a.png' />
+          </View>
+          <View className='nick-name'>Hi~</View>
+          <View className='address-text'>欢迎登录 Hi 头像</View>
+        </View>
+        <View className='login-wrap'>
+          <Image className="logo-image" src="https://image-hosting.xiaoxili.com/img/img/20200830/41eb7adb16c09f5b25137fe708269e12-11e1fa.png"></Image>
+          <Button className="login-button" type="default" openType="getUserInfo" onGetUserInfo={this.onGetUserInfo} onClick={this.showH5Modal}>微信一键授权</Button>
+          <View className="login-tips">登录后查看历史作品</View>
+          <Version />
+        </View>
+      </Block>
+    )
+  }
+
+  renderHasLogin = () => {
+    const {  userInfo } = this.props
+    const { wechatInfo = {}, avatar } = userInfo
+    const { avatarUrl, nickName, country = '', province = '', city = '' } = wechatInfo
+    
+    return (
+      <Block>
+        <View className='user-wrap'>
+          <View className='avatar'>
+            <Image className='avatar-image' src={avatarUrl || avatar}></Image>
+          </View>
+          <View className='nick-name'>{nickName}</View>
+          <View className='address-text'>让头像更有趣</View>
+        </View>
+        <ScrollView className="avatar-wrap" scrollY>
+          <AvatarList ref={c => this.listRef = c} />
+          <Version />
+        </ScrollView>
+      </Block>
+    )
+  }
+
   render() {
+    const { tabBarIndex } = this.state
     const { isLogin, userInfo } = this.props
 
     const { wechatInfo = { }, avatar } = userInfo
-    const { avatarUrl, nickName, country = '', province = '', city = '' } = wechatInfo
+    const { avatarUrl } = wechatInfo
 
+    let isShowLogin = !!(avatarUrl || avatar)
 
     return (
-      <View className='self-page'>
-        <View className='user-wrap'>
-          {
-            isLogin
-              ? (
-                <Block>
-                  <View className='avatar'>
-                    <Image src={avatarUrl || avatar}></Image>
-                  </View>
-                  <View className='user-main'>
-                    <View className='nick-name'>{nickName}</View>
-                    <View className='address-text'>{country} {province} {city}</View>
-                  </View>
-                </Block>
-              )
-              : (
-                <Block>
-                  <View className='avatar'>
-                    
-                  </View>
-                  <View className='user-main'>
-                    <View className='nick-name'>未登录</View>
-                    {/* <View className='address-text'></View> */}
-                  </View>
-                </Block>
-              )
-          }
+      <View className='self-page' style={{ paddingTop: `${statusBarHeight}px` }}>
+        <View className='page-title'>我的</View>
+        <View className='main-wrap'>
+          {isShowLogin ? this.renderHasLogin() : this.renderNotLogin()}
         </View>
-        <View className='list-wrap'>
-          <View className='item' onClick={this.goMyAvatars}>
-            <Image className='item-image' src='https://n1image.hjfile.cn/res7/2020/03/22/7b172802b0cbadee5708c8c03a9fc48c.png' />
-            头像列表
-            <View className='item-icon'></View>
-          </View>
-          <View className='item' onClick={this.goThanks}>
-            <Image className='item-image'  src='https://n1image.hjfile.cn/res7/2020/03/22/4573f9e2d8b60d5a02cffb6de351ee6f.png' />
-            致谢
-            <View className='item-icon'></View>
-          </View>
-        </View>
-        <View className='version'>Ver.{version}，基于 Taro 及小程序云开发</View>
+        <CustomTabBar selected={tabBarIndex} />
       </View>
     )
   }

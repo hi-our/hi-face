@@ -27,9 +27,9 @@ class PageWrapper extends Taro.Component {
       <Block>
         <PageStatus status={status} errorText={errorText} errorCode={errorCode} showRefreshBtn={showRefreshBtn} loadingType={loadingType}>
           {this.props.children}
-          <ToTop scrollTop={scrollTop} styles={isIpx ? 'bottom: 260rpx' : 'bottom: 220rpx'} />
+          {/* <ToTop scrollTop={scrollTop} styles={isIpx ? 'bottom: 260rpx' : 'bottom: 220rpx'} /> */}
         </PageStatus>
-        <BackHome styles={isIpx ? 'bottom: 160rpx' : 'bottom: 120rpx'} />
+        {/* <BackHome styles={isIpx ? 'bottom: 160rpx' : 'bottom: 120rpx'} /> */}
       </Block>
     )
   }

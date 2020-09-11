@@ -6,75 +6,90 @@ html
 
 
 .self-page
+
   height 100vh
-  background #f9f9f9
+  overflow hidden
+  box-sizing border-box
+  display flex
+  flex-direction column
+  background url(https://image-hosting.xiaoxili.com/img/img/20200906/f51b60b18f6a227a82c784a8a9466c68-ed53cb.png)  center top no-repeat
+  background-size 100% auto
+
+.page-title
+  text-align center
+  font-size 16px
+  font-weight 400
+  color #fff
+  line-height 44px
+  height 44px
+
+.main-wrap
+  height calc(100% - 94px)
+  display flex
+  flex-direction column
+  padding-top 1px
+  // height calc(100 - 50px)
+
 
 .user-wrap
-  display flex
-  background #ffffff
-  padding 20px
+  padding 56px 0 10px
   .avatar
-    margin-right 20px
-    width 60px
-    height 60px
+    display block
+    margin 0 auto
+    width 98px
+    height 98px
+    padding 4px
     border-radius 50%
     overflow hidden
+    background #fff
+    box-shadow 0 6px 15px rgba(140, 140, 140, 0.3)
 
-    & > image
-      display block
-      width 60px
-      height 60px
+  .avatar-image
+    display block
+    width 100%
+    height 100%
+    border-radius 50%
   
-  .user-main
-    display flex
-    flex-direction column
-    justify-content center
-
   .nick-name
-    font-size 18px
-    line-height 1.5
-    color #2D3742
+    margin-top 6px
+    font-size 20px
+    line-height 1.4
+    color #464D5C
+    text-align center
   
   .address-text
-    margin-top 5px
-    font-size 12px
-    line-height 1.5
-    color #A4B0BD
-  
-.list-wrap
-  margin-top 10px
-  background #fff
+    font-size 16px
+    line-height 1.4
+    color #464D5C
+    text-align center
 
-  .item
-    position relative
-    padding 20px
+.login-wrap
+  flex 1
+  display flex
+  flex-direction column
+  justify-content center
+  align-items center
+
+  .logo-image
+    display block
+    width 232px
+    height 210px
+    margin 0 auto -10px
+    opacity 0.1
+  .login-button
+    display block
+    margin 0 auto 6px
+    background: linear-gradient(180deg, #B76BFF 0%, #8039FF 100%);
+    width 138px
+    line-height 44px
+    border-radius 18px
     font-size 14px
-    line-height 1.5
-    color #2D3742
-    display flex
-    align-items center
+    color #fff
 
-    &:nth-child(n+2)
-      border-top 1px solid #eee
-    
-  .item-image
-    margin-right 30px
-    width 40px
-    height 40px
-  
-  .item-icon
-    position absolute
-    right 10px
-    top 50%
-    margin-top -10px
-    width 20px
-    height 20px
-    background url(https://n1image.hjfile.cn/res7/2020/03/22/978f72bed2a5be8c0fb2993df5dca9b3.png) no-repeat
-    background-size contain
-
-
-.version
-  padding 15px 0 20px
-  color #95A1AF
-  font-size 12px
-  text-align center
+  .login-tips
+    font-size 12px
+    text-align center
+    color rgba(70, 77, 92, 0.49)
+.avatar-wrap
+  height calc(100% - 220px)
+  padding-bottom 10px

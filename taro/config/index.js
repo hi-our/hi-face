@@ -1,16 +1,13 @@
 const alias = require('./alias')
-const loadEnv = require('../load-env')
+const loadEnv = require('./load-env')
 
-loadEnv()
-
-
+loadEnv(process.env.SERVER_ENV === 'dev' ? '.env.dev' : '.env')
 // 兼容web端和小程序端
 const dpr = process.env.TARO_ENV === 'h5' ? 1 : 2
 
-
 const config = {
-  projectName: 'quickly-mask',
-  date: '2019-11-2',
+  projectName: 'hi-face',
+  date: '2020-08-14',
   designWidth: 375 * dpr,
   deviceRatio: {
     640: 2.34 / 2 / dpr,
@@ -23,9 +20,7 @@ const config = {
   babel: {
     sourceMap: true,
     presets: [
-      [
-        'env',
-        {
+      ['env', {
           modules: false
         }
       ]
@@ -35,27 +30,26 @@ const config = {
       'transform-class-properties',
       'transform-object-rest-spread',
       ['transform-runtime', {
-        helpers: false,
-        polyfill: false,
-        regenerator: true,
-        moduleName: 'babel-runtime'
-      }]
+          helpers: false,
+          polyfill: false,
+          regenerator: true,
+          moduleName: 'babel-runtime'
+        }
+      ]
     ]
   },
+  plugins: [
+    '@tarojs/plugin-stylus',
+    '@tarojs/plugin-terser'
+  ],
   copy: {
     patterns: [
       { from: 'sitemap.json', to: 'dist/' }
-    ],
-    options: {
-    }
+    ]
   },
   defineConstants: {
     'process.env.SERVER_ENV': JSON.stringify(process.env.SERVER_ENV),
-    'process.env.APPID_ENV': JSON.stringify(process.env.APPID_ENV),
-    'process.env.MOCK': JSON.stringify(process.env.MOCK),
-    'process.env.appSign': JSON.stringify(process.env.appSign),
-    'process.env.appAccessKeyId': JSON.stringify(process.env.appAccessKeyId),
-    'process.env.appAccessKey': JSON.stringify(process.env.appAccessKey),
+    'process.env.ENV_ID': JSON.stringify(process.env.ENV_ID),
   },
   alias,
   mini: {
@@ -63,6 +57,16 @@ const config = {
       limit: 0
     },
     postcss: {
+      autoprefixer: {
+        enable: true,
+        config: {
+          browsers: [
+            'last 3 versions',
+            'Android >= 4.1',
+            'ios >= 8'
+          ]
+        }
+      },
       pxtransform: {
         enable: true,
         config: {

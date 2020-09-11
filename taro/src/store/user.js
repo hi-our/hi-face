@@ -57,10 +57,12 @@ const userActions = mirror.model({
       EventEmitter.emit('login-callback-status', loginStatus)
     },
     async login() {
-      
       try {
         const userInfo = await cloudCallFunction({
-          name: 'login',
+          name: 'hiface-api',
+          data: {
+            $url: 'user/get',
+          }
         })
         const { wechatInfo = {}, userId } = userInfo
 
@@ -75,6 +77,7 @@ const userActions = mirror.model({
           this.getWxInfo()
         }
       } catch (error) {
+        console.log('login error :>> ', error);
         this.loginSuccessEmitter(LOGIN_STATUS.TIMEOUT)
         this.setLoginInfo({ loginStatus: LOGIN_STATUS.TIMEOUT })
       }
@@ -89,9 +92,9 @@ const userActions = mirror.model({
         console.log('res', res, res.userInfo)
 
         cloudCallFunction({
-          name: 'login',
+          name: 'hiface-api',
           data: {
-            type: 'saveWechatInfo',
+            $url: 'user/save',
             wechatInfo: res.userInfo
           }
         }).then(() => {

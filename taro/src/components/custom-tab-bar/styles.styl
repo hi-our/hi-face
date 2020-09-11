@@ -1,0 +1,94 @@
+$smallSize = 60px
+$cubicType = cubic-bezier(0.68, -0.55, 0.265, 1.55)
+
+html
+  .tab-bar
+    position relative
+    z-index 10
+.tab-bar
+  // background rgba(222,232,255,0.2)
+  background #fff
+  // background-image linear-gradient(0deg, #f7b0b0, rgba(183, 255, 154, 0)), linear-gradient(0deg, rgba(158, 255, 151, 0.75), rgba(183, 255, 154, 0)), linear-gradient(0deg, #b4fffb, rgba(183, 255, 154, 0))
+  display flex
+  justify-content space-between
+  // filter url(https://n1other.hjfile.cn/res7/2020/08/26/368fb179da9fc4f58b4f520f314bec6f.svg#goo)
+  // filter url(https://n1other.hjfile.cn/res7/2020/08/26/368fb179da9fc4f58b4f520f314bec6f.svg#goo)
+  filter: drop-shadow(0 -5px 5px #EEEEEE)
+
+.tab-bar-item
+  width 110px
+  height 50px
+  font-size 12px
+  line-height 17px
+  color #95A1AF 
+  text-align center
+  margin-top 0
+  transition 0.3s $cubicType margin-top
+  position relative
+  
+  &:before
+    content ''
+    position absolute
+    left 50%
+    margin-left -($smallSize /2)
+    right 0
+    top 0
+    width $smallSize 
+    height ($smallSize /4)
+    background url('https://image-hosting.xiaoxili.com/img/img/20200902/f8aefaf1c333ba1c5f529af95d61fb2c-aa5d47.svg')
+    background-size contain
+    transition 0.3s $cubicType transform
+    will-change transform
+
+  &:after
+    content ''
+    position absolute
+    left 5px
+    right 0
+    top 60px
+    width 100px
+    height 100px
+    border-radius 50px
+    background #fff
+    opacity 0
+    transition 0.3s $cubicType transform
+
+.tab-bar-image
+  position relative
+  width 24px
+  height 24px
+  display block
+  margin 5px auto -3px
+  transition 0.08s $cubicType
+
+.tab-bar-text
+  margin-top 3px
+.tab-bar-item-hover
+  .tab-bar-image
+    transform scale(0.8)
+.tab-item-active
+  color #2F3742
+  .tab-bar-image
+    padding 6px
+    border-radius 18px
+    background #8039FF
+    margin-top -6px
+    transition 0.15s $cubicType
+
+  &:before
+    transform translateY(-12px)
+
+.tab-item-hide
+  &:before
+    transform translateY(0)
+
+  &:after
+    opacity 1
+    transform translateY(-108px)
+
+  .tab-bar-image
+  .tab-bar-text
+    opacity 0
+
+.bottom-safe-area
+  padding-bottom 12px

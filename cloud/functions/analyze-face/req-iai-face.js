@@ -35,6 +35,7 @@ const analyzeFace = (Image) => {
   let faceReq = new models.DetectFaceRequest()
 
   let query_string = JSON.stringify({
+    FaceModelVersion: '3.0',
     Image
   })
   // 传入json参数

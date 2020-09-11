@@ -1,0 +1,48 @@
+{
+  "collectionName": "hiface-users",
+  "fields": [
+    {
+      "isRequired": true,
+      "fieldLabel": "用户Id",
+      "fieldName": "userId",
+      "fieldType": "String"
+    },
+    {
+      "fieldLabel": "排序",
+      "fieldName": "order",
+      "fieldType": "Number",
+      "helpText": "值越大在 CMS 列表中越靠前"
+    },
+    {
+      "fieldLabel": "创建时间",
+      "fieldName": "createTime",
+      "fieldType": "DateTime",
+      "helpText": "留空时会在服务端自动写入创建时间"
+    },
+    {
+      "fieldType": "DateTime",
+      "helpText": "留空时会在服务端自动写入修改时间",
+      "fieldLabel": "修改时间",
+      "fieldName": "updateTime"
+    },
+    {
+      "fieldName": "passCode",
+      "fieldType": "String",
+      "isRequired": true,
+      "fieldLabel": "验证码"
+    },
+    {
+      "fieldLabel": "上次登录时间？",
+      "fieldName": "lastLime",
+      "fieldType": "DateTime"
+    },
+    {
+      "fieldType": "String",
+      "isRequired": true,
+      "fieldLabel": "微信小程序openId",
+      "fieldName": "wxOpenId"
+    }
+  ],
+  "label": "普通用户表",
+  "id": "982133855ebab0090096c2554e4c15a0"
+}

@@ -5,26 +5,50 @@
   background-repeat no-repeat
   background-size cover
   box-sizing border-box
+  background-image url(https://image-hosting.xiaoxili.com/img/img/20200903/4b7b122541712e742ee33809c6b8760c-0906c0.jpg)
 
-.age-origin
-  background-image url(https://n1image.hjfile.cn/res7/2020/03/21/a8bfb32f1f491b9b9c7ea7a3515a896e.jpeg)
-  .page-poster-wrap
-    background #FEE6F6
-.age-childhood
-  background-image url(https://n1image.hjfile.cn/res7/2020/03/21/eadd0c47e27914f625a07d3a7134e612.jpg)
-  .page-poster-wrap
-    background #79C0FF
+.page-title
+  position relative
+  font-size 16px
+  font-weight 400
+  color #2f3742
+  line-height 44px
+  height 44px
+  text-align center
 
-  
+.page-home
+  position absolute
+  left 20px
+  top 7px
+  width 30px
+  height 30px
+  background url(https://image-hosting.xiaoxili.com/img/img/20200906/b9e33bf7134122de664015a75ec47632-ffa317.svg) no-repeat center
+  background-size 18px auto
+  border-radius 50%
+  box-shadow inset 0 0 0 1px rgba(0, 0, 0, 0.05)
 
+.page-back
+  position absolute
+  left 20px
+  top 7px
+  width 30px
+  height 30px
+  background url(https://image-hosting.xiaoxili.com/img/img/20200906/7ebcfb300011ebfedce3d3633cda6a28-ab9b2d.svg) no-repeat center
+  background-size 18px
+  border-radius 50%
+  box-shadow inset 0 0 0 1px rgba(0, 0, 0, 0.1)
+
+// .age-origin
+//   background-image url(https://image-hosting.xiaoxili.com/img/20200812133603.png)
 
 .page-poster-wrap
-  margin 140px auto auto
+  margin 15px auto 0
   width 300px
   height 300px
   padding 15px
   border-radius 20px
-  box-shadow inset 1px 1px 3px rgba(255, 255, 255, 0.3), 0 9px 8px rgba(0, 0, 0, 0.25)
+  background #fff
+  box-shadow 0 5px 4px rgba(153, 153, 153, 0.5)
   
 
 .page-poster
@@ -40,58 +64,51 @@
   display flex
   justify-content space-evenly
 
-.button-reset
-  width 56px
-  height 56px
-  background url(https://n1image.hjfile.cn/res7/2020/03/21/3586553f6e961bc4a28fbcf9d1d7c43f.png) no-repeat
-  background-size contain
-
-
-.button-main
-  background linear-gradient(85deg, #FF937D, #FF5A47)
-  width 168px
-  height 54px
-  line-height 54px
-  text-align center
-  font-size 18px
-  color #ffffff
-  border-radius 15px
-
-.button-save
+.button
   display block
-  box-sizing border-box
-  width 54px
-  height 54px
-  padding 7px 8px
-  line-height 20px
-  font-size 14px
-  color #fff
-  background #69a4fd
-  text-align center
-  border-radius: 50%
-
-.button-share
-  display block
-  width 54px
-  height 54px
-  padding 7px 8px
-  line-height 20px
-  font-size 14px
-  color #fff
-  background #FF9B34
-  text-align center
-  border-radius: 50%
-  &:hover
-    background #FFB447
-
-.version
-  padding 40px 0 20px
-  color #95A1AF
+  overflow visible
   font-size 12px
+  line-height 1.5
+  text-align center
+  &:before
+    content ''
+    display block
+    width 60px
+    height 60px
+    background #ffffff
+    box-shadow 0 0 12px #EFEFEF
+    background-position center
+    background-repeat no-repeat
+    border-radius 50%
+    margin-bottom 2px
+
+
+.button-home:before
+  background-image url(https://image-hosting.xiaoxili.com/img/img/20200830/707f0df8a2606d164270542b2807ad63-19e38f.svg)
+  background-size 30px auto
+.button-share:before
+  background-image url(https://image-hosting.xiaoxili.com/img/img/20200830/281332fb70035b5c6d6ec8eecf768257-d3d179.svg)
+  background-size 30px auto
+
+
+.button-poster
+.button-try
+  display block
+  margin 0 auto 6px
+  background: linear-gradient(180deg, #B76BFF 0%, #8039FF 100%);
+  width 138px
+  line-height 44px
+  border-radius 13px
+  font-size 14px
+  color #fff
   text-align center
 
-
-
+.button-fixed
+  position fixed
+  left 50%
+  transform translateX(-50%)
+  bottom 50px
+  text-align center
 .poster-dialog
   display none
   position fixed
@@ -108,10 +125,16 @@
 
 .poster-dialog-main
   position relative
-    
+
+.poster-image-wrap
+  overflow hidden
+  border-radius 20px
+  box-shadow 0 3px 10px rgba(0, 0, 0, 0.1)
+
 .poster-image
-  width 300px
-  height 420px
+  display block
+  width 340px
+  height 530px
 
 .poster-image-tips
   position absolute
@@ -148,7 +171,7 @@
     display flex
     justify-content center
     align-items center
-    margin-left 33px
+    // margin-left 33px
     width 118px
     height 40px
     color #fff
@@ -156,8 +179,7 @@
     font-weight 400
     line-height 21px
     border-radius 100px
-    background linear-gradient(60deg, rgba(47, 90, 255, 1) 0, rgba(0, 147, 255, 1) 100%)
-    box-shadow 0 2px 6px 0 rgba(47, 90, 255, .2)
+    background linear-gradient(180deg, #B76BFF 0%, #8039FF 100%);
 
   .icon
     margin-right 2px
@@ -175,7 +197,7 @@
   right 0
   width 36px
   height 38px
-  background url('https://n1image.hjfile.cn/res7/2019/01/10/b18454c07e26f34cbec2fb10474c4a6c.png') no-repeat center / 36px 38px
+  background url('https://image-hosting.xiaoxili.com/img/20200812133922.png') no-repeat center / 36px 38px
 
 
 
