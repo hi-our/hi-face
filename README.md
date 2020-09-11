@@ -59,12 +59,14 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 ## 主创人员
 
 **小溪里，技术研发**
+
 个人网站：[https://www.xiaoxili.com](https://www.xiaoxili.com)
 
 公众号：小溪里
 
 
 **不二雪，UI设计**
+
 作品集地址：待补充
 
 公众号：不二诗旅
@@ -129,6 +131,7 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 
 在`taro/src`中，有以下文件
 
+```
 |-config.js 配置AppId、云环境Id及其它
 |-components 全局组件
 |-pages
@@ -136,6 +139,7 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 |-|- avatar-poster 头像分享页
 |-|- theme-list 主题列表
 |-|- self 我的，含个人头像列表
+```
 
 ![](https://image-hosting.xiaoxili.com/img/img/20200911/8eac43d66cafebcdd0eb76042f414572-e11a3a.png)
 
