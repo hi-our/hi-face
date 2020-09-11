@@ -54,11 +54,16 @@ html
     background-size contain
 .theme-wrap
   padding 1px 16px
-  display flex
-  justify-content space-between
+  overflow hidden
 .category-item
+  float left
   width 100px
   margin-top 10px
+
+  margin-right 18px
+
+  &:nth-child(3n)
+    margin-right: 0
 
   &:nth-child(1)
     .shape-list
@@ -93,12 +98,11 @@ html
 
 .shape-list
   height 100px
-  display flex
-  flex-wrap wrap
-  box-shadow 0px 0px 4px 0px rgba(157, 157, 157, 0.5);
+  box-shadow 0px 0px 4px rgba(157, 157, 157, 0.5);
   border-radius: 7px
 
 .shape-item
+  float left
   display block
   width 40px
   height 40px

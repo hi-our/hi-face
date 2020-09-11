@@ -10,7 +10,7 @@ const LOGIN_TYPE_MAP = {
   web_mp: 'qqOpenOd',
 }
 
-const COLLECTION_NAME = 'users'
+const COLLECTION_NAME = 'hiface-users'
 
 class UserController extends BaseController {
   async get(event) {
@@ -23,7 +23,7 @@ class UserController extends BaseController {
 
     try {
       // 查询是否当前环境下有该用户
-      let result = (await this.cloud.db.collection('users').where({
+      let result = (await this.cloud.db.collection(COLLECTION_NAME).where({
         [LOGIN_TYPE_MAP[loginType]]: _open_id
       }).get()).data
 
@@ -41,7 +41,7 @@ class UserController extends BaseController {
         // 记录当前环境下的openId
         saveData[LOGIN_TYPE_MAP[loginType]] = _open_id
 
-        let res = await this.cloud.db.collection('users').add({
+        let res = await this.cloud.db.collection(COLLECTION_NAME).add({
           data: saveData
         })
         userData = res.data

@@ -3,7 +3,7 @@ const uuid = require('uuid')
 
 const uuidv4 = uuid.v4
 
-const COLLECTION_NAME = 'avatars'
+const COLLECTION_NAME = 'hiface-avatars'
 
 class AvatarController extends BaseController {
   async get(event) {

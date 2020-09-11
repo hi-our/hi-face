@@ -1,7 +1,9 @@
 const BaseController = require('./base-controller.js')
 const ConfigController = require('./config')
 
-const COLLECTION_NAME = 'themes'
+const COLLECTION_NAME = 'hiface-themes'
+const COLLECTION_CATEGORY_NAME = 'hiface-shape-categories'
+const COLLECTION_SHAPE_NAME = 'hiface-shapes'
 const apiConfig = new ConfigController()
 
 const getImageUrl = async (cloud, fileID) => {
@@ -31,7 +33,7 @@ class ThemeController extends BaseController {
         return this.fail(-20001, '未成功设置themeID')
       }
 
-      const { errMsg, data } = await this.cloud.db.collection('themes').doc(themeId).get()
+      const { errMsg, data } = await this.cloud.db.collection(COLLECTION_NAME).doc(themeId).get()
       
       const { coverImage, shareImage } = data
       
@@ -45,12 +47,12 @@ class ThemeController extends BaseController {
       }
 
       if (needShapes && errMsg === 'document.get:ok') {
-        let { errMsg: categoryErrMsg, list: shapeCategoryList } = await this.cloud.db.collection('shape_categories').aggregate()
+        let { errMsg: categoryErrMsg, list: shapeCategoryList } = await this.cloud.db.collection(COLLECTION_CATEGORY_NAME).aggregate()
           .match({
             belongThemes: themeId
           })
           .lookup({
-            from: 'shapes',
+            from: COLLECTION_SHAPE_NAME,
             localField: '_id',
             foreignField: 'belongShapeCategory',
             as: 'shapeList'
@@ -135,7 +137,6 @@ class ThemeController extends BaseController {
 
           let coverImageUrl = coverImage.replace(couldPrefix, urlPrefix)
           let shareImageUrl = shareImage.replace(couldPrefix, urlPrefix)
-          console.log('coverImageUrl :>> ', coverImageUrl, shareImageUrl);
 
           data[themeIndex] = {
             ...themeItem,
