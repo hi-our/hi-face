@@ -8,7 +8,9 @@
 * 基于腾讯云云开发开发，易部署、扩展性很好，核心配置已进行抽离
 * 基于 Taro 打造，有微信小程序端和 Web 端，将来还可以扩展更多端
 * 用户体验好，易于操作，交互动画友好且动感
-* 独家拥有技术小册**《**[从0到1开发一个智能头像识别小程序](https://www.xiaoxili.com/hi-face/docs/README.html)**》，**详细说明 Hi 头像主要实现思路
+* 独家拥有技术小册《**[从0到1开发一个智能头像识别小程序](https://www.xiaoxili.com/hi-face/docs/README.html)**》，详细说明 Hi 头像主要实现思路
+
+
 ## 功能体验
 
 小程序二维码
@@ -56,14 +58,13 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 
 ## 主创人员
 
-小溪里，技术研发
-
+**小溪里，技术研发**
 个人网站：[https://www.xiaoxili.com](https://www.xiaoxili.com)
 
 公众号：小溪里
 
-不二雪，UI设计
 
+**不二雪，UI设计**
 作品集地址：待补充
 
 公众号：不二诗旅
@@ -71,8 +72,6 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 ## 部署文档
 
 本项目的部署文档非常详细，详情请查看《[DEPLOYMENT](https://github.com/hi-our/hi-face/blob/master/DEPLOYMENT.md)》文档。
-
-如有不足，欢迎提 Pr改进。
 
 ## 贡献榜
 
@@ -99,7 +98,7 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 
 ## 学习资源
 
-**《**[从0到1开发一个智能头像识别小程序](https://www.xiaoxili.com/hi-face/docs/README.html)**》**
+《**[从0到1开发一个智能头像识别小程序](https://www.xiaoxili.com/hi-face/docs/README.html)**》
 
 >本技术小册基于Hi 头像 v1版本编写，v2 版本正在撰写中。
 
@@ -131,18 +130,12 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 在`taro/src`中，有以下文件
 
 |-config.js 配置AppId、云环境Id及其它
-
 |-components 全局组件
-
 |-pages
-
-|- avatar-edit 头像编辑页
-
-|- avatar-poster 头像分享页
-
-|- theme-list 主题列表
-
-|- self 我的，含个人头像列表
+|-|- avatar-edit 头像编辑页
+|-|- avatar-poster 头像分享页
+|-|- theme-list 主题列表
+|-|- self 我的，含个人头像列表
 
 ![](https://image-hosting.xiaoxili.com/img/img/20200911/8eac43d66cafebcdd0eb76042f414572-e11a3a.png)
 
