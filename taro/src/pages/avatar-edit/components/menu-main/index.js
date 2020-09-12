@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { View, Block, Image } from '@tarojs/components'
-import { getSystemInfo } from 'utils/common'
+import { getSystemInfo, imageThumb } from 'utils/common'
 
 const { statusBarHeight } = getSystemInfo()
 
@@ -47,10 +47,12 @@ export default class MenuMain extends Taro.PureComponent {
           <View className="theme-list">
             {
               themeList.map((theme) => {
-                const { _id: themeId, themeName, shareImageUrl } = theme
+                const { _id: themeId, themeName, shareImageUrl, iconImageUrl } = theme
+                let imageWebp = imageThumb(iconImageUrl || shareImageUrl, 140, 140)
+
                 return (
                   <View className={`theme-item ${activeThemeId === themeId ? 'theme-active' : ''}`} key={themeId} onClick={this.onSwitchTheme.bind(this, themeId)}>
-                    <Image className="theme-image" src={shareImageUrl}></Image>
+                    <Image className="theme-image" src={imageWebp}></Image>
                     <View className="theme-text">{themeName}</View>
                   </View>
                 )

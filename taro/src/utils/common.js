@@ -1,5 +1,19 @@
 import Taro from '@tarojs/taro'
 
+export const isH5Page = Taro.getEnv() === 'WEB'
+
+function checkSupportWebP() {
+  const ele = document.createElement('canvas')
+  if (ele && typeof ele.toDataURL === 'function') {
+    const dataUrl = ele.toDataURL('image/webp') || ''
+    return dataUrl.indexOf('data:image/webp') === 0
+  }
+  return false
+}
+
+// 判断支持 WebP 格式图片
+const isSupportWebP = isH5Page ? checkSupportWebP() : true
+
 let _systemInfo = null
 let _isXPhoneArea = null
 
@@ -44,4 +58,37 @@ export function h5PageModalTips() {
     title: '提示',
     content: '本网站为“Hi头像”的Web版本，其功能只适用于智能触屏手机使用。微信搜一搜“Hi头像”，可以体验完整功能。',
   })
+}
+
+/**
+ * 图片缩略
+ * @format  Format 可为：jpg，bmp，gif，png，webp
+ * @mode  1 保持图片的宽高比 2  按照图片裁切
+ * 文档：https://cloud.tencent.com/document/product/460/6929
+ */
+export const imageThumb = (src, width, height, format = 'webp', mode = 1, ) => {
+
+  if (!src) return ''
+  let pathn = src.trim().replace(/^http(s)?:\/\//ig, '')
+
+  pathn = pathn.split('/')
+  let domain = pathn[0]
+  if (!domain) {
+    return src
+  }
+  let returnUrl = src
+
+  if (width || height) {
+    if (/imageView2/ig.test(src)) {
+      returnUrl =  src.replace(/(?:\?imageView2.*)$/ig, '').replace(/(\.[a-z_]+)$/ig, `$1?imageView2/${c}/w/${width || 0}/h/${height || 0}`)
+    } else {
+      returnUrl = src.replace(/(\.[a-z_]+)$/ig, `$1?imageView2/${mode}/w/${width || 0}/h/${height || 0}`)
+    }
+
+    if (format && isSupportWebP) {
+      returnUrl += '/format/webp/ignore-error/1'
+    }
+  }
+
+  return returnUrl
 }

@@ -1,7 +1,7 @@
 html
   .avatar-edit-page
     height 100%
-    max-width 640PX
+    max-width 480PX
     margin 0 auto
 
 $animateDuration = 0.35s
@@ -72,11 +72,21 @@ $animateDuration = 0.35s
   flex 1
   overflow hidden
 
-.page-cover
+.page-cover-wrap
   margin 133px auto 0
+  height calc(100% - 133px)
+  display flex
+  flex-direction column
+  justify-content center
+  align-items center
+.page-theme-cover
   width 300px
-  height 100%
+  height 300px
   
+.page-theme-name
+  font-size 20px
+  line-height 1.4
+  color #333
 
 .tabs-bottom
   transition 0.3s linear

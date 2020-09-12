@@ -8,7 +8,7 @@ import TabCategoryList from './components/tab-category-list'
 import PosterDialog from './components/poster-dialog'
 import { getHatList, getHatShapeList } from 'utils/face-utils'
 import { getImg, fsmReadFile, getBase64Main, saveImageToPhotosAlbum, onUploadFile } from 'utils/image-utils'
-import { h5PageModalTips } from 'utils/common'
+import { h5PageModalTips, imageThumb } from 'utils/common'
 import { cloudCallFunction } from 'utils/fetch'
 import { imgSecCheck } from 'utils/image-safe-check';
 import { imageAnalyzeFace } from 'utils/image-analyze-face'
@@ -48,7 +48,7 @@ class AvatarEdit extends Component {
   componentDidShow() {
     // 显示 Web 端提示
     this.showTimer = setTimeout(() => {
-      this.showH5Modal()
+      // this.showH5Modal()
     }, 2500)
 
     // 显示当前高亮 Tab
@@ -414,8 +414,9 @@ class AvatarEdit extends Component {
   render() {
     const { themeList, forCheck } = this.props
     const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, tabBarIndex, posterSrc } = this.state
-    const { coverImageUrl, _id: activeThemeId } = themeData
+    const { coverImageUrl, _id: activeThemeId, themeName } = themeData
 
+    console.log('coverImageUrl :>> ', coverImageUrl);
     return (
       <View className={`avatar-edit-page ${isShowMenuMain ? 'menu-open' : ''}`}>
         {/* <PageLead /> */}
@@ -434,7 +435,10 @@ class AvatarEdit extends Component {
                 />
               )
               : (
-                <Image src={coverImageUrl} className="page-cover" mode="aspectFit" />
+                <View className="page-cover-wrap">
+                  {!!coverImageUrl && <Image src={imageThumb(coverImageUrl, 600, 600, 1, 'webp')} webp className="page-theme-cover" />}
+                  <View className='page-theme-name'>{themeName}</View>
+                </View>
               )
             }
             <View className={`tabs-bottom ${pageStatus === 'done' && isShowShape ? 'tabs-open' : ''}`} >

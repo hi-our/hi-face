@@ -110,10 +110,10 @@ export default class ThemeList extends Component {
                 <View className="tabs-bar-inner">
                   {
                     themeList.map((theme, index) => {
-                      const { _id: themeId, themeName, shareImageUrl } = theme
+                      const { _id: themeId, themeName, shareImageUrl, iconImageUrl } = theme
                       return (
                         <View className={`tabs-bar-item ${activeTab === index ? 'bar-active' : ''}`} key={themeId} id={`item-${index}`} onClick={this.onSwitchTab.bind(this, index)}>
-                          <Image className="bar-image" src={shareImageUrl}></Image>
+                          <Image className="bar-image" src={iconImageUrl || shareImageUrl}></Image>
                           <View className="bar-text">{themeName}</View>
                         </View>
                       )
