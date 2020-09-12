@@ -52,7 +52,7 @@ export default class MenuMain extends Taro.PureComponent {
 
                 return (
                   <View className={`theme-item ${activeThemeId === themeId ? 'theme-active' : ''}`} key={themeId} onClick={this.onSwitchTheme.bind(this, themeId)}>
-                    <Image className="theme-image" src={imageWebp}></Image>
+                    <Image className="theme-image" src={imageWebp} webp></Image>
                     <View className="theme-text">{themeName}</View>
                   </View>
                 )

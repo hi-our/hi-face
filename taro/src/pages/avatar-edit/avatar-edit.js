@@ -1,7 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
 import { connect } from '@tarojs/redux'
 import { View, Image, Canvas } from '@tarojs/components'
-import { STATUS_BAR_HEIGHT, SAVE_IMAGE_WIDTH, getDefaultState } from './utils'
+import { STATUS_BAR_HEIGHT, SAVE_IMAGE_WIDTH, getDefaultState, getOneShapeList } from './utils'
 import PageLoading from 'components/page-status'
 import ShapeEdit from './components/shape-edit'
 import TabCategoryList from './components/tab-category-list'
@@ -160,29 +160,48 @@ class AvatarEdit extends Component {
     })
 
     try {
-
-      let cloudFunc = isH5Page ? this.cloudAnalyzeFaceH5 : this.cloudAnalyzeFaceWx
-
-      const couldRes = await cloudFunc(cutImageSrc)
-
-      Taro.hideLoading()
-
-      console.log('图片分析的结果 :', couldRes)
-      // 开启人脸识别开关后
-      if (!couldRes.FaceShapeSet) {
+      let shapeList = []
+      // web版用老逻辑
+      if (shapeOne.position === 2 || isH5Page) {
+        let cloudFunc = isH5Page ? this.cloudAnalyzeFaceH5 : this.cloudAnalyzeFaceWx
+  
+        const couldRes = await cloudFunc(cutImageSrc)
+  
+        Taro.hideLoading()
+  
+        console.log('图片分析的结果 :', couldRes)
+        // 开启人脸识别开关后
+        if (!couldRes.FaceShapeSet) {
+          this.setState({
+            shapeList,
+            isShowShape: true
+          })
+          return
+        }
+        const hatList = getHatList(couldRes, shapeOne)
+        shapeList = getHatShapeList(hatList, shapeOne, SAVE_IMAGE_WIDTH)
+  
         this.setState({
-          shapeList: [],
-          isShowShape: true
+          shapeList,
+          isShowShape: true,
         })
         return
       }
-      const hatList = getHatList(couldRes, shapeOne)
-      let shapeList = getHatShapeList(hatList, shapeOne, SAVE_IMAGE_WIDTH)
 
+
+      await this.imageCheckNow(cutImageSrc)
+      if (shapeOne.position) {
+        shapeList = [
+          getOneShapeList(shapeOne)
+        ]
+      }
+      console.log('2 :>> ', shapeList);
       this.setState({
         shapeList,
         isShowShape: true,
       })
+      Taro.hideLoading()
+
 
     } catch (error) {
       console.log('onAnalyzeFace error :', error);
@@ -238,6 +257,20 @@ class AvatarEdit extends Component {
     const couldRes = forCheck ? {} : await imageAnalyzeFace(base64Main)
 
     return couldRes
+  }
+
+  imageCheckNow = async (tempFilePaths) => {
+    const resImage = await Taro.compressImage({
+      src: tempFilePaths, // 图片路径
+      quality: 10 // 压缩质量
+    })
+
+    let { data: base64Main } = await fsmReadFile({
+      filePath: resImage.tempFilePath,
+      encoding: 'base64',
+    })
+
+    await imgSecCheck(base64Main)
   }
 
   onRemoveImage = () => {

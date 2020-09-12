@@ -84,7 +84,7 @@ export default class ThemeDetail extends Taro.Component {
                         showList.map((shape) => {
                           const { _id: shapeId, imageUrl } = shape
                           return (
-                            <Image className='shape-item' key={shapeId} src={imageThumb(imageUrl, 100, 100)} lazyLoad />
+                            <Image className='shape-item' key={shapeId} webp src={imageThumb(imageUrl, 100, 100)} />
                           )
                         })
                       }

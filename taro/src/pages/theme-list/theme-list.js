@@ -114,7 +114,7 @@ export default class ThemeList extends Component {
                       let imageWebp = imageThumb(iconImageUrl || shareImageUrl, 140, 140)
                       return (
                         <View className={`tabs-bar-item ${activeTab === index ? 'bar-active' : ''}`} key={themeId} id={`item-${index}`} onClick={this.onSwitchTab.bind(this, index)}>
-                          <Image className="bar-image" src={imageWebp}></Image>
+                          <Image className="bar-image" src={imageWebp} webp></Image>
                           <View className="bar-text">{themeName}</View>
                         </View>
                       )
