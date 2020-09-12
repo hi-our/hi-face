@@ -102,7 +102,7 @@ export default class ThemeList extends Component {
 
     return (
       <Block>
-        <View className='theme-list-page' style={{ paddingTop: `${statusBarHeight}px` }}>
+        <View className='theme-list-page' style={{ paddingTop: `${statusBarHeight}px`, backgroundPosition: 'center -' + (44 - statusBarHeight) + 'px' }}>
           <View className='page-title'>主题列表</View>
           <View className='main-wrap'>
             <View className="theme-tabs">
