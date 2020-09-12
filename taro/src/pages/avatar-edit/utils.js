@@ -85,6 +85,8 @@ export function getOneShapeList(shapeItem) {
     shapeWidth = 150
   } = Object.assign(SHAPE_POSITION_MAP[shapeItem.position], shapeItem)
 
+  console.log('shapeCenterX :>> ', shapeItem.position, shapeCenterX);
+
   const resizeCenterX = shapeCenterX + shapeWidth / 2 - 2
   const resizeCenterY = shapeCenterY + shapeWidth / 2 - 2
 

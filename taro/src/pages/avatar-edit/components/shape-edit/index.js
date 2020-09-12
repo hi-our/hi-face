@@ -99,7 +99,7 @@ class ShapeEdit extends Taro.Component {
 
   // 选择或新增图形
   chooseShape = (shapeOne) => {
-    let { shapeId, imageUrl, imageReverseUrl, posistion } = shapeOne
+    let { shapeId, imageUrl, imageReverseUrl, position = 1 } = shapeOne
     let { shapeList, currentShapeIndex } = this.state
 
     // 判断有图形，并且当前有一个选中的，就会将图形切换为最新选择的
@@ -113,13 +113,11 @@ class ShapeEdit extends Taro.Component {
       }
     } else {
       currentShapeIndex = shapeList.length
-      if ([0, 2, 3].includes(posistion)) {
-        posistion = 1
+      if ([0, 2, 3].includes(position)) {
+        position = 1
       }
 
-      let shapeNew = getOneShapeList({ ...shapeOne, posistion })
-
-      console.log('shapeNew :>> ', shapeNew);
+      let shapeNew = getOneShapeList({ ...shapeOne, position })
       // 若当前无图形或图形未被选择，则新增一个图形
       shapeList.push(shapeNew)
     }
