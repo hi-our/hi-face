@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro'
 import { View, ScrollView, Image } from '@tarojs/components'
 import { cloudCallFunction } from 'utils/fetch'
+import { imageThumb } from 'utils/common';
 
 import './styles.styl'
 
@@ -66,7 +67,7 @@ export default class ThemeDetail extends Taro.Component {
               <View className="share-title">{shareTitle}</View>
               <View className="share-desc">{shareDesc}</View>
             </View>
-            <Image className="theme-cover" src={shareImageUrl} />
+            <Image className="theme-cover" src={imageThumb(shareImageUrl, 280, 280)} lazyLoad />
           </View>
           <View className="theme-title">
             {themeName}贴纸
@@ -83,7 +84,7 @@ export default class ThemeDetail extends Taro.Component {
                         showList.map((shape) => {
                           const { _id: shapeId, imageUrl } = shape
                           return (
-                            <Image className='shape-item' key={shapeId} src={imageUrl} />
+                            <Image className='shape-item' key={shapeId} src={imageThumb(imageUrl, 100, 100)} lazyLoad />
                           )
                         })
                       }
