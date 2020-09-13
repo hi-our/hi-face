@@ -1,0 +1,74 @@
+/**
+ * Copyright (c) 2017-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+ 
+/* your custom css */
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
+}
+
+@media only screen and (min-width: 1024px) {
+}
+
+@media only screen and (max-width: 1023px) {
+  .navigationSlider .slidingNav ul {
+    background: #6B8CC7;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+}
+
+@media only screen and (min-width: 1500px) {
+}
+
+a {
+  color: #6B8CC7;
+}
+.fixedHeaderContainer {
+  background: #0000C2;
+}
+
+.toc .toggleNav ul li.navListItemActive a,
+.toc .toggleNav ul li a:focus,
+.toc .toggleNav ul li a:hover {
+  color: #6B8CC7;
+}
+
+.onPageNav .toc-headings>li>a.active,
+.onPageNav .toc-headings>li>a.hover {
+  color: #6B8CC7;
+}
+
+
+.navigationSlider .slidingNav ul li > a:focus,
+.navigationSlider .slidingNav ul li > a:hover,
+.navigationSlider .slidingNav ul li.siteNavItemActive > a,
+.navigationSlider .slidingNav ul li.siteNavGroupActive > a {
+  background-color: #ecc349;
+}
+
+.projectTitle {
+  color: #6B8CC7;
+}
+
+.button {
+  border-color: #6B8CC7;
+  color: #6B8CC7;
+}
+
+.button:hover {
+  background: #6B8CC7;
+  color:#fff;
+}
+
+.imageAlignTop .blockImage {
+  max-width: 160px;
+}
+
+.copyright a {
+  color: rgba(255, 255, 255, 0.4);
+}
