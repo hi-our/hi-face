@@ -94,6 +94,10 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 
 若想贡献代码或者提供建议，请先查阅《[CONTRIBUTING](https://github.com/hi-our/hi-face/blob/master/https://github.com/hi-our/hi-face/blob/master/CONTRIBUTING.md.md)》文档。
 
+## 开发交流
+
+[官方交流微信群](https://github.com/hi-our/hi-face/issues/43)
+
 ## 更新记录
 
 本项目遵从[Angular Style Commit Message Conventions](https://gist.github.com/stephenparish/9941e89d80e2bc58a153)，更新日志请查阅 《[CHANGELOG](https://github.com/hi-our/hi-face/blob/master/https://github.com/hi-our/hi-face/blob/master/CHANGELOG.md.md)》
