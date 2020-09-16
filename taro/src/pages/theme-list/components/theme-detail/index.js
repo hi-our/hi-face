@@ -67,7 +67,7 @@ export default class ThemeDetail extends Taro.Component {
               <View className="share-title">{shareTitle}</View>
               <View className="share-desc">{shareDesc}</View>
             </View>
-            <Image className="theme-cover" src={imageThumb(shareImageUrl, 280, 280)} lazyLoad />
+            <Image className="theme-cover" src={imageThumb(shareImageUrl, 280, 280)} webp />
           </View>
           <View className="theme-title">
             {themeName}贴纸
