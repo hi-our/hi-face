@@ -30,6 +30,7 @@ class AvatarPoster extends Component {
     this.state = {
       avatarFileID: '',
       avatarFileLocal: '',
+      posterBgLocal: '',
       ageType: '',
       pageStatus: 'loading',
       isAuthor: false,
@@ -113,7 +114,7 @@ class AvatarPoster extends Component {
   loadData = async () => {
     let hasError = false
     try {
-      const { avatarFileID = '', ageType = '', isAuthor } = await cloudCallFunction({
+      const { avatarFileID = '', ageType = '', isAuthor, themeId } = await cloudCallFunction({
         name: 'hiface-api',
         data: {
           $url: 'avatar/get',
@@ -136,6 +137,25 @@ class AvatarPoster extends Component {
           avatarFileLocal
         })
       }
+
+      if (themeId) {
+        const { posterBg } = await cloudCallFunction({
+          name: 'hiface-api',
+          data: {
+            $url: 'theme/get',
+            themeId
+          }
+        })
+
+        if (posterBg) {
+          let posterBgLocal = await onDownloadFile(posterBg)
+  
+          console.log('avatarFileLocal :', posterBg, posterBgLocal);
+          this.setState({
+            posterBgLocal
+          })
+        }
+      }     
 
     } catch (error) {
       hasError = true
@@ -164,9 +184,6 @@ class AvatarPoster extends Component {
   }
 
   onCreatePoster = async () => {
-    const { userInfo } = this.props
-    const { wechatInfo } = userInfo
-    const { nickName, avatarUrl } = wechatInfo
     
     try {
       
@@ -175,7 +192,8 @@ class AvatarPoster extends Component {
       })
       const {
         avatarFileLocal,
-        qrcodeFile
+        qrcodeFile,
+        posterBgLocal
       } = this.state
       
       const posterCtx = Taro.createCanvasContext('canvasPoster')
@@ -184,18 +202,15 @@ class AvatarPoster extends Component {
       if (!avatarFileLocal) {
         return Error('需要重新进入页面')
       }
-      posterCtx.drawImage(require('../../images/poster-bg.jpg'), 0, 0, POSTER_WIDTH, POSTER_HEIGHT)
-      if (avatarUrl) {
-        let avatarNow = await this.getImgAvatar(avatarUrl)
-        posterCtx.drawImage(avatarNow, 40, 40, 120, 120)
-      }
-      posterCtx.drawImage(avatarFileLocal, 40, 184, SAVE_AVATAR_SIZE, SAVE_AVATAR_SIZE)
-      posterCtx.drawImage(require('../../images/logo-text.png'), 40, 880, 250, 108)
+      // posterCtx.drawImage(require('../../images/poster-bg.jpg'), 0, 0, POSTER_WIDTH, POSTER_HEIGHT)
+      let posterBg = posterBgLocal || require('../../images/poster-bg.jpg')
+      posterCtx.drawImage(posterBg, 0, 0, POSTER_WIDTH, POSTER_HEIGHT)
+      posterCtx.drawImage(avatarFileLocal, 68, 340, SAVE_AVATAR_SIZE, SAVE_AVATAR_SIZE)
+      posterCtx.drawImage(require('../../images/poster-line.png'), 1, 264, POSTER_WIDTH, POSTER_WIDTH)
+      posterCtx.drawImage(require('../../images/logo-text.png'), 46, 1060, 314, 134)
       if (qrcodeFile) {
-        drawRoundImage(posterCtx, qrcodeFile, 440, 820, 100)
+        drawRoundImage(posterCtx, qrcodeFile, 452, 1022, 107)
       }
-      fillText(posterCtx, nickName, 184, 110, false, 32, '#333')
-      
   
       posterCtx.draw(true, () => {
         Taro.canvasToTempFilePath({

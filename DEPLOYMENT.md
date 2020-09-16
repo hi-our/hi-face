@@ -36,6 +36,15 @@ SERVER_ENV=dev
 
 * `ENV_ID`云环境 ID
 * `SERVER_ENV`是在 Taro 项目中区分开发环境还是生产环境
+
+#### 依赖的服务
+
+在头像编辑页需要图像安全审核、人脸五官分析两个服务，请在微信服务平台开通。
+
+* [图像安全审核](https://developers.weixin.qq.com/community/servicemarket/detail/000a246b6fca70b76a896e6a25ec15)
+* [五官定位](https://developers.weixin.qq.com/community/servicemarket/detail/000808a09b85c8e39aa94b1c65d015)
+
+
 #### 小程序 AppID
 
 在`taro/src/config.js`配置
@@ -158,30 +167,29 @@ Web端上线部署基于[Cloudbase Framework](https://github.com/TencentCloudBas
 
 在`taro/src`中，有以下文件
 
+```
 |-config.js 配置AppId、云环境Id及其它
-
 |-components 全局组件
-
 |-pages
-
-|- avatar-edit 头像编辑页
-
-|- avatar-poster 头像分享页
-
-|- theme-list 主题列表
-
-|- self 我的，含个人头像列表
-
+|-|- avatar-edit 头像编辑页
+|-|- avatar-poster 头像分享页
+|-|- theme-list 主题列表
+|-|- self 我的，含个人头像列表
+```
 
 ### 小程序端调试
 
 小程序端调试已经被封装成以下命令：
+> 在 `taro/` 目录 `package.json` 中定义的这几个命令
 
 ```
 开发环境调试 npm start
 生产环境调试 npm run build
 生产环境编译 npm run release
 ```
+
+完整调试技巧，请查阅[Taro 安装及使用](https://taro-docs.jd.com/taro/docs/2.2.13/GETTING-STARTED)
+
 ### 小程序端部署
 
 方法一：微信开发工具上传

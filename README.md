@@ -87,10 +87,9 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 
 
 * [王宝国](https://github.com/wangbaoguo88)：产品助理，撰写了 v1.0 的产品文档
-
 * [李欢](https://github.com/huan-x)：开发助理，编写了 v1.x 中原生小程序的人像魅力、图片标签等页面
-
 * [任乐乐](https://github.com/wolf-lang)、[康鸿](https://github.com/daxiakang)：协助 v2.0 版的功能测试
+* [忍者无敌]()：协助 v2.0 部署文档内容的补充
 
 若想贡献代码或者提供建议，请先查阅《[CONTRIBUTING](https://github.com/hi-our/hi-face/blob/master/https://github.com/hi-our/hi-face/blob/master/CONTRIBUTING.md.md)》文档。
 

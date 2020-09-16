@@ -70,10 +70,10 @@
 			"current": -1,
 			"list": [
 				{
-					"id": 3,
+					"id": 0,
 					"name": "avatar-poster-dev",
 					"pathName": "pages/avatar-poster/avatar-poster",
-					"query": "uuid=31aa9c93-c91b-4e71-9c93-fbac32494f22&__key_=15982788221531",
+					"query": "uuid=3b2fa74b-5c5f-4490-95e3-35714d36b2e5&__key_=16002627735151",
 					"scene": null
 				},
 				{
@@ -101,6 +101,14 @@
 					"id": -1,
 					"name": "pages/about/about",
 					"pathName": "pages/about/about",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "avatar-poster-dev-儿童节",
+					"pathName": "pages/avatar-poster/avatar-poster",
+					"query": "uuid=7aa36d6e-15c6-4278-874c-36c588283683&__key_=16002639504561",
 					"scene": null
 				}
 			]
