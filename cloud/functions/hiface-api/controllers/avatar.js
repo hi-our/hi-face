@@ -6,6 +6,15 @@ const uuidv4 = uuid.v4
 const COLLECTION_NAME = 'hiface-avatars'
 const COLLECTION_USER_NAME = 'hiface-users'
 
+const getImageUrl = async (cloud, fileID) => {
+  if (!fileID) return ''
+
+  const { fileList } = await cloud.getTempFileURL({
+    fileList: [fileID]
+  })
+  return fileList[0].tempFileURL
+}
+
 class AvatarController extends BaseController {
   async get(event) {
     const { uuid } = event
@@ -24,13 +33,17 @@ class AvatarController extends BaseController {
         appId: false,
       })
       .get()
-      .then(result => {
+      .then(async result => {
         let { data } = result
 
+        
         if (data && data.length >= 1) {
+          const { avatarFileID, openId } = data[0]
+          let imageUrl = await getImageUrl(this.cloud, avatarFileID)
           return this.success({
             ...data[0],
-            isAuthor: OPENID === data[0].openId
+            isAuthor: OPENID === openId,
+            avatarImageUrl: imageUrl
           })
         }
         return this.fail(-10000, '数据不存在')

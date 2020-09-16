@@ -35,7 +35,7 @@ class ThemeController extends BaseController {
 
       const { errMsg, data } = await this.cloud.db.collection(COLLECTION_NAME).doc(themeId).get()
       
-      const { coverImage = '', shareImage = '', iconImage = '' } = data
+      const { coverImage = '', shareImage = '', iconImage = '', posterBg = '' } = data
       
       let couldPrefix = coverImage.split('/uploads/')[0]
       let urlPath = await getImageUrl(this.cloud, coverImage)
@@ -43,12 +43,14 @@ class ThemeController extends BaseController {
       let coverImageUrl = urlPath
       let shareImageUrl = shareImage.replace(couldPrefix, urlPrefix)
       let iconImageUrl = iconImage.replace(couldPrefix, urlPrefix)
+      let posterBgUrl = posterBg.replace(couldPrefix, urlPrefix)
       
       let themeData = {
         ...data,
         coverImageUrl,
         shareImageUrl,
-        iconImageUrl
+        iconImageUrl,
+        posterBgUrl,
       }
 
       if (needShapes && errMsg === 'document.get:ok') {

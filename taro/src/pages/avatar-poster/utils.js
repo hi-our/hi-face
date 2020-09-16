@@ -16,8 +16,8 @@ export const SAVE_IMAGE_HEIGHT = DPR_CANVAS_SIZE * pixelRatio * 1.4
 export const SAVE_CODE_SIZE = ORIGIN_CODE_SIZE * PAGE_DPR * pixelRatio
 
 export const SAVE_AVATAR_SIZE = 600
-export const POSTER_WIDTH = 680
-export const POSTER_HEIGHT = 1060
+export const POSTER_WIDTH = 732
+export const POSTER_HEIGHT = 1280
 
 export const STATUS_BAR_HEIGHT = statusBarHeight
 
