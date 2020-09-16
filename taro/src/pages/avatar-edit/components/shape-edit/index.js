@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro'
 import { Block, View, Image, Button } from '@tarojs/components'
 import { getRealRpx, getShowRpx } from 'utils/image-utils'
+import { getOneShapeList } from '../../utils';
 
 import './styles.styl'
 
@@ -97,7 +98,8 @@ class ShapeEdit extends Taro.Component {
   }
 
   // 选择或新增图形
-  chooseShape = ({ shapeId, imageUrl, imageReverseUrl }) => {
+  chooseShape = (shapeOne) => {
+    let { shapeId, imageUrl, imageReverseUrl, position = 1 } = shapeOne
     let { shapeList, currentShapeIndex } = this.state
 
     // 判断有图形，并且当前有一个选中的，就会将图形切换为最新选择的
@@ -111,13 +113,13 @@ class ShapeEdit extends Taro.Component {
       }
     } else {
       currentShapeIndex = shapeList.length
+      if ([0, 2, 3].includes(position)) {
+        position = 1
+      }
+
+      let shapeNew = getOneShapeList({ ...shapeOne, position })
       // 若当前无图形或图形未被选择，则新增一个图形
-      shapeList.push({
-        ...this.getDefaultShape(),
-        shapeId: shapeId,
-        imageUrl,
-        imageReverseUrl
-      })
+      shapeList.push(shapeNew)
     }
     this.setState({
       shapeList,
@@ -297,12 +299,16 @@ class ShapeEdit extends Taro.Component {
                   shapeCenterY,
                   resizeCenterX,
                   resizeCenterY,
+                  imageReverseUrl,
                   reserve,
                   rotate
                 } = shape
+                console.log('shape :>> ', shape);
 
                 let transX = getShowRpx(shapeCenterX - shapeWidth / 2 - 2) // + 'rpx'
                 let transY = getShowRpx(shapeCenterY - shapeWidth / 2 - 2) // + 'rpx'
+
+                console.log('transX :>> ', transX);
 
                 let shapeStyle = {
                   width: getShowRpx(shapeWidth), // + 'rpx',
@@ -324,7 +330,7 @@ class ShapeEdit extends Taro.Component {
                         <Block>
                           <View className='shape-btn-remove' data-shape-index={shapeIndex} onClick={this.removeShape}></View>
                           <View className='shape-btn-resize' data-shape-index={shapeIndex} data-type='rotate-resize'></View>
-                          <View className='shape-btn-reverse' data-shape-index={shapeIndex} onClick={this.reverseShape}></View>
+                          {!!imageReverseUrl && <View className='shape-btn-reverse' data-shape-index={shapeIndex} onClick={this.reverseShape}></View>}
                           <View className='shape-btn-checked' data-shape-index={shapeIndex} onClick={this.checkedShape}></View>
                         </Block>
                       )

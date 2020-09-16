@@ -29,7 +29,7 @@
 			"outputPath": ""
 		},
 		"useIsolateContext": true,
-		"useCompilerModule": true,
+		"useCompilerModule": false,
 		"userConfirmedUseCompilerModuleSwitch": false,
 		"useMultiFrameRuntime": true,
 		"useApiHook": true,
@@ -95,6 +95,12 @@
 					"name": "theme-list-主题列表",
 					"pathName": "pages/theme-list/theme-list",
 					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/about/about",
+					"pathName": "pages/about/about",
 					"scene": null
 				}
 			]

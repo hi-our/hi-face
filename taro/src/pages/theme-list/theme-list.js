@@ -4,7 +4,7 @@ import { View, Image, Block, ScrollView, Swiper, SwiperItem } from '@tarojs/comp
 import CustomTabBar from 'components/custom-tab-bar'
 import ThemeDetail from './components/theme-detail'
 import EventEmitter from 'utils/event-emitter'
-import { h5PageModalTips, getSystemInfo } from 'utils/common'
+import { h5PageModalTips, getSystemInfo, imageThumb } from 'utils/common'
 
 const { statusBarHeight } = getSystemInfo()
 const isH5Page = process.env.TARO_ENV === 'h5'
@@ -102,7 +102,7 @@ export default class ThemeList extends Component {
 
     return (
       <Block>
-        <View className='theme-list-page' style={{ paddingTop: `${statusBarHeight}px` }}>
+        <View className='theme-list-page' style={{ paddingTop: `${statusBarHeight}px`, backgroundPosition: 'center -' + (44 - statusBarHeight) + 'px' }}>
           <View className='page-title'>主题列表</View>
           <View className='main-wrap'>
             <View className="theme-tabs">
@@ -110,10 +110,11 @@ export default class ThemeList extends Component {
                 <View className="tabs-bar-inner">
                   {
                     themeList.map((theme, index) => {
-                      const { _id: themeId, themeName, shareImageUrl } = theme
+                      const { _id: themeId, themeName, shareImageUrl, iconImageUrl } = theme
+                      let imageWebp = imageThumb(iconImageUrl || shareImageUrl, 140, 140)
                       return (
                         <View className={`tabs-bar-item ${activeTab === index ? 'bar-active' : ''}`} key={themeId} id={`item-${index}`} onClick={this.onSwitchTab.bind(this, index)}>
-                          <Image className="bar-image" src={shareImageUrl}></Image>
+                          <Image className="bar-image" src={imageWebp} webp></Image>
                           <View className="bar-text">{themeName}</View>
                         </View>
                       )

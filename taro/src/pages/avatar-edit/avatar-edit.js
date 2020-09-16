@@ -1,14 +1,14 @@
 import Taro, { Component } from '@tarojs/taro'
 import { connect } from '@tarojs/redux'
 import { View, Image, Canvas } from '@tarojs/components'
-import { STATUS_BAR_HEIGHT, SAVE_IMAGE_WIDTH, getDefaultState } from './utils'
+import { STATUS_BAR_HEIGHT, SAVE_IMAGE_WIDTH, getDefaultState, getOneShapeList } from './utils'
 import PageLoading from 'components/page-status'
 import ShapeEdit from './components/shape-edit'
 import TabCategoryList from './components/tab-category-list'
 import PosterDialog from './components/poster-dialog'
 import { getHatList, getHatShapeList } from 'utils/face-utils'
 import { getImg, fsmReadFile, getBase64Main, saveImageToPhotosAlbum, onUploadFile } from 'utils/image-utils'
-import { h5PageModalTips } from 'utils/common'
+import { h5PageModalTips, imageThumb } from 'utils/common'
 import { cloudCallFunction } from 'utils/fetch'
 import { imgSecCheck } from 'utils/image-safe-check';
 import { imageAnalyzeFace } from 'utils/image-analyze-face'
@@ -48,7 +48,7 @@ class AvatarEdit extends Component {
   componentDidShow() {
     // 显示 Web 端提示
     this.showTimer = setTimeout(() => {
-      this.showH5Modal()
+      // this.showH5Modal()
     }, 2500)
 
     // 显示当前高亮 Tab
@@ -160,29 +160,48 @@ class AvatarEdit extends Component {
     })
 
     try {
-
-      let cloudFunc = isH5Page ? this.cloudAnalyzeFaceH5 : this.cloudAnalyzeFaceWx
-
-      const couldRes = await cloudFunc(cutImageSrc)
-
-      Taro.hideLoading()
-
-      console.log('图片分析的结果 :', couldRes)
-      // 开启人脸识别开关后
-      if (!couldRes.FaceShapeSet) {
+      let shapeList = []
+      // web版用老逻辑
+      if (shapeOne.position === 2 || isH5Page) {
+        let cloudFunc = isH5Page ? this.cloudAnalyzeFaceH5 : this.cloudAnalyzeFaceWx
+  
+        const couldRes = await cloudFunc(cutImageSrc)
+  
+        Taro.hideLoading()
+  
+        console.log('图片分析的结果 :', couldRes)
+        // 开启人脸识别开关后
+        if (!couldRes.FaceShapeSet) {
+          this.setState({
+            shapeList,
+            isShowShape: true
+          })
+          return
+        }
+        const hatList = getHatList(couldRes, shapeOne)
+        shapeList = getHatShapeList(hatList, shapeOne, SAVE_IMAGE_WIDTH)
+  
         this.setState({
-          shapeList: [],
-          isShowShape: true
+          shapeList,
+          isShowShape: true,
         })
         return
       }
-      const hatList = getHatList(couldRes, shapeOne)
-      let shapeList = getHatShapeList(hatList, shapeOne, SAVE_IMAGE_WIDTH)
 
+
+      await this.imageCheckNow(cutImageSrc)
+      if (shapeOne.position) {
+        shapeList = [
+          getOneShapeList(shapeOne)
+        ]
+      }
+      console.log('2 :>> ', shapeList);
       this.setState({
         shapeList,
         isShowShape: true,
       })
+      Taro.hideLoading()
+
 
     } catch (error) {
       console.log('onAnalyzeFace error :', error);
@@ -238,6 +257,20 @@ class AvatarEdit extends Component {
     const couldRes = forCheck ? {} : await imageAnalyzeFace(base64Main)
 
     return couldRes
+  }
+
+  imageCheckNow = async (tempFilePaths) => {
+    const resImage = await Taro.compressImage({
+      src: tempFilePaths, // 图片路径
+      quality: 10 // 压缩质量
+    })
+
+    let { data: base64Main } = await fsmReadFile({
+      filePath: resImage.tempFilePath,
+      encoding: 'base64',
+    })
+
+    await imgSecCheck(base64Main)
   }
 
   onRemoveImage = () => {
@@ -414,14 +447,15 @@ class AvatarEdit extends Component {
   render() {
     const { themeList, forCheck } = this.props
     const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, tabBarIndex, posterSrc } = this.state
-    const { coverImageUrl, _id: activeThemeId } = themeData
+    const { coverImageUrl, _id: activeThemeId, themeName } = themeData
 
+    console.log('coverImageUrl :>> ', coverImageUrl);
     return (
       <View className={`avatar-edit-page ${isShowMenuMain ? 'menu-open' : ''}`}>
-        {/* <PageLead /> */}
+        <PageLead />
         <PageLoading status={pageStatus} loadingType='fullscreen'></PageLoading>
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
-        <View className={`page-container ${isShowShape ? 'page-container-shape' : ''}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px' }}>
+        <View className={`page-container ${isShowShape ? 'page-container-shape' : ''}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px', backgroundPosition: 'center -' + (44 - STATUS_BAR_HEIGHT) + 'px' }}>
           <View className='main-wrap'>
             {isShowShape
               ? (
@@ -434,7 +468,10 @@ class AvatarEdit extends Component {
                 />
               )
               : (
-                <Image src={coverImageUrl} className="page-cover" mode="aspectFit" />
+                <View className="page-cover-wrap">
+                  {!!coverImageUrl && <Image src={imageThumb(coverImageUrl, 600, 600, 1, 'webp')} webp className="page-theme-cover" />}
+                  <View className='page-theme-name'>{themeName}</View>
+                </View>
               )
             }
             <View className={`tabs-bottom ${pageStatus === 'done' && isShowShape ? 'tabs-open' : ''}`} >

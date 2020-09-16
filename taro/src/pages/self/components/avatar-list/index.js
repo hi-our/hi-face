@@ -78,7 +78,7 @@ export default class AvatarList extends Taro.Component {
               const { uuid, avatarFileID } = item
               return (
                 <View key={uuid} className="avatar-item" data-uuid={uuid} onClick={this.goOneAvatar.bind(this, uuid)}>
-                  <Image className="avatar-image" src={avatarFileID}></Image>
+                  <Image className="avatar-image" src={avatarFileID} lazyLoad></Image>
                 </View>
               )
             })

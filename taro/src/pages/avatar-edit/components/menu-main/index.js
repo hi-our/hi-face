@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { View, Block, Image } from '@tarojs/components'
-import { getSystemInfo } from 'utils/common'
+import { getSystemInfo, imageThumb } from 'utils/common'
 
 const { statusBarHeight } = getSystemInfo()
 
@@ -34,6 +34,13 @@ export default class MenuMain extends Taro.PureComponent {
     this.onMenuMainTogggle()
   }
 
+  goToAbout = () => {
+    Taro.navigateTo({
+      url: '/pages/about/about'
+    })
+    this.onMenuMainTogggle()
+  }
+
   render() {
     const { isShowMenuMain, activeThemeId, themeList } = this.props
 
@@ -47,10 +54,12 @@ export default class MenuMain extends Taro.PureComponent {
           <View className="theme-list">
             {
               themeList.map((theme) => {
-                const { _id: themeId, themeName, shareImageUrl } = theme
+                const { _id: themeId, themeName, shareImageUrl, iconImageUrl } = theme
+                let imageWebp = imageThumb(iconImageUrl || shareImageUrl, 140, 140)
+
                 return (
                   <View className={`theme-item ${activeThemeId === themeId ? 'theme-active' : ''}`} key={themeId} onClick={this.onSwitchTheme.bind(this, themeId)}>
-                    <Image className="theme-image" src={shareImageUrl}></Image>
+                    <Image className="theme-image" src={imageWebp} webp></Image>
                     <View className="theme-text">{themeName}</View>
                   </View>
                 )
@@ -59,7 +68,7 @@ export default class MenuMain extends Taro.PureComponent {
           </View>
           <View className="about-wrap">
             <View className="menu-title">关于作者</View>
-            {/* <View className="about-btn">了解更多</View> */}
+            <View className="about-btn" onClick={this.goToAbout}>了解更多</View>
             <View className="about-text">设计 - 不二雪</View>
             <View className="about-text">开发 - 小溪里</View>
 

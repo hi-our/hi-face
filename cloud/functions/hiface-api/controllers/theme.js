@@ -35,15 +35,20 @@ class ThemeController extends BaseController {
 
       const { errMsg, data } = await this.cloud.db.collection(COLLECTION_NAME).doc(themeId).get()
       
-      const { coverImage, shareImage } = data
+      const { coverImage = '', shareImage = '', iconImage = '' } = data
       
-      let coverImageUrl = await getImageUrl(this.cloud, coverImage)
-      let shareImageUrl = await getImageUrl(this.cloud, shareImage)
+      let couldPrefix = coverImage.split('/uploads/')[0]
+      let urlPath = await getImageUrl(this.cloud, coverImage)
+      let urlPrefix = urlPath.split('/uploads/')[0]
+      let coverImageUrl = urlPath
+      let shareImageUrl = shareImage.replace(couldPrefix, urlPrefix)
+      let iconImageUrl = iconImage.replace(couldPrefix, urlPrefix)
       
       let themeData = {
         ...data,
         coverImageUrl,
         shareImageUrl,
+        iconImageUrl
       }
 
       if (needShapes && errMsg === 'document.get:ok') {
@@ -59,13 +64,6 @@ class ThemeController extends BaseController {
           })
           .end()
         if (categoryErrMsg === 'collection.aggregate:ok' && shapeCategoryList.length > 0) {
-          // TODO 临时写法，快速换地址
-          let cloudId = shapeCategoryList[0].shapeList[0].imageFileID
-          let couldPrefix = cloudId.split('/uploads/')[0]
-          let urlPath = await getImageUrl(this.cloud, cloudId)
-          let urlPrefix = urlPath.split('/uploads/')[0]
-          console.log('urlPrefix :>> ', couldPrefix, urlPrefix);
-
           shapeCategoryList.forEach(catItem => {
             catItem.categoryImageUrl = (catItem.categoryImage || '').replace(couldPrefix, urlPrefix)
             catItem.shapeList.forEach(shapeItem => {
@@ -133,15 +131,17 @@ class ThemeController extends BaseController {
         console.log('urlPrefix :>> ', couldPrefix, urlPrefix)
 
         data.forEach(async (themeItem, themeIndex) => {
-          const { coverImage = '', shareImage = '' } = themeItem
+          const { coverImage = '', shareImage = '', iconImage = '' } = themeItem
 
           let coverImageUrl = coverImage.replace(couldPrefix, urlPrefix)
           let shareImageUrl = shareImage.replace(couldPrefix, urlPrefix)
+          let iconImageUrl = iconImage.replace(couldPrefix, urlPrefix)
 
           data[themeIndex] = {
             ...themeItem,
             coverImageUrl,
             shareImageUrl,
+            iconImageUrl,
           }
         })
 

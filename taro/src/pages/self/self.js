@@ -148,7 +148,7 @@ class Self extends Component {
     let isShowLogin = !!(avatarUrl || avatar)
 
     return (
-      <View className='self-page' style={{ paddingTop: `${statusBarHeight}px` }}>
+      <View className='self-page' style={{ paddingTop: `${statusBarHeight}px`, backgroundPosition: 'center -' + (44 - statusBarHeight) + 'px' }}>
         <View className='page-title'>我的</View>
         <View className='main-wrap'>
           {isShowLogin ? this.renderHasLogin() : this.renderNotLogin()}

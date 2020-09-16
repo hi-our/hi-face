@@ -1,0 +1,82 @@
+html
+  .about-page
+    height 100%
+    max-width 480PX
+    margin 0 auto
+
+.about-page
+  position relative
+  background: #F8DBD4;
+  overflow hidden
+  height 100vh
+
+.page-home
+  position absolute
+  left 20px
+  top 7px
+  z-index 10
+  width 30px
+  height 30px
+  background url(https://image-hosting.xiaoxili.com/img/img/20200910/5fdfdec1b27efdf9d744e163807ef0ad-10f9cb.svg) no-repeat center
+  background-size 18px auto
+  border-radius 50%
+  box-shadow inset 0 0 0 1px rgba(0, 0, 0, 0.05)
+
+.page-back
+  position absolute
+  left 20px
+  top 7px
+  z-index 10
+  width 30px
+  height 30px
+  background url(https://image-hosting.xiaoxili.com/img/img/20200906/7ebcfb300011ebfedce3d3633cda6a28-ab9b2d.svg) no-repeat center
+  background-size 18px
+  border-radius 50%
+  box-shadow inset 0 0 0 1px rgba(0, 0, 0, 0.1)
+
+.section
+  display flex
+  height 50%
+  box-shadow: 0px 0px 30px 0px #E0B8CA;
+  flex-direction: column
+  align-items center
+  background #fff
+
+.section-title
+  font-size 26px
+  line-height 1.4
+  color #2F3742
+  margin-bottom 22px
+.section-desc
+  font-size 18px
+  line-height 1.4
+  color #2F3742
+
+.section-image
+  display block
+  width 120px
+  height 120px
+  
+.section-1
+  position relative
+  z-index 1
+  border-radius: 0 0 60px 60px;
+  justify-content flex-end
+  animation: an-1 1.2s ease-in-out forwards;
+  .section-image
+    margin-top 37px
+    margin-bottom -60px
+.section-2
+  border-radius: 60px 60px 0 0;
+  justify-content flex-start
+  animation: an-2 1.2s ease-in-out forwards;
+  .section-image
+    margin-bottom 37px
+    margin-top -60px
+
+@keyframes an-1
+  to
+    transform: translateY(-23%)
+@keyframes an-2
+  to
+    transform: translateY(23%)

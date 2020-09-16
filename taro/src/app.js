@@ -20,7 +20,8 @@ class App extends Component {
       'pages/avatar-edit/avatar-edit',
       'pages/avatar-poster/avatar-poster',
       'pages/theme-list/theme-list',
-      'pages/self/self'
+      'pages/self/self',
+      'pages/about/about',
     ],
     window: {
       backgroundTextStyle: 'light',
