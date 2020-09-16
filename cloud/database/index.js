@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 
+// 请查看部署文档，并注意建立开发和生产环境的env文件
+
 const fs = require('fs').promises
 const path = require('path')
 const dotenv = require('dotenv')
 const tcb = require('@cloudbase/node-sdk')
 
 const cmsContentsCollection = 'tcb-ext-cms-contents'
-const envFile = path.resolve(__dirname, '..', '.env')
+const envFile = path.resolve(__dirname, '..', '..', process.env.SERVER_ENV === 'dev' ? '.env.dev' : '.env')
 const schemasFolder = path.resolve(__dirname, 'models')
 
 const config = dotenv.config({ path: envFile }).parsed
