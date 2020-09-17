@@ -23,3 +23,5 @@ yarn.lock
 
 .env
 .env.dev
+
+miniprogram-private.key
