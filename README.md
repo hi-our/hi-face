@@ -67,7 +67,7 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 
 **不二雪，UI设计**
 
-作品集地址：待补充
+<!-- 作品集地址：待补充 -->
 
 公众号：不二诗旅
 
@@ -174,6 +174,8 @@ v1版中使用图示“第五版”时序图来完成主逻辑，而v2版中使�
 
 ## License
 
-MITLicense
+前后端技术源码为 MIT License
+
+页面UI设计版权为作者不二雪所有
 
 Copyright (c) 2020 Hanqin
