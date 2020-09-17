@@ -89,7 +89,7 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 * [王宝国](https://github.com/wangbaoguo88)：产品助理，撰写了 v1.0 的产品文档
 * [李欢](https://github.com/huan-x)：开发助理，编写了 v1.x 中原生小程序的人像魅力、图片标签等页面
 * [任乐乐](https://github.com/wolf-lang)、[康鸿](https://github.com/daxiakang)：协助 v2.0 版的功能测试
-* [忍者无敌]()：协助 v2.0 部署文档内容的补充
+* [忍者无敌](https://github.com/LoserTeach)：协助 v2.0 部署文档内容的补充
 
 若想贡献代码或者提供建议，请先查阅《[CONTRIBUTING](https://github.com/hi-our/hi-face/blob/master/https://github.com/hi-our/hi-face/blob/master/CONTRIBUTING.md.md)》文档。
 
@@ -152,13 +152,13 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 
 Hi 头像功能以小程序端为主，功能齐全，而在 web端能制作头像并保存图片，暂不提供头像保存和分享功能。
 
-![](https://uploader.shimo.im/f/x2wUY5DvXrLBHuWs.png!thumbnail)
+![](https://image-hosting.xiaoxili.com/img/img/20200917/19cd0697d023f9bb6f0836a1ee35a2dc-df21f2.png)
 
 ### 五官分析时序图
 
 v1版中使用图示“第五版”时序图来完成主逻辑，而v2版中使用“第六版”时序图，这两者差异点就是基于已有服务来完成功能，更容易初学者掌握。
 
-![](https://images-cdn.shimo.im/x2wUY5DvXrLBHuWs__thumbnail.png)
+![](https://image-hosting.xiaoxili.com/img/img/20200917/c4ea86ffa18c6bead6cffa6a76d9b926-f19204.png)
 
 ### 核心语法
 
