@@ -75,9 +75,12 @@ export default class MenuChoose extends Taro.Component {
         title: '获取头像...'
       })
       try {
-        let avatarUrl = await getImg(e.detail.userInfo.avatarUrl)
+        let avatarUrl = await getImg(e.detail.userInfo.avatarUrl.replace('/132', '/0'))
+        
         if (avatarUrl) {
-          onChoose(avatarUrl)
+          this.setState({
+            originSrc: avatarUrl
+          });
         }
 
       } catch (error) {
