@@ -17,13 +17,31 @@
           }
         }
       },
+      "miniprogram": {
+        "use": "@cloudbase/framework-plugin-mp",
+        "inputs": {
+          "appid": "{{env.APP_ID}}",
+          "privateKeyPath": "miniprogram-private.key",
+          "localpath": "./taro/dist",
+          "ignores": "[node_modules/**/*]",
+          "deployMode": "preview",
+          "previewOptions": {
+            "desc": "CloudBase Framework 一键预览",
+            "setting": {
+              "es6": true
+            },
+            "qrcodeOutputPath": "./qrcode.jpg",
+            "pagePath": "pages/avatar-edit/avatar-edit"
+          }
+        }
+      },
       "server": {
         "use": "@cloudbase/framework-plugin-function",
         "inputs": {
           "functionRootPath": "cloud/functions",
           "functions": [
             {
-              "name": "api",
+              "name": "hiface-api",
               "config": {
                 "timeout": 20,
                 "envVariables": {},
