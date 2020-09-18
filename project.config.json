@@ -1,117 +1,117 @@
 {
-	"miniprogramRoot": "taro/dist/",
-	"cloudfunctionRoot": "cloud/functions/",
-	"cloudfunctionTemplateRoot": "cloud/template/",
-	"projectname": "hi-face",
-	"description": "Hi头像，让头像有趣一点",
-	"appid": "wxd5e8989ce23206af",
-	"qqappid": "1110180763",
-	"setting": {
-		"urlCheck": false,
-		"es6": false,
-		"postcss": false,
-		"preloadBackgroundData": false,
-		"minified": false,
-		"newFeature": true,
-		"coverView": true,
-		"nodeModules": false,
-		"autoAudits": true,
-		"showShadowRootInWxmlPanel": true,
-		"scopeDataCheck": false,
-		"uglifyFileName": true,
-		"checkInvalidKey": true,
-		"checkSiteMap": true,
-		"uploadWithSourceMap": true,
-		"compileHotReLoad": false,
-		"babelSetting": {
-			"ignore": [],
-			"disablePlugins": [],
-			"outputPath": ""
-		},
-		"useIsolateContext": true,
-		"useCompilerModule": true,
-		"userConfirmedUseCompilerModuleSwitch": false,
-		"useMultiFrameRuntime": true,
-		"useApiHook": true,
-		"packNpmManually": false,
-		"packNpmRelationList": [],
-		"remoteDebugLogEnable": false
-	},
-	"compileType": "miniprogram",
-	"simulatorType": "wechat",
-	"simulatorPluginLibVersion": {},
-	"scripts": {
-		"beforeCompile": "",
-		"beforePreview": "",
-		"beforeUpload": ""
-	},
-	"libVersion": "2.12.2",
-	"condition": {
-		"search": {
-			"current": -1,
-			"list": []
-		},
-		"conversation": {
-			"current": -1,
-			"list": []
-		},
-		"plugin": {
-			"current": -1,
-			"list": []
-		},
-		"game": {
-			"list": []
-		},
-		"gamePlugin": {
-			"current": -1,
-			"list": []
-		},
-		"miniprogram": {
-			"current": -1,
-			"list": [
-				{
-					"id": 0,
-					"name": "avatar-poster-dev",
-					"pathName": "pages/avatar-poster/avatar-poster",
-					"query": "uuid=3b2fa74b-5c5f-4490-95e3-35714d36b2e5&__key_=16002627735151",
-					"scene": null
-				},
-				{
-					"id": 1,
-					"name": "avatar-poster-prod",
-					"pathName": "pages/avatar-poster/avatar-poster",
-					"query": "uuid=76bb601b-2324-418a-9286-d7dcf1d5fdf9&__key_=15991396054112",
-					"scene": null
-				},
-				{
-					"id": 2,
-					"name": "pages/self/self-我的",
-					"pathName": "pages/self/self",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": 3,
-					"name": "theme-list-主题列表",
-					"pathName": "pages/theme-list/theme-list",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/about/about",
-					"pathName": "pages/about/about",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "avatar-poster-dev-儿童节",
-					"pathName": "pages/avatar-poster/avatar-poster",
-					"query": "uuid=7aa36d6e-15c6-4278-874c-36c588283683&__key_=16002639504561",
-					"scene": null
-				}
-			]
-		}
-	}
+  "miniprogramRoot": "taro/dist/",
+  "cloudfunctionRoot": "cloud/functions/",
+  "cloudfunctionTemplateRoot": "cloud/template/",
+  "projectname": "hi-face",
+  "description": "Hi头像，让头像有趣一点",
+  "appid": "wxd5e8989ce23206af",
+  "qqappid": "1110180763",
+  "setting": {
+    "urlCheck": false,
+    "es6": false,
+    "postcss": false,
+    "preloadBackgroundData": false,
+    "minified": false,
+    "newFeature": true,
+    "coverView": true,
+    "nodeModules": false,
+    "autoAudits": true,
+    "showShadowRootInWxmlPanel": true,
+    "scopeDataCheck": false,
+    "uglifyFileName": true,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
+    "uploadWithSourceMap": true,
+    "compileHotReLoad": false,
+    "useMultiFrameRuntime": true,
+    "useApiHook": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "useIsolateContext": true,
+    "useCompilerModule": true,
+    "userConfirmedUseCompilerModuleSwitch": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "remoteDebugLogEnable": false
+  },
+  "compileType": "miniprogram",
+  "simulatorType": "wechat",
+  "simulatorPluginLibVersion": {},
+  "scripts": {
+    "beforeCompile": "",
+    "beforePreview": "",
+    "beforeUpload": ""
+  },
+  "libVersion": "2.12.2",
+  "condition": {
+    "search": {
+      "current": -1,
+      "list": []
+    },
+    "conversation": {
+      "current": -1,
+      "list": []
+    },
+    "plugin": {
+      "current": -1,
+      "list": []
+    },
+    "game": {
+      "list": []
+    },
+    "gamePlugin": {
+      "current": -1,
+      "list": []
+    },
+    "miniprogram": {
+      "current": -1,
+      "list": [
+        {
+          "id": 0,
+          "name": "avatar-poster-dev",
+          "pathName": "pages/avatar-poster/avatar-poster",
+          "query": "uuid=3b2fa74b-5c5f-4490-95e3-35714d36b2e5&__key_=16002627735151",
+          "scene": null
+        },
+        {
+          "id": 1,
+          "name": "avatar-poster-prod",
+          "pathName": "pages/avatar-poster/avatar-poster",
+          "query": "uuid=76bb601b-2324-418a-9286-d7dcf1d5fdf9&__key_=15991396054112",
+          "scene": null
+        },
+        {
+          "id": 2,
+          "name": "pages/self/self-我的",
+          "pathName": "pages/self/self",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": 3,
+          "name": "theme-list-主题列表",
+          "pathName": "pages/theme-list/theme-list",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/about/about",
+          "pathName": "pages/about/about",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "avatar-poster-dev-儿童节",
+          "pathName": "pages/avatar-poster/avatar-poster",
+          "query": "uuid=7aa36d6e-15c6-4278-874c-36c588283683&__key_=16002639504561",
+          "scene": null
+        }
+      ]
+    }
+  }
 }

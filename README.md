@@ -75,6 +75,8 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 
 本项目的部署文档非常详细，详情请查看《[DEPLOYMENT](https://github.com/hi-our/hi-face/blob/master/DEPLOYMENT.md)》文档。
 
+> 基于[Cloudbase Framework](https://github.com/TencentCloudBase/cloudbase-framework)完成小程序端、Web端、云函数端构建，基于[云开发 CMS](https://github.com/TencentCloudBase/cloudbase-extension-cms)管理数据。
+
 ## 贡献榜
 
 阅读我们的贡献指南，让我们一起建立一个更好的头像小程序。
@@ -122,7 +124,7 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 * 产品需求、项目规划的实战知识
 ## 项目综述
 
-本项目在小程序和Web端使用 Taro 构建，功能服务基于[腾讯云云开发](https://www.cloudbase.net/)及腾讯云人工智能服务，使用 CMS 内容管理系统来管理数据，基于[Cloudbase Framework](https://github.com/TencentCloudBase/cloudbase-framework)完成小程序端、Web端、云函数端构建？
+本项目在小程序和Web端使用 Taro 构建，功能服务基于[腾讯云云开发](https://www.cloudbase.net/)及腾讯云人工智能服务，使用 CMS 内容管理系统来管理数据，基于[Cloudbase Framework](https://github.com/TencentCloudBase/cloudbase-framework)完成小程序端、Web端、云函数端构建。
 
 ## 架构图
 
@@ -174,8 +176,9 @@ v1版中使用图示“第五版”时序图来完成主逻辑，而v2版中使�
 
 ## License
 
-前后端技术源码为 MIT License
-
-页面UI设计版权为作者不二雪所有
+* 前后端技术源码为 MIT License
+* 页面UI设计版权为作者不二雪所有，如玫红色UI、含小象logo的背景图等
+* 节日主题及贴纸来源为 iconfont，版权归原作者所有
+* 依据 Hi 头像完整功能进行上线时，请在页脚备注“技术支持来自小溪里”
 
 Copyright (c) 2020 Hanqin

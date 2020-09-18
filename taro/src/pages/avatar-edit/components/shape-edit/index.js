@@ -303,12 +303,9 @@ class ShapeEdit extends Taro.Component {
                   reserve,
                   rotate
                 } = shape
-                console.log('shape :>> ', shape);
 
                 let transX = getShowRpx(shapeCenterX - shapeWidth / 2 - 2) // + 'rpx'
                 let transY = getShowRpx(shapeCenterY - shapeWidth / 2 - 2) // + 'rpx'
-
-                console.log('transX :>> ', transX);
 
                 let shapeStyle = {
                   width: getShowRpx(shapeWidth), // + 'rpx',
