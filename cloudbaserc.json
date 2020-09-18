@@ -20,9 +20,10 @@
       "miniprogram": {
         "use": "@cloudbase/framework-plugin-mp",
         "inputs": {
+          "buildCommand": "cd taro && SERVER_ENV={{env.SERVER_ENV}} npm run release",
           "appid": "{{env.APP_ID}}",
           "privateKeyPath": "miniprogram-private.key",
-          "localpath": "./taro/dist",
+          "localPath": "taro/",
           "ignores": "[node_modules/**/*]",
           "deployMode": "preview",
           "previewOptions": {
