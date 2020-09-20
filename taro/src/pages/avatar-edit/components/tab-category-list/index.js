@@ -66,12 +66,17 @@ export default class ImageChoose extends Taro.Component {
                       item.shapeList.map((shapeItem) => {
                         const { imageUrl, _id: shapeId } = shapeItem 
                         return (
-                          <Image
-                            className={`tab-bd-image  tab-bd-image-${item.name}`}
-                            key={shapeId}
-                            src={imageUrl}
-                            onClick={() => chooseShape({ ...shapeItem, shapeId })}
-                          />
+                          <View className='tab-bd-image-wrap' key={shapeId}>
+                            {
+                              currentTabIndex === itemIndex && (
+                                <Image
+                                  className='tab-bd-image'
+                                  src={imageUrl}
+                                  onClick={() => chooseShape({ ...shapeItem, shapeId })}
+                                />
+                              )
+                            }
+                          </View>
                         )
                       })
                     }

@@ -124,11 +124,11 @@ export default class ThemeList extends Component {
               </ScrollView>
               <Swiper className="theme-swiper" current={activeTab} onChange={this.onSwiperChange}>
                 {
-                  themeList.map((theme) => {
+                  themeList.map((theme, index) => {
                     const { _id: themeId } = theme
                     return (
                       <SwiperItem key={themeId}>
-                        <ThemeDetail themeId={themeId} themeData={theme} onSwitch={this.onSwitchTheme} />
+                        <ThemeDetail themeId={themeId} isCurrentShow={activeTab === index} themeData={theme} onSwitch={this.onSwitchTheme} />
                       </SwiperItem>
                     )
                   })
