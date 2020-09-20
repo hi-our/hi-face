@@ -5,6 +5,7 @@ import CustomTabBar from 'components/custom-tab-bar'
 import ThemeDetail from './components/theme-detail'
 import EventEmitter from 'utils/event-emitter'
 import { h5PageModalTips, getSystemInfo, imageThumb } from 'utils/common'
+import { DEFAULT_SHARE_COVER } from 'constants/status'
 
 const { statusBarHeight } = getSystemInfo()
 const isH5Page = process.env.TARO_ENV === 'h5'
@@ -47,8 +48,6 @@ export default class ThemeList extends Component {
   }
 
   onShareAppMessage() {
-    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/img/20200908/20f5ceab078c93d0901ea0ab0aac8b27-1231fe.jpg'
-
     return {
       title: '邀请好友一起来制作头像吧',
       imageUrl: DEFAULT_SHARE_COVER,
@@ -111,6 +110,7 @@ export default class ThemeList extends Component {
                   {
                     themeList.map((theme, index) => {
                       const { _id: themeId, themeName, shareImageUrl, iconImageUrl } = theme
+                      console.log('iconImageUrl || shareImageUrl :>> ', iconImageUrl,  shareImageUrl);
                       let imageWebp = imageThumb(iconImageUrl || shareImageUrl, 140, 140)
                       return (
                         <View className={`tabs-bar-item ${activeTab === index ? 'bar-active' : ''}`} key={themeId} id={`item-${index}`} onClick={this.onSwitchTab.bind(this, index)}>

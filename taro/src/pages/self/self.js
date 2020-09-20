@@ -8,6 +8,7 @@ import AvatarList from './components/avatar-list';
 import userActions from '@/store/user'
 import './styles.styl'
 import { h5PageModalTips, getSystemInfo } from 'utils/common'
+import { DEFAULT_SHARE_COVER } from 'constants/status'
 
 const isH5Page = process.env.TARO_ENV === 'h5'
 const { statusBarHeight } = getSystemInfo()
@@ -47,7 +48,6 @@ class Self extends Component {
   }
 
   onShareAppMessage() {
-    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/img/20200908/20f5ceab078c93d0901ea0ab0aac8b27-1231fe.jpg'
 
     return {
       title: '邀请好友一起来制作头像吧',

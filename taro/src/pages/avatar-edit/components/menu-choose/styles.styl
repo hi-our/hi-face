@@ -6,16 +6,16 @@ html
 .menu-choose
   position absolute
   left 50%
-  margin-left -40px
+  margin-left -32px
   bottom 7px
   z-index 1
   transform translateY(100px)
   transition 0.3s $cubicType transform
   
   &.menu-show
-    transform translateY(0)
+    transform translateY(-0px)
     &.bottom-safe-area
-      transform translateY(-12px)
+      transform translateY(-24px)
 
   &.menu-open
     .menu-choose-btn
@@ -23,36 +23,36 @@ html
       &:before
         opacity 0
       &:after
-        transform  translate(-20px, -13px) rotate(405deg) scale(1.8) // translateX(-8px)
+        transform  translate(-12px, -9px) rotate(405deg) scale(1.8) // translateX(-8px)
     .menu-item
       opacity 1
       // &:nth-child(1)
       //   transition-delay 0.1s
-      //   transform rotate(-60deg) translateY(-105px) rotate(60deg)
+      //   transform rotate(-60deg) translateY(-90px) rotate(60deg)
       // &:nth-child(2)
       //   transition-delay 0.18s
-      //   transform rotate(-20deg) translateY(-105px) rotate(20deg)
+      //   transform rotate(-20deg) translateY(-90px) rotate(20deg)
       // &:nth-child(3)
       //   transition-delay 0.25s
-      //   transform rotate(20deg) translateY(-105px) rotate(-20deg)
+      //   transform rotate(20deg) translateY(-90px) rotate(-20deg)
       // &:nth-child(4)
       //   transition-delay 0.3s
-      //   transform rotate(60deg) translateY(-105px) rotate(-60deg)
+      //   transform rotate(60deg) translateY(-90px) rotate(-60deg)
       &:nth-child(1)
         transition-delay 0.1s
-        transform rotate(-50deg) translateY(-105px) rotate(50deg)
+        transform rotate(-50deg) translateY(-90px) rotate(50deg)
       &:nth-child(2)
         transition-delay 0.18s
-        transform translateY(-105px) 
+        transform translateY(-90px) 
       &:nth-child(3)
         transition-delay 0.25s
-        transform rotate(50deg) translateY(-105px) rotate(-50deg)
+        transform rotate(50deg) translateY(-90px) rotate(-50deg)
 
 .menu-choose-btn
-  width 80px
-  height 80px
+  width 64px
+  height 64px
   background: linear-gradient(180deg, #FFBE85 0%, #FF238B 100%);
-  box-shadow: 0px 4px 10px 0px rgba(255, 0, 116, 0.32);
+  box-shadow: 0px 4px 10px 0px rgba(255, 0, 116, 0.16);
   border-radius 50%
   position relative
   &:before, &:after
@@ -63,27 +63,27 @@ html
     width 100%
     height 100%
     background url(https://image-hosting.xiaoxili.com/img/img/20200901/48d1aa7e09b8167545b01afc35dbe9eb-85e325.svg) no-repeat center
-    background-size 60px
+    background-size 48px
   
   &:after
     position absolute
-    left 50px
-    top 45px
-    width 20px
-    height 20px
+    left 36px
+    top 32px
+    width 16px
+    height 16px
     background url(https://image-hosting.xiaoxili.com/img/img/20200901/1f5ef087d6f34a5d1b4dae14664af92c-0f4420.svg) no-repeat
     background-size contain
     
 .menu-item
   position absolute
   padding 7px 6px 13px
-  width 60px
-  height 60px
-  border-radius 30px
+  width 50px
+  height 50px
+  border-radius 25px
   box-sizing border-box
   left 50%
   top 50%
-  margin -30px 0 0 -30px
+  margin -25px 0 0 -25px
   transition 0.3s linear transform, 0.3s linear opacity 
 
   text-align center
@@ -93,7 +93,7 @@ html
 
   &:before
     content ''
-    margin 5px auto
+    margin 2px auto
     display block
     width 28px
     height 20px
