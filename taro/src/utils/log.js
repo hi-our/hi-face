@@ -1,6 +1,8 @@
-var log = wx.getRealtimeLogManager ? wx.getRealtimeLogManager() : null
+import Taro from '@tarojs/taro'
 
-module.exports = {
+var log = Taro.getRealtimeLogManager ? Taro.getRealtimeLogManager() : null
+
+export default {
   debug() {
     if (!log) return
     log.debug.apply(log, arguments)

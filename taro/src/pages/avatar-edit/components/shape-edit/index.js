@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro'
 import { Block, View, Image, Button } from '@tarojs/components'
 import { getRealRpx, getShowRpx } from 'utils/image-utils'
 import { getOneShapeList } from '../../utils'
-import { getSystemInfo } from 'utils/common'
+import { getSystemInfo, isH5Page } from 'utils/common'
 import $log from 'utils/log'
 
 const systemInfo = getSystemInfo()
@@ -200,7 +200,7 @@ class ShapeEdit extends Taro.Component {
 
     let { shapeList } = this.state
     
-    if (!shapeList[this.touch_shape_index]) {
+    if (!shapeList[this.touch_shape_index] && !isH5Page) {
       console.log('无 this.touch_shape_index', this.touch_shape_index);
       $log.error('shape edit touchmove: ' + this.touch_shape_index + ' - '+ JSON.stringify(systemInfo))
       return

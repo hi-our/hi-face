@@ -57,8 +57,14 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 
 
 ### 作品效果图
-![](https://image-hosting.xiaoxili.com/img/img/20200911/5647e3ce1d5e7a80ddf51101915775e0-3ae655.png)
+![](https://image-hosting.xiaoxili.com/img/img/20200921/6562b94a148b112a6c6b092821bee6f3-4768c7.png)
+![](https://image-hosting.xiaoxili.com/img/img/20200921/236e9b57e5c2a8ad170c1edada9c2724-149cab.png)
 
+### 产品介绍视频
+
+[#小程序云开发挑战赛# Hi头像小程序介绍视频-完整版](https://v.qq.com/x/page/l3152qjx9e8.html)
+
+<iframe frameborder="0" src="https://v.qq.com/txp/iframe/player.html?vid=l3152qjx9e8" allowFullScreen="true"></iframe>
 
 ## 主创人员
 
