@@ -64,7 +64,6 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 
 [#小程序云开发挑战赛# Hi头像小程序介绍视频-完整版](https://v.qq.com/x/page/l3152qjx9e8.html)
 
-<iframe frameborder="0" src="https://v.qq.com/txp/iframe/player.html?vid=l3152qjx9e8" allowFullScreen="true"></iframe>
 
 ## 主创人员
 
