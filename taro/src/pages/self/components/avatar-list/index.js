@@ -69,7 +69,6 @@ export default class AvatarList extends Taro.Component {
 
   render() {
     const { list, listStatus, errorText } = this.state
-    console.log('listStatus :>> ', listStatus);
     return (
       <Block>
 

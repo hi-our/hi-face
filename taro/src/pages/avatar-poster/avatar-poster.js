@@ -100,8 +100,6 @@ class AvatarPoster extends Component {
 
       let base64Data = 'data:image/jpg;base64,' + base64Main
       const filePath = await base64src(base64Data)
-
-      console.log('base64Main :', filePath)
       this.setState({
         qrcodeFile: filePath
       })
@@ -122,7 +120,6 @@ class AvatarPoster extends Component {
         }
       })
       
-      console.log('isAuthor :', avatarFileID, isAuthor);
       this.setState({
         avatarFileID,
         isAuthor,
@@ -132,7 +129,6 @@ class AvatarPoster extends Component {
       if (avatarFileID) {
         let avatarFileLocal = await onDownloadFile(avatarFileID)
   
-        console.log('avatarFileLocal :', avatarFileLocal);
         this.setState({
           avatarFileLocal
         })

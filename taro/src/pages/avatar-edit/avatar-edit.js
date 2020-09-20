@@ -447,11 +447,11 @@ class AvatarEdit extends Component {
   render() {
     const { themeList, forCheck } = this.props
     const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, tabBarIndex, posterSrc } = this.state
-    const { coverImageUrl, _id: activeThemeId, themeName } = themeData
+    const { coverImageUrl, _id: activeThemeId, themeName, shareTitleSlug } = themeData
 
     return (
       <View className={`avatar-edit-page ${isShowMenuMain ? 'menu-open' : ''}`}>
-        {/* <PageLead /> */}
+        <PageLead />
         <PageLoading status={pageStatus} loadingType='fullscreen'></PageLoading>
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
         <View className={`page-container ${isShowShape ? 'page-container-shape' : ''}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px', backgroundPosition: 'center -' + (44 - STATUS_BAR_HEIGHT) + 'px' }}>
@@ -470,6 +470,7 @@ class AvatarEdit extends Component {
                 <View className="page-cover-wrap">
                   {!!coverImageUrl && <Image src={imageThumb(coverImageUrl, 600, 600, 1, 'webp')} webp className="page-theme-cover" />}
                   <View className='page-theme-name'>{themeName}</View>
+                  <View className='page-theme-slug'>{shareTitleSlug}</View>
                 </View>
               )
             }

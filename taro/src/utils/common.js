@@ -73,6 +73,7 @@ export function h5PageModalTips() {
 export const imageThumb = (src, width, height, format = 'webp', mode = 1, ) => {
 
   if (!src) return ''
+  if (src.includes('cloud')) return src
   let pathn = src.trim().replace(/^http(s)?:\/\//ig, '')
 
   pathn = pathn.split('/')

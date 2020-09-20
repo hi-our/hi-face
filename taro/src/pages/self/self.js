@@ -57,7 +57,6 @@ class Self extends Component {
   }
 
   onPullDownRefresh = () => {
-    console.log('onPullDownRefresh :>> ');
     this.listRef && this.listRef.loadData()
     Taro.showToast({
       title: '已刷新列表',

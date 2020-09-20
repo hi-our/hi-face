@@ -110,7 +110,6 @@ export default class ThemeList extends Component {
                   {
                     themeList.map((theme, index) => {
                       const { _id: themeId, themeName, shareImageUrl, iconImageUrl } = theme
-                      console.log('iconImageUrl || shareImageUrl :>> ', iconImageUrl,  shareImageUrl);
                       let imageWebp = imageThumb(iconImageUrl || shareImageUrl, 140, 140)
                       return (
                         <View className={`tabs-bar-item ${activeTab === index ? 'bar-active' : ''}`} key={themeId} id={`item-${index}`} onClick={this.onSwitchTab.bind(this, index)}>

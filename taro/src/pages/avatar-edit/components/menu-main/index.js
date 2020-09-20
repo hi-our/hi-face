@@ -66,9 +66,9 @@ export default class MenuMain extends Taro.PureComponent {
               })
             }
           </View>
-          <View className="about-wrap">
+          <View className="about-wrap" onClick={this.goToAbout}>
             <View className="menu-title">关于作者</View>
-            <View className="about-btn" onClick={this.goToAbout}>了解更多</View>
+            <View className="about-btn">了解更多</View>
             <View className="about-text">设计 - 不二雪</View>
             <View className="about-text">开发 - 小溪里</View>
 

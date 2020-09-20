@@ -69,8 +69,6 @@ export default class ThemeDetail extends Taro.Component {
     const { shapeCategoryList, isShowShape } = this.state
     const { shareImageUrl, shareTitle, shareDesc, themeName, shareTitleSlug } = themeData
 
-    console.log('shareTitleSlug :>> ', shareTitleSlug);
-
     return (
       <ScrollView className="theme-scroll" scrollY>
         <View className="theme-item" onClick={this.onSwitch}>

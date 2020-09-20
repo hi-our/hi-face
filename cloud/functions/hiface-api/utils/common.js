@@ -8,6 +8,11 @@ function safeJsonParse(jsonstr) {
   }
 }
 
+function getSplitString(fileId = '') {
+  return fileId.includes('/cloudbase-cms/upload/') ? '/cloudbase-cms/upload/' : '/uploads/'
+}
+
 module.exports = {
-  safeJsonParse
+  safeJsonParse,
+  getSplitString
 }

@@ -1,5 +1,6 @@
 const BaseController = require('./base-controller.js')
 const ConfigController = require('./config')
+const getSplitString = require('../utils/common').getSplitString
 
 const COLLECTION_NAME = 'hiface-themes'
 const COLLECTION_CATEGORY_NAME = 'hiface-shape-categories'
@@ -37,9 +38,9 @@ class ThemeController extends BaseController {
       
       const { coverImage = '', shareImage = '', iconImage = '', posterBg = '' } = data
       
-      let couldPrefix = coverImage.split('/uploads/')[0]
+      let couldPrefix = coverImage.split(getSplitString(coverImage))[0]
       let urlPath = await getImageUrl(this.cloud, coverImage)
-      let urlPrefix = urlPath.split('/uploads/')[0]
+      let urlPrefix = urlPath.split(getSplitString(coverImage))[0]
       let coverImageUrl = urlPath
       let shareImageUrl = shareImage.replace(couldPrefix, urlPrefix)
       let iconImageUrl = iconImage.replace(couldPrefix, urlPrefix)
@@ -127,9 +128,9 @@ class ThemeController extends BaseController {
       if (data && data.length >= 1) {
         // TODO 临时写法，快速换地址
         let cloudId = data[0].coverImage || ''
-        let couldPrefix = cloudId.split('/uploads/')[0]
+        let couldPrefix = cloudId.split(getSplitString(cloudId))[0]
         let urlPath = await getImageUrl(this.cloud, cloudId)
-        let urlPrefix = urlPath.split('/uploads/')[0]
+        let urlPrefix = urlPath.split(getSplitString(cloudId))[0]
         console.log('urlPrefix :>> ', couldPrefix, urlPrefix)
 
         data.forEach(async (themeItem, themeIndex) => {
