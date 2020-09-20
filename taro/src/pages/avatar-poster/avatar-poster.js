@@ -6,6 +6,7 @@ import PageWrapper from 'components/page-wrapper'
 import { base64src, onDownloadFile, getImg, saveImageToPhotosAlbum } from 'utils/image-utils'
 import { STATUS_BAR_HEIGHT, SAVE_AVATAR_SIZE, POSTER_WIDTH, POSTER_HEIGHT } from './utils'
 import { drawRoundImage, fillText } from 'utils/canvas'
+import { DEFAULT_SHARE_COVER } from 'constants/status'
 import CorePage from 'page';
 
 import './styles.styl'
@@ -54,7 +55,6 @@ class AvatarPoster extends Component {
   }
 
   onShareAppMessage({ from, target }) {
-    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/img/20200908/20f5ceab078c93d0901ea0ab0aac8b27-1231fe.jpg'
 
     const { avatarFileID, ageType } = this.state
 
@@ -100,8 +100,6 @@ class AvatarPoster extends Component {
 
       let base64Data = 'data:image/jpg;base64,' + base64Main
       const filePath = await base64src(base64Data)
-
-      console.log('base64Main :', filePath)
       this.setState({
         qrcodeFile: filePath
       })
@@ -122,7 +120,6 @@ class AvatarPoster extends Component {
         }
       })
       
-      console.log('isAuthor :', avatarFileID, isAuthor);
       this.setState({
         avatarFileID,
         isAuthor,
@@ -132,7 +129,6 @@ class AvatarPoster extends Component {
       if (avatarFileID) {
         let avatarFileLocal = await onDownloadFile(avatarFileID)
   
-        console.log('avatarFileLocal :', avatarFileLocal);
         this.setState({
           avatarFileLocal
         })
@@ -207,7 +203,7 @@ class AvatarPoster extends Component {
       posterCtx.drawImage(posterBg, 0, 0, POSTER_WIDTH, POSTER_HEIGHT)
       posterCtx.drawImage(avatarFileLocal, 68, 340, SAVE_AVATAR_SIZE, SAVE_AVATAR_SIZE)
       posterCtx.drawImage(require('../../images/poster-line.png'), 1, 264, POSTER_WIDTH, POSTER_WIDTH)
-      posterCtx.drawImage(require('../../images/logo-text.png'), 46, 1060, 314, 134)
+      posterCtx.drawImage(require('../../images/logo-text.png'), 48, 1080, 320, 100)
       if (qrcodeFile) {
         drawRoundImage(posterCtx, qrcodeFile, 452, 1022, 107)
       }

@@ -54,12 +54,12 @@ export default class CustomTabBar extends Taro.Component {
     const { selected, hideIndex } = this.props
     const { list } = this.state
     return (
-      <View className={`tab-bar ${IS_IPHONEX ? 'bottom-safe-area' : ''}`}>
+      <View className={`tab-bar ${IS_IPHONEX ? 'bottom-safe-area' : ''} ${hideIndex === selected ? 'tab-bar-hide' : ''}`}>
         {
           list.map((item, index) => {
             const { pagePath, selectedIconPath, iconPath, text } = item
             return (
-              <View key={text} hoverClass='tab-bar-item-hover' className={`tab-bar-item ${selected === index ? 'tab-item-active' : ''} ${hideIndex === index ? 'tab-item-hide' : ''}`} data-path={pagePath} data-index={index} onClick={this.switchTab}>
+              <View key={text} hoverClass='tab-bar-item-hover' className={`tab-bar-item ${selected === index ? 'tab-item-active' : ''}`} data-path={pagePath} data-index={index} onClick={this.switchTab}>
                 <Image className="tab-bar-image" src={'' + (selected === index ? selectedIconPath : iconPath)}></Image>
                 <View className="tab-bar-text">{text}</View>
               </View>

@@ -65,16 +65,23 @@ export default class MenuChoose extends Taro.Component {
     })
   }
 
+  onCancel = () => {
+    this.setState({
+      originSrc: ''
+    })
+  }
+
   //用户按了允许授权按钮
   onGetUserInfo = async (e) => {
-    const { onChoose } = this.props
     if (e.detail.userInfo) {
+      // 授权后默认完成用户登录
       userActions.login()
       Taro.showToast({
         icon: 'none',
         title: '获取头像...'
       })
       try {
+        Taro.hideToast()
         let avatarUrl = await getImg(e.detail.userInfo.avatarUrl.replace('/132', '/0'))
         
         if (avatarUrl) {
@@ -105,10 +112,14 @@ export default class MenuChoose extends Taro.Component {
             type="default"
             openType="getUserInfo"
             onGetUserInfo={this.onGetUserInfo}
-          ></Button>
-          <View className='menu-item menu-item-camera' onClick={this.onChooseImage.bind(this, 'camera')}></View>
-          <View className='menu-item menu-item-album' onClick={this.onChooseImage.bind(this, 'album')}></View>
-          <View className='menu-item menu-item-search'></View>
+          >头像</Button>
+          <View className='menu-item menu-item-camera' onClick={this.onChooseImage.bind(this, 'camera')}>
+            相机
+          </View>
+          <View className='menu-item menu-item-album' onClick={this.onChooseImage.bind(this, 'album')}>
+            相册
+          </View>
+          {/* <View className='menu-item menu-item-search'></View> */}
           <View className='menu-choose-btn'></View>
         </View>
         <View className='cropper-wrap' style={{ display: originSrc ? 'block' : 'none' }}>

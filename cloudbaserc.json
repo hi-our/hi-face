@@ -23,7 +23,7 @@
           "buildCommand": "cd taro && SERVER_ENV={{env.SERVER_ENV}} npm run release",
           "appid": "{{env.APP_ID}}",
           "privateKeyPath": "miniprogram-private.key",
-          "localPath": "taro/",
+          "localPath": "taro/dist/",
           "ignores": "[node_modules/**/*]",
           "deployMode": "preview",
           "previewOptions": {
@@ -47,7 +47,7 @@
                 "timeout": 20,
                 "envVariables": {},
                 "runtime": "Nodejs10.15",
-                "memorySize": 1024
+                "memorySize": 256
               }
             }
           ]

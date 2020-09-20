@@ -4,11 +4,15 @@
 
 ## 核心亮点
 
-
-* 基于腾讯云云开发开发，易部署、扩展性很好，核心配置已进行抽离
-* 基于 Taro 打造，有微信小程序端和 Web 端，将来还可以扩展更多端
-* 用户体验好，易于操作，交互动画友好且动感
-* 独家拥有技术小册《**[从0到1开发一个智能头像识别小程序](https://www.xiaoxili.com/hi-face/docs/README.html)**》，详细说明 Hi 头像主要实现思路
+| 特性        | 介绍                                  |
+| ----------- | ------------------------------------ |
+| 云开发      |基于腾讯云云开发，易部署、扩展性很好                                 |
+| 人工智能 | 基于腾讯云的人脸五官分析服务自动为头像戴皇冠、圣诞帽或口罩，支持多人识别 |
+| 多端运行 | 基于 Taro 打造，有微信小程序端和 Web 端 |
+| 用户体验好 | UI设计精美，易于操作，交互动画友好且动感 |
+| 部署文档详细 | 本项目的部署文档非常详细，详情请查看《[DEPLOYMENT](https://github.com/hi-our/hi-face/blob/master/DEPLOYMENT.md)》文档 |
+| 前端工程化 | 核心配置已抽取，基于 Cloudbase Framework 完成云函数、Web 端 和小程序端部署|
+| 技术小册 | 独家拥有技术小册《**[从0到1开发一个智能头像识别小程序](https://www.xiaoxili.com/hi-face/docs/README.html)**》，详细说明 Hi 头像主要实现思路 |
 
 
 ## 功能体验
@@ -75,7 +79,29 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 
 本项目的部署文档非常详细，详情请查看《[DEPLOYMENT](https://github.com/hi-our/hi-face/blob/master/DEPLOYMENT.md)》文档。
 
-> 基于[Cloudbase Framework](https://github.com/TencentCloudBase/cloudbase-framework)完成小程序端、Web端、云函数端构建，基于[云开发 CMS](https://github.com/TencentCloudBase/cloudbase-extension-cms)管理数据。
+* 核心配置可参考 `.env.example`
+* 基于[Cloudbase Framework](https://github.com/TencentCloudBase/cloudbase-framework)完成小程序端、Web端、云函数端构建
+* 基于[云开发 CMS](https://github.com/TencentCloudBase/cloudbase-extension-cms)管理数据
+
+## RoadMap
+
+🚀 表示已经实现的功能，👷 表示进行中的功能，⏳ 表示规划中的功能，🏹 表示技术方案设计中的功能。
+
+| 功能                                                     | 状态      | 发布版本 |
+| -------------------------------------------------------- | --------- | -------- |
+| UI 重构、页面流程优化                                        | 🚀 已实现 | V2.0     |
+| 云函数合并，使用 `tcb-router` 进行路由匹配        | 🚀 已实现 | V2.0     |
+| 使用 `cloudbase-framework` 来发布 Web 端、云函数    | 🚀 已实现 | V2.0     |
+| 使用 `cloudbase-framework` 来部署小程序的预览、体验版      | 👷 进行中 | V2.0     |
+| Cloudbase CMS v1 版数据模型快速生成集合字段      | 🚀 已实现  | V2.0     |
+| Cloudbase CMS v2 版数据模型快速生成集合字段及提供默认数据      | ⏳ 规划中  | V3.0     |
+| 贴纸编辑器调研      | 🏹 设计中  | V3.0     |
+| 海报换为 `canvas 2d` 版      | 🏹 设计中  | V3.0     |
+| Web 版云开发登录鉴权设计      | 🏹 设计中  | V3.0     |
+| 云环境共享调研      | 🏹 设计中  | V3.0     |
+| 更多的腾讯云人工智能服务      | 🏹 设计中  | V3.0     |
+
+
 
 ## 贡献榜
 

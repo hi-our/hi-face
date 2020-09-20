@@ -1,7 +1,11 @@
 import Taro from '@tarojs/taro'
 import { Block, View, Image, Button } from '@tarojs/components'
 import { getRealRpx, getShowRpx } from 'utils/image-utils'
-import { getOneShapeList } from '../../utils';
+import { getOneShapeList } from '../../utils'
+import { getSystemInfo } from 'utils/common'
+import $log from 'utils/log'
+
+const systemInfo = getSystemInfo()
 
 import './styles.styl'
 
@@ -113,7 +117,9 @@ class ShapeEdit extends Taro.Component {
       }
     } else {
       currentShapeIndex = shapeList.length
-      if ([0, 2, 3].includes(position)) {
+      // 贴纸为额头或嘴巴
+      // 当前有同款贴纸
+      if ([0, 2, 3].includes(position) || shapeList.find(item => item.shapeId === shapeId)) {
         position = 1
       }
 
@@ -160,6 +166,8 @@ class ShapeEdit extends Taro.Component {
   }
 
   touchStart = (e) => {
+    if (this.state.shapeList.length === 0) return
+
     const { type = '', shapeIndex = 0 } = e.target.dataset
 
     this.touch_target = type;
@@ -178,6 +186,8 @@ class ShapeEdit extends Taro.Component {
   }
 
   touchEnd = (e) => {
+    if (this.state.shapeList.length === 0) return
+    
     if (this.touch_target !== '' || this.touch_target !== 'cancel') {
       if (this.state.shapeList[this.touch_shape_index]) {
         setTmpThis(this, this.state.shapeList[this.touch_shape_index])
@@ -186,13 +196,23 @@ class ShapeEdit extends Taro.Component {
   }
 
   touchMove = (e) => {
+    if (this.state.shapeList.length === 0) return
+
     let { shapeList } = this.state
+    
+    if (!shapeList[this.touch_shape_index]) {
+      console.log('无 this.touch_shape_index', this.touch_shape_index);
+      $log.error('shape edit touchmove: ' + this.touch_shape_index + ' - '+ JSON.stringify(systemInfo))
+      return
+    }
+
+    
     const {
       shapeCenterX,
       shapeCenterY,
       resizeCenterX,
       resizeCenterY,
-    } = shapeList[this.touch_shape_index]
+    } = shapeList[this.touch_shape_index || 0] || {}
 
     var current_x = e.touches[0].clientX;
     var current_y = e.touches[0].clientY;

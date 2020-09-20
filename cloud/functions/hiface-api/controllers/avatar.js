@@ -124,11 +124,14 @@ class AvatarController extends BaseController {
 
 
     try {
-      let { total } = await this.cloud.db.collection(COLLECTION_NAME).count()
+      let { data: totalList } = await this.cloud.db.collection(COLLECTION_NAME).limit(1000).get()
+      
+      let total = totalList.length
+      
       let pageTotal = Math.ceil(total / pageSize)
 
       if (pageNo > pageTotal) {
-        this.success({
+        return this.success({
           items: [],
           pageNo,
           total
@@ -156,9 +159,9 @@ class AvatarController extends BaseController {
       } else {
         operation = operation.orderBy('updateTime', 'desc')
       }
-      let { data = [] } = await operation.get()
-
-      if (data && data.length >= 1) {
+      let { data } = await operation.get()
+      
+      if (data) {
         return this.success({
           items: data,
           nextPage: pageTotal > pageNo,

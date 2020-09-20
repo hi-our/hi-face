@@ -2,6 +2,8 @@ const cloud = require('wx-server-sdk')
 
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV
+  // env: 'production-topjt'
+  // env: 'development-v9y2f'
 })
 
 

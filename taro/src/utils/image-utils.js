@@ -29,12 +29,12 @@ export const base64src = async (base64data) => {
     return (new Error('ERROR_BASE64SRC_PARSE'));
   }
   const filePath = `${Taro.env.USER_DATA_PATH}/${FILE_BASE_NAME}-${Date.now()}.${format}`;
-  const buffer = Taro.base64ToArrayBuffer(bodyData);
+  // const buffer = Taro.base64ToArrayBuffer(bodyData);
   try {
     await fsm.writeFile({
       filePath,
-      data: buffer,
-      encoding: 'binary',
+      data: bodyData,
+      encoding: 'base64',
     });
     return filePath
     

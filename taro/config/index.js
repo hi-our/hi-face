@@ -50,6 +50,7 @@ const config = {
   defineConstants: {
     'process.env.SERVER_ENV': JSON.stringify(process.env.SERVER_ENV),
     'process.env.ENV_ID': JSON.stringify(process.env.ENV_ID),
+    'process.env.APP_ID': JSON.stringify(process.env.APP_ID),
   },
   alias,
   mini: {

@@ -9,6 +9,7 @@ import PosterDialog from './components/poster-dialog'
 import { getHatList, getHatShapeList } from 'utils/face-utils'
 import { getImg, fsmReadFile, getBase64Main, saveImageToPhotosAlbum, onUploadFile } from 'utils/image-utils'
 import { h5PageModalTips, imageThumb } from 'utils/common'
+import { DEFAULT_SHARE_COVER } from 'constants/status'
 import { cloudCallFunction } from 'utils/fetch'
 import { imgSecCheck } from 'utils/image-safe-check';
 import { imageAnalyzeFace } from 'utils/image-analyze-face'
@@ -76,9 +77,8 @@ class AvatarEdit extends Component {
 
   // 分享信息
   onShareAppMessage({ from, target }) {
-    const DEFAULT_SHARE_COVER = 'https://image-hosting.xiaoxili.com/img/img/20200908/20f5ceab078c93d0901ea0ab0aac8b27-1231fe.jpg'
     const { themeData } = this.state
-    let { shareImage = DEFAULT_SHARE_COVER, shareTitle = '给女神戴上皇冠吧！' } = themeData
+    let { shareImage = DEFAULT_SHARE_COVER, shareTitle = '', shareTitleSlug = '' } = themeData
 
     let shareUrl = '/pages/avatar-edit/avatar-edit'
     if (from === 'button') {
@@ -96,7 +96,7 @@ class AvatarEdit extends Component {
     }
 
     return {
-      title: shareTitle,
+      title: shareTitle + (shareTitleSlug ? ' ' + shareTitleSlug : ''),
       imageUrl: shareImage,
       path: shareUrl
     }
@@ -195,7 +195,7 @@ class AvatarEdit extends Component {
           getOneShapeList(shapeOne)
         ]
       }
-      console.log('2 :>> ', shapeList);
+
       this.setState({
         shapeList,
         isShowShape: true,
@@ -447,9 +447,8 @@ class AvatarEdit extends Component {
   render() {
     const { themeList, forCheck } = this.props
     const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, tabBarIndex, posterSrc } = this.state
-    const { coverImageUrl, _id: activeThemeId, themeName } = themeData
+    const { coverImageUrl, _id: activeThemeId, themeName, shareTitleSlug } = themeData
 
-    console.log('coverImageUrl :>> ', coverImageUrl);
     return (
       <View className={`avatar-edit-page ${isShowMenuMain ? 'menu-open' : ''}`}>
         <PageLead />
@@ -471,6 +470,7 @@ class AvatarEdit extends Component {
                 <View className="page-cover-wrap">
                   {!!coverImageUrl && <Image src={imageThumb(coverImageUrl, 600, 600, 1, 'webp')} webp className="page-theme-cover" />}
                   <View className='page-theme-name'>{themeName}</View>
+                  <View className='page-theme-slug'>{shareTitleSlug}</View>
                 </View>
               )
             }
