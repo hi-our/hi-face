@@ -38,7 +38,7 @@ export default class MenuMain extends Taro.PureComponent {
     Taro.navigateTo({
       url: '/pages/about/about'
     })
-    this.onMenuMainTogggle()
+    // this.onMenuMainTogggle()
   }
 
   render() {

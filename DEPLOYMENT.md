@@ -21,37 +21,35 @@
 
 #### 云环境ID
 
-请参照 .env.example 文件，在项目根目录配置 .env 和 .env.dev 文件
+请参照 `.env.example` 文件，在项目根目录配置 `.env` 和 `.env.dev` 文件
 
 ```makefile
-#.env
-ENV_ID=xxx
-SERVER_ENV=prod
-```
-```makefile
-#.env.dev
-ENV_ID=xxx
-SERVER_ENV=dev
+# 小程序 appid，在小程序项目和小程序部署中使用
+APP_ID=xxxID
+# 云环境 ID
+ENV_ID=xxxID
+SERVER_ENV=dev # 开发环境：dev 生成环境：prod
+
+# 在云数据库导入中用，具体可以看 cloud/database
+#腾讯云安全 secretID和 secretKey，可以从 https://console.cloud.tencent.com/cam/capi 获取
+TCB_SECRET_ID=xxx
+TCB_SECRET_KEY=xxx
 ```
 
-* `ENV_ID`云环境 ID
-* `SERVER_ENV`是在 Taro 项目中区分开发环境还是生产环境
+* `APP_ID` 小程序 appId
+* `ENV_ID` 云环境 ID
+* `SERVER_ENV` 是在 Taro 项目中区分开发环境还是生产环境
 
-#### 依赖的服务
+#### 小程序版本 Version
+
+在`taro/src/config.js`配置，便于线上查看版本
+
+#### 需要开通的服务
 
 在头像编辑页需要图像安全审核、人脸五官分析两个服务，请在微信服务平台开通。
 
 * [图像安全审核](https://developers.weixin.qq.com/community/servicemarket/detail/000a246b6fca70b76a896e6a25ec15)
 * [五官定位](https://developers.weixin.qq.com/community/servicemarket/detail/000808a09b85c8e39aa94b1c65d015)
-
-
-#### 小程序 AppID
-
-在`taro/src/config.js`配置
-
-版本 Version
-
-在`taro/src/config.js`配置，便于线上查看版本
 
 ### （2）云开发环境部署
 

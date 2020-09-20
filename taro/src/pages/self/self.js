@@ -128,7 +128,6 @@ class Self extends Component {
             <Image className='avatar-image' src={avatarUrl || avatar}></Image>
           </View>
           <View className='nick-name'>{nickName}</View>
-          <View className='address-text'>让头像更有趣</View>
         </View>
         <ScrollView className="avatar-wrap" scrollY>
           <AvatarList ref={c => this.listRef = c} />

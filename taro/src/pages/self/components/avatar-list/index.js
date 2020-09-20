@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro'
 import { View, Block, Image } from '@tarojs/components'
-import { cloudCallFunction } from 'utils/fetch';
+import { cloudCallFunction } from 'utils/fetch'
+import PageStatus from 'components/page-status'
 
 
 import './styles.styl'
@@ -17,7 +18,7 @@ export default class AvatarList extends Taro.Component {
     super(props)
     this.state = {
       list: [],
-      pageStatus: 'loading',
+      listStatus: 'loading',
       errorText: ''
     }
   }
@@ -36,11 +37,9 @@ export default class AvatarList extends Taro.Component {
         }
       })
 
-      console.log('data.length :', items.length);
-
       if (pageNo === 1 && items.length === 0) {
         this.setState({
-          pageStatus: 'empty',
+          listStatus: 'empty',
           errorText: '数据为空'
         })
         return
@@ -48,12 +47,12 @@ export default class AvatarList extends Taro.Component {
 
       this.setState({
         list: items,
-        pageStatus: 'done'
+        listStatus: 'done'
       })
 
     } catch (error) {
       this.setState({
-        pageStatus: 'error',
+        listStatus: 'error',
         errorText: '加载出错'
       })
       console.log('error :', error);
@@ -69,21 +68,40 @@ export default class AvatarList extends Taro.Component {
   }
 
   render() {
-    const { list, pageStatus, errorText } = this.state
+    const { list, listStatus, errorText } = this.state
+    console.log('listStatus :>> ', listStatus);
     return (
       <Block>
-        <View className="list" scrollY>
-          {
-            list.filter(item => item.avatarFileID).map((item) => {
-              const { uuid, avatarFileID } = item
-              return (
-                <View key={uuid} className="avatar-item" data-uuid={uuid} onClick={this.goOneAvatar.bind(this, uuid)}>
-                  <Image className="avatar-image" src={avatarFileID} lazyLoad></Image>
-                </View>
-              )
-            })
-          }
-        </View>
+
+        {
+          listStatus === 'loading' && (
+            <PageStatus status='loading' />
+          )
+        }
+        {
+          listStatus === 'empty' && (
+            <View>
+              <Image className="logo-image" src="https://image-hosting.xiaoxili.com/img/img/20200830/41eb7adb16c09f5b25137fe708269e12-11e1fa.png"></Image>
+              <View className="empty-text">长官，快去做你的第一个头像吧</View>
+            </View>
+          )
+        }
+        {
+          listStatus === 'done' && (
+            <View className="list" scrollY>
+              {
+                list.filter(item => item.avatarFileID).map((item) => {
+                  const { uuid, avatarFileID } = item
+                  return (
+                    <View key={uuid} className="avatar-item" data-uuid={uuid} onClick={this.goOneAvatar.bind(this, uuid)}>
+                      <Image className="avatar-image" src={avatarFileID} lazyLoad></Image>
+                    </View>
+                  )
+                })
+              }
+            </View>
+          )
+        }
       </Block>
     )
   }

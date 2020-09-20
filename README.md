@@ -4,8 +4,8 @@
 
 ## 核心亮点
 
-
-* 基于腾讯云云开发开发，易部署、扩展性很好，核心配置已进行抽离
+* 基于腾讯云云开发开发，易部署、扩展性很好，核心配置可根据环境设置
+* 基于腾讯云人工智能特色服务，如五官分析
 * 基于 Taro 打造，有微信小程序端和 Web 端，将来还可以扩展更多端
 * 用户体验好，易于操作，交互动画友好且动感
 * 独家拥有技术小册《**[从0到1开发一个智能头像识别小程序](https://www.xiaoxili.com/hi-face/docs/README.html)**》，详细说明 Hi 头像主要实现思路
@@ -75,7 +75,9 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 
 本项目的部署文档非常详细，详情请查看《[DEPLOYMENT](https://github.com/hi-our/hi-face/blob/master/DEPLOYMENT.md)》文档。
 
-> 基于[Cloudbase Framework](https://github.com/TencentCloudBase/cloudbase-framework)完成小程序端、Web端、云函数端构建，基于[云开发 CMS](https://github.com/TencentCloudBase/cloudbase-extension-cms)管理数据。
+* 核心配置可参考 `.env.example`
+* 基于[Cloudbase Framework](https://github.com/TencentCloudBase/cloudbase-framework)完成小程序端、Web端、云函数端构建
+* 基于[云开发 CMS](https://github.com/TencentCloudBase/cloudbase-extension-cms)管理数据
 
 ## 贡献榜
 

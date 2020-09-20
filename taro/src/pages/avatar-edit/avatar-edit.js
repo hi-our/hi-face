@@ -195,7 +195,7 @@ class AvatarEdit extends Component {
           getOneShapeList(shapeOne)
         ]
       }
-      console.log('2 :>> ', shapeList);
+
       this.setState({
         shapeList,
         isShowShape: true,
@@ -449,10 +449,9 @@ class AvatarEdit extends Component {
     const { isShowShape, isShowMenuMain, cutImageSrc, shapeList, pageStatus, themeData, shapeCategoryList, tabBarIndex, posterSrc } = this.state
     const { coverImageUrl, _id: activeThemeId, themeName } = themeData
 
-    console.log('coverImageUrl :>> ', coverImageUrl);
     return (
       <View className={`avatar-edit-page ${isShowMenuMain ? 'menu-open' : ''}`}>
-        <PageLead />
+        {/* <PageLead /> */}
         <PageLoading status={pageStatus} loadingType='fullscreen'></PageLoading>
         <Canvas className='canvas-shape' style={{ width: SAVE_IMAGE_WIDTH + 'px', height: SAVE_IMAGE_WIDTH + 'px' }} canvasId='canvasShape' ref={c => this.canvasShapeRef = c} />
         <View className={`page-container ${isShowShape ? 'page-container-shape' : ''}`} style={{ paddingTop: STATUS_BAR_HEIGHT + 'px', backgroundPosition: 'center -' + (44 - STATUS_BAR_HEIGHT) + 'px' }}>

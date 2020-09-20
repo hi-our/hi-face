@@ -70,7 +70,7 @@ export default class ImageChoose extends Taro.Component {
                             className={`tab-bd-image  tab-bd-image-${item.name}`}
                             key={shapeId}
                             src={imageUrl}
-                            onClick={() => chooseShape(shapeItem)}
+                            onClick={() => chooseShape({ ...shapeItem, shapeId })}
                           />
                         )
                       })

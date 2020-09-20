@@ -28,25 +28,25 @@ html
       opacity 1
       // &:nth-child(1)
       //   transition-delay 0.1s
-      //   transform rotate(-60deg) translateY(-95px) rotate(60deg)
+      //   transform rotate(-60deg) translateY(-105px) rotate(60deg)
       // &:nth-child(2)
       //   transition-delay 0.18s
-      //   transform rotate(-20deg) translateY(-95px) rotate(20deg)
+      //   transform rotate(-20deg) translateY(-105px) rotate(20deg)
       // &:nth-child(3)
       //   transition-delay 0.25s
-      //   transform rotate(20deg) translateY(-95px) rotate(-20deg)
+      //   transform rotate(20deg) translateY(-105px) rotate(-20deg)
       // &:nth-child(4)
       //   transition-delay 0.3s
-      //   transform rotate(60deg) translateY(-95px) rotate(-60deg)
+      //   transform rotate(60deg) translateY(-105px) rotate(-60deg)
       &:nth-child(1)
         transition-delay 0.1s
-        transform rotate(-60deg) translateY(-95px) rotate(60deg)
+        transform rotate(-50deg) translateY(-105px) rotate(50deg)
       &:nth-child(2)
         transition-delay 0.18s
-        transform translateY(-95px) 
+        transform translateY(-105px) 
       &:nth-child(3)
         transition-delay 0.25s
-        transform rotate(60deg) translateY(-95px) rotate(-60deg)
+        transform rotate(50deg) translateY(-105px) rotate(-50deg)
 
 .menu-choose-btn
   width 80px
@@ -82,19 +82,23 @@ html
 .menu-item
   position absolute
   padding 7px 6px 13px
-  width 40px
-  height 40px
-  border-radius 20px
+  width 60px
+  height 60px
+  border-radius 30px
   box-sizing border-box
   left 50%
   top 50%
-  margin -20px 0 0 -20px
-  // opacity 0
+  margin -30px 0 0 -30px
   transition 0.3s linear transform, 0.3s linear opacity 
+
+  text-align center
+  font-size 10px
+  line-height 1.25
+  color #fff !important
 
   &:before
     content ''
-    margin 2px auto 0
+    margin 5px auto
     display block
     width 28px
     height 20px
