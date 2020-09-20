@@ -47,7 +47,7 @@
                 "timeout": 20,
                 "envVariables": {},
                 "runtime": "Nodejs10.15",
-                "memorySize": 1024
+                "memorySize": 256
               }
             }
           ]
