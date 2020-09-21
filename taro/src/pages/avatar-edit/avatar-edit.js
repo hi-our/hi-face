@@ -26,11 +26,7 @@ const isQQPage = process.env.TARO_ENV === 'qq'
 
 // @CorePage
 class AvatarEdit extends Component {
-  config = {
-    navigationBarTitleText: '头像编辑',
-    navigationStyle: 'custom',
-    disableScroll: true
-  }
+
 
   constructor(props) {
     super(props)
