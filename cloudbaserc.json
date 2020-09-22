@@ -49,6 +49,32 @@
                 "runtime": "Nodejs10.15",
                 "memorySize": 256
               }
+            },
+            {
+              "name": "init-db",
+              "config": {
+                "timeout": 20,
+                "envVariables": {},
+                "runtime": "Nodejs10.15",
+                "memorySize": 256
+              }
+            }
+          ]
+        }
+      },
+      "db": {
+        "use": "@cloudbase/framework-plugin-function",
+        "inputs": {
+          "functionRootPath": "cloud/functions",
+          "functions": [
+            {
+              "name": "init-db",
+              "config": {
+                "timeout": 20,
+                "envVariables": {},
+                "runtime": "Nodejs10.15",
+                "memorySize": 256
+              }
             }
           ]
         }

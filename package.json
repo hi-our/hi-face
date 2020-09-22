@@ -13,6 +13,9 @@
     "deploy:web": "tcb framework deploy client",
     "deploy:mini": "tcb framework deploy miniprogram  --verbose",
     "deploy:devfn": "tcb framework deploy server --mode dev",
+    "deploy:init-db": "tcb framework deploy db && tcb fn invoke init-db",
+    "deploy:init-db:dev": "tcb framework deploy db --mode dev && tcb fn invoke init-db --mode dev",
+    "deploy:init-db:test": "tcb framework deploy db --mode test && tcb fn invoke init-db --mode test",
     "deploy:fn": "tcb framework deploy server"
   },
   "husky": {

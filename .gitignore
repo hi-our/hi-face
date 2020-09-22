@@ -23,5 +23,6 @@ yarn.lock
 
 .env
 .env.dev
+.env.test
 
 miniprogram-private.key

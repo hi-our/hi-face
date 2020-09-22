@@ -1,0 +1,20 @@
+{
+  "name": "hiface-database-init",
+  "version": "1.0.0",
+  "description": "用于生产 Hi 头像数据模型",
+  "main": "index.js",
+  "scripts": {
+    "init-db:dev": "SERVER_ENV=dev node index.js",
+    "init-db": "node index.js"
+  },
+  "devDependencies": {
+    "wx-server-sdk": "latest"
+  },
+  "keywords": [
+    "hi-face",
+    "cloudbase",
+    "tcb"
+  ],
+  "author": "shenghanqin",
+  "license": "MIT"
+}
