@@ -123,13 +123,32 @@ TCB_SECRET_KEY=xxx
 
 ![](https://image-hosting.xiaoxili.com/img/img/20200911/ce081059e46ea9d91a34101af20a2d24-ded751.png)
 
-#### 方案三：数据模型快速生成
+#### 方案三：数据模型快速生成，需要安装Cloudbase Cli
+
+>目前在 CMS v1 版中有一点小问题，CMS v2版数据模型跟 v1 不太一样，还未完全测试。
+
+Hi 头像数据管理基于 Cloudbase CMS 内容管理扩展，需要在云开发 cloudbase 控制台下方扩展能力中开通。
+
+```shell
+# 安装Cloudbase Cli，目前我用的是测试版
+npm install -g @cloudbase/cli@beta
+
+# 授权云函数所在的腾讯云账号
+tcb login
+
+# 部署生产环境的数据模型，需要在 .env 文件中配置 ENV_ID
+npm run deploy:init-db
+# 或者，部署开发环境的数据模型，需要在 .env.dev 文件中配置 ENV_ID
+npm run deploy:init-db:dev
+```
+
+#### 方案四：数据模型快速生成，需配置 腾讯云 secretId 和 secretKey
 
 >目前在 CMS v1 版中有一点小问题，CMS v2版数据模型跟 v1 不太一样，还未完全测试。
 
 Hi 头像数据管理基于 云开发 CMS 内容管理扩展，需要在云开发cloudbase 控制台下方扩展能力中开通。
 
-```plain
+```
 cd cloud/database
 npm install
 npm run init-db
