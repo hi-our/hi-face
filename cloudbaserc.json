@@ -20,17 +20,17 @@
       "miniprogram": {
         "use": "@cloudbase/framework-plugin-mp",
         "inputs": {
-          "buildCommand": "cd taro && SERVER_ENV={{env.SERVER_ENV}} npm run release",
+          "commands": {
+            "install": "cd taro && npm install",
+            "build": "cd taro && SERVER_ENV={{env.SERVER_ENV}} npm run release"
+          },
           "appid": "{{env.APP_ID}}",
           "privateKeyPath": "miniprogram-private.key",
-          "localPath": "taro/dist/",
-          "ignores": "[node_modules/**/*]",
+          "localPath": "./",
+          "ignores": ["node_modules/**/*"],
           "deployMode": "preview",
           "previewOptions": {
             "desc": "CloudBase Framework 一键预览",
-            "setting": {
-              "es6": true
-            },
             "qrcodeOutputPath": "./qrcode.jpg",
             "pagePath": "pages/avatar-edit/avatar-edit"
           }
