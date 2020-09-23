@@ -4,7 +4,7 @@
   "$schema": "https://framework-1258016615.tcloudbaseapp.com/schema/latest.json",
   "functionRoot": "cloud/functions",
   "framework": {
-    "name": "taro-starter",
+    "name": "hiface-starter",
     "plugins": {
       "client": {
         "use": "@cloudbase/framework-plugin-website",
