@@ -11,6 +11,7 @@
 | 多端运行 | 基于 Taro 打造，有微信小程序端和 Web 端 |
 | 用户体验好 | UI设计精美，易于操作，交互动画友好且动感 |
 | 部署文档详细 | 本项目的部署文档非常详细，详情请查看《[DEPLOYMENT](https://github.com/hi-our/hi-face/blob/master/DEPLOYMENT.md)》文档 |
+| 数据管理方便 | 使用 CloudBase CMS 管理数据，并贴心地给出初始化数据模型及默认数据 |
 | 前端工程化 | 核心配置已抽取，基于 Cloudbase Framework 完成云函数、Web 端 和小程序端部署|
 | 技术小册 | 独家拥有技术小册《**[从0到1开发一个智能头像识别小程序](https://www.xiaoxili.com/hi-face/docs/README.html)**》，详细说明 Hi 头像主要实现思路 |
 
@@ -80,13 +81,17 @@ Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 
 公众号：不二诗旅
 
+## 技术栈
+* ❤️ UI侧 —— Taro，文档见 https://taro.jd.com/
+* ❤️ 服务 —— 云开发 CloudBase，文档见 https://docs.cloudbase.net/
+* ❤️ 部署 —— 基于 CloudBase Framework 完成小程序端、Web端、云函数、数据模型构建，官网见 https://cloudbase.net/framework.html
+* ❤️ 内容管理 —— 基于 CloudBase CMS 管理数据，文档见 https://docs.cloudbase.net/cms/intro.html
+
+
 ## 部署文档
 
 本项目的部署文档非常详细，详情请查看《[DEPLOYMENT](https://github.com/hi-our/hi-face/blob/master/DEPLOYMENT.md)》文档。
 
-* 核心配置可参考 `.env.example`
-* 基于[Cloudbase Framework](https://github.com/TencentCloudBase/cloudbase-framework)完成小程序端、Web端、云函数端构建
-* 基于[云开发 CMS](https://github.com/TencentCloudBase/cloudbase-extension-cms)管理数据
 
 ## RoadMap
 
