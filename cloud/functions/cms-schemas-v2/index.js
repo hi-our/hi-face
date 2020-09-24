@@ -33,7 +33,8 @@ async function main() {
   const projects = await fs.readdir(projectsFolder)
   for (const project of projects) {
     // if (schema !== 'themes.json') return
-    const projectFilePath = path.join(schemasFolder, project)
+    const projectFilePath = path.join(projectsFolder, project)
+    console.log('projectFilePath :>> ', projectFilePath);
     const stats = await fs.stat(projectFilePath)
     if (stats.isFile() && project.endsWith('.json')) {
       try {
@@ -66,14 +67,14 @@ async function main() {
  * @param {string} filepath
  */
 async function addProject(filepath) {
-  const schemaJson = require(filepath)
+  const dataJson = require(filepath)
   const cmsCollection = db.collection(cmsProjectsCollection)
 
-  console.log(`>>> start create ${schemaJson.collectionName}`)
+  console.log(`>>> start create ${dataJson.name}`)
   try {
     
     const { total } = await cmsCollection.where({
-      customId: schemaJson.customId
+      customId: dataJson.customId
     })
       .count()
     
@@ -82,14 +83,14 @@ async function addProject(filepath) {
       // 按照 CMS 的字段定义格式，新建对应字段的记录信息
       const { _id } = await cmsCollection.add({
         data: {
-          ...schemaJson,
+          ...dataJson,
           createTime: new Date(),
           updateTime: new Date(),
         }
       })
-      console.log(`<<< ${schemaJson.name} create success`)
+      console.log(`<<< ${dataJson.name} create success`)
     } else {
-      console.log(`<<< ${schemaJson.name} exists`)
+      console.log(`<<< ${dataJson.name} exists`)
     }
   } catch (error) {
     console.log('error :>> ', error)
