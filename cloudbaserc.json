@@ -49,15 +49,6 @@
                 "runtime": "Nodejs10.15",
                 "memorySize": 256
               }
-            },
-            {
-              "name": "init-db",
-              "config": {
-                "timeout": 20,
-                "envVariables": {},
-                "runtime": "Nodejs10.15",
-                "memorySize": 256
-              }
             }
           ]
         }
@@ -68,7 +59,7 @@
           "functionRootPath": "cloud/functions",
           "functions": [
             {
-              "name": "init-db",
+              "name": "cms-schemas-v2",
               "config": {
                 "timeout": 20,
                 "envVariables": {},

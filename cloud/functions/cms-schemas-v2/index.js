@@ -34,7 +34,6 @@ async function main() {
   for (const project of projects) {
     // if (schema !== 'themes.json') return
     const projectFilePath = path.join(projectsFolder, project)
-    console.log('projectFilePath :>> ', projectFilePath);
     const stats = await fs.stat(projectFilePath)
     if (stats.isFile() && project.endsWith('.json')) {
       try {
