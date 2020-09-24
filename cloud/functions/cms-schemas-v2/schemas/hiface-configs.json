@@ -1,0 +1,84 @@
+{
+  "_id": "37e26adb5eb7cc580070282b3975f3ae",
+  "fields": [
+    {
+      "description": "前端或云函数中获取配置所需的名称",
+      "displayName": "名称",
+      "id": "a4HGoY1ftQz-QWt3we_aJIN0EB3OLM2Q",
+      "isRequired": true,
+      "name": "name",
+      "order": 0,
+      "type": "String"
+    },
+    {
+      "description": "留空时会在服务端自动写入创建时间",
+      "displayName": "创建时间",
+      "id": "LyZAERJ27vardA8qx3YXqr3CerjD_yoE",
+      "name": "createTime",
+      "order": 2,
+      "type": "DateTime"
+    },
+    {
+      "description": "留空时会在服务端自动写入修改时间",
+      "displayName": "修改时间",
+      "id": "3VfsKpRCt8D5guJj3xg0CYzfYiDBlcq7",
+      "name": "updateTime",
+      "order": 3,
+      "type": "DateTime"
+    },
+    {
+      "description": "请填写JSON格式的字符串",
+      "displayName": "配置内容",
+      "id": "DnPav93s7eTx_HztRMeM6BFwYwAZ9ohr",
+      "isRequired": true,
+      "name": "content",
+      "order": 4,
+      "type": "String"
+    },
+    {
+      "defaultValue": "1",
+      "description": "1为头像正中间，2为额头，3为嘴巴，4为左上角，5为右上角，6为左下角，7为右下角",
+      "displayName": "位置",
+      "enumElements": [
+        {
+          "label": "正中间",
+          "value": "1"
+        },
+        {
+          "label": "额头",
+          "value": "2"
+        },
+        {
+          "label": "嘴巴",
+          "value": "3"
+        },
+        {
+          "label": "左上角",
+          "value": "4"
+        },
+        {
+          "label": "右上角",
+          "value": "5"
+        },
+        {
+          "label": "左下角",
+          "value": "6"
+        },
+        {
+          "label": "右下角",
+          "value": "7"
+        }
+      ],
+      "id": "8j_4OT5OL_RezvS4DF2hPrpKi2gpjRt0",
+      "name": "position",
+      "order": 5,
+      "type": "Enum"
+    }
+  ],
+  "projectId": "e656fa635f66f7fe0027463a724c3661",
+  "displayName": "全局配置",
+  "collectionName": "hiface-configs",
+  "_createTime": 1600583678629,
+  "_updateTime": 1600954997435,
+  "description": "全局配置，如当前显示的主题信息"
+}

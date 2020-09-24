@@ -1,0 +1,70 @@
+{
+  "_id": "982133855ebab0090096c2554e4c15a0",
+  "fields": [
+    {
+      "displayName": "用户Id",
+      "id": "gObnj6XMUwTqKoGSjZEr6xlD6i71ZZ1b",
+      "isRequired": true,
+      "name": "userId",
+      "order": 0,
+      "type": "String"
+    },
+    {
+      "description": "值越大在 CMS 列表中越靠前",
+      "displayName": "排序",
+      "id": "dEVdKthAs_GcjmBf9uGIu5BfLpgwD99E",
+      "isOrderField": true,
+      "name": "order",
+      "order": 1,
+      "orderDirection": "desc",
+      "type": "Number"
+    },
+    {
+      "description": "留空时会在服务端自动写入创建时间",
+      "displayName": "创建时间",
+      "id": "H65d3-sah_wcMnFezswtL7XE7op2waU3",
+      "name": "createTime",
+      "order": 2,
+      "type": "DateTime"
+    },
+    {
+      "description": "留空时会在服务端自动写入修改时间",
+      "displayName": "修改时间",
+      "id": "h9M_kjfQqR-fqr5YeXt0jXcZ-JB88mif",
+      "name": "updateTime",
+      "order": 3,
+      "type": "DateTime"
+    },
+    {
+      "description": "暂时未用到",
+      "displayName": "验证码",
+      "id": "cNOBZb9DteEesf7MBbWea3tq5LUXLRTs",
+      "isRequired": true,
+      "name": "passCode",
+      "order": 4,
+      "type": "String"
+    },
+    {
+      "description": "暂时未用到",
+      "displayName": "上次登录时间？",
+      "id": "7_O4GLK_IbRQpNsWcSmSxBTwqKPP3UCC",
+      "name": "lastLime",
+      "order": 5,
+      "type": "DateTime"
+    },
+    {
+      "displayName": "微信小程序openId",
+      "id": "Ch4bJ5ioeu0Ldr6noN8VqUp2zBwPEOZP",
+      "isRequired": true,
+      "name": "wxOpenId",
+      "order": 6,
+      "type": "String"
+    }
+  ],
+  "projectId": "e656fa635f66f7fe0027463a724c3661",
+  "displayName": "用户表",
+  "collectionName": "hiface-users",
+  "_createTime": 1600583678629,
+  "_updateTime": 1600954822097,
+  "description": "用户登录的表，暂时未与云开发用户鉴权合并操作"
+}

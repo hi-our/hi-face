@@ -1,0 +1,125 @@
+{
+  "_id": "5e847ab25eb7c684008c1d186169a002",
+  "fields": [
+    {
+      "description": "给贴纸起个名字，随意一些",
+      "displayName": "名称",
+      "id": "FlSVtnXJJodOdAsZoO2HTYXVDcw8XMpm",
+      "isRequired": true,
+      "name": "shapeName",
+      "order": 0,
+      "type": "String"
+    },
+    {
+      "defaultValue": 100,
+      "description": "值越小，在前端越靠前",
+      "displayName": "排序",
+      "id": "x5TkdRf1bG7wz0ADThrY5es0kpZB-2Pb",
+      "isOrderField": true,
+      "isRequired": true,
+      "name": "order",
+      "order": 1,
+      "orderDirection": "asc",
+      "type": "Number"
+    },
+    {
+      "description": "留空时会在服务端自动写入创建时间",
+      "displayName": "创建时间",
+      "id": "dTe6mQQl6qVN5O5W-geRH69lJRkitfb5",
+      "name": "createTime",
+      "order": 2,
+      "type": "DateTime"
+    },
+    {
+      "description": "留空时会在服务端自动写入修改时间",
+      "displayName": "修改时间",
+      "id": "-qCf5GMrGR2Md5eTazco6QZalrDJdUUm",
+      "name": "updateTime",
+      "order": 3,
+      "type": "DateTime"
+    },
+    {
+      "defaultValue": "1",
+      "description": "1为贴纸，2为相框",
+      "displayName": "类型",
+      "id": "6gs3Y4GMuX9msrne7uVI4vDdFpYIn9fm",
+      "isRequired": false,
+      "name": "type",
+      "order": 4,
+      "type": "Number"
+    },
+    {
+      "description": "贴纸的正向图片",
+      "displayName": "正向图片",
+      "id": "79rIlei8YOxU80qhPjn9tbAjMLo7vqdy",
+      "isRequired": true,
+      "name": "imageFileID",
+      "order": 6,
+      "type": "Image"
+    },
+    {
+      "description": "正向图片的水平翻转图片",
+      "displayName": "反向图片",
+      "id": "1eiUoFF3Io0qm__A-4bSHVbqpSFO9EG1",
+      "isRequired": false,
+      "name": "imageReverseFileID",
+      "order": 7,
+      "type": "Image"
+    },
+    {
+      "connectField": "categoryName",
+      "connectResource": "a9bfcffc5eb7b2f4005a2cb66d55ea60",
+      "description": "请选择所属贴纸分类",
+      "displayName": "所属贴纸分类",
+      "id": "iYd1RktlS_cSyPeA7vKMNDdZg80ONdmG",
+      "name": "belongShapeCategory",
+      "order": 8,
+      "type": "Connect"
+    },
+    {
+      "defaultValue": "1",
+      "description": "请选择贴纸所在的位置",
+      "displayName": "贴纸位置",
+      "enumElements": [
+        {
+          "label": "正中间",
+          "value": "1"
+        },
+        {
+          "label": "额头",
+          "value": "2"
+        },
+        {
+          "label": "嘴巴",
+          "value": "3"
+        },
+        {
+          "label": "左上角",
+          "value": "4"
+        },
+        {
+          "label": "右上角",
+          "value": "5"
+        },
+        {
+          "label": "左下角",
+          "value": "6"
+        },
+        {
+          "label": "右下角",
+          "value": "7"
+        }
+      ],
+      "id": "cowP8fwtVGioAy-uKM5ZONVeZy7haDfX",
+      "name": "position",
+      "order": 8,
+      "type": "Enum"
+    }
+  ],
+  "projectId": "e656fa635f66f7fe0027463a724c3661",
+  "displayName": "贴纸",
+  "collectionName": "hiface-shapes",
+  "_createTime": 1600583678629,
+  "_updateTime": 1600954687587,
+  "description": "单个贴纸，用于放在头像上，可以从属于多个贴纸分类。"
+}
