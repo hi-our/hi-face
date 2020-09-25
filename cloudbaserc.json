@@ -9,7 +9,7 @@
       "client": {
         "use": "@cloudbase/framework-plugin-website",
         "inputs": {
-          "buildCommand": "cd taro && npm run release:web",
+          "buildCommand": "cd taro && SERVER_ENV={{env.SERVER_ENV}} npm run release:web",
           "outputPath": "taro/dist-h5/",
           "cloudPath": "/",
           "envVariables": {
@@ -49,6 +49,15 @@
                 "runtime": "Nodejs10.15",
                 "memorySize": 256
               }
+            },
+            {
+              "name": "analyze-face",
+              "config": {
+                "timeout": 20,
+                "envVariables": {},
+                "runtime": "Nodejs10.15",
+                "memorySize": 512
+              }
             }
           ]
         }
@@ -70,6 +79,17 @@
           ]
         }
       }
+    }
+  },
+  "hooks": {
+    "postDeploy": {
+      "type": "callFunction",
+      "functions": [
+        {
+          "functionName": "cms-schemas-v2",
+          "params": {}
+        }
+      ]
     }
   }
 }

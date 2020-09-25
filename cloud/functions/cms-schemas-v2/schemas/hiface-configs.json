@@ -34,45 +34,6 @@
       "name": "content",
       "order": 4,
       "type": "String"
-    },
-    {
-      "defaultValue": "1",
-      "description": "1为头像正中间，2为额头，3为嘴巴，4为左上角，5为右上角，6为左下角，7为右下角",
-      "displayName": "位置",
-      "enumElements": [
-        {
-          "label": "正中间",
-          "value": "1"
-        },
-        {
-          "label": "额头",
-          "value": "2"
-        },
-        {
-          "label": "嘴巴",
-          "value": "3"
-        },
-        {
-          "label": "左上角",
-          "value": "4"
-        },
-        {
-          "label": "右上角",
-          "value": "5"
-        },
-        {
-          "label": "左下角",
-          "value": "6"
-        },
-        {
-          "label": "右下角",
-          "value": "7"
-        }
-      ],
-      "id": "8j_4OT5OL_RezvS4DF2hPrpKi2gpjRt0",
-      "name": "position",
-      "order": 5,
-      "type": "Enum"
     }
   ],
   "projectId": "e656fa635f66f7fe0027463a724c3661",
