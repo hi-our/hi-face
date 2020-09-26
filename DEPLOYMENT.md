@@ -30,10 +30,6 @@ APP_ID=xxxID
 ENV_ID=xxxID
 SERVER_ENV=dev # 开发环境：dev 生成环境：prod
 
-# 在云数据库导入中用，具体可以看 cloud/database
-#腾讯云安全 secretID和 secretKey，可以从 https://console.cloud.tencent.com/cam/capi 获取
-TCB_SECRET_ID=xxx
-TCB_SECRET_KEY=xxx
 ```
 
 * `APP_ID` 小程序 appId
@@ -142,20 +138,6 @@ npm run deploy:init-db
 # 或者，部署开发环境的数据模型，需要在 .env.dev 文件中配置 ENV_ID
 npm run deploy:init-db:dev
 ```
-
-#### 方案四：数据模型快速生成，需配置 腾讯云 secretId 和 secretKey
-
->目前在 CMS v1 版中有一点小问题，CMS v2版数据模型跟 v1 不太一样，还未完全测试。
-
-第一步：Hi 头像数据管理基于 Cloudbase CMS 内容管理扩展，需要在云开发 cloudbase 控制台下方扩展能力中开通。
-
-第二步：按照以下命令执行
-```
-cd cloud/database
-npm install
-npm run init-db
-```
-![](https://image-hosting.xiaoxili.com/img/img/20200911/145016609594c92fca0e51fe573782ee-2b3607.png)
 
 ### 云开发云函数的部署
 
