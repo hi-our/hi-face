@@ -2,21 +2,27 @@
 
 // 请查看部署文档，并注意建立开发和生产环境的env文件
 
-const fs = require('fs').promises
+const fs = require('fs')
 const path = require('path')
 const cloud = require('wx-server-sdk')
+
+const fsPromises = fs.promises
 
 const cmsContentsCollection = 'tcb-ext-cms-schemas'
 const cmsProjectsCollection = 'tcb-ext-cms-projects'
 const schemasFolder = path.resolve(__dirname, 'schemas')
 const projectsFolder = path.resolve(__dirname, 'projects')
+const contentsFolder = path.resolve(__dirname, 'contents')
+let uploadsFolderSrc = 'cloudbase-cms/upload/2020-09-26'
+const uploadsFolder = path.resolve(__dirname, uploadsFolderSrc)
 
 cloud.init({
-  env: cloud.DYNAMIC_CURRENT_ENV
+  env: 'web-test-faad77', //cloud.DYNAMIC_CURRENT_ENV
 })
 const db = cloud.database()
 
-async function main() {
+async function main(event) {
+  const { needTypes = ['projects', 'schemas', 'uploads', 'contents'] } = event
   // 检查CMS预设的集合是否存在
   const checkPromises = await Promise.all([
     'tcb-ext-cms-schemas',
@@ -30,35 +36,70 @@ async function main() {
   }
 
   // 导入 CMS v2 项目 project
-  const projects = await fs.readdir(projectsFolder)
-  for (const project of projects) {
-    // if (schema !== 'themes.json') return
-    const projectFilePath = path.join(projectsFolder, project)
-    const stats = await fs.stat(projectFilePath)
-    if (stats.isFile() && project.endsWith('.json')) {
-      try {
-        await addProject(projectFilePath)
-      } catch (error) {
-        console.log(error)
+  if (needTypes.includes('projects')) {
+    const projects = await fsPromises.readdir(projectsFolder)
+    for (const project of projects) {
+      const projectFilePath = path.join(projectsFolder, project)
+      const stats = await fsPromises.stat(projectFilePath)
+      if (stats.isFile() && project.endsWith('.json')) {
+        try {
+          await addProject(projectFilePath)
+        } catch (error) {
+          console.log(error)
+        }
       }
     }
+
   }
 
   // 导入 CMS v2 数据集合模型
-  const schemas = await fs.readdir(schemasFolder)
-  for (const schema of schemas) {
-    // if (schema !== 'themes.json') return
-    const schemaFilePath = path.join(schemasFolder, schema)
-    const stats = await fs.stat(schemaFilePath)
-    if (stats.isFile() && schema.endsWith('.json')) {
-      try {
-        await createCollection(schemaFilePath)
-      } catch (error) {
-        console.log(error)
+  if (needTypes.includes('projects') && needTypes.includes('schemas')) {
+    const schemas = await fsPromises.readdir(schemasFolder)
+    for (const schema of schemas) {
+      const schemaFilePath = path.join(schemasFolder, schema)
+      const stats = await fsPromises.stat(schemaFilePath)
+      if (stats.isFile() && schema.endsWith('.json')) {
+        try {
+          await createCollection(schemaFilePath)
+        } catch (error) {
+          console.log(error)
+        }
       }
     }
   }
   
+
+  if (needTypes.includes('uploads')) {
+    const uploads = await fsPromises.readdir(uploadsFolder)
+    for (const upload of uploads) {
+      const uploadFilePath = path.join(uploadsFolder, upload)
+      const stats = await fsPromises.stat(uploadFilePath)
+      if (stats.isFile()) {
+        try {
+          await uploadFile(path.join(uploadsFolderSrc, upload), uploadFilePath)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    }
+  }
+
+  // 导入 CMS v2 默认内容数据
+  if (needTypes.includes('contents')) {
+    const contents = await fsPromises.readdir(contentsFolder)
+    for (const content of contents) {
+      const contentFilePath = path.join(contentsFolder, content)
+      const stats = await fsPromises.stat(contentFilePath)
+      if (stats.isFile() && content.endsWith('.json')) {
+        try {
+          let collectionName = content.replace('.json', '')
+          await addContent(collectionName, contentFilePath)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -122,11 +163,6 @@ async function createCollection(filepath) {
           updateTime: new Date(),
         }
       })
-      // await cmsCollection.doc(_id)
-      //   .update({
-      //     _id,
-      //     updateTime: new Date()
-      //   })
       const isExists = await checkCollection(schemaJson.collectionName)
       if (!isExists) {
         await db.createCollection(schemaJson.collectionName)
@@ -156,6 +192,49 @@ async function checkCollection(collectionName) {
       return false
     }
     console.log('checkCollection error :>> ', error)
+    throw error
+  }
+}
+
+async function uploadFile(cloudPath, filePath) {
+  try {
+    const res = await cloud.uploadFile({
+      // 云存储的路径
+      cloudPath,
+      fileContent: fs.createReadStream(filePath)
+    })
+    // 返回文件 ID
+    console.log('res.fileID', res.fileID)
+  } catch (error) {
+    console.log('uploadFile error :>> ', error)
+    throw error
+  }
+}
+
+async function addContent(collectionName, filepath) {
+  const contentCollection = db.collection(collectionName)
+  try {
+    const contentJSON = require(filepath)
+    const isExists = await checkCollection(collectionName)
+    if (isExists) {
+      const { total } = await contentCollection.where({
+        _id: contentJSON._id
+      })
+        .count()
+      if (total === 0) {
+        // 新增默认数据
+        const { _id } = await contentCollection.add({
+          data: contentJSON
+        })
+        console.log(collectionName + ' add content success _id :>> ', _id)
+      } else {
+        console.log(collectionName + ' _id ' + contentJSON._id + ' exists',)
+      }
+    } else {
+      console.log(collectionName + ' not exist')
+    }
+  } catch (error) {
+    console.log('addContent error:>> ', error)
     throw error
   }
 }
