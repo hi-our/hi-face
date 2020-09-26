@@ -1,0 +1,65 @@
+{
+  "_id": "a9bfcffc5eb7b2f4005a2cb66d55ea60",
+  "fields": [
+    {
+      "id": "mOEEtbwZ74uEbtMMbOffoR_G2Plv0RSv",
+      "displayName": "分类名称",
+      "name": "categoryName",
+      "type": "String",
+      "description": "贴纸的分类名称",
+      "isRequired": true,
+      "order": 0
+    },
+    {
+      "id": "lvnQQD8qKe-bGyD2UfRUoQ2DbWKClYY9",
+      "displayName": "排序",
+      "name": "order",
+      "type": "Number",
+      "description": "值越大在 CMS 列表中越靠前",
+      "order": 1,
+      "isOrderField": true,
+      "orderDirection": "desc"
+    },
+    {
+      "id": "DoYviQBW4CSZQQpbG9z1FwnJyJewktCl",
+      "displayName": "创建时间",
+      "name": "createTime",
+      "type": "DateTime",
+      "description": "留空时会在服务端自动写入创建时间",
+      "order": 2
+    },
+    {
+      "id": "_J1RJjoNzNZg6jN7oT6tXk0gkeX31JdE",
+      "displayName": "修改时间",
+      "name": "updateTime",
+      "type": "DateTime",
+      "description": "留空时会在服务端自动写入修改时间",
+      "order": 3
+    },
+    {
+      "id": "j8pYi2vpmMojAppa6dlmIe6yYSVuh6oY",
+      "displayName": "分类图片",
+      "name": "categoryImage",
+      "type": "Image",
+      "description": "贴纸的分类图片，设置贴纸图片即可",
+      "order": 4
+    },
+    {
+      "id": "513gIZm5NsLvgXN4R_Q8X2WfjW8GYR_t",
+      "displayName": "所属主题",
+      "name": "belongThemes",
+      "type": "Connect",
+      "description": "请选择所属主题",
+      "isRequired": true,
+      "connectField": "themeName",
+      "connectResource": "05f2c36f5eb7aae3007a5fb01603b07a",
+      "order": 5
+    }
+  ],
+  "projectId": "e656fa635f66f7fe0027463a724c3661",
+  "displayName": "贴纸分类",
+  "collectionName": "hiface-shape-categories",
+  "_createTime": 1600583678629,
+  "_updateTime": 1600953397905,
+  "description": "贴纸的分类，一个贴纸分类可以从属于多个节日主题"
+}

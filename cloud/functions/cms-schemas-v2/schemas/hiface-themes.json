@@ -1,0 +1,116 @@
+{
+  "_id": "05f2c36f5eb7aae3007a5fb01603b07a",
+  "fields": [
+    {
+      "description": "请输入主题特色名称",
+      "displayName": "名称",
+      "id": "j816KxYL3FdYp70XZqHUEjKYxlOcbh8m",
+      "isRequired": true,
+      "name": "themeName",
+      "order": 0,
+      "type": "String"
+    },
+    {
+      "description": "值越小，在前端展示靠前",
+      "displayName": "排序",
+      "id": "6pkpVRUefCHetKyvLBE06rmzYgseg_cq",
+      "isOrderField": true,
+      "name": "order",
+      "order": 1,
+      "orderDirection": "asc",
+      "type": "Number"
+    },
+    {
+      "description": "留空时会在服务端自动写入创建时间",
+      "displayName": "创建时间",
+      "id": "YyT3FG2sfxzJEHNJqsGWcD-iW5ecF7Lr",
+      "name": "createTime",
+      "order": 2,
+      "type": "DateTime"
+    },
+    {
+      "description": "留空时会在服务端自动写入修改时间",
+      "displayName": "修改时间",
+      "id": "4t135a6t9HtwlBmIIYcKFUVEC5QULQGe",
+      "name": "updateTime",
+      "order": 3,
+      "type": "DateTime"
+    },
+    {
+      "description": "300x300，用于分享，也用于主题显示",
+      "displayName": "分享图片",
+      "id": "JVcmbrbd7KMM_TKmb216eDCuLT9dmzwC",
+      "isRequired": true,
+      "name": "shareImage",
+      "order": 4,
+      "type": "Image"
+    },
+    {
+      "description": "分享标题",
+      "displayName": "分享标题",
+      "id": "i02v0kwKXxDj1Q2jzh_ayP8JZ4cvOKGb",
+      "isRequired": true,
+      "name": "shareTitle",
+      "order": 5,
+      "type": "String"
+    },
+    {
+      "description": "分享描述",
+      "displayName": "分享描述",
+      "id": "cPRq2fs8PVOCung5xp3aUK81crN2IweM",
+      "isRequired": true,
+      "name": "shareDesc",
+      "order": 6,
+      "type": "String"
+    },
+    {
+      "displayName": "上架",
+      "id": "qNZV0oLQROovEBWv6lIlQmeTH6suYtb5",
+      "isHidden": false,
+      "name": "isPublic",
+      "order": 7,
+      "type": "Boolean"
+    },
+    {
+      "description": "600x600，用于页面显示",
+      "displayName": "封面图",
+      "id": "gPa4RApxLqTa12q-xOs6KMXC5SW7YCAU",
+      "isHidden": false,
+      "name": "coverImage",
+      "order": 8,
+      "type": "Image"
+    },
+    {
+      "description": "140x140，用于在主题列表中显示",
+      "displayName": "图标",
+      "id": "iZeihMiWvanJ11Pb4mD0nuAR0xN7E_sd",
+      "isHidden": false,
+      "name": "iconImage",
+      "order": 9,
+      "type": "Image"
+    },
+    {
+      "description": "海报分享页的背景图，存储为732x1280",
+      "displayName": "海报背景图",
+      "id": "j72JF8_BaPOctIIO1nqJwsv1XLsB1vop",
+      "isHidden": false,
+      "name": "posterBg",
+      "order": 10,
+      "type": "Image"
+    },
+    {
+      "description": "为分享和主题列表显示效果做补充",
+      "displayName": "分享标题-补充文案",
+      "id": "2xPNV4lyiA6MtKdlqhNg_dvN4jspp9xS",
+      "name": "shareTitleSlug",
+      "order": 11,
+      "type": "MultiLineString"
+    }
+  ],
+  "projectId": "e656fa635f66f7fe0027463a724c3661",
+  "displayName": "主题信息",
+  "collectionName": "hiface-themes",
+  "_createTime": 1600583678628,
+  "_updateTime": 1600953808029,
+  "description": "主题信息，如国庆节、圣诞节、安全节等"
+}

@@ -1,0 +1,94 @@
+{
+  "_id": "982133855ebaa7e70096236153e0fc3f",
+  "fields": [
+    {
+      "displayName": "appId",
+      "id": "yOp3Qbb9tfnqty8269ei8haYvI8zJLkB",
+      "isRequired": true,
+      "name": "appId",
+      "order": 0,
+      "type": "String"
+    },
+    {
+      "description": "值越大在 CMS 列表中越靠前",
+      "displayName": "排序",
+      "id": "HL9fx2yOiEIJT_SdKbdQ5pwUKvz3fhKm",
+      "isOrderField": true,
+      "name": "order",
+      "order": 1,
+      "orderDirection": "desc",
+      "type": "Number"
+    },
+    {
+      "description": "留空时会在服务端自动写入创建时间",
+      "displayName": "创建时间",
+      "id": "totfPG2XCWCBkYB6vP6XCjc7LRCNE4Yf",
+      "name": "createTime",
+      "order": 2,
+      "type": "DateTime"
+    },
+    {
+      "description": "留空时会在服务端自动写入修改时间",
+      "displayName": "修改时间",
+      "id": "RUgl7aQVoTMk__mSWFTD1M3XnWbvthB4",
+      "name": "updateTime",
+      "order": 3,
+      "type": "DateTime"
+    },
+    {
+      "displayName": "保存后头像",
+      "id": "6QrlNOJ69Teww5sIUsKJanFUfzU9ZSbB",
+      "name": "avatarFileID",
+      "order": 4,
+      "type": "Image"
+    },
+    {
+      "defaultValue": "false",
+      "displayName": "是否被软删除",
+      "id": "DUedGDyh73T9ruqKI6imG5F5F3TqPmoN",
+      "isRequired": true,
+      "name": "isDelete",
+      "order": 5,
+      "type": "Boolean"
+    },
+    {
+      "displayName": "用户openId",
+      "id": "3EM9W2Xe3J7Egf-ocdvPj_Sn-XYEQp3e",
+      "name": "openId",
+      "order": 6,
+      "type": "String"
+    },
+    {
+      "displayName": "uuid",
+      "id": "whJCfbPodJJuncuaF3qldv6mjNvlBdN7",
+      "isRequired": true,
+      "name": "uuid",
+      "order": 7,
+      "type": "String"
+    },
+    {
+      "displayName": "用户Id",
+      "id": "LV-qRWeWrcAiNguTGvLkgMxS_57k8agg",
+      "isRequired": true,
+      "name": "userId",
+      "order": 8,
+      "type": "String"
+    },
+    {
+      "defaultValue": "origin",
+      "description": "暂时未用到。",
+      "displayName": "年龄类型",
+      "id": "pPnw3ZodfGK3r6QzSTGBmNz_ZYutlhvG",
+      "isRequired": true,
+      "name": "ageType",
+      "order": 9,
+      "type": "String"
+    }
+  ],
+  "projectId": "e656fa635f66f7fe0027463a724c3661",
+  "displayName": "合成头像",
+  "collectionName": "hiface-avatars",
+  "_createTime": 1600583678629,
+  "_updateTime": 1600954797933,
+  "description": "在小程序、web端合成好的头像"
+}

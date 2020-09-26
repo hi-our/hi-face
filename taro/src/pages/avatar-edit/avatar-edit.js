@@ -148,7 +148,7 @@ class AvatarEdit extends Component {
     if (!cutImageSrc) return
 
     const { shapeCategoryList = [] } = this.state
-    const { shapeList: shapeListRes } = shapeCategoryList[0]
+    const { shapeList: shapeListRes } = shapeCategoryList[0] || {}
     const shapeOne = shapeListRes[0]
 
     Taro.showLoading({
@@ -161,6 +161,14 @@ class AvatarEdit extends Component {
 
     try {
       let shapeList = []
+
+      if (!shapeOne) {
+        Taro.showToast({
+          icon: 'none',
+          title: '请管理员添加贴纸数据'
+        })
+        return
+      }
       // web版用老逻辑
       if (shapeOne.position === 2 || isH5Page) {
         let cloudFunc = isH5Page ? this.cloudAnalyzeFaceH5 : this.cloudAnalyzeFaceWx

@@ -4,23 +4,15 @@
 
 const fs = require('fs').promises
 const path = require('path')
-const dotenv = require('dotenv')
-const tcb = require('@cloudbase/node-sdk')
+const cloud = require('wx-server-sdk')
 
 const cmsContentsCollection = 'tcb-ext-cms-contents'
-const envFile = path.resolve(__dirname, '..', '..', process.env.SERVER_ENV === 'dev' ? '.env.dev' : '.env')
 const schemasFolder = path.resolve(__dirname, 'models')
 
-const config = dotenv.config({ path: envFile }).parsed
-
-const app = tcb.init({
-  secretId: config.TCB_SECRET_ID,
-  secretKey: config.TCB_SECRET_KEY,
-  env: config.ENV_ID
+cloud.init({
+  env: cloud.DYNAMIC_CURRENT_ENV
 })
-const db = app.database()
-
-main()
+const db = cloud.database()
 
 async function main() {
   // 检查CMS预设的集合是否存在
@@ -37,6 +29,7 @@ async function main() {
 
   const schemas = await fs.readdir(schemasFolder)
   for (const schema of schemas) {
+    // if (schema !== 'themes.json') return
     const schemaFilePath = path.join(schemasFolder, schema)
     const stats = await fs.stat(schemaFilePath)
     if (stats.isFile() && schema.endsWith('.json')) {
@@ -51,46 +44,53 @@ async function main() {
 
 /**
  * 更新CMS结构记录，创建数据表
- * @param {string} filepath 
+ * @param {string} filepath
  */
 async function createCollection(filepath) {
   const schemaJson = require(filepath)
   const cmsCollection = db.collection(cmsContentsCollection)
 
   console.log(`>>> start create ${schemaJson.collectionName}`)
-
-  const { total } = await cmsCollection.where({
-    collectionName: schemaJson.collectionName
-  })
-    .count()
-
-  if (total === 0) {
-    // 按照 CMS 的字段定义格式，新建对应字段的记录信息
-    const { id } = await cmsCollection.add({
-      ...schemaJson,
-      createTime: new Date(),
-      updateTime: new Date(),
+  try {
+    
+    const { total } = await cmsCollection.where({
+      collectionName: schemaJson.collectionName
     })
-    await cmsCollection.doc(id)
-      .update({
-        id,
-        updateTime: new Date()
+      .count()
+    
+  
+    if (total === 0) {
+      // 按照 CMS 的字段定义格式，新建对应字段的记录信息
+      const { _id } = await cmsCollection.add({
+        data: {
+          ...schemaJson,
+          createTime: new Date(),
+          updateTime: new Date(),
+        }
       })
-
-    const isExists = await checkCollection(schemaJson.collectionName)
-    if (!isExists) {
-      await db.createCollection(schemaJson.collectionName)
+      // await cmsCollection.doc(_id)
+      //   .update({
+      //     _id,
+      //     updateTime: new Date()
+      //   })
+      const isExists = await checkCollection(schemaJson.collectionName)
+      if (!isExists) {
+        await db.createCollection(schemaJson.collectionName)
+      }
+  
+      console.log(`<<< ${schemaJson.collectionName} create success`)
+    } else {
+      console.log(`<<< ${schemaJson.collectionName} exists`)
     }
-
-    console.log(`<<< ${schemaJson.collectionName} create success`)
-  } else {
-    console.log(`<<< ${schemaJson.collectionName} exists`)
+  } catch (error) {
+    console.log('error :>> ', error)
   }
+
 }
 
 /**
  * 检查集合是否存在
- * @param {string} collectionName 
+ * @param {string} collectionName
  * @return {Promise<boolean>}
  */
 async function checkCollection(collectionName) {
@@ -98,9 +98,12 @@ async function checkCollection(collectionName) {
     await db.collection(collectionName).count()
     return true
   } catch (error) {
-    if (error.code === 'DATABASE_COLLECTION_NOT_EXIST') {
+    if (error.errMsg.includes('Db or Table not exist')) {
       return false
     }
+    console.log('checkCollection error :>> ', error)
     throw error
   }
 }
+
+exports.main = main

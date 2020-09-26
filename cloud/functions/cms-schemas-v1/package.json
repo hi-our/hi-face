@@ -8,8 +8,7 @@
     "init-db": "node index.js"
   },
   "devDependencies": {
-    "@cloudbase/node-sdk": "^2.2.1",
-    "dotenv": "^8.2.0"
+    "wx-server-sdk": "latest"
   },
   "keywords": [
     "hi-face",

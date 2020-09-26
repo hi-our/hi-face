@@ -1,7 +1,7 @@
 const alias = require('./alias')
 const loadEnv = require('./load-env')
 
-loadEnv(process.env.SERVER_ENV === 'dev' ? '.env.dev' : '.env')
+loadEnv(process.env.SERVER_ENV != 'prod' ? '.env.' + process.env.SERVER_ENV : '.env')
 // 兼容web端和小程序端
 const dpr = process.env.TARO_ENV === 'h5' ? 1 : 2
 
@@ -91,6 +91,10 @@ const config = {
 
   },
   h5: {
+    output: {
+      filename: 'js/[name].[hash:8].js',
+      chunkFilename: 'js/[name].[chunkhash:8].js'
+    },
     publicPath: '/',
     staticDirectory: 'static',
     esnextModules: ['taro-cropper'],

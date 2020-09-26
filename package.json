@@ -9,11 +9,16 @@
   "license": "MIT",
   "scripts": {
     "commit": "git-cz",
-    "deploy:devweb": "tcb framework deploy client --mode dev",
     "deploy:web": "tcb framework deploy client",
+    "deploy:web:dev": "tcb framework deploy client --mode dev",
+    "deploy:web:test": "tcb framework deploy client --mode test",
     "deploy:mini": "tcb framework deploy miniprogram  --verbose",
-    "deploy:devfn": "tcb framework deploy server --mode dev",
-    "deploy:fn": "tcb framework deploy server"
+    "deploy:fn": "tcb framework deploy server",
+    "deploy:fn:dev": "tcb framework deploy server --mode dev",
+    "deploy:fn:test": "tcb framework deploy server --mode test",
+    "deploy:init-db": "tcb framework deploy db",
+    "deploy:init-db:dev": "tcb framework deploy db --mode dev",
+    "deploy:init-db:test": "tcb framework deploy db --mode test"
   },
   "husky": {
     "hooks": {

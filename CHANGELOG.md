@@ -1,5 +1,12 @@
 ### Changelog 更新文档
 
+### v2.2.4 （2020-09-22）
+
+* Web 端打包设置 hash 值
+* 基于云函数版 快速实现 Cloudbase CMS 数据
+  * `cms-schemas-v2` 包含 CMS v2 版项目、数据模型、默认文件、默认数据
+  * `cms-schemas-v1` 只包含 CMS v1 版数据模型
+
 ### v2.2.3 （2020-09-20）
 
 * 修改 UI 效果，包含开屏图、海报中Logo、默认分享图

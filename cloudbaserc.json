@@ -4,12 +4,12 @@
   "$schema": "https://framework-1258016615.tcloudbaseapp.com/schema/latest.json",
   "functionRoot": "cloud/functions",
   "framework": {
-    "name": "taro-starter",
+    "name": "hiface-starter",
     "plugins": {
       "client": {
         "use": "@cloudbase/framework-plugin-website",
         "inputs": {
-          "buildCommand": "cd taro && npm run release:web",
+          "buildCommand": "cd taro && SERVER_ENV={{env.SERVER_ENV}} npm run release:web",
           "outputPath": "taro/dist-h5/",
           "cloudPath": "/",
           "envVariables": {
@@ -20,17 +20,17 @@
       "miniprogram": {
         "use": "@cloudbase/framework-plugin-mp",
         "inputs": {
-          "buildCommand": "cd taro && SERVER_ENV={{env.SERVER_ENV}} npm run release",
+          "commands": {
+            "install": "cd taro && npm install",
+            "build": "cd taro && SERVER_ENV={{env.SERVER_ENV}} npm run release"
+          },
           "appid": "{{env.APP_ID}}",
           "privateKeyPath": "miniprogram-private.key",
-          "localPath": "taro/dist/",
-          "ignores": "[node_modules/**/*]",
+          "localPath": "./",
+          "ignores": ["node_modules/**/*"],
           "deployMode": "preview",
           "previewOptions": {
             "desc": "CloudBase Framework 一键预览",
-            "setting": {
-              "es6": true
-            },
             "qrcodeOutputPath": "./qrcode.jpg",
             "pagePath": "pages/avatar-edit/avatar-edit"
           }
@@ -49,10 +49,47 @@
                 "runtime": "Nodejs10.15",
                 "memorySize": 256
               }
+            },
+            {
+              "name": "analyze-face",
+              "config": {
+                "timeout": 20,
+                "envVariables": {},
+                "runtime": "Nodejs10.15",
+                "memorySize": 512
+              }
+            }
+          ]
+        }
+      },
+      "db": {
+        "use": "@cloudbase/framework-plugin-function",
+        "inputs": {
+          "functionRootPath": "cloud/functions",
+          "functions": [
+            {
+              "name": "cms-schemas-v2",
+              "config": {
+                "timeout": 20,
+                "envVariables": {},
+                "runtime": "Nodejs10.15",
+                "memorySize": 256
+              }
             }
           ]
         }
       }
+    }
+  },
+  "hooks": {
+    "postDeploy": {
+      "type": "callFunction",
+      "functions": [
+        {
+          "functionName": "cms-schemas-v2",
+          "params": {}
+        }
+      ]
     }
   }
 }
