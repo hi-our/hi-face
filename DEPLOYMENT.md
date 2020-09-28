@@ -154,9 +154,9 @@ npm run deploy:init-db:dev
 
 #### 方案二：使用命令快速部署
 
-开发环境：`npm run deploy:web:dev`
+开发环境：`npm run deploy:fn:dev`
 
-正式环境：`npm run deploy:web`
+正式环境：`npm run deploy:fn`
 
 **原理解析**
 
@@ -219,7 +219,7 @@ npm run wxci:upload
 
 ### Web端部署
 
-开发环境：`npm run deploy:devweb`
+开发环境：`npm run deploy:web:dev`
 
 正式环境：`npm run deploy:web`
 
