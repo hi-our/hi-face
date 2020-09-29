@@ -12,6 +12,7 @@ import './styles.styl'
 const setTmpThis = (el, elState) => {
   const {
     shapeWidth,
+    shapeHeight,
     shapeCenterX,
     shapeCenterY,
     resizeCenterX,
@@ -20,6 +21,7 @@ const setTmpThis = (el, elState) => {
   } = elState
 
   el.shape_width = shapeWidth
+  el.shape_height = shapeHeight
   el.shape_center_x = shapeCenterX;
   el.shape_center_y = shapeCenterY;
   el.resize_center_x = resizeCenterX;
@@ -84,6 +86,8 @@ class ShapeEdit extends Taro.Component {
     return {
       // 图形默认宽度为 200 rpx
       shapeWidth: defaultShapeSize,
+      // 图形默认宽度为 200 rpx
+      shapeHeight: defaultShapeSize,
       // 使用时间作为key，比较简单
       timeNow: Date.now(),
 
@@ -315,21 +319,23 @@ class ShapeEdit extends Taro.Component {
                   timeNow,
                   imageUrl,
                   shapeWidth,
+                  shapeHeight,
                   shapeCenterX,
                   shapeCenterY,
                   resizeCenterX,
                   resizeCenterY,
                   imageReverseUrl,
                   reserve,
-                  rotate
+                  rotate,
+                  position
                 } = shape
 
                 let transX = getShowRpx(shapeCenterX - shapeWidth / 2 - 2) // + 'rpx'
-                let transY = getShowRpx(shapeCenterY - shapeWidth / 2 - 2) // + 'rpx'
+                let transY = getShowRpx(shapeCenterY - shapeHeight / 2 - 2) // + 'rpx'
 
                 let shapeStyle = {
                   width: getShowRpx(shapeWidth), // + 'rpx',
-                  height: getShowRpx(shapeWidth), // + 'rpx',
+                  height: getShowRpx(shapeHeight), // + 'rpx',
                   transform: `translate(${transX}, ${transY}) rotate(${rotate + 'deg'})`,
                   zIndex: shapeIndex === currentShapeIndex ? 2 : 1
                 }
@@ -346,7 +352,7 @@ class ShapeEdit extends Taro.Component {
                       currentShapeIndex === shapeIndex && (
                         <Block>
                           <View className='shape-btn-remove' data-shape-index={shapeIndex} onClick={this.removeShape}></View>
-                          <View className='shape-btn-resize' data-shape-index={shapeIndex} data-type='rotate-resize'></View>
+                          {position < 8 && <View className='shape-btn-resize' data-shape-index={shapeIndex} data-type='rotate-resize'></View>}
                           {!!imageReverseUrl && <View className='shape-btn-reverse' data-shape-index={shapeIndex} onClick={this.reverseShape}></View>}
                           <View className='shape-btn-checked' data-shape-index={shapeIndex} onClick={this.checkedShape}></View>
                         </Block>

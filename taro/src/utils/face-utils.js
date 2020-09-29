@@ -165,6 +165,8 @@ export function getHatShapeList(hatList, shapeItem, saveImageWidth = 600) {
       imageUrl,
       imageReverseUrl,
       shapeWidth,
+      shapeHeight: shapeWidth,
+      position: shapeItem.position,
       currentShapeId: 1,
       timeNow: Date.now() * Math.random(),
       shapeCenterX,
@@ -265,6 +267,7 @@ export function getMaskShapeList(mouthList, dprCanvasWidth, shapeSize) {
     return {
       name: 'mask',
       shapeWidth,
+      shapeHeight: shapeWidth,
       currentShapeId: 1,
       timeNow: Date.now() * Math.random(),
       shapeCenterX,
