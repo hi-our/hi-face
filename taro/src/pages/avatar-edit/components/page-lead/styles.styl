@@ -11,10 +11,42 @@
   z-index 100
   transition ease-in-out 0.8s
 
+.page-china
+  background-image url('../../../../images/bg-lead-china.jpg')
+  &:before
+    content ''
+    position absolute
+    left 0
+    right 0
+    top 0
+    bottom 0
+    background: rgba(93, 0, 61, 0.69);
+    animation: an-lead-1 2.2s ease-in-out forwards;
+  &:after
+    content ''
+    position absolute
+    left 50%
+    margin-left -75px
+    top 50%
+    margin-top -100px
+    width 150px
+    height 200px
+    background url('../../../../images/logo-text-large.png') center no-repeat
+    background-size contain
+    animation: an-lead-2 1.2s ease-in-out forwards;
+  
+
   &.hide
     margin-top -100vh
     opacity 0
     filter (2px)
+
+@keyframes an-lead-1
+  to
+    opacity 0
+@keyframes an-lead-2
+  to
+    transform: translate(130px, -280px) scale(0.3)
 
 // .page-lead-btn
 //   position absolute

@@ -52,7 +52,7 @@ export default class PageLead extends Taro.Component {
   render() {
     const { isHide, showTimeText } = this.state
     return (
-      <View className={`page-lead ${isHide ? 'hide' : ''}`}>
+      <View className={`page-lead page-china ${isHide ? 'hide' : ''}`}>
         {/* <View className='page-lead-btn' onClick={this.onToggle}>跳过 {showTimeText}s</View> */}
       </View>
     )
