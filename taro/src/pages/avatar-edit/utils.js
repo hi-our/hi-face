@@ -48,26 +48,26 @@ export const SHAPE_POSITION_MAP = [
   // 左上
   {
     alt: 'left-top',
-    shapeCenterX: 75,
-    shapeCenterY: 75,
+    shapeCenterX: 112.5,
+    shapeCenterY: 112.5,
   },
   // 右上
   {
     alt: 'right-top',
-    shapeCenterX: 525,
-    shapeCenterY: 75,
+    shapeCenterX: 488,
+    shapeCenterY: 112.5,
   },
   // 左下
   {
     alt: 'left-bottom',
-    shapeCenterX: 75,
-    shapeCenterY: 525,
+    shapeCenterX: 112.5,
+    shapeCenterY: 488,
   },
   // 右下
   {
     alt: 'right-bottom',
-    shapeCenterX: 525,
-    shapeCenterY: 525,
+    shapeCenterX: 488,
+    shapeCenterY: 488,
   },
 ]
 
@@ -82,7 +82,7 @@ export function getOneShapeList(shapeItem) {
     _id: shapeId,
     shapeCenterX,
     shapeCenterY,
-    shapeWidth = 150
+    shapeWidth = 225
   } = Object.assign(SHAPE_POSITION_MAP[shapeItem.position], shapeItem)
 
   const resizeCenterX = shapeCenterX + shapeWidth / 2 - 2

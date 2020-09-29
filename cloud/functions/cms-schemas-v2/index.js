@@ -1,7 +1,3 @@
-#!/usr/bin/env node
-
-// 请查看部署文档，并注意建立开发和生产环境的env文件
-
 const fs = require('fs')
 const path = require('path')
 const cloud = require('wx-server-sdk')
@@ -17,7 +13,8 @@ let uploadsFolderSrc = 'cloudbase-cms/upload/2020-09-26'
 const uploadsFolder = path.resolve(__dirname, uploadsFolderSrc)
 
 cloud.init({
-  env: 'web-test-faad77', //cloud.DYNAMIC_CURRENT_ENV
+  // env: 'web-test-faad77',
+  env: cloud.DYNAMIC_CURRENT_ENV,
 })
 const db = cloud.database()
 

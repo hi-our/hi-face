@@ -1,18 +1,23 @@
 .image-wrap
-  margin 126px auto 0
-  width 300px
-  height 300px
-  border-radius 20px
-  box-shadow 0 6px 8px rgba(161, 161, 161, 0.5)
+  margin 96px auto 0
+  padding 30px 0 20px
+  overflow hidden
 
 .image-inner
+  margin 0 auto
   position relative
-  overflow hidden
-  border-radius 20px
-
-.image-selected
   width 300px
   height 300px
+  box-shadow 0 6px 8px rgba(161, 161, 161, 0.5)
+  border-radius 20px
+  // overflow hidden
+
+.image-selected
+  display block
+  width 300px
+  height 300px
+  border-radius 20px
+
 
 
 .shape-container
@@ -27,6 +32,7 @@
   width 100%
   height 100%
   background-size contain
+  border-radius 20px
 
 .shape-btn-resize,
 .shape-btn-remove 
@@ -37,6 +43,24 @@
   width:20 * 1.3px
   height:20 * 1.3px
 
+.shape-btn-remove 
+  left 0
+  top 0
+  margin-left -10 * 1.3px
+  margin-top -10 * 1.3px
+  background url(https://image-hosting.xiaoxili.com/img/20200812133019.png) no-repeat center / contain
+.shape-btn-checked 
+  right 0
+  top 0
+  margin-right -10 * 1.3px
+  margin-top -10 * 1.3px
+  background url(https://image-hosting.xiaoxili.com/img/20200812133039.png) no-repeat center / contain
+.shape-btn-reverse
+  left 0
+  bottom 0
+  margin-left -10 * 1.3px
+  margin-bottom -10 * 1.3px
+  background url(https://image-hosting.xiaoxili.com/img/20200812133255.png) no-repeat center / contain
 .shape-btn-resize 
   right 0
   bottom 0
@@ -44,31 +68,19 @@
   margin-bottom -10 * 1.3px
   background url(https://image-hosting.xiaoxili.com/img/20200812132758.png) no-repeat center / contain
   
-.shape-btn-remove 
-  left 0
-  top 0
-  margin-left -10 * 1.3px
-  margin-top -10 * 1.3px
-  background url(https://image-hosting.xiaoxili.com/img/20200812133019.png) no-repeat center / contain
+// .shape-in-right
+//   .shape-btn-remove
+//     right 0
+//     left auto
+//     margin-right -10 * 1.3px
+  
+//   .shape-btn-checked
+//     left 0
 
-
-.shape-btn-checked 
-  right 0
-  top 0
-  margin-right -10 * 1.3px
-  margin-top -10 * 1.3px
-  background url(https://image-hosting.xiaoxili.com/img/20200812133039.png) no-repeat center / contain
-
-.shape-btn-reverse
-  left 0
-  bottom 0
-  margin-left -10 * 1.3px
-  margin-bottom -10 * 1.3px
-  background url(https://image-hosting.xiaoxili.com/img/20200812133255.png) no-repeat center / contain
 
 
 .button-wrap
-  margin 20px auto 0
+  margin 0 auto
   width 330px
   height 54px
   display flex

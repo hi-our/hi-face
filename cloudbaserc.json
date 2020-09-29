@@ -87,7 +87,9 @@
       "functions": [
         {
           "functionName": "cms-schemas-v2",
-          "params": {}
+          "params": {
+            "needTypes": ["projects", "schemas", "uploads", "contents"]
+          }
         }
       ]
     }

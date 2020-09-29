@@ -36,7 +36,8 @@ class AvatarPoster extends Component {
       pageStatus: 'loading',
       isAuthor: false,
       showBackToIndexBtn,
-      errorText: ''
+      errorText: '',
+      shareTitle: '',
     }
   }
 
@@ -56,7 +57,8 @@ class AvatarPoster extends Component {
 
   onShareAppMessage({ from, target }) {
 
-    const { avatarFileID, ageType } = this.state
+    const { avatarFileID, shareTitle } = this.state
+    
 
     let imageUrl = avatarFileID || DEFAULT_SHARE_COVER
 
@@ -72,7 +74,7 @@ class AvatarPoster extends Component {
     }
 
     return {
-      title: typeMap[ageType] || typeMap.origin,
+      title: shareTitle || typeMap.origin,
       imageUrl,
       path: this.pageUrl
     }
@@ -135,7 +137,7 @@ class AvatarPoster extends Component {
       }
 
       if (themeId) {
-        const { posterBg } = await cloudCallFunction({
+        const { posterBg, shareTitle } = await cloudCallFunction({
           name: 'hiface-api',
           data: {
             $url: 'theme/get',
@@ -148,6 +150,7 @@ class AvatarPoster extends Component {
   
           console.log('avatarFileLocal :', posterBg, posterBgLocal);
           this.setState({
+            shareTitle,
             posterBgLocal
           })
         }

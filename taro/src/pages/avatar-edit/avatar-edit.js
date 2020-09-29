@@ -78,7 +78,7 @@ class AvatarEdit extends Component {
   // 分享信息
   onShareAppMessage({ from, target }) {
     const { themeData } = this.state
-    let { shareImage = DEFAULT_SHARE_COVER, shareTitle = '', shareTitleSlug = '' } = themeData
+    let { shareImage = DEFAULT_SHARE_COVER, shareTitle = '' } = themeData
 
     let shareUrl = '/pages/avatar-edit/avatar-edit'
     if (from === 'button') {
@@ -96,7 +96,7 @@ class AvatarEdit extends Component {
     }
 
     return {
-      title: shareTitle + (shareTitleSlug ? ' ' + shareTitleSlug : ''),
+      title: shareTitle,
       imageUrl: shareImage,
       path: shareUrl
     }

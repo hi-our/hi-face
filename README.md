@@ -24,6 +24,15 @@
 
 Web 体验版：[https://face.xiaoxili.com](https://face.xiaoxili.com)
 
+**DEMO 体验版**
+前台功能：https://face-demo.xiaoxili.com
+CMS 数据体验：https://face-demo.xiaoxili.com/tcb-cms/
+账号： cmsAdmin
+密码： cmsAdmin123==
+
+如有问题，可以提 Issue
+请勿修改密码，上传敏感数据。环境数据可能会被清空，勿做私人使用。
+
 ## 愿景
 
 ### 使用场景&目标用户&背景
