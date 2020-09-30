@@ -10,7 +10,7 @@
     "urlCheck": false,
     "es6": false,
     "postcss": false,
-    "preloadBackgroundData": true,
+    "preloadBackgroundData": false,
     "minified": false,
     "newFeature": true,
     "coverView": true,
