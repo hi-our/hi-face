@@ -10,7 +10,7 @@
     "urlCheck": false,
     "es6": false,
     "postcss": false,
-    "preloadBackgroundData": false,
+    "preloadBackgroundData": true,
     "minified": false,
     "newFeature": true,
     "coverView": true,
@@ -32,7 +32,7 @@
     },
     "useIsolateContext": true,
     "useCompilerModule": true,
-    "userConfirmedUseCompilerModuleSwitch": false,
+    "userConfirmedUseCompilerModuleSwitch": true,
     "packNpmManually": false,
     "packNpmRelationList": [],
     "remoteDebugLogEnable": false

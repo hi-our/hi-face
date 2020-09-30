@@ -65,6 +65,9 @@ class ThemeController extends BaseController {
             foreignField: 'belongShapeCategory',
             as: 'shapeList'
           })
+          .sort({
+            order: 1,
+          })
           .end()
         if (categoryErrMsg === 'collection.aggregate:ok' && shapeCategoryList.length > 0) {
           shapeCategoryList.forEach(catItem => {

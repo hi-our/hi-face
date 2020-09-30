@@ -105,7 +105,7 @@ export function getOneShapeList(shapeItem) {
     shapeWidth,
     shapeHeight,
     currentShapeId: 1,
-    position: shapeItem.position,
+    position: parseInt(shapeItem.position),
     timeNow: Date.now() * Math.random(),
     shapeCenterX,
     shapeCenterY,
