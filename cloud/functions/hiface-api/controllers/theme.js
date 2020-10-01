@@ -65,10 +65,14 @@ class ThemeController extends BaseController {
             foreignField: 'belongShapeCategory',
             as: 'shapeList'
           })
+          .sort({
+            order: 1,
+          })
           .end()
         if (categoryErrMsg === 'collection.aggregate:ok' && shapeCategoryList.length > 0) {
           shapeCategoryList.forEach(catItem => {
             catItem.categoryImageUrl = (catItem.categoryImage || '').replace(couldPrefix, urlPrefix)
+            catItem.shapeList = catItem.shapeList.sort((item1, item2) => item1.order - item2.order)
             catItem.shapeList.forEach(shapeItem => {
               const { imageFileID = '', imageReverseFileID = '' } = shapeItem
               if (imageFileID) shapeItem.imageUrl = imageFileID.replace(couldPrefix, urlPrefix)

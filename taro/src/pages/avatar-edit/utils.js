@@ -69,6 +69,14 @@ export const SHAPE_POSITION_MAP = [
     shapeCenterX: 488,
     shapeCenterY: 488,
   },
+  // 中下-全宽
+  {
+    alt: 'right-bottom',
+    shapeCenterX: 300,
+    shapeCenterY: 452,
+    shapeWidth: 600,
+    shapeHeight: 300
+  },
 ]
 
 /**
@@ -82,11 +90,12 @@ export function getOneShapeList(shapeItem) {
     _id: shapeId,
     shapeCenterX,
     shapeCenterY,
-    shapeWidth = 225
+    shapeWidth = 225,
+    shapeHeight = 225,
   } = Object.assign(SHAPE_POSITION_MAP[shapeItem.position], shapeItem)
 
   const resizeCenterX = shapeCenterX + shapeWidth / 2 - 2
-  const resizeCenterY = shapeCenterY + shapeWidth / 2 - 2
+  const resizeCenterY = shapeCenterY + shapeHeight / 2 - 2
 
   return {
     shapeId,
@@ -94,7 +103,9 @@ export function getOneShapeList(shapeItem) {
     imageUrl,
     imageReverseUrl,
     shapeWidth,
+    shapeHeight,
     currentShapeId: 1,
+    position: parseInt(shapeItem.position),
     timeNow: Date.now() * Math.random(),
     shapeCenterX,
     shapeCenterY,

@@ -328,7 +328,10 @@ class AvatarEdit extends Component {
       // 获取贴纸的细节
       const {
         // 图形宽
-        shapeWidth: shapeSize,
+        shapeWidth,
+        
+        // 图形高
+        shapeHeight,
         // 旋转角度
         rotate,
         // 图形中心点 X轴
@@ -356,10 +359,10 @@ class AvatarEdit extends Component {
       // 绘制贴纸
       pc.drawImage(
         oneImgSrc,
-        -shapeSize / 2,
-        -shapeSize / 2,
-        shapeSize,
-        shapeSize
+        -shapeWidth / 2,
+        -shapeHeight / 2,
+        shapeWidth,
+        shapeHeight
       )
 
       // 恢复之前保存的绘图上下文

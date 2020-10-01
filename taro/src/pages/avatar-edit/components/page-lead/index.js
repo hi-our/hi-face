@@ -1,7 +1,10 @@
 import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
+import { isIphoneSafeArea } from 'utils/common'
 
 import './styles.styl'
+
+const IS_IPHONE_X = isIphoneSafeArea()
 
 export default class PageLead extends Taro.Component {
 
@@ -52,7 +55,7 @@ export default class PageLead extends Taro.Component {
   render() {
     const { isHide, showTimeText } = this.state
     return (
-      <View className={`page-lead ${isHide ? 'hide' : ''}`}>
+      <View className={`page-lead page-china ${IS_IPHONE_X ? 'iphone-x' : ''} ${isHide ? 'hide' : ''}`}>
         {/* <View className='page-lead-btn' onClick={this.onToggle}>跳过 {showTimeText}s</View> */}
       </View>
     )

@@ -11,11 +11,50 @@
   z-index 100
   transition ease-in-out 0.8s
 
+.page-china
+  background-image url('../../../../images/bg-lead-china.jpg')
+  &:before
+    content ''
+    position absolute
+    left 0
+    right 0
+    top 0
+    bottom 0
+    background: rgba(93, 0, 61, 0.69);
+    animation: an-lead-1 1.8s ease-in-out forwards;
+  &:after
+    content ''
+    position absolute
+    left 50%
+    margin-left -75px
+    top 50%
+    margin-top -100px
+    width 150px
+    height 200px
+    background url('../../../../images/logo-text-large.png') center no-repeat
+    background-size contain
+    animation: an-lead-2 1s ease-in-out forwards;
+  
+  &.iphone-x
+    &:after
+      animation-name an-lead-2-x
+
   &.hide
     margin-top -100vh
     opacity 0
     filter (2px)
 
+
+@keyframes an-lead-1
+  to
+    opacity 0
+@keyframes an-lead-2
+  to
+    transform: translate(-140px, -280px) scale(0.3)
+
+@keyframes an-lead-2-x
+  to
+    transform: translate(-140px, -330px) scale(0.3)
 // .page-lead-btn
 //   position absolute
 //   right 20px
