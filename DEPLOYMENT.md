@@ -61,8 +61,6 @@ SERVER_ENV=dev # 开发环境：dev 生成环境：prod
 
 ![](https://image-hosting.xiaoxili.com/img/img/20200911/a983e50400151acc1ea19ebba0c3579d-2ab28d.png)
 
-
-
 在操作后，即将云开发环境转换为按量计费（按量计费仍然有免费额度，和基础版预付费一致，无需担心）
 
 在浏览器中，打开[腾讯云控制台](https://cloud.tencent.com/login/mp?s_url=https%3A%2F%2Fconsole.cloud.tencent.com%2Ftcb),使用微信扫描二维码，选择当前小程序账号进行授权。
@@ -200,7 +198,12 @@ Web端上线部署基于[Cloudbase Framework](https://github.com/TencentCloudBas
 
 文档：[https://developers.weixin.qq.com/miniprogram/dev/devtools/ci.html](https://developers.weixin.qq.com/miniprogram/dev/devtools/ci.html)
 
-示例：
+* 下载小程序部署私钥
+* 【可选】关闭IP白名单
+* 运行小程序部署命令 `npm run deploy:mini`
+
+
+<!-- 示例：
 
 ![](https://image-hosting.xiaoxili.com/img/img/20200911/6b7e858b51f95138e899ca80bd9b8ec3-a3f360.png)
 
@@ -215,7 +218,7 @@ Web端上线部署基于[Cloudbase Framework](https://github.com/TencentCloudBas
 npm run wxci:preview
 // 部署体验版，直接上传到mp平台
 npm run wxci:upload
-```
+``` -->
 
 ### Web端部署
 
@@ -233,9 +236,6 @@ npm install -g @cloudbase/cli@latest
 ```
 ## TODO：
 
-- [ ] 快速生成数据模型
-    - [ ] v1 所属主题有问题
-    - [ ] v2 cms中未显示对应的数据模型
 - [ ] 云函数部署，framework的方式还有点问题
 ## 参考文档：
 
