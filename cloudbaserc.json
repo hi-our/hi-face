@@ -80,18 +80,5 @@
         }
       }
     }
-  },
-  "hooks": {
-    "postDeploy": {
-      "type": "callFunction",
-      "functions": [
-        {
-          "functionName": "cms-schemas-v2",
-          "params": {
-            "needTypes": ["projects", "schemas", "uploads", "contents"]
-          }
-        }
-      ]
-    }
   }
 }
