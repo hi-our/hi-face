@@ -10,5 +10,5 @@ module.exports = {
   envMode,
   appId: process.env.APP_ID,
   envId: process.env.ENV_ID,
-  version: '2.2.5',
+  version: '2.2.6',
 }
