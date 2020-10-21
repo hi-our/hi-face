@@ -119,8 +119,6 @@ SERVER_ENV=dev # 开发环境：dev 生成环境：prod
 
 #### 方案三：数据模型快速生成，基于 Cloudbase Framework 和 Cloudbase Cli 及云函数
 
->目前在 CMS v1 版中有一点小问题，CMS v2版数据模型跟 v1 不太一样，还未完全测试。
-
 第一步：Hi 头像数据管理基于 Cloudbase CMS 内容管理扩展，需要在云开发 cloudbase 控制台下方扩展能力中开通。
 
 第二步：按照以下命令执行
@@ -142,6 +140,9 @@ npm run deploy:init-db:dev
 
 * `hiface-api`主要的接口请求 API
 * `analyze-face`Web 端五官分析和图形安全审核，在小程序端基于服务市场的五官分析公服务。如果只部署微信小程序端，则无需部署。
+
+  * secretId secretKey 腾讯云账号权限
+  * 腾讯云 nodejs sdk
 #### 方案一：微信开发者工具
 
 在小程序开发者工具中，打开`cloud/functions`目录，将所有的子目录，均右键，在菜单中点击“上传并部署：云端安装依赖”。
@@ -218,7 +219,7 @@ Web端上线部署基于[Cloudbase Framework](https://github.com/TencentCloudBas
 npm run wxci:preview
 // 部署体验版，直接上传到mp平台
 npm run wxci:upload
-``` -->
+​``` -->
 
 ### Web端部署
 
@@ -231,12 +232,10 @@ npm run wxci:upload
 
 Web端上线部署基于[Cloudbase Framework](https://github.com/TencentCloudBase/cloudbase-framework)来完成，需要安装云开发`@cloudbase/cli`，具体可以查看`cloudbaserc.json`中的配置。
 
-```plain
+​```plain
 npm install -g @cloudbase/cli@latest
 ```
-## TODO：
 
-- [ ] 云函数部署，framework的方式还有点问题
 ## 参考文档：
 
 
