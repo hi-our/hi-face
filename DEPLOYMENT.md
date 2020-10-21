@@ -232,9 +232,6 @@ npm run wxci:upload
 
 Web端上线部署基于[Cloudbase Framework](https://github.com/TencentCloudBase/cloudbase-framework)来完成，需要安装云开发`@cloudbase/cli`，具体可以查看`cloudbaserc.json`中的配置。
 
-​```plain
-npm install -g @cloudbase/cli@latest
-```
 
 ## 参考文档：
 
