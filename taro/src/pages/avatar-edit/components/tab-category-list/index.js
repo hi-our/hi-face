@@ -38,7 +38,7 @@ export default class ImageChoose extends Taro.Component {
 
     return (
       <View className='tab-wrap'>
-        <View className='tab-hd'>
+        <ScrollView className="tab-hd" scrollX enableFlex>
           {
             categoryList.map((item, itemIndex) => {
               const { _id, categoryName } = item
@@ -55,7 +55,7 @@ export default class ImageChoose extends Taro.Component {
               )
             })
           }
-        </View>
+        </ScrollView>
         <View className='tab-bd'>
           {
             categoryList.map((item, itemIndex) => {
