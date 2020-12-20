@@ -490,7 +490,7 @@ class AvatarEdit extends Component {
               )
               : (
                 <View className="page-cover-wrap">
-                  {!!coverImageUrl && <Image src={imageThumb(coverImageUrl, 600, 600)} webp className="page-theme-cover" />}
+                  {!!coverImageUrl && <Image src={imageThumb(coverImageUrl, 636, 744)} webp className="page-theme-cover" />}
                   <View className='page-theme-name'>{themeName}</View>
                   <View className='page-theme-slug'>{shareTitleSlug}</View>
                 </View>
