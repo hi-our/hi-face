@@ -21,7 +21,7 @@ function checkWebp() {
 if (isH5Page) {
   checkWebp()
 } else {
-  hasWebP == true
+  hasWebP = true
 }
 
 // 这个方法，不兼容Safari浏览器，所以改用了加载webp图片的方式
