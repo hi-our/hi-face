@@ -2,6 +2,30 @@ import Taro from '@tarojs/taro'
 
 export const isH5Page = Taro.getEnv() === 'WEB'
 
+/**
+ * 判断浏览器是否兼容 Webp 格式图片
+ */
+let hasWebP = false
+function checkWebp() {
+  var img = new Image()
+  img.onload = function () {
+    hasWebP = !!(img.height > 0 && img.width > 0)
+  }
+  img.onerror = function () {
+    hasWebP = false
+  }
+  img.src = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA='
+}
+
+// 小程序上无需判断，H5需要判断，
+if (isH5Page) {
+  checkWebp()
+} else {
+  hasWebP == true
+}
+
+// 这个方法，不兼容Safari浏览器，所以改用了加载webp图片的方式
+// Safari 14支持webp格式，但dataUrl中还是 image/png
 function checkSupportWebP() {
   const ele = document.createElement('canvas')
   if (ele && typeof ele.toDataURL === 'function') {
@@ -11,8 +35,8 @@ function checkSupportWebP() {
   return false
 }
 
-// 判断支持 WebP 格式图片
-const isSupportWebP = isH5Page ? checkSupportWebP() : true
+// // 判断支持 WebP 格式图片
+// const isSupportWebP = isH5Page ? checkSupportWebP() : true
 
 let _systemInfo = null
 let _isXPhoneArea = null
@@ -71,9 +95,9 @@ export function h5PageModalTips() {
  * 文档：https://cloud.tencent.com/document/product/460/6929
  */
 export const imageThumb = (src, width, height, format = 'webp', mode = 1, ) => {
-
   if (!src) return ''
-  if (src.includes('cloud')) return src
+  if (src.includes('cloud:')) return src
+  
   let pathn = src.trim().replace(/^http(s)?:\/\//ig, '')
 
   pathn = pathn.split('/')
@@ -89,8 +113,9 @@ export const imageThumb = (src, width, height, format = 'webp', mode = 1, ) => {
     } else {
       returnUrl = src.replace(/(\.[a-z_]+)$/ig, `$1?imageView2/${mode}/w/${width || 0}/h/${height || 0}`)
     }
-
-    if (format && isSupportWebP) {
+    
+    if (format === 'webp' && hasWebP) {
+      
       returnUrl += '/format/webp/ignore-error/1'
     }
   }
