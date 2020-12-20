@@ -1,7 +1,7 @@
 # Hi头像
 
 让头像有趣一点
-
+<!-- 
 ## 核心亮点
 
 | 特性        | 介绍                                  |
@@ -13,7 +13,7 @@
 | 部署文档详细 | 本项目的部署文档非常详细，详情请查看《[DEPLOYMENT](https://github.com/hi-our/hi-face/blob/master/DEPLOYMENT.md)》文档 |
 | 数据管理方便 | 使用 CloudBase CMS 管理数据，并贴心地给出初始化数据模型及默认数据 |
 | 前端工程化 | 核心配置已抽取，基于 Cloudbase Framework 完成云函数、Web 端 和小程序端部署|
-| 技术小册 | 独家拥有技术小册《**[从0到1开发一个智能头像识别小程序](https://www.xiaoxili.com/hi-face/docs/README.html)**》，详细说明 Hi 头像主要实现思路 |
+| 技术小册 | 独家拥有技术小册《**[从0到1开发一个智能头像识别小程序](https://www.xiaoxili.com/hi-face/docs/README.html)**》，详细说明 Hi 头像主要实现思路 | -->
 
 
 ## 功能体验
@@ -65,15 +65,13 @@ CMS 数据体验：https://face-demo.xiaoxili.com/tcb-cms/
 
 20-35喜欢分享的年轻人
 
-
 ### 作品效果图
 ![](https://image-hosting.xiaoxili.com/img/img/20200921/6562b94a148b112a6c6b092821bee6f3-4768c7.png)
 ![](https://image-hosting.xiaoxili.com/img/img/20200921/236e9b57e5c2a8ad170c1edada9c2724-149cab.png)
 
 ### 产品介绍视频
 
-[#小程序云开发挑战赛# Hi头像小程序介绍视频-完整版](https://v.qq.com/x/page/l3152qjx9e8.html)
-
+[Hi头像小程序介绍视频-完整版](https://v.qq.com/x/page/l3152qjx9e8.html)
 
 ## 主创人员
 
