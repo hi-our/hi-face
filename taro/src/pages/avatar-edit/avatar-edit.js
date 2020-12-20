@@ -6,7 +6,7 @@ import PageLoading from 'components/page-status'
 import ShapeEdit from './components/shape-edit'
 import TabCategoryList from './components/tab-category-list'
 import PosterDialog from './components/poster-dialog'
-import { getHatList, getHatShapeList } from 'utils/face-utils'
+import { getHatList, getHatShapeList, getMouthList, getMaskShapeList } from 'utils/face-utils'
 import { getImg, fsmReadFile, getBase64Main, saveImageToPhotosAlbum, onUploadFile } from 'utils/image-utils'
 import { h5PageModalTips, imageThumb } from 'utils/common'
 import { DEFAULT_SHARE_COVER } from 'constants/status'
@@ -170,7 +170,7 @@ class AvatarEdit extends Component {
         return
       }
       // web版用老逻辑
-      if (shapeOne.position === 2 || isH5Page) {
+      if ((shapeOne.position == 2 || shapeOne.position == 3) || isH5Page) {
         let cloudFunc = isH5Page ? this.cloudAnalyzeFaceH5 : this.cloudAnalyzeFaceWx
   
         const couldRes = await cloudFunc(cutImageSrc)
@@ -186,8 +186,19 @@ class AvatarEdit extends Component {
           })
           return
         }
-        const hatList = getHatList(couldRes, shapeOne)
-        shapeList = getHatShapeList(hatList, shapeOne, SAVE_IMAGE_WIDTH)
+
+        if (shapeOne.position == 3) {
+          // 口罩
+          const mouthList = getMouthList(couldRes, shapeOne)
+          console.log('mouthList', mouthList)
+          shapeList = getMaskShapeList(mouthList, shapeOne, SAVE_IMAGE_WIDTH)
+          console.log('shapeList', shapeList)
+        } else {
+          // 皇冠
+          const hatList = getHatList(couldRes, shapeOne)
+          shapeList = getHatShapeList(hatList, shapeOne, SAVE_IMAGE_WIDTH)
+
+        }
   
         this.setState({
           shapeList,
@@ -479,7 +490,7 @@ class AvatarEdit extends Component {
               )
               : (
                 <View className="page-cover-wrap">
-                  {!!coverImageUrl && <Image src={imageThumb(coverImageUrl, 600, 600, 1, 'webp')} webp className="page-theme-cover" />}
+                  {!!coverImageUrl && <Image src={imageThumb(coverImageUrl, 636, 744)} webp className="page-theme-cover" />}
                   <View className='page-theme-name'>{themeName}</View>
                   <View className='page-theme-slug'>{shareTitleSlug}</View>
                 </View>
