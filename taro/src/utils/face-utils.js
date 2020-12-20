@@ -161,14 +161,13 @@ export function getHatShapeList(hatList, shapeItem, saveImageWidth = 600) {
 
     return {
       shapeId,
-      timeNow: Date.now(),
+      timeNow: Date.now() * Math.random(),
       imageUrl,
       imageReverseUrl,
       shapeWidth,
       shapeHeight: shapeWidth,
       position: parseInt(shapeItem.position),
       currentShapeId: 1,
-      timeNow: Date.now() * Math.random(),
       shapeCenterX,
       shapeCenterY,
       reserve: 1,
@@ -246,18 +245,18 @@ export function getMouthList(results) {
  * @param {array} shapeItem 贴纸信息
  * @param {number} saveImageWidth 预期保存的图片宽
  */
-export function getMaskShapeList(mouthList, dprCanvasWidth, shapeSize) {
+export function getMaskShapeList(mouthList, shapeItem, saveImageWidth = 600) {
+  const { imageUrl = '', imageReverseUrl, _id: shapeId } = shapeItem || {}
   return mouthList.map(item => {
     let { faceWidth, angle, mouthMidPoint, ImageWidth } = item
-    let dpr = ImageWidth / dprCanvasWidth
+    let dpr = saveImageWidth / ImageWidth // 头像宽高为132，达不到600
     const shapeCenterX = mouthMidPoint.X / dpr
     const shapeCenterY = mouthMidPoint.Y / dpr
-    const scale = faceWidth / shapeSize / dpr
     const rotate = angle / Math.PI * 180
 
     // 角度计算有点难
-    let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
-    let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * scale * 50
+    let widthScaleDpr = Math.sin(Math.PI / 4 - angle) * Math.sqrt(2) * faceWidth * dpr
+    let heightScaleDpr = Math.cos(Math.PI / 4 - angle) * Math.sqrt(2) * faceWidth * dpr
 
     const resizeCenterX = shapeCenterX + widthScaleDpr - 2
     const resizeCenterY = shapeCenterY + heightScaleDpr - 2
@@ -265,12 +264,15 @@ export function getMaskShapeList(mouthList, dprCanvasWidth, shapeSize) {
     const shapeWidth = faceWidth * 1.2 / dpr
 
     return {
-      name: 'mask',
+      shapeId,
+      timeNow: Date.now() * Math.random(),
+      imageUrl,
+      imageReverseUrl,
       shapeWidth,
       shapeHeight: shapeWidth,
-      // position: parseInt(shapeItem.position),
+      name: 'mask',
+      position: parseInt(shapeItem.position),
       currentShapeId: 1,
-      timeNow: Date.now() * Math.random(),
       shapeCenterX,
       shapeCenterY,
       reserve: 1,
