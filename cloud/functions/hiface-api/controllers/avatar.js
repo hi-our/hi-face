@@ -157,7 +157,7 @@ class AvatarController extends BaseController {
         console.log('orderBy :>> ', orderBy);
         operation = operation.orderBy(orderBy.field, orderBy.orderType || 'desc')
       } else {
-        operation = operation.orderBy('order', 'asc')
+        operation = operation.orderBy('updateTime', 'desc')
       }
       let { data } = await operation.get()
       
