@@ -1078,14 +1078,6 @@
   resolved "http://registry.fe.yeshj.com/@sindresorhus/is/download/@sindresorhus/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha1-mgb08TfuhNffBGDB/bETX/psUP0=
 
-"@tarojs/async-await@^1.3.25":
-  version "1.3.45"
-  resolved "https://registry.yarnpkg.com/@tarojs/async-await/-/async-await-1.3.45.tgz#e1ae9f17506805f60e156abfb58455de55174eb0"
-  integrity sha512-R4JUWnb/xoQQTeTKJuIDFjtdjOoVAP4VH3olhQskyh+eMEah5f9TOHr6fzJJA1RLblrWasSHV6/frhg92PoQmQ==
-  dependencies:
-    promise-polyfill "^7.1.2"
-    regenerator-runtime "^0.11.1"
-
 "@tarojs/cli@2.2.12":
   version "2.2.12"
   resolved "http://registry.fe.yeshj.com/@tarojs/cli/download/@tarojs/cli-2.2.12.tgz#9d9880b29e9ebf9349c3b0dfc22e2cd7b6590bb1"
@@ -1163,19 +1155,6 @@
   version "2.2.12"
   resolved "http://registry.fe.yeshj.com/@tarojs/components-qa/download/@tarojs/components-qa-2.2.12.tgz#7e92c9a91fe132860bbe991b2df77908903df9e4"
   integrity sha1-fpLJqR/hMoYLvpkbLfd5CJA9+eQ=
-
-"@tarojs/components@1.3.25":
-  version "1.3.25"
-  resolved "https://registry.yarnpkg.com/@tarojs/components/-/components-1.3.25.tgz#1648a25f8a0aa7624ce23f37e5f3b9828e9b2570"
-  integrity sha512-kbY8EroOqN2KfplETSCXaSV9LWUFSisozP4BJfMBsMOe9357DKMzRQVGldrwYmQzaGHST8FEGkwHwi2RH6jCrQ==
-  dependencies:
-    better-scroll "^1.14.1"
-    classnames "^2.2.5"
-    intersection-observer "^0.7.0"
-    omit.js "^1.0.0"
-    resolve-pathname "^3.0.0"
-    swiper "4.4.2"
-    weui "^1.1.2"
 
 "@tarojs/components@2.2.12":
   version "2.2.12"
@@ -1299,18 +1278,6 @@
     "@tarojs/taro" "2.2.12"
     "@tarojs/utils" "2.2.12"
 
-"@tarojs/router@1.3.25":
-  version "1.3.25"
-  resolved "https://registry.yarnpkg.com/@tarojs/router/-/router-1.3.25.tgz#101338d9da181dcd53a9db3566faa1dfb2bdda9f"
-  integrity sha512-YVnAV08Jb+FUcCv7YWch4VrbPQow7Qo0TCwV6kBQKYHlLWdCC96LIjdDZjNgrwMsYt0a5kwg3g37dviGzR0uZA==
-  dependencies:
-    invariant "2.2.4"
-    lodash "4.17.13"
-    resolve-pathname "2.2.0"
-    rollup-plugin-alias "1.4.0"
-    value-equal "0.4.0"
-    warning "4.0.2"
-
 "@tarojs/router@2.2.12":
   version "2.2.12"
   resolved "http://registry.fe.yeshj.com/@tarojs/router/download/@tarojs/router-2.2.12.tgz#8ed85dbdfe7a44e1eb5128b923457326dede46ec"
@@ -1343,16 +1310,6 @@
     resolve "1.15.1"
     tapable "1.1.3"
 
-"@tarojs/taro-alipay@1.3.25":
-  version "1.3.25"
-  resolved "https://registry.yarnpkg.com/@tarojs/taro-alipay/-/taro-alipay-1.3.25.tgz#fba70f6b45d7144088f1c2223fbf74da25530f11"
-  integrity sha512-couA8bfmYMbdkmRxb5c8CmWGNTuFD0DLeCjXdT3wvibYR2G6OuB21ypF6dZv9YSyDCATQPTqmGGLbipnuzw2lA==
-  dependencies:
-    "@tarojs/taro" "1.3.25"
-    "@tarojs/utils" "1.3.25"
-    lodash "^4.17.10"
-    prop-types "^15.6.1"
-
 "@tarojs/taro-alipay@2.2.12":
   version "2.2.12"
   resolved "http://registry.fe.yeshj.com/@tarojs/taro-alipay/download/@tarojs/taro-alipay-2.2.12.tgz#6c5bc82a6504ce6f0db591dd295623b59e6719e9"
@@ -1362,17 +1319,6 @@
     "@tarojs/utils" "2.2.12"
     lodash "^4.17.10"
     prop-types "^15.6.1"
-
-"@tarojs/taro-h5@1.3.25":
-  version "1.3.25"
-  resolved "https://registry.yarnpkg.com/@tarojs/taro-h5/-/taro-h5-1.3.25.tgz#4a4c32852c0b1f673c7d8bf121382fee5d8de31b"
-  integrity sha512-1HFr+a8U2ltfqWC7WTawcVvr05urndaJ08fZxTp+wO6YHFrGINoJGdlE2faIxUwcyz4KP3aO7W6cSwcGAJUx+w==
-  dependencies:
-    base64-js "^1.3.0"
-    jsonp-retry "^1.0.3"
-    mobile-detect "^1.4.2"
-    raf "^3.4.1"
-    whatwg-fetch "^2.0.4"
 
 "@tarojs/taro-h5@2.2.12":
   version "2.2.12"
@@ -1385,16 +1331,6 @@
     raf "^3.4.1"
     whatwg-fetch "^2.0.4"
 
-"@tarojs/taro-qq@1.3.25":
-  version "1.3.25"
-  resolved "https://registry.yarnpkg.com/@tarojs/taro-qq/-/taro-qq-1.3.25.tgz#008bd306c8a4d1d004dba4bfd0471b7f11d29267"
-  integrity sha512-fDllSlIZZhzScJOhumKy4OGqEpumrlYGNzz+6cD9A/1LqWaBcxZYHwZKDvVKi4f7KR0BBkzk99lgAn1mi5I/uA==
-  dependencies:
-    "@tarojs/taro" "1.3.25"
-    "@tarojs/utils" "1.3.25"
-    lodash "^4.17.10"
-    prop-types "^15.6.1"
-
 "@tarojs/taro-qq@2.2.12":
   version "2.2.12"
   resolved "http://registry.fe.yeshj.com/@tarojs/taro-qq/download/@tarojs/taro-qq-2.2.12.tgz#40a5a72849521f2bc1a024a0d6711d4eb0e80b1c"
@@ -1402,16 +1338,6 @@
   dependencies:
     "@tarojs/taro" "2.2.12"
     "@tarojs/utils" "2.2.12"
-    lodash "^4.17.10"
-    prop-types "^15.6.1"
-
-"@tarojs/taro-quickapp@1.3.25":
-  version "1.3.25"
-  resolved "https://registry.yarnpkg.com/@tarojs/taro-quickapp/-/taro-quickapp-1.3.25.tgz#30d576281f7ea8921626aa3ffa9697effa6ba73e"
-  integrity sha512-kn3mMoj/C5EsUm++yIy3OE/8UKXLPZEoGDSyocKdntJRUa967GE2to3zAwnkX/UBvRWZaX5eiyHDmwUbWLC40w==
-  dependencies:
-    "@tarojs/taro" "1.3.25"
-    "@tarojs/utils" "1.3.25"
     lodash "^4.17.10"
     prop-types "^15.6.1"
 
@@ -1425,16 +1351,6 @@
     lodash "^4.17.10"
     prop-types "^15.6.1"
 
-"@tarojs/taro-swan@1.3.25":
-  version "1.3.25"
-  resolved "https://registry.yarnpkg.com/@tarojs/taro-swan/-/taro-swan-1.3.25.tgz#4a9c98f9b4fe2cee724387b558b96d5f71000222"
-  integrity sha512-WADf4HYmJoJJ2Q7GWV4c/C8R61rr9dV1KiZkiQrNR8Y7R/YYo5wfd+YgWgy0oJgRTdJ7j7XXGRcRQPBhOlLP8w==
-  dependencies:
-    "@tarojs/taro" "1.3.25"
-    "@tarojs/utils" "1.3.25"
-    lodash "^4.17.10"
-    prop-types "^15.6.1"
-
 "@tarojs/taro-swan@2.2.12":
   version "2.2.12"
   resolved "http://registry.fe.yeshj.com/@tarojs/taro-swan/download/@tarojs/taro-swan-2.2.12.tgz#a6df370da6471a2af3712de9705dcf2ccf37c504"
@@ -1442,16 +1358,6 @@
   dependencies:
     "@tarojs/taro" "2.2.12"
     "@tarojs/utils" "2.2.12"
-    lodash "^4.17.10"
-    prop-types "^15.6.1"
-
-"@tarojs/taro-tt@1.3.25":
-  version "1.3.25"
-  resolved "https://registry.yarnpkg.com/@tarojs/taro-tt/-/taro-tt-1.3.25.tgz#67a6a33dd440cacbff4d7334f661d422f051366b"
-  integrity sha512-iM5oOsqY68GikmKJ+mPYBR1H+0HZH8LK+ZgEy1JwVKNVKwldf0E1PhcanEffCAaQomGeNvZI3b8sJ3xa2wW1wQ==
-  dependencies:
-    "@tarojs/taro" "1.3.25"
-    "@tarojs/utils" "1.3.25"
     lodash "^4.17.10"
     prop-types "^15.6.1"
 
@@ -1465,16 +1371,6 @@
     lodash "^4.17.10"
     prop-types "^15.6.1"
 
-"@tarojs/taro-weapp@1.3.25":
-  version "1.3.25"
-  resolved "https://registry.yarnpkg.com/@tarojs/taro-weapp/-/taro-weapp-1.3.25.tgz#a25f82b10e5a62b1be66d9157e547814d6932252"
-  integrity sha512-OLO/3MiaDps7mfvmPpUUNJLHBMr/i8wF2GtF4bHVyT4yh77hUYfwAFq6uPMiiB2uPh++WG9EBOPvw7sAYlHISw==
-  dependencies:
-    "@tarojs/taro" "1.3.25"
-    "@tarojs/utils" "1.3.25"
-    lodash "^4.17.10"
-    prop-types "^15.6.1"
-
 "@tarojs/taro-weapp@2.2.12":
   version "2.2.12"
   resolved "http://registry.fe.yeshj.com/@tarojs/taro-weapp/download/@tarojs/taro-weapp-2.2.12.tgz#97dc34d3fd3bf6601a484e72d5696723e0df7e63"
@@ -1484,13 +1380,6 @@
     "@tarojs/utils" "2.2.12"
     lodash "^4.17.10"
     prop-types "^15.6.1"
-
-"@tarojs/taro@1.3.25":
-  version "1.3.25"
-  resolved "https://registry.yarnpkg.com/@tarojs/taro/-/taro-1.3.25.tgz#70fa2ec933da30f08770739478a76a7ecb752358"
-  integrity sha512-DTgS5K9Sz0JZtwQ1nqD7GYRpBxbKioYwzmCEPjuyAhOXY6JDxPyZkbLGfsqSTh86CQgy/hBq6oh1E1of/JBGrw==
-  dependencies:
-    "@tarojs/utils" "1.3.25"
 
 "@tarojs/taro@2.2.12":
   version "2.2.12"
@@ -1546,11 +1435,6 @@
     lodash "4.17.19"
     prettier "^1.14.2"
     typescript "^3.2.2"
-
-"@tarojs/utils@1.3.25":
-  version "1.3.25"
-  resolved "https://registry.yarnpkg.com/@tarojs/utils/-/utils-1.3.25.tgz#646698f3bb2babed837447617ccec7bd4ee393e3"
-  integrity sha512-c/gpkBdPX94KwPKZRcQMO1FiRlho9r+VxF1StqDseaRUmQTCMcir44Cfw4NYVcMmpjm3YtWIDHWMCTimoMvaPA==
 
 "@tarojs/utils@2.2.12":
   version "2.2.12"
@@ -3057,7 +2941,7 @@ babel-register@^6.26.0, babel-register@^6.9.0:
     mkdirp "^0.5.1"
     source-map-support "^0.4.15"
 
-babel-runtime@^6.0.0, babel-runtime@^6.18.0, babel-runtime@^6.2.0, babel-runtime@^6.22.0, babel-runtime@^6.23.0, babel-runtime@^6.26.0, babel-runtime@^6.6.1, babel-runtime@^6.9.1:
+babel-runtime@^6.18.0, babel-runtime@^6.2.0, babel-runtime@^6.22.0, babel-runtime@^6.23.0, babel-runtime@^6.26.0, babel-runtime@^6.6.1, babel-runtime@^6.9.1:
   version "6.26.0"
   resolved "http://registry.fe.yeshj.com/babel-runtime/download/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   integrity sha1-llxwWGaOgrVde/4E/yM3vItWR/4=
@@ -3164,13 +3048,6 @@ better-babel-generator@^6.26.1:
     lodash "^4.17.4"
     source-map "^0.5.7"
     trim-right "^1.0.1"
-
-better-scroll@^1.14.1:
-  version "1.15.2"
-  resolved "https://registry.yarnpkg.com/better-scroll/-/better-scroll-1.15.2.tgz#65ffc6058b8b4ff337b8dfad4bcb334d7699ceb6"
-  integrity sha512-sSY2N8I9/B+YX/9JpIz6pMQYnmBuvspBqZG4UxYaQEfz/ZWrnxwdyKLL4t6IKpFmxqtZadVypXw7vSSHxBZpBQ==
-  dependencies:
-    babel-runtime "^6.0.0"
 
 big.js@^3.1.3:
   version "3.2.0"
@@ -3800,8 +3677,8 @@ chownr@^1.1.1:
 
 chownr@^2.0.0:
   version "2.0.0"
-  resolved "http://registry.fe.yeshj.com/chownr/download/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
-  integrity sha1-Fb++U9LqtM9w8YqM1o6+Wzyx3s4=
+  resolved "https://registry.yarnpkg.com/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
+  integrity sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==
 
 chrome-trace-event@^1.0.2:
   version "1.0.2"
@@ -6081,8 +5958,8 @@ fs-extra@^5.0.0:
 
 fs-minipass@^2.0.0:
   version "2.1.0"
-  resolved "http://registry.fe.yeshj.com/fs-minipass/download/fs-minipass-2.1.0.tgz#7f5036fdbf12c63c169190cbe4199c852271f9fb"
-  integrity sha1-f1A2/b8SxjwWkZDL5BmchSJx+fs=
+  resolved "https://registry.yarnpkg.com/fs-minipass/-/fs-minipass-2.1.0.tgz#7f5036fdbf12c63c169190cbe4199c852271f9fb"
+  integrity sha512-V/JgOLFCS+R6Vcq0slCuaeWEdNC3ouDlJMNIsacH2VtALiu9mV4LPrHc5cDl8k5aw6J8jwgWWpiTo5RYhmIzvg==
   dependencies:
     minipass "^3.0.0"
 
@@ -8388,10 +8265,10 @@ minipass@^3.0.0, minipass@^3.1.1:
   dependencies:
     yallist "^4.0.0"
 
-minizlib@^2.1.0:
-  version "2.1.0"
-  resolved "http://registry.fe.yeshj.com/minizlib/download/minizlib-2.1.0.tgz#fd52c645301ef09a63a2c209697c294c6ce02cf3"
-  integrity sha1-/VLGRTAe8JpjosIJaXwpTGzgLPM=
+minizlib@^2.1.1:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/minizlib/-/minizlib-2.1.2.tgz#e90d3466ba209b932451508a11ce3d3632145931"
+  integrity sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==
   dependencies:
     minipass "^3.0.0"
     yallist "^4.0.0"
@@ -8429,8 +8306,8 @@ mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@^0.5.3, mkdirp@^0.5.5, mkdirp@~0.5.x:
 
 mkdirp@^1.0.3, mkdirp@^1.0.4:
   version "1.0.4"
-  resolved "http://registry.fe.yeshj.com/mkdirp/download/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
-  integrity sha1-PrXtYmInVteaXw4qIh3+utdcL34=
+  resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
+  integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
 mobile-detect@^1.4.2:
   version "1.4.4"
@@ -8539,7 +8416,7 @@ neo-async@^2.5.0, neo-async@^2.6.1:
   resolved "http://registry.fe.yeshj.com/neo-async/download/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha1-tKr7k+OustgXTKU88WOrfXMIMF8=
 
-nerv-devtools@^1.5.0, nerv-devtools@^1.5.5:
+nerv-devtools@^1.5.5:
   version "1.5.7"
   resolved "http://registry.fe.yeshj.com/nerv-devtools/download/nerv-devtools-1.5.7.tgz#6321721ba3052d8e917f1868da1d10c132d44209"
   integrity sha1-YyFyG6MFLY6Rfxho2h0QwTLUQgk=
@@ -8558,7 +8435,7 @@ nerv-utils@1.4.5:
   resolved "http://registry.fe.yeshj.com/nerv-utils/download/nerv-utils-1.4.5.tgz#3e017a8a1b605b35ee31ad396a038207fbc597b0"
   integrity sha1-PgF6ihtgWzXuMa05agOCB/vFl7A=
 
-nervjs@1.5.7, nervjs@^1.5.0, nervjs@^1.5.5:
+nervjs@1.5.7, nervjs@^1.5.5:
   version "1.5.7"
   resolved "http://registry.fe.yeshj.com/nervjs/download/nervjs-1.5.7.tgz#29798a8e1473b33329b9d2af4022d8818c7ff4cd"
   integrity sha1-KXmKjhRzszMpudKvQCLYgYx/9M0=
@@ -9764,11 +9641,6 @@ promise-inflight@^1.0.1:
   resolved "http://registry.fe.yeshj.com/promise-inflight/download/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
 
-promise-polyfill@^7.1.2:
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/promise-polyfill/-/promise-polyfill-7.1.2.tgz#ab05301d8c28536301622d69227632269a70ca3b"
-  integrity sha512-FuEc12/eKqqoRYIGBrUptCBRhobL19PS2U31vMNTfyck1FxPyMfgsXyW4Mav85y/ZN1hop3hOwRlUDok23oYfQ==
-
 promise@^7.1.1:
   version "7.3.1"
   resolved "http://registry.fe.yeshj.com/promise/download/promise-7.3.1.tgz#064b72602b18f90f29192b8b1bc418ffd1ebd3bf"
@@ -10145,7 +10017,7 @@ regenerate@^1.2.1, regenerate@^1.4.0:
   resolved "http://registry.fe.yeshj.com/regenerate/download/regenerate-1.4.1.tgz#cad92ad8e6b591773485fbe05a485caf4f457e6f"
   integrity sha1-ytkq2Oa1kXc0hfvgWkhcr09Ffm8=
 
-regenerator-runtime@0.11.1, regenerator-runtime@^0.11.0, regenerator-runtime@^0.11.1:
+regenerator-runtime@0.11.1, regenerator-runtime@^0.11.0:
   version "0.11.1"
   resolved "http://registry.fe.yeshj.com/regenerator-runtime/download/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
   integrity sha1-vgWtf5v30i4Fb5cmzuUBf78Z4uk=
@@ -11628,14 +11500,14 @@ tar-stream@^1.5.2:
     xtend "^4.0.0"
 
 tar@^6.0.2:
-  version "6.0.2"
-  resolved "http://registry.fe.yeshj.com/tar/download/tar-6.0.2.tgz#5df17813468a6264ff14f766886c622b84ae2f39"
-  integrity sha1-XfF4E0aKYmT/FPdmiGxiK4SuLzk=
+  version "6.1.4"
+  resolved "https://registry.yarnpkg.com/tar/-/tar-6.1.4.tgz#9f0722b772a5e00dba7d52e1923b37a7ec3799b3"
+  integrity sha512-kcPWrO8S5ABjuZ/v1xQHP8xCEvj1dQ1d9iAb6Qs4jLYzaAIYWwST2IQpz7Ud8VNYRI+fGhFjrnzRKmRggKWg3g==
   dependencies:
     chownr "^2.0.0"
     fs-minipass "^2.0.0"
     minipass "^3.0.0"
-    minizlib "^2.1.0"
+    minizlib "^2.1.1"
     mkdirp "^1.0.3"
     yallist "^4.0.0"
 
@@ -11649,25 +11521,6 @@ taro-css-to-react-native@2.2.12:
     css-color-keywords "^1.0.0"
     css-mediaquery "^0.1.2"
     postcss-value-parser "^3.3.0"
-
-taro-plugin-canvas@^1.0.10:
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/taro-plugin-canvas/-/taro-plugin-canvas-1.0.10.tgz#916c1802845b0d15b49401660f29d74b707557ae"
-  integrity sha512-WUIH/JvEPM9me7dhg2JR7Wazsyi+/2hbmLkfTQvsYZuBkVeaaaK1aGoxht8rTnwgc20xPL19UBfAL8l7aAwU3w==
-  dependencies:
-    "@tarojs/async-await" "^1.3.25"
-    "@tarojs/components" "1.3.25"
-    "@tarojs/router" "1.3.25"
-    "@tarojs/taro" "1.3.25"
-    "@tarojs/taro-alipay" "1.3.25"
-    "@tarojs/taro-h5" "1.3.25"
-    "@tarojs/taro-qq" "1.3.25"
-    "@tarojs/taro-quickapp" "1.3.25"
-    "@tarojs/taro-swan" "1.3.25"
-    "@tarojs/taro-tt" "1.3.25"
-    "@tarojs/taro-weapp" "1.3.25"
-    nerv-devtools "^1.5.0"
-    nervjs "^1.5.0"
 
 tcp-port-used@^1.0.1:
   version "1.0.1"
@@ -12692,8 +12545,8 @@ yallist@^3.0.2:
 
 yallist@^4.0.0:
   version "4.0.0"
-  resolved "http://registry.fe.yeshj.com/yallist/download/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
-  integrity sha1-m7knkNnA7/7GO+c1GeEaNQGaOnI=
+  resolved "https://registry.yarnpkg.com/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
+  integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
 
 yaml@^1.7.2:
   version "1.10.0"
